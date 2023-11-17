@@ -1,0 +1,160 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+// import 'package:madnolia/widgets/form_button.dart';
+
+class CustomScaffold extends StatelessWidget {
+  final Widget body;
+  const CustomScaffold({super.key, required this.body});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: Drawer(
+        surfaceTintColor: Colors.pink,
+        backgroundColor: const Color.fromARGB(33, 68, 37, 155),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              const Wrap(
+                spacing: 10,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  SizedBox(width: 0),
+                  CircleAvatar(
+                    minRadius: 40,
+                    maxRadius: 50,
+                    backgroundColor: Colors.white,
+                    child: Text("US"),
+                  ),
+                  Text(
+                    "Usuario",
+                    style: TextStyle(fontSize: 20),
+                  )
+                ],
+              ),
+              const Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(height: 230),
+                  _MenuButton(
+                    icon: Icons.gamepad_outlined,
+                    title: "Platforms",
+                    route: "",
+                  ),
+                  _MenuButton(
+                    icon: Icons.bolt_outlined,
+                    title: "Create match",
+                    route: "new",
+                  ),
+                  _MenuButton(
+                    icon: Icons.notifications_outlined,
+                    title: "Notifications",
+                    route: "",
+                  ),
+                  _MenuButton(
+                      icon: Icons.person_outline_outlined,
+                      title: "Profile",
+                      route: "user"),
+                  SizedBox(height: 230),
+                ],
+              ),
+              Positioned(
+                  bottom: 30,
+                  left: 20,
+                  child: GestureDetector(
+                    onTap: () {
+                      SystemNavigator.pop();
+                    },
+                    child: const Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 10,
+                      children: [
+                        Icon(
+                          Icons.power_settings_new,
+                          color: Colors.red,
+                          size: 30,
+                        ),
+                        Text(
+                          "Logout",
+                          style: TextStyle(fontSize: 15),
+                        )
+                      ],
+                    ),
+                  ))
+            ],
+          ),
+        ),
+      ),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 18, 0, 24),
+        shadowColor: Colors.transparent,
+        centerTitle: true,
+        title: const Icon(Icons.home),
+      ),
+      body: body,
+    );
+  }
+}
+
+class _MenuButton extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String route;
+  const _MenuButton(
+      {required this.icon, required this.title, required this.route});
+
+  @override
+  Widget build(BuildContext context) {
+    final currentRouteName = ModalRoute.of(context)?.settings.name;
+    return ElevatedButton(
+        onPressed: () {
+          if (route != "" && route != currentRouteName) {
+            Navigator.pushNamed(context, route);
+          }
+        },
+        style: ElevatedButton.styleFrom(
+            shape: const StadiumBorder(),
+            foregroundColor: Colors.pink,
+            backgroundColor: const Color.fromARGB(20, 48, 43, 95),
+            surfaceTintColor: Colors.transparent,
+            disabledBackgroundColor: Colors.transparent,
+            padding: const EdgeInsets.all(0),
+            shadowColor: Colors.transparent,
+            elevation: 0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          margin: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(60),
+            gradient: currentRouteName == route
+                ? const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                        Color.fromRGBO(255, 31, 75, 0),
+                        Color.fromRGBO(255, 31, 75, 0.5),
+                        Color.fromRGBO(255, 31, 75, 0.7),
+                        Color.fromRGBO(255, 31, 75, 1),
+                        Color.fromRGBO(255, 31, 75, 0.7),
+                        Color.fromRGBO(255, 31, 75, 0.5),
+                        Color.fromRGBO(255, 31, 75, 0),
+                      ])
+                : null,
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 40,
+                color: Colors.white,
+              ),
+              Text(
+                "     $title",
+                style: const TextStyle(color: Colors.white),
+              )
+            ],
+          ),
+        ));
+  }
+}
