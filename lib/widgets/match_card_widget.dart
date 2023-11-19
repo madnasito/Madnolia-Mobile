@@ -22,7 +22,7 @@ class MatchCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Image.asset(image),
+              Image.network(image),
               Positioned(
                   bottom: 2,
                   left: 2,

@@ -20,17 +20,18 @@ class CustomInput extends StatefulWidget {
   final TextInputType keyboardType;
   final bool isPassword;
   final Function()? onTap;
+  final Function(String)? onChanged;
 
-  const CustomInput({
-    super.key,
-    required this.icon,
-    required this.placeholder,
-    required this.textController,
-    this.onTap,
-    this.enabled = true,
-    this.keyboardType = TextInputType.text,
-    this.isPassword = false,
-  });
+  const CustomInput(
+      {super.key,
+      required this.icon,
+      required this.placeholder,
+      required this.textController,
+      this.onTap,
+      this.enabled = true,
+      this.keyboardType = TextInputType.text,
+      this.isPassword = false,
+      this.onChanged});
 
   @override
   State<CustomInput> createState() => _CustomInputState();
@@ -76,6 +77,7 @@ class _CustomInputState extends State<CustomInput> {
         borderRadius: BorderRadius.circular(30),
       ),
       child: TextFormField(
+        onChanged: widget.onChanged,
         onTap: widget.onTap,
         enabled: widget.enabled,
         controller: widget.textController,

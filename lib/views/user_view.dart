@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/custom_input.dart';
 import 'package:madnolia/widgets/form_button.dart';
 
@@ -12,13 +13,19 @@ class UserMainView extends StatelessWidget {
     return const Column(
       children: [
         _Card(
-          routeName: "user/edit",
+          icon: Icons.person,
+          title: "You",
+          routeName: "/user/edit",
         ),
         _Card(
-          routeName: "user/matches",
+          icon: Icons.bolt,
+          title: "Matches",
+          routeName: "/user/matches",
         ),
         _Card(
-          routeName: "user/platforms",
+          icon: Icons.gamepad_outlined,
+          title: "Platforms",
+          routeName: "/user/platforms",
         )
       ],
     );
@@ -26,25 +33,32 @@ class UserMainView extends StatelessWidget {
 }
 
 class _Card extends StatelessWidget {
+  final IconData icon;
+  final String title;
   final String routeName;
-  const _Card({required this.routeName});
+  const _Card(
+      {required this.routeName, required this.icon, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, routeName),
+      onTap: () => context.go(routeName),
       child: Container(
         margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.symmetric(horizontal: 140, vertical: 80),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 60),
         decoration: BoxDecoration(
             color: Colors.black12,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.blue, width: 5)),
-        child: const Column(
+            border: Border.all(color: Colors.blue, width: 3)),
+        child: Column(
           children: [
-            Icon(Icons.person),
+            Icon(icon),
             Text(
-              "You",
+              title,
+              style: TextStyle(
+                  fontSize: 30,
+                  fontFamily: "Cyberverse",
+                  color: Colors.greenAccent),
             )
           ],
         ),
@@ -126,7 +140,7 @@ class UserMatchesView extends StatelessWidget {
             style: TextStyle(
                 fontFamily: "Cyberverse",
                 fontSize: 30,
-                color: Color.fromARGB(255, 255, 251, 16)),
+                color: Colors.greenAccent),
           ),
         ),
         const MatchCard(

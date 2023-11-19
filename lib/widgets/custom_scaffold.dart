@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 // import 'package:madnolia/widgets/form_button.dart';
 
 class CustomScaffold extends StatelessWidget {
@@ -45,7 +46,7 @@ class CustomScaffold extends StatelessWidget {
                   _MenuButton(
                     icon: Icons.bolt_outlined,
                     title: "Create match",
-                    route: "new",
+                    route: "/new",
                   ),
                   _MenuButton(
                     icon: Icons.notifications_outlined,
@@ -55,7 +56,7 @@ class CustomScaffold extends StatelessWidget {
                   _MenuButton(
                       icon: Icons.person_outline_outlined,
                       title: "Profile",
-                      route: "user"),
+                      route: "/user"),
                   SizedBox(height: 230),
                 ],
               ),
@@ -106,11 +107,12 @@ class _MenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentRouteName = ModalRoute.of(context)?.settings.name;
+    final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
+    print(currentRouteName);
     return ElevatedButton(
         onPressed: () {
           if (route != "" && route != currentRouteName) {
-            Navigator.pushNamed(context, route);
+            context.go(route);
           }
         },
         style: ElevatedButton.styleFrom(

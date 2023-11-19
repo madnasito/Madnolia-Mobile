@@ -8,13 +8,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       theme: ThemeData(
         brightness: Brightness.dark,
       ),
       title: 'Madnolia',
-      initialRoute: "user",
-      routes: getApplicationRoutes(),
+      routerConfig: router,
     );
   }
 }
