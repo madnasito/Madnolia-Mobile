@@ -2,13 +2,14 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:madnolia/pages/auth/login_page.dart';
-import 'package:madnolia/pages/auth/register_page.dart';
+// import 'package:madnolia/pages/auth/register_page.dart';
 import 'package:madnolia/pages/create_match_page.dart';
-import 'package:madnolia/pages/home/home_new_page.dart';
+// import 'package:madnolia/pages/home/home_new_page.dart';
+import 'package:madnolia/pages/platforms_page.dart';
 import 'package:madnolia/pages/user/edit_user_page.dart';
 import 'package:madnolia/pages/user/user_matches_page.dart';
 import 'package:madnolia/pages/user/user_page.dart';
-import 'package:madnolia/pages/user/user_platforms.dart';
+// import 'package:madnolia/pages/user/user_platforms.dart';
 
 import '../pages/home/home_user_page.dart';
 
@@ -45,6 +46,12 @@ final GoRouter router = GoRouter(
           },
         ),
         GoRoute(
+          path: "platforms",
+          builder: (context, state) {
+            return const PlatformsPage();
+          },
+        ),
+        GoRoute(
             path: 'user',
             builder: (BuildContext context, GoRouterState state) {
               return const UserPage();
@@ -66,7 +73,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'new',
           builder: (BuildContext context, GoRouterState state) {
-            return NewPage();
+            return const NewPage();
           },
         ),
       ],

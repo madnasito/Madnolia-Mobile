@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../models/game_model.dart';
+
 class MatchCard extends StatelessWidget {
-  final String title;
-  final String image;
-  final Widget buttom;
-  const MatchCard({
-    super.key,
-    required this.title,
-    required this.image,
-    required this.buttom,
-  });
+  final Game game;
+  final Widget bottom;
+  const MatchCard({super.key, required this.game, required this.bottom});
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +18,18 @@ class MatchCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Image.network(image),
+              Image.network(game.backgroundImage),
               Positioned(
                   bottom: 2,
                   left: 2,
                   child: Text(
-                    title,
+                    game.name,
                     style: const TextStyle(
                         backgroundColor: Colors.black54, fontSize: 15),
                   ))
             ],
           ),
-          buttom
+          bottom
         ],
       ),
     );

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:madnolia/models/game_response_model.dart';
 // import 'package:flutter/services.dart';
 
 import 'package:madnolia/widgets/custom_input.dart';
@@ -125,63 +124,65 @@ class CreateMatchView extends StatelessWidget {
   }
 }
 
-class SearchGameView extends StatelessWidget {
+class SearchGameView extends StatefulWidget {
   final TextEditingController controller;
 
-  const SearchGameView({
+  SearchGameView({
     super.key,
     required this.controller,
   });
 
+  int counter = 0;
+  late final Game game;
+  @override
+  State<SearchGameView> createState() => _SearchGameViewState();
+}
+
+class _SearchGameViewState extends State<SearchGameView> {
   @override
   Widget build(BuildContext context) {
-    int counter = 0;
-    bool visibility = false;
-
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         CustomInput(
           icon: Icons.gamepad,
           placeholder: "Search Game",
-          textController: controller,
+          textController: widget.controller,
           onChanged: (value) async {
-            counter++;
+            widget.counter++;
             Timer(
-              const Duration(seconds: 3),
+              const Duration(seconds: 1),
               () {
-                counter--;
-                if (counter == 0) {
-                  if (controller.text.isNotEmpty) {
-                    visibility = true;
-                  } else {
-                    visibility = false;
-                  }
-                }
+                widget.counter--;
+                setState(() {});
               },
             );
           },
         ),
-        Visibility(
-          visible: visibility,
-          child: FutureBuilder(
-            future: getGames(title: controller.text, platform: "15"),
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.hasData) {
-                return Flexible(
-                    child: ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return MatchCard(
-                              title: snapshot.data[index].name,
-                              image: snapshot.data[index].backgroundImage,
-                              buttom: Text(""));
-                        }));
-              } else {
-                return const CircularProgressIndicator();
-              }
-            },
-          ),
-        )
+        (widget.counter == 0 && widget.controller.text.isNotEmpty)
+            ? FutureBuilder(
+                future: getGames(title: widget.controller.text, platform: "15"),
+                builder:
+                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if (snapshot.hasData) {
+                    return Flexible(
+                        child: ListView.builder(
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GestureDetector(
+                                onTap: () => widget.game = snapshot.data[index],
+                                child: MatchCard(
+                                    game: snapshot.data[index],
+                                    bottom: const Text("")),
+                              );
+                            }));
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                },
+              )
+            : const Text(""),
       ],
     );
   }

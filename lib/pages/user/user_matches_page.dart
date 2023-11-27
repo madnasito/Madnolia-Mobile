@@ -8,7 +8,7 @@ class UserMatchesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
+    return const CustomScaffold(
         body: Background(
       child: SafeArea(
           child: SingleChildScrollView(

@@ -3,8 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/custom_input.dart';
 import 'package:madnolia/widgets/form_button.dart';
 
-import '../widgets/match_card_widget.dart';
-
 class UserMainView extends StatelessWidget {
   const UserMainView({super.key});
 
@@ -55,7 +53,7 @@ class _Card extends StatelessWidget {
             Icon(icon),
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 30,
                   fontFamily: "Cyberverse",
                   color: Colors.greenAccent),
@@ -143,71 +141,6 @@ class UserMatchesView extends StatelessWidget {
                 color: Colors.greenAccent),
           ),
         ),
-        const MatchCard(
-          image: "assets/game_example.jpg",
-          title: "Kingdom Hearts",
-          buttom: Column(children: [
-            SizedBox(height: 5),
-            Text(
-              "Casual match",
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 8),
-            Text("21312321")
-          ]),
-        ),
-        const MatchCard(
-          image: "assets/game_example_2.jpg",
-          title: "Kingdom Hearts HD 2.5 ReMIX",
-          buttom: Column(children: [
-            SizedBox(height: 5),
-            Text(
-              "Casual match",
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text("21312321")
-          ]),
-        ),
-        const MatchCard(
-          image: "assets/game_example_3.jpg",
-          title: "Kingdom Hearts 2",
-          buttom: Column(children: [
-            SizedBox(height: 5),
-            Text(
-              "Casual match",
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text("21312321")
-          ]),
-        ),
-        const MatchCard(
-          image: "assets/game_example_4.jpg",
-          title: "Naruto Shippuden: Ultimate Ninja 4",
-          buttom: Column(children: [
-            SizedBox(height: 5),
-            Text(
-              "Casual match",
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text("21312321")
-          ]),
-        ),
-        const MatchCard(
-          image: "assets/game_example_5.jpg",
-          title: "FINAL FANTASY XIII-2",
-          buttom: Column(children: [
-            SizedBox(height: 5),
-            Text(
-              "Casual match",
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 10),
-            Text("21312321")
-          ]),
-        )
       ],
     );
   }

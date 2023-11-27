@@ -46,4 +46,38 @@ class RawgService {
       return respBody["results"];
     } catch (e) {}
   }
+
+  Future getPlatformGames({required int id}) async {
+    try {
+      Uri url = Uri.parse("$urlBase/games");
+
+      url = url.replace(
+          queryParameters: {"key": apiKey, "platforms": id, "page_size": "6"});
+
+      final resp = await http.get(url);
+
+      final respBody = jsonDecode(resp.body);
+
+      List<Game> games = [];
+
+      if (respBody["results"].length > 0) {
+        for (var game in respBody["results"]) {
+          Game newGame = Game.fromJson(game);
+          List image = newGame.backgroundImage.split("/");
+          if (image[image.length - 3] == "screenshots") {
+            newGame.backgroundImage =
+                "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
+          } else {
+            newGame.backgroundImage =
+                "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
+          }
+          games.add(newGame);
+        }
+
+        return games;
+      }
+
+      return respBody["results"];
+    } catch (e) {}
+  }
 }

@@ -41,7 +41,7 @@ class CustomScaffold extends StatelessWidget {
                   _MenuButton(
                     icon: Icons.gamepad_outlined,
                     title: "Platforms",
-                    route: "",
+                    route: "/platforms",
                   ),
                   _MenuButton(
                     icon: Icons.bolt_outlined,
@@ -108,7 +108,6 @@ class _MenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
-    print(currentRouteName);
     return ElevatedButton(
         onPressed: () {
           if (route != "" && route != currentRouteName) {

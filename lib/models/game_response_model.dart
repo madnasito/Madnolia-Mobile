@@ -325,9 +325,9 @@ class Tag {
       };
 }
 
-enum Language { ENG, RUS }
+enum Language { eng, rus }
 
-final languageValues = EnumValues({"eng": Language.ENG, "rus": Language.RUS});
+final languageValues = EnumValues({"eng": Language.eng, "rus": Language.rus});
 
 class EnumValues<T> {
   Map<String, T> map;
