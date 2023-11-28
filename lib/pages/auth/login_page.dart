@@ -15,64 +15,58 @@ class LoginPage extends StatelessWidget {
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
-        body: Background(
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  const Center(
-                    child: Text(
-                      "Welcome player",
-                      style: TextStyle(fontSize: 20),
-                    ),
+      body: Background(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                const Center(
+                  child: Text(
+                    "Welcome player",
+                    style: TextStyle(fontSize: 20),
                   ),
-                  const SizedBox(height: 100),
-                  const Center(
-                    child: Text(
-                      "Sign in",
-                      style: TextStyle(fontSize: 40),
-                    ),
+                ),
+                const SizedBox(height: 100),
+                const Center(
+                  child: Text(
+                    "Sign in",
+                    style: TextStyle(fontSize: 40),
                   ),
-                  const SizedBox(height: 50),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      key: formKey,
-                      children: [
-                        CustomInput(
-                          icon: Icons.account_circle_outlined,
-                          placeholder: "Username",
-                          textController: emailController,
-                        ),
-                        CustomInput(
-                            icon: Icons.lock_outline,
-                            placeholder: "password",
-                            textController: passwordController,
-                            isPassword: true),
-                        FormButton(
-                            text: "Login",
-                            color: const Color.fromARGB(0, 33, 149, 243),
-                            onPressed: () {
-                              formKey.currentState?.validate();
-                            })
-                      ],
-                    ),
+                ),
+                const SizedBox(height: 50),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Column(
+                    key: formKey,
+                    children: [
+                      CustomInput(
+                        icon: Icons.account_circle_outlined,
+                        placeholder: "Username",
+                        textController: emailController,
+                      ),
+                      CustomInput(
+                          icon: Icons.lock_outline,
+                          placeholder: "password",
+                          textController: passwordController,
+                          isPassword: true),
+                      FormButton(
+                          text: "Login",
+                          color: const Color.fromARGB(0, 33, 149, 243),
+                          onPressed: () {
+                            formKey.currentState?.validate();
+                          })
+                    ],
                   ),
-                  const SizedBox(height: 30),
-                  const Text("Forgot password?")
-                ],
-              ),
+                ),
+                const SizedBox(height: 30),
+                const Text("Forgot password?")
+              ],
             ),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            // final service = AuthService();
-            // final resp = await service.login("madna", "123456");
-          },
-          child: const Icon(Icons.usb_rounded),
-        ));
+      ),
+    );
   }
 }

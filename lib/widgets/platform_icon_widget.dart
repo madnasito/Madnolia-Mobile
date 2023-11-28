@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 bool active = false;
 
@@ -21,6 +22,7 @@ class _PlatformIconState extends State<PlatformIcon> {
       onTap: () {
         setState(() {
           widget.platform.active = !widget.platform.active;
+          context.go("/platforms/${widget.platform.id}");
         });
       },
       child: SvgPicture.asset(

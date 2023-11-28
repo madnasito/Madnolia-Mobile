@@ -47,12 +47,16 @@ class RawgService {
     } catch (e) {}
   }
 
-  Future getPlatformGames({required int id}) async {
+  Future getPlatformGames({required String id}) async {
     try {
       Uri url = Uri.parse("$urlBase/games");
 
-      url = url.replace(
-          queryParameters: {"key": apiKey, "platforms": id, "page_size": "6"});
+      url = url.replace(queryParameters: {
+        "key": apiKey,
+        "platforms": id,
+        "page_size": "6",
+        "tags": "online"
+      });
 
       final resp = await http.get(url);
 

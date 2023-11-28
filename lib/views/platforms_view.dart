@@ -6,8 +6,6 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:madnolia/widgets/platform_icon_widget.dart';
 
-import 'package:madnolia/services/rawg_service.dart';
-
 import '../widgets/background.dart';
 import '../widgets/custom_scaffold.dart';
 
@@ -73,7 +71,7 @@ class PlatformsView extends StatefulWidget {
         size: 20),
   ];
 
-  List<Platform> nintendoItems = [
+  final List<Platform> nintendoItems = [
     Platform(
         id: 4,
         active: false,
@@ -101,7 +99,7 @@ class PlatformsView extends StatefulWidget {
         size: 70)
   ];
 
-  List<Platform> xboxItems = [
+  final List<Platform> xboxItems = [
     // Platform(active: false, path: "assets/platforms/xbox_360.svg", size: 70),
     Platform(
         id: 1, active: false, path: "assets/platforms/xbox_one.svg", size: 70),
@@ -179,9 +177,6 @@ class _PlatformsViewState extends State<PlatformsView> {
             delay: const Duration(milliseconds: 1500),
             child: GestureDetector(
               onTap: () async {
-                final games = await RawgService().getPlatformGames(id: item.id);
-
-                print(games);
                 item.active = !item.active;
 
                 currentFather = item.id;

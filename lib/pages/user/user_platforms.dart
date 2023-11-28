@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class UserPlatformsPage extends StatelessWidget {
   const UserPlatformsPage({super.key});
