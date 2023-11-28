@@ -1,0 +1,27 @@
+import 'package:flutter/material.dart';
+import 'package:madnolia/blocs/login_bloc.dart';
+export 'package:madnolia/blocs/login_bloc.dart';
+
+class Provider extends InheritedWidget {
+  static Provider? _instance;
+
+  factory Provider({Key? key, required Widget child}) {
+    _instance ??= Provider._internal(key: key, child: child);
+
+    return _instance!;
+  }
+
+  final loginBloc = LoginBloc();
+
+  Provider._internal({super.key, required super.child});
+
+  // Provider({required Key key, required Widget child})
+  //     : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) => true;
+
+  static LoginBloc of(BuildContext context) {
+    return (context.getInheritedWidgetOfExactType<Provider>()!).loginBloc;
+  }
+}

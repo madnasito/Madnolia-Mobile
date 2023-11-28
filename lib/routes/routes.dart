@@ -19,7 +19,7 @@ import '../pages/home/home_user_page.dart';
 
 /// The route configuration.
 final GoRouter router = GoRouter(
-  initialLocation: "/register",
+  initialLocation: "/login",
   routes: <RouteBase>[
     GoRoute(
       path: '/',

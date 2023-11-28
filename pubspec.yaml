@@ -44,6 +44,7 @@ dependencies:
   flutter_svg: ^2.0.9
   animate_do: ^3.0.2
   gradient_borders: ^1.0.0
+  rxdart: ^0.27.7
   
 
 dev_dependencies:

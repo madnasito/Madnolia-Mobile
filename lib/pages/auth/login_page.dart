@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:madnolia/blocs/provider.dart';
 import 'package:madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
-
-import '../../widgets/custom_input.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of(context);
+
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
 
@@ -42,21 +44,26 @@ class LoginPage extends StatelessWidget {
                     key: formKey,
                     children: [
                       CustomInput(
-                        icon: Icons.account_circle_outlined,
-                        placeholder: "Username",
-                        textController: emailController,
-                      ),
+                          stream: bloc.emailStream,
+                          onChanged: bloc.changeEmail,
+                          icon: Icons.email_outlined,
+                          placeholder: "Email"),
                       CustomInput(
+                          stream: bloc.passwordStream,
+                          onChanged: bloc.changePassword,
                           icon: Icons.lock_outline,
-                          placeholder: "password",
-                          textController: passwordController,
-                          isPassword: true),
-                      FormButton(
-                          text: "Login",
-                          color: const Color.fromARGB(0, 33, 149, 243),
-                          onPressed: () {
-                            formKey.currentState?.validate();
-                          })
+                          placeholder: "Password"),
+                      StreamBuilder(
+                        stream: bloc.formValidStream,
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          return FormButton(
+                              text: "Login",
+                              color: const Color.fromARGB(0, 33, 149, 243),
+                              onPressed:
+                                  snapshot.hasData ? () => _login(bloc) : null);
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -68,5 +75,12 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _login(LoginBloc bloc) {
+    print("===========");
+    print("Email: ${bloc.email}");
+    print("Password: ${bloc.password}");
+    print("===========");
   }
 }
