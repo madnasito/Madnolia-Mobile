@@ -1,7 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/widgets/custom_input.dart';
+import 'package:madnolia/blocs/edit_user_bloc.dart';
+import 'package:madnolia/blocs/edit_user_provider.dart';
+import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
+import 'package:provider/provider.dart';
+
+import '../models/user_model.dart';
+import '../providers/user_provider.dart';
+import '../services/user_service.dart';
 
 class UserMainView extends StatelessWidget {
   const UserMainView({super.key});
@@ -66,82 +75,117 @@ class _Card extends StatelessWidget {
 }
 
 class EditUserView extends StatelessWidget {
-  EditUserView({super.key});
-
-  final nameController = TextEditingController();
-  final usernameController = TextEditingController();
-  final emailController = TextEditingController();
-
+  const EditUserView({super.key});
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(
-          decelerationRate: ScrollDecelerationRate.fast),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const SizedBox(height: 10),
-          const Text(
-            "MADNA",
-            style: TextStyle(fontSize: 20),
-          ),
-          Container(
-            margin: const EdgeInsets.all(30),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                border: Border.all(
-                    color: const Color.fromARGB(181, 255, 255, 255))),
-            child: Image.asset("assets/rachel.jpeg"),
-          ),
-          const SizedBox(height: 20),
-          CustomInput(
-              icon: Icons.near_me,
-              placeholder: "Name",
-              textController: nameController),
-          CustomInput(
-              icon: Icons.person_2_outlined,
-              placeholder: "Username",
-              textController: usernameController),
-          CustomInput(
-            icon: Icons.email_outlined,
-            placeholder: "Email",
-            textController: emailController,
-            keyboardType: TextInputType.emailAddress,
-          ),
-          FormButton(
-              text: "Update",
-              color: const Color.fromARGB(0, 33, 149, 243),
-              onPressed: () {}),
-          const SizedBox(height: 20)
-        ],
-      ),
+    final bloc = EditUserProvider.of(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    final nameController = TextEditingController(text: userProvider.user.name);
+    final usernameController =
+        TextEditingController(text: userProvider.user.username);
+    final emailController =
+        TextEditingController(text: userProvider.user.email);
+
+    bloc.changeName(nameController.text);
+    bloc.changeEmail(emailController.text);
+    bloc.changeUsername(usernameController.text);
+
+    String acceptInvitations = userProvider.user.acceptInvitations.toString();
+    return FutureBuilder(
+      future: _loadInfo(userProvider),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(
+                decelerationRate: ScrollDecelerationRate.fast),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  userProvider.user.name,
+                  style: const TextStyle(fontSize: 20),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(30),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3),
+                      border: Border.all(
+                          color: const Color.fromARGB(181, 255, 255, 255))),
+                  child: Image.network(userProvider.user.img.toString()),
+                ),
+                const SizedBox(height: 20),
+                CustomInput(
+                    controller: nameController,
+                    icon: Icons.abc,
+                    placeholder: "Name",
+                    stream: bloc.nameStream,
+                    onChanged: bloc.changeName),
+                CustomInput(
+                    icon: Icons.account_circle_outlined,
+                    placeholder: "User name",
+                    stream: bloc.usernameStream,
+                    onChanged: bloc.changeUsername,
+                    controller: usernameController),
+                CustomInput(
+                    icon: Icons.email_outlined,
+                    placeholder: "Email",
+                    stream: bloc.emailStream,
+                    onChanged: bloc.changeEmail,
+                    controller: emailController),
+                DropDownWidget(
+                  value: userProvider.user.acceptInvitations.toString(),
+                  onChanged: (value) {
+                    acceptInvitations = value.toString();
+                  },
+                ),
+                const SizedBox(height: 20),
+                StreamBuilder(
+                  stream: bloc.userValidStream,
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    return FormButton(
+                        text: "Update",
+                        color: const Color.fromARGB(0, 33, 149, 243),
+                        onPressed: snapshot.hasData
+                            ? () => _uptadeUser(
+                                bloc, userProvider, acceptInvitations)
+                            : null);
+                  },
+                ),
+                const SizedBox(height: 20)
+              ],
+            ),
+          );
+        } else {
+          return const Center(
+              heightFactor: 15, child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }
 
-class UserMatchesView extends StatelessWidget {
-  const UserMatchesView({super.key});
+_loadInfo(UserProvider user) async {
+  final userInfo = await UserService().getUserInfo();
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Icon(IconData(0xE003,
-            fontFamily: "Icomoon", fontPackage: "icon-playstation")),
-        Container(
-          padding: const EdgeInsets.all(20),
-          width: double.infinity,
-          color: Colors.black54,
-          child: const Text(
-            "My matches",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontFamily: "Cyberverse",
-                fontSize: 30,
-                color: Colors.greenAccent),
-          ),
-        ),
-      ],
-    );
-  }
+  user.user = userFromJson(jsonEncode(userInfo));
+
+  return userInfo;
+}
+
+_uptadeUser(
+    EditUserBloc bloc, UserProvider provider, String invitations) async {
+  User user = User(
+      email: bloc.email,
+      name: bloc.name,
+      platforms: [],
+      username: bloc.username,
+      acceptInvitations: invitations);
+  Map<String, dynamic> resp = await UserService().updateUser(user);
+
+  final newUser = User.fromJson(resp);
+
+  provider.user = newUser;
 }

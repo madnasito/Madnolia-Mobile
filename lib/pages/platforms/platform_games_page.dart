@@ -22,7 +22,7 @@ class PlatformGames extends StatelessWidget {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
-                      return MatchCard(
+                      return GameCard(
                           game: snapshot.data[index], bottom: const Text(""));
                     });
               } else {

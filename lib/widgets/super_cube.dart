@@ -37,9 +37,8 @@ class _SuperCubeState extends State<SuperCube>
 
   @override
   void dispose() {
-    super.dispose();
-
     controller.dispose();
+    super.dispose();
   }
 
   @override

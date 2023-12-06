@@ -1,4 +1,4 @@
-import 'package:flutter/src/material/colors.dart';
+import 'package:flutter/material.dart';
 
 class Platform {
   String path;

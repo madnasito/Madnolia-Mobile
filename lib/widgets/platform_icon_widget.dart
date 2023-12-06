@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 
 bool active = false;
 
@@ -19,12 +18,12 @@ class _PlatformIconState extends State<PlatformIcon> {
     final iconSize =
         (widget.platform.size * MediaQuery.of(context).size.width) / 100;
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          widget.platform.active = !widget.platform.active;
-          context.go("/platforms/${widget.platform.id}");
-        });
-      },
+      // onTap: () {
+      //   setState(() {
+      //     widget.platform.active = true;
+      //     // context.go("/platforms/${widget.platform.id}");
+      //   });
+      // },
       child: SvgPicture.asset(
         widget.platform.path,
         height: iconSize,

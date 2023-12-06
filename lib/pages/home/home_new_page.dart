@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/super_cube.dart';
 

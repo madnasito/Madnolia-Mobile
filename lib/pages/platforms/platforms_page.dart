@@ -6,6 +6,6 @@ class PlatformsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PlatformsView();
+    return PlatformsView(platforms: const []);
   }
 }

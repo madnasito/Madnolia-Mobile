@@ -44,7 +44,9 @@ class RawgService {
       }
 
       return respBody["results"];
-    } catch (e) {}
+    } catch (e) {
+      return {"ok": false};
+    }
   }
 
   Future getPlatformGames({required String id}) async {
@@ -82,6 +84,8 @@ class RawgService {
       }
 
       return respBody["results"];
-    } catch (e) {}
+    } catch (e) {
+      return {"ok": false};
+    }
   }
 }

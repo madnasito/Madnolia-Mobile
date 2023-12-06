@@ -14,10 +14,11 @@ class FormButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
-            side: const BorderSide(color: Colors.blue, width: 5),
+            side: onPressed != null
+                ? const BorderSide(color: Colors.blue, width: 5)
+                : null,
             foregroundColor: Colors.blue,
             shadowColor: Colors.black,
-            textStyle: const TextStyle(color: Colors.white),
             elevation: 2,
             backgroundColor: color,
             shape: const StadiumBorder()),

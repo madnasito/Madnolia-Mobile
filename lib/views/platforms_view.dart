@@ -6,13 +6,11 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:madnolia/widgets/platform_icon_widget.dart';
 
-import '../widgets/background.dart';
-import '../widgets/custom_scaffold.dart';
-
 int currentFather = 0;
 
 class PlatformsView extends StatefulWidget {
-  PlatformsView({super.key});
+  final List platforms;
+  PlatformsView({super.key, required this.platforms});
 
   @override
   State<PlatformsView> createState() => _PlatformsViewState();
@@ -23,7 +21,7 @@ class PlatformsView extends StatefulWidget {
         path: "assets/platforms/nintendo.svg",
         active: false,
         size: 25,
-        background: Color(0xffed1c24)),
+        background: const Color(0xffed1c24)),
     Platform(
         id: 2,
         path: "assets/platforms/playstation.svg",
@@ -113,46 +111,45 @@ class PlatformsView extends StatefulWidget {
 
 class _PlatformsViewState extends State<PlatformsView> {
   @override
+  void dispose() {
+    currentFather = 0;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-        body: Background(
-            child: SafeArea(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [..._fatherToMap(widget.fatherPlatforms)],
-            ),
-            const SizedBox(height: 40),
-            FadeIn(
-                delay: const Duration(seconds: 1),
-                child: const Text(
-                  "Please, select your platforms",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                )),
-            SingleChildScrollView(
-              dragStartBehavior: DragStartBehavior.start,
-              child: FadeIn(
-                delay: const Duration(seconds: 2),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 70),
-                    ...loadPlatforms(currentFather),
-                    const SizedBox(height: 70),
-                  ],
-                ),
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        FadeIn(
+            delay: const Duration(seconds: 1),
+            child: const Text(
+              "Please, select your platforms",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
               ),
-            ),
-          ],
+            )),
+        const SizedBox(height: 40),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [..._fatherToMap(widget.fatherPlatforms)],
         ),
-      ),
-    )));
+        SingleChildScrollView(
+          dragStartBehavior: DragStartBehavior.start,
+          child: FadeIn(
+            delay: const Duration(seconds: 2),
+            child: Column(
+              children: [
+                const SizedBox(height: 70),
+                ...loadPlatforms(currentFather),
+                const SizedBox(height: 70),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   List<Widget> loadPlatforms(value) {
@@ -177,7 +174,7 @@ class _PlatformsViewState extends State<PlatformsView> {
             delay: const Duration(milliseconds: 1500),
             child: GestureDetector(
               onTap: () async {
-                item.active = !item.active;
+                item.active = true;
 
                 currentFather = item.id;
 
@@ -198,7 +195,24 @@ class _PlatformsViewState extends State<PlatformsView> {
 
   List<Widget> _toMap(List<Platform> list) {
     return list
-        .map((item) => FadeIn(child: PlatformIcon(platform: item)))
+        .map((item) => FadeIn(
+            child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    item.active = !item.active;
+                    if (item.active) {
+                      widget.platforms.add(item.id);
+                    } else {
+                      int index = widget.platforms
+                          .indexWhere((element) => element == item.id);
+
+                      if (index != -1) {
+                        widget.platforms.removeAt(index);
+                      }
+                    }
+                  });
+                },
+                child: PlatformIcon(platform: item))))
         .toList();
   }
 }

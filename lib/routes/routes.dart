@@ -7,6 +7,7 @@ import 'package:madnolia/pages/auth/register_page.dart';
 // import 'package:madnolia/pages/auth/register_page.dart';
 import 'package:madnolia/pages/create_match_page.dart';
 import 'package:madnolia/pages/home/home_new_page.dart';
+import 'package:madnolia/pages/match_page.dart';
 import 'package:madnolia/pages/platforms/platform_games_page.dart';
 // import 'package:madnolia/pages/home/home_new_page.dart';
 import 'package:madnolia/pages/platforms/platforms_page.dart';
@@ -19,30 +20,30 @@ import '../pages/home/home_user_page.dart';
 
 /// The route configuration.
 final GoRouter router = GoRouter(
-  initialLocation: "/login",
+  initialLocation: "/",
   routes: <RouteBase>[
     GoRoute(
       path: '/',
-      redirect: (BuildContext context, GoRouterState state) async {
-        const storage = FlutterSecureStorage();
-
-        String? token = await storage.read(key: "token");
-
-        if (token != null) {
-          return "/user";
-        } else {
-          return null;
-        }
-      },
       builder: (BuildContext context, GoRouterState state) {
-        return const HomePage();
+        return FutureBuilder(
+            future: getToken(),
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.hasData) {
+                return const HomeUserPage();
+              } else {
+                return const HomePage();
+              }
+            });
       },
       routes: <RouteBase>[
         GoRoute(
-          path: "home",
-          name: "home",
-          builder: (context, state) => const HomePage(),
-        ),
+            path: "home",
+            name: "home",
+            builder: (context, state) => const HomePage()),
+        GoRoute(
+            path: "home-user",
+            name: "home-user",
+            builder: (context, state) => const HomeUserPage()),
         GoRoute(
           path: 'login',
           builder: (BuildContext context, GoRouterState state) {
@@ -52,14 +53,9 @@ final GoRouter router = GoRouter(
         GoRoute(
             path: "register",
             name: "register",
-            builder: (context, state) => const RegisterPage()),
+            builder: (context, state) => RegisterPage()),
         GoRoute(
-          path: 'loggedHome',
-          builder: (BuildContext context, GoRouterState state) {
-            return const LoggedHome();
-          },
-        ),
-        GoRoute(
+          name: "platforms",
           path: "platforms",
           routes: <RouteBase>[
             GoRoute(
@@ -88,12 +84,14 @@ final GoRouter router = GoRouter(
             },
             routes: [
               GoRoute(
+                name: "edit-user",
                 path: 'edit',
                 builder: (BuildContext context, GoRouterState state) {
                   return const UserEditPage();
                 },
               ),
               GoRoute(
+                name: "user-matches",
                 path: 'matches',
                 builder: (BuildContext context, GoRouterState state) {
                   return const UserMatchesPage();
@@ -101,12 +99,26 @@ final GoRouter router = GoRouter(
               ),
             ]),
         GoRoute(
+          name: "new",
           path: 'new',
           builder: (BuildContext context, GoRouterState state) {
             return const NewPage();
           },
         ),
+        GoRoute(
+          path: "match",
+          name: "match",
+          builder: (context, state) => const MatchPage(),
+        )
       ],
     ),
   ],
 );
+
+Future<String?> getToken() async {
+  const storage = FlutterSecureStorage();
+
+  final token = await storage.read(key: "token");
+
+  return token;
+}

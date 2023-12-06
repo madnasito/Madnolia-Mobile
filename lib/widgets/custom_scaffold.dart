@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/user_provider.dart';
 // import 'package:madnolia/widgets/form_button.dart';
 
 class CustomScaffold extends StatelessWidget {
@@ -9,6 +12,7 @@ class CustomScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
@@ -16,22 +20,26 @@ class CustomScaffold extends StatelessWidget {
         child: SafeArea(
           child: Stack(
             children: [
-              const Wrap(
-                spacing: 10,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  SizedBox(width: 0),
-                  CircleAvatar(
-                    minRadius: 40,
-                    maxRadius: 50,
-                    backgroundColor: Colors.white,
-                    child: Text("US"),
-                  ),
-                  Text(
-                    "Usuario",
-                    style: TextStyle(fontSize: 20),
-                  )
-                ],
+              GestureDetector(
+                onTap: () => context.go("/user/edit"),
+                child: Wrap(
+                  spacing: 10,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    const SizedBox(width: 0),
+                    // CircleAvatar(
+                    //   backgroundImage:
+                    //       NetworkImage(userProvider.user.thumbImg.toString()),
+                    //   minRadius: 40,
+                    //   maxRadius: 50,
+                    //   backgroundColor: Colors.white,
+                    // ),
+                    Text(
+                      userProvider.user.name,
+                      style: const TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
               ),
               const Column(
                 mainAxisSize: MainAxisSize.max,
@@ -64,8 +72,10 @@ class CustomScaffold extends StatelessWidget {
                   bottom: 30,
                   left: 20,
                   child: GestureDetector(
-                    onTap: () {
-                      SystemNavigator.pop();
+                    onTap: () async {
+                      const storage = FlutterSecureStorage();
+                      storage.delete(key: "token");
+                      context.go("/home");
                     },
                     child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
