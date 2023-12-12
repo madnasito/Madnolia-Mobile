@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/login_provider.dart';
+import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/providers/user_provider.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/services/sockets_service.dart';
@@ -19,12 +20,14 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
               create: (BuildContext context) => SocketService())
         ],
-        child: MaterialApp.router(
-          theme: ThemeData(
-            brightness: Brightness.dark,
+        child: MessageProvider(
+          child: MaterialApp.router(
+            theme: ThemeData(
+              brightness: Brightness.dark,
+            ),
+            title: 'Madnolia',
+            routerConfig: router,
           ),
-          title: 'Madnolia',
-          routerConfig: router,
         ),
       ),
     );

@@ -75,7 +75,7 @@ class UserService {
 
       final resp = await http.put(url,
           headers: {"token": token!, 'Content-Type': 'application/json'},
-          body: jsonEncode(body));
+          body: body);
 
       authenticating = false;
 

@@ -46,6 +46,8 @@ dependencies:
   gradient_borders: ^1.0.0
   rxdart: ^0.27.7
   provider: ^6.1.1
+  mime_type: ^1.0.0
+  image_picker: ^1.0.4
   
 
 dev_dependencies:

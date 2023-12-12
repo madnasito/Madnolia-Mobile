@@ -11,7 +11,7 @@ class UserMatchesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> matchesWidgets = [];
+    // List<Widget> matchesWidgets = [];
     return CustomScaffold(
         body: Background(
       child: SafeArea(

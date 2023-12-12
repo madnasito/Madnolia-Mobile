@@ -27,13 +27,13 @@ class CustomScaffold extends StatelessWidget {
                   crossAxisAlignment: WrapCrossAlignment.center,
                   children: [
                     const SizedBox(width: 0),
-                    // CircleAvatar(
-                    //   backgroundImage:
-                    //       NetworkImage(userProvider.user.thumbImg.toString()),
-                    //   minRadius: 40,
-                    //   maxRadius: 50,
-                    //   backgroundColor: Colors.white,
-                    // ),
+                    CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(userProvider.user.thumbImg.toString()),
+                      minRadius: 40,
+                      maxRadius: 50,
+                      backgroundColor: Colors.white,
+                    ),
                     Text(
                       userProvider.user.name,
                       style: const TextStyle(fontSize: 20),
@@ -101,7 +101,8 @@ class CustomScaffold extends StatelessWidget {
         backgroundColor: const Color.fromARGB(255, 18, 0, 24),
         shadowColor: Colors.transparent,
         centerTitle: true,
-        title: const Icon(Icons.home),
+        title: IconButton(
+            icon: const Icon(Icons.home), onPressed: () => context.go("/")),
       ),
       body: body,
     );

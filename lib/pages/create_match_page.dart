@@ -8,12 +8,8 @@ class NewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final searchController = TextEditingController();
+    // final searchController = TextEditingController();
 
-    return CustomScaffold(
-        body: Background(
-            child: SearchGameView(
-      controller: searchController,
-    )));
+    return const CustomScaffold(body: Background(child: CreateMatchView()));
   }
 }

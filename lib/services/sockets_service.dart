@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
+// ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../global/environment.dart';
@@ -41,8 +42,8 @@ class SocketService with ChangeNotifier {
       notifyListeners();
     });
 
-    _socket.on("nuevo-mensaje", (payload) {
-      print("nuevo mensaje: $payload");
+    _socket.on("message", (payload) {
+      // print("nuevo mensaje: $payload");
     });
   }
 

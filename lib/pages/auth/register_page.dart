@@ -52,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: !verifiedUser
                   ? FadeIn(
-                      delay: const Duration(seconds: 1),
+                      delay: const Duration(milliseconds: 500),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -90,7 +90,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   )
                 : Container(),
             FadeIn(
-              delay: const Duration(seconds: 2),
+              delay: const Duration(seconds: 1),
               child: StreamBuilder(
                 stream: widget.bloc.userValidStream,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {

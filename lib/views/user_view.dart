@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:madnolia/blocs/edit_user_bloc.dart';
 import 'package:madnolia/blocs/edit_user_provider.dart';
+import 'package:madnolia/services/upload_service.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:provider/provider.dart';
@@ -76,6 +78,7 @@ class _Card extends StatelessWidget {
 
 class EditUserView extends StatelessWidget {
   const EditUserView({super.key});
+
   @override
   Widget build(BuildContext context) {
     final bloc = EditUserProvider.of(context);
@@ -90,6 +93,8 @@ class EditUserView extends StatelessWidget {
     bloc.changeName(nameController.text);
     bloc.changeEmail(emailController.text);
     bloc.changeUsername(usernameController.text);
+    bloc.changeImg(userProvider.user.img.toString());
+    bloc.changeThumbImg(userProvider.user.thumbImg.toString());
 
     String acceptInvitations = userProvider.user.acceptInvitations.toString();
     return FutureBuilder(
@@ -113,7 +118,74 @@ class EditUserView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(3),
                       border: Border.all(
                           color: const Color.fromARGB(181, 255, 255, 255))),
-                  child: Image.network(userProvider.user.img.toString()),
+                  child: GestureDetector(
+                      onTap: () async {
+                        final picker = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+
+                        if (picker != null) {
+                          final resp = await bloc.uploadImage(picker);
+                          if (resp["ok"]) {
+                            userProvider.user.img = resp["img"];
+                            userProvider.user.img = resp["thumb_img"];
+                          }
+                        }
+                      },
+                      child: Stack(
+                        children: [
+                          StreamBuilder(
+                            stream: bloc.imgStream,
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                return Image.network(bloc.img,
+                                    colorBlendMode: BlendMode.darken,
+                                    color: null);
+                              } else {
+                                return const CircularProgressIndicator();
+                              }
+                            },
+                          ),
+
+                          StreamBuilder(
+                            stream: bloc.loadingStream,
+                            builder:
+                                (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData) {
+                                if (snapshot.data == true) {
+                                  return const Center(
+                                    heightFactor: 2,
+                                    child: Column(
+                                      children: [
+                                        CircularProgressIndicator(
+                                          color: Colors.lightBlueAccent,
+                                        ),
+                                        Text("Updating img")
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
+                          //  const Center(
+                          //       heightFactor: 2,
+                          //       child: Column(
+                          //         children: [
+                          //           CircularProgressIndicator(
+                          //             color: Colors.lightBlueAccent,
+                          //           ),
+                          //           Text("Updating img")
+                          //         ],
+                          //       ),
+                          //     )
+                          // : Container()
+                        ],
+                      )),
                 ),
                 const SizedBox(height: 20),
                 CustomInput(

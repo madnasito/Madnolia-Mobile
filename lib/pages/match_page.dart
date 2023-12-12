@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/views/match_view.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
@@ -12,6 +13,7 @@ class MatchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Match extraMatch = GoRouterState.of(context).extra! as Match;
+    final bloc = MessageProvider.of(context);
 
     return CustomScaffold(
       body: Background(
@@ -20,7 +22,10 @@ class MatchPage extends StatelessWidget {
                 //  MatchOwnerView(
                 //   match: extraMatch,
                 // ),
-                MatchChat(match: extraMatch)),
+                MatchChat(
+          match: extraMatch,
+          bloc: bloc,
+        )),
       ),
     );
   }

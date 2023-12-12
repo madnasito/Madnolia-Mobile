@@ -6,8 +6,7 @@ import 'package:rxdart/rxdart.dart';
 class MessageBloc with Validators {
   final _messageController = BehaviorSubject<String>();
   // Get STREAM data
-  Stream<String> get nameStream =>
-      _messageController.stream.transform(validateName);
+  Stream<String> get messageStream => _messageController.stream;
 
   // Update values
   Function(String) get changeMessage => _messageController.sink.add;

@@ -20,7 +20,9 @@ class GameCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Image.network(game.backgroundImage),
+              game.backgroundImage != null
+                  ? Image.network(game.backgroundImage!)
+                  : Image.asset("assets/no image.jpg"),
               Positioned(
                   bottom: 2,
                   left: 2,

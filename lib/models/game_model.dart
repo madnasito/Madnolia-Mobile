@@ -5,12 +5,12 @@ Game gameFromJson(String str) => Game.fromJson(jsonDecode(str));
 class Game {
   String name;
   int id;
-  String backgroundImage;
+  String? backgroundImage;
   // List<Platform> platforms;
 
   Game({
     required this.name,
-    required this.backgroundImage,
+    this.backgroundImage,
     required this.id,
     //  required this.platforms
   });

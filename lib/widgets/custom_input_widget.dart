@@ -18,7 +18,7 @@ OutlineInputBorder errorBorder = OutlineInputBorder(
 
 class CustomInput extends StatelessWidget {
   final Stream<String> stream;
-  final IconData icon;
+  final IconData? icon;
   final String placeholder;
   final TextInputType keyboardType;
   final bool isPassword;
@@ -26,7 +26,7 @@ class CustomInput extends StatelessWidget {
   final TextEditingController? controller;
   const CustomInput(
       {super.key,
-      required this.icon,
+      this.icon,
       required this.placeholder,
       required this.stream,
       required this.onChanged,
@@ -55,9 +55,11 @@ class CustomInput extends StatelessWidget {
                     borderRadius: BorderRadius.circular(30),
                     borderSide: const BorderSide(color: Colors.blue, width: 3)),
                 errorBorder: errorBorder,
-                prefixIcon: Icon(
-                  icon,
-                ),
+                prefixIcon: icon != null
+                    ? Icon(
+                        icon,
+                      )
+                    : null,
                 hintText: placeholder,
                 errorText: snapshot.error as String?),
             onChanged: onChanged,
@@ -89,7 +91,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       elevation: 20,
       isDense: true,
       value: widget.value,
-      isExpanded: true,
       style: const TextStyle(
         decoration: TextDecoration.underline,
         fontSize: 15,
@@ -115,6 +116,29 @@ class _DropDownWidgetState extends State<DropDownWidget> {
         )
       ],
       onChanged: (value) => widget.onChanged!(value),
+    );
+  }
+}
+
+class SimpleCustomInput extends StatelessWidget {
+  final String placeholder;
+  final TextEditingController controller;
+  final void Function()? onTap;
+  final void Function(String)? onChanged;
+  const SimpleCustomInput(
+      {super.key,
+      required this.placeholder,
+      required this.controller,
+      this.onTap,
+      this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      onTap: onTap,
+      controller: controller,
+      onChanged: onChanged,
+      decoration: InputDecoration(hintText: placeholder, border: focusedBorder),
     );
   }
 }

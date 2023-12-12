@@ -14,6 +14,7 @@ import 'package:madnolia/pages/platforms/platforms_page.dart';
 import 'package:madnolia/pages/user/edit_user_page.dart';
 import 'package:madnolia/pages/user/user_matches_page.dart';
 import 'package:madnolia/pages/user/user_page.dart';
+import 'package:madnolia/pages/user/user_platforms.dart';
 // import 'package:madnolia/pages/user/user_platforms.dart';
 
 import '../pages/home/home_user_page.dart';
@@ -97,6 +98,10 @@ final GoRouter router = GoRouter(
                   return const UserMatchesPage();
                 },
               ),
+              GoRoute(
+                  path: "platforms",
+                  name: "user-platforms",
+                  builder: (context, state) => const UserPlatformsPage())
             ]),
         GoRoute(
           name: "new",

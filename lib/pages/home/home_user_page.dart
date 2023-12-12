@@ -7,7 +7,7 @@ import 'package:madnolia/models/user_model.dart';
 import 'package:madnolia/providers/user_provider.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/services/user_service.dart';
-import 'package:madnolia/widgets/alert_widget.dart';
+// import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:provider/provider.dart';
@@ -58,7 +58,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
       await storage.delete(key: "token");
       // ignore: use_build_context_synchronously
-      showAlert(context, "Token error");
+      // showAlert(context, "Token error");
       // ignore: use_build_context_synchronously
       return context.go("/home");
     }

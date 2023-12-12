@@ -15,7 +15,7 @@ class PlatformsView extends StatefulWidget {
   @override
   State<PlatformsView> createState() => _PlatformsViewState();
 
-  final List<Platform> fatherPlatforms = [
+  List<Platform> fatherPlatforms = [
     Platform(
         id: 1,
         path: "assets/platforms/nintendo.svg",
@@ -36,80 +36,93 @@ class PlatformsView extends StatefulWidget {
         background: Colors.green),
   ];
 
-  final List<Platform> playstationItems = [
-    Platform(
-        id: 17,
-        path: "assets/platforms/playstation_portable.svg",
-        active: false,
-        size: 20),
-    Platform(
-        id: 15,
-        path: "assets/platforms/playstation_2.svg",
-        active: false,
-        size: 60),
-    Platform(
-        id: 16,
-        path: "assets/platforms/playstation_3.svg",
-        active: false,
-        size: 60),
-    Platform(
-        id: 18,
-        path: "assets/platforms/playstation_4.svg",
-        active: false,
-        size: 60),
-    Platform(
-        id: 187,
-        path: "assets/platforms/playstation_5.svg",
-        active: false,
-        size: 60),
-    Platform(
-        id: 19,
-        path: "assets/platforms/playstation_vita.svg",
-        active: false,
-        size: 20),
-  ];
+  List<Platform> playstationItems = [];
 
-  final List<Platform> nintendoItems = [
-    Platform(
-        id: 4,
-        active: false,
-        path: "assets/platforms/nintendo_ds.svg",
-        size: 20),
-    Platform(
-        id: 8,
-        active: false,
-        path: "assets/platforms/nintendo_3ds.svg",
-        size: 20),
-    Platform(
-        id: 11,
-        active: false,
-        path: "assets/platforms/nintendo_wii.svg",
-        size: 20),
-    Platform(
-        id: 10,
-        active: false,
-        path: "assets/platforms/nintendo_wiiu.svg",
-        size: 20),
-    Platform(
-        id: 7,
-        active: false,
-        path: "assets/platforms/nintendo_switch.svg",
-        size: 70)
-  ];
+  List<Platform> nintendoItems = [];
 
-  final List<Platform> xboxItems = [
-    // Platform(active: false, path: "assets/platforms/xbox_360.svg", size: 70),
-    Platform(
-        id: 1, active: false, path: "assets/platforms/xbox_one.svg", size: 70),
-    Platform(
-        id: 186,
-        active: false,
-        path: "assets/platforms/xbox_series.svg",
-        size: 30)
-  ];
+  List<Platform> xboxItems = [];
 }
 
 class _PlatformsViewState extends State<PlatformsView> {
+  @override
+  void initState() {
+    widget.playstationItems = [
+      Platform(
+          id: 17,
+          path: "assets/platforms/playstation_portable.svg",
+          active: widget.platforms.contains(17) ? true : false,
+          size: 20),
+      Platform(
+          id: 15,
+          path: "assets/platforms/playstation_2.svg",
+          active: widget.platforms.contains(15) ? true : false,
+          size: 60),
+      Platform(
+          id: 16,
+          path: "assets/platforms/playstation_3.svg",
+          active: widget.platforms.contains(16) ? true : false,
+          size: 60),
+      Platform(
+          id: 18,
+          path: "assets/platforms/playstation_4.svg",
+          active: widget.platforms.contains(18) ? true : false,
+          size: 60),
+      Platform(
+          id: 187,
+          path: "assets/platforms/playstation_5.svg",
+          active: widget.platforms.contains(187) ? true : false,
+          size: 60),
+      Platform(
+          id: 19,
+          path: "assets/platforms/playstation_vita.svg",
+          active: widget.platforms.contains(19) ? true : false,
+          size: 20),
+    ];
+
+    widget.nintendoItems = [
+      Platform(
+          id: 4,
+          active: widget.platforms.contains(4) ? true : false,
+          path: "assets/platforms/nintendo_ds.svg",
+          size: 20),
+      Platform(
+          id: 8,
+          active: widget.platforms.contains(8) ? true : false,
+          path: "assets/platforms/nintendo_3ds.svg",
+          size: 20),
+      Platform(
+          id: 11,
+          active: widget.platforms.contains(11) ? true : false,
+          path: "assets/platforms/nintendo_wii.svg",
+          size: 20),
+      Platform(
+          id: 10,
+          active: widget.platforms.contains(10) ? true : false,
+          path: "assets/platforms/nintendo_wiiu.svg",
+          size: 20),
+      Platform(
+          id: 7,
+          active: widget.platforms.contains(7) ? true : false,
+          path: "assets/platforms/nintendo_switch.svg",
+          size: 70)
+    ];
+
+    widget.xboxItems = [
+      // Platform(active: false, path: "assets/platforms/xbox_360.svg", size: 70),
+      Platform(
+          id: 1,
+          active: widget.platforms.contains(1) ? true : false,
+          path: "assets/platforms/xbox_one.svg",
+          size: 70),
+      Platform(
+          id: 186,
+          active: widget.platforms.contains(186) ? true : false,
+          path: "assets/platforms/xbox_series.svg",
+          size: 30)
+    ];
+    super.initState();
+  }
+
   @override
   void dispose() {
     currentFather = 0;
@@ -122,7 +135,7 @@ class _PlatformsViewState extends State<PlatformsView> {
       children: [
         const SizedBox(height: 20),
         FadeIn(
-            delay: const Duration(seconds: 1),
+            delay: const Duration(milliseconds: 300),
             child: const Text(
               "Please, select your platforms",
               textAlign: TextAlign.center,
@@ -138,7 +151,7 @@ class _PlatformsViewState extends State<PlatformsView> {
         SingleChildScrollView(
           dragStartBehavior: DragStartBehavior.start,
           child: FadeIn(
-            delay: const Duration(seconds: 2),
+            delay: const Duration(seconds: 1),
             child: Column(
               children: [
                 const SizedBox(height: 70),
@@ -171,7 +184,7 @@ class _PlatformsViewState extends State<PlatformsView> {
   List<Widget> _fatherToMap(List<Platform> list) {
     return list
         .map((item) => FadeIn(
-            delay: const Duration(milliseconds: 1500),
+            delay: const Duration(milliseconds: 700),
             child: GestureDetector(
               onTap: () async {
                 item.active = true;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+// ignore: unused_import, depend_on_referenced_packages
 import 'package:http_parser/http_parser.dart';
 
 import '../models/game_model.dart';
@@ -29,13 +30,15 @@ class RawgService {
       if (respBody["results"].length > 0) {
         for (var game in respBody["results"]) {
           Game newGame = Game.fromJson(game);
-          List image = newGame.backgroundImage.split("/");
-          if (image[image.length - 3] == "screenshots") {
-            newGame.backgroundImage =
-                "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
-          } else {
-            newGame.backgroundImage =
-                "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
+          if (newGame.backgroundImage != null) {
+            List image = newGame.backgroundImage!.split("/");
+            if (image[image.length - 3] == "screenshots") {
+              newGame.backgroundImage =
+                  "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
+            } else {
+              newGame.backgroundImage =
+                  "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
+            }
           }
           games.add(newGame);
         }
@@ -69,13 +72,15 @@ class RawgService {
       if (respBody["results"].length > 0) {
         for (var game in respBody["results"]) {
           Game newGame = Game.fromJson(game);
-          List image = newGame.backgroundImage.split("/");
-          if (image[image.length - 3] == "screenshots") {
-            newGame.backgroundImage =
-                "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
-          } else {
-            newGame.backgroundImage =
-                "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
+          if (newGame.backgroundImage != null) {
+            List image = newGame.backgroundImage!.split("/");
+            if (image[image.length - 3] == "screenshots") {
+              newGame.backgroundImage =
+                  "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
+            } else {
+              newGame.backgroundImage =
+                  "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
+            }
           }
           games.add(newGame);
         }
