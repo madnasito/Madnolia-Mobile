@@ -1,7 +1,10 @@
 import 'dart:convert';
 
-import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+
+import 'package:animate_do/animate_do.dart';
+import 'package:toast/toast.dart';
+
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/views/platforms_view.dart';
 import 'package:madnolia/widgets/background.dart';
@@ -19,6 +22,8 @@ class UserPlatformsPage extends StatelessWidget {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     List platforms = userProvider.user.platforms;
+
+    ToastContext().init(context);
 
     bool updating = false;
     return CustomScaffold(
@@ -39,19 +44,24 @@ class UserPlatformsPage extends StatelessWidget {
                     onPressed: updating == false
                         ? () async {
                             if (platforms.isEmpty) {
-                              // TODO: Create the warning toast
+                              Toast.show(
+                                  "You need to select at least one platform",
+                                  gravity: 100,
+                                  border: Border.all(color: Colors.blueAccent),
+                                  textStyle: const TextStyle(fontSize: 18),
+                                  duration: 2);
                               return;
                             }
 
                             updating = true;
-                            var jsonPlatforms =
-                                json.encode({"platforms": platforms});
                             // print(jsonPlatforms);
-                            final resp = await UserService()
-                                .updateUserPlatforms(platforms: jsonPlatforms);
 
                             updating = false;
-                            print(resp);
+                            Toast.show("Updated platforms",
+                                gravity: 100,
+                                border: Border.all(color: Colors.blueAccent),
+                                textStyle: const TextStyle(fontSize: 18),
+                                duration: 3);
                           }
                         : null),
               ),
