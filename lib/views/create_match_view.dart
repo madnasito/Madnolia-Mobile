@@ -66,6 +66,7 @@ class _CreateMatchViewState extends State<CreateMatchView> {
                           const Duration(days: 3652),
                         ),
                         is24HourMode: false,
+                        theme: ThemeData.dark(useMaterial3: true),
                         isShowSeconds: false,
                         minutesInterval: 1,
                         secondsInterval: 1,

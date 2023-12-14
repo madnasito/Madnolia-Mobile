@@ -21,7 +21,7 @@ class CustomScaffold extends StatelessWidget {
           child: Stack(
             children: [
               GestureDetector(
-                onTap: () => context.go("/user/edit"),
+                onTap: () => GoRouter.of(context).push("/user/edit"),
                 child: Wrap(
                   spacing: 10,
                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -75,7 +75,7 @@ class CustomScaffold extends StatelessWidget {
                     onTap: () async {
                       const storage = FlutterSecureStorage();
                       storage.delete(key: "token");
-                      context.go("/home");
+                      GoRouter.of(context).push("/home");
                     },
                     child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -102,7 +102,8 @@ class CustomScaffold extends StatelessWidget {
         shadowColor: Colors.transparent,
         centerTitle: true,
         title: IconButton(
-            icon: const Icon(Icons.home), onPressed: () => context.go("/")),
+            icon: const Icon(Icons.home),
+            onPressed: () => GoRouter.of(context).push("/")),
       ),
       body: body,
     );
@@ -122,7 +123,7 @@ class _MenuButton extends StatelessWidget {
     return ElevatedButton(
         onPressed: () {
           if (route != "" && route != currentRouteName) {
-            context.go(route);
+            GoRouter.of(context).push(route);
           }
         },
         style: ElevatedButton.styleFrom(

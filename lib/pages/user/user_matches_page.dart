@@ -44,7 +44,8 @@ class UserMatchesPage extends StatelessWidget {
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                             onTap: () {
-                              context.go('/match', extra: list[index]);
+                              GoRouter.of(context)
+                                  .push('/match', extra: list[index]);
                             },
                             child: MatchCard(
                                 match: list[index],

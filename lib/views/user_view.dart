@@ -51,7 +51,7 @@ class _Card extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go(routeName),
+      onTap: () => GoRouter.of(context).push(routeName),
       child: Container(
         margin: const EdgeInsets.all(20),
         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 60),

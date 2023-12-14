@@ -15,6 +15,7 @@ import 'package:madnolia/pages/user/edit_user_page.dart';
 import 'package:madnolia/pages/user/user_matches_page.dart';
 import 'package:madnolia/pages/user/user_page.dart';
 import 'package:madnolia/pages/user/user_platforms.dart';
+import 'package:madnolia/views/create_match_view.dart';
 // import 'package:madnolia/pages/user/user_platforms.dart';
 
 import '../pages/home/home_user_page.dart';
@@ -107,8 +108,14 @@ final GoRouter router = GoRouter(
           name: "new",
           path: 'new',
           builder: (BuildContext context, GoRouterState state) {
-            return const NewPage();
+            return NewPage();
           },
+          routes: [
+            GoRoute(
+              path: "match",
+              builder: (context, state) => CreateMatchView(),
+            )
+          ],
         ),
         GoRoute(
           path: "match",
