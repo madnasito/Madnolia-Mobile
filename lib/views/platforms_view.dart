@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:madnolia/widgets/platform_icon_widget.dart';
 
@@ -212,6 +213,12 @@ class _PlatformsViewState extends State<PlatformsView> {
             child: GestureDetector(
                 onTap: () {
                   setState(() {
+                    String currentRouteName =
+                        "/${ModalRoute.of(context)?.settings.name}";
+                    if (currentRouteName == "/platforms") {
+                      context.push("/platforms/${item.id}");
+                      return;
+                    }
                     item.active = !item.active;
                     if (item.active) {
                       widget.platforms.add(item.id);

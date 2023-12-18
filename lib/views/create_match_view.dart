@@ -239,6 +239,7 @@ class MatchFormView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ToastContext().init(context);
+    bool uploading = false;
     String fullDate = "";
     String newDateTime = "";
     final dateController = TextEditingController();
@@ -354,6 +355,13 @@ class MatchFormView extends StatelessWidget {
                 text: "Create Match",
                 color: Colors.transparent,
                 onPressed: () async {
+                  if (uploading == true) {
+                    return Toast.show("The match is creating",
+                        gravity: 100,
+                        border: Border.all(color: Colors.blueAccent),
+                        textStyle: const TextStyle(fontSize: 18),
+                        duration: 3);
+                  }
                   if (newDateTime.isEmpty || newDateTime == "null") {
                     return Toast.show("Please create a date for the match",
                         gravity: 100,
@@ -374,10 +382,17 @@ class MatchFormView extends StatelessWidget {
                     // "tournament_match": "false"
                   };
 
+                  uploading = true;
                   final resp = await MatchService().createMatch(match);
-
+                  uploading = false;
                   if (resp["ok"] == true) {
                     Toast.show("Match Created",
+                        gravity: 100,
+                        border: Border.all(color: Colors.blueAccent),
+                        textStyle: const TextStyle(fontSize: 18),
+                        duration: 3);
+                  } else {
+                    Toast.show("Error creating the match",
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),

@@ -46,11 +46,11 @@ class CustomScaffold extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(height: 230),
-                  _MenuButton(
-                    icon: Icons.gamepad_outlined,
-                    title: "Platforms",
-                    route: "/platforms",
-                  ),
+                  // _MenuButton(
+                  //   icon: Icons.gamepad_outlined,
+                  //   title: "Platforms",
+                  //   route: "/platforms",
+                  // ),
                   _MenuButton(
                     icon: Icons.bolt_outlined,
                     title: "Create match",
@@ -59,7 +59,7 @@ class CustomScaffold extends StatelessWidget {
                   _MenuButton(
                     icon: Icons.notifications_outlined,
                     title: "Notifications",
-                    route: "",
+                    route: "/notifications",
                   ),
                   _MenuButton(
                       icon: Icons.person_outline_outlined,
