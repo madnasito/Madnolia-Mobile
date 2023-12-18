@@ -5,9 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/pages/auth/login_page.dart';
 import 'package:madnolia/pages/auth/register_page.dart';
 // import 'package:madnolia/pages/auth/register_page.dart';
-import 'package:madnolia/pages/create_match_page.dart';
+import 'package:madnolia/pages/new/create_match_page.dart';
 import 'package:madnolia/pages/home/home_new_page.dart';
 import 'package:madnolia/pages/match_page.dart';
+import 'package:madnolia/pages/new/match_form_page.dart';
 import 'package:madnolia/pages/platforms/platform_games_page.dart';
 // import 'package:madnolia/pages/home/home_new_page.dart';
 import 'package:madnolia/pages/platforms/platforms_page.dart';
@@ -113,7 +114,7 @@ final GoRouter router = GoRouter(
           routes: [
             GoRoute(
               path: "match",
-              builder: (context, state) => CreateMatchView(),
+              builder: (context, state) => const MatchFormPage(),
             )
           ],
         ),

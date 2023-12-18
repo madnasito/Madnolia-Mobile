@@ -54,14 +54,29 @@ class UserPlatformsPage extends StatelessWidget {
                             }
 
                             updating = true;
-                            // print(jsonPlatforms);
+
+                            final jsonBody =
+                                platforms.map((platform) => platforms).toList();
+
+                            final resp = await UserService()
+                                .updateUserPlatforms(
+                                    platforms: {"platforms": platforms});
+
+                            if (resp["ok"] == true) {
+                              Toast.show("Updated platforms",
+                                  gravity: 100,
+                                  border: Border.all(color: Colors.blueAccent),
+                                  textStyle: const TextStyle(fontSize: 18),
+                                  duration: 3);
+                            } else {
+                              Toast.show("Error updating",
+                                  gravity: 100,
+                                  border: Border.all(color: Colors.redAccent),
+                                  textStyle: const TextStyle(fontSize: 18),
+                                  duration: 3);
+                            }
 
                             updating = false;
-                            Toast.show("Updated platforms",
-                                gravity: 100,
-                                border: Border.all(color: Colors.blueAccent),
-                                textStyle: const TextStyle(fontSize: 18),
-                                duration: 3);
                           }
                         : null),
               ),

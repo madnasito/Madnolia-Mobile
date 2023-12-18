@@ -24,17 +24,17 @@ class Match {
   List<dynamic> chat;
 
   Match(
-      {required this.id,
+      {this.id = "",
       required this.users,
       required this.message,
       required this.likes,
-      required this.active,
-      required this.tournamentMatch,
+      this.active = true,
+      this.tournamentMatch = false,
       required this.gameName,
       required this.gameId,
       required this.platform,
       required this.date,
-      required this.user,
+      this.user = "",
       required this.chat,
       this.img});
 

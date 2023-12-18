@@ -123,6 +123,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
 class SimpleCustomInput extends StatelessWidget {
   final String placeholder;
   final TextEditingController controller;
+  final TextInputType keyboardType;
   final void Function()? onTap;
   final void Function(String)? onChanged;
   const SimpleCustomInput(
@@ -130,7 +131,8 @@ class SimpleCustomInput extends StatelessWidget {
       required this.placeholder,
       required this.controller,
       this.onTap,
-      this.onChanged});
+      this.onChanged,
+      this.keyboardType = TextInputType.text});
 
   @override
   Widget build(BuildContext context) {
@@ -138,6 +140,7 @@ class SimpleCustomInput extends StatelessWidget {
       onTap: onTap,
       controller: controller,
       onChanged: onChanged,
+      keyboardType: keyboardType,
       decoration: InputDecoration(hintText: placeholder, border: focusedBorder),
     );
   }

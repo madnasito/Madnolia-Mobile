@@ -73,6 +73,7 @@ class UserService {
       final String? token = await _storage.read(key: "token");
       final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
 
+      body = jsonEncode(body);
       final resp = await http.put(url,
           headers: {"token": token!, 'Content-Type': 'application/json'},
           body: body);
