@@ -15,9 +15,10 @@ class AuthService {
     try {
       final url = Uri.parse("${Environment.apiUrl}/login");
 
+      print(url);
       authenticating = true;
       final resp = await http.post(url,
-          // headers: {"Content-Type": "application/json"},
+          // headers: {"Content-Type": "application/json"},h
           body: {"username": username, "password": password});
 
       authenticating = false;
@@ -31,6 +32,7 @@ class AuthService {
         return {"ok": false, "message": respBody["message"]};
       }
     } catch (e) {
+      print(e);
       return {"ok": false, "message": "Error"};
     }
   }
