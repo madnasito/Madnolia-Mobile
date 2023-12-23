@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/models/match_model.dart';
-import 'package:madnolia/services/match_service.dart';
-import 'package:madnolia/utils/platform_id_ico.dart';
+import 'package:Madnolia/models/match_model.dart';
+import 'package:Madnolia/services/match_service.dart';
+import 'package:Madnolia/utils/platform_id_ico.dart';
 // import 'package:flutter/services.dart';
 
-import 'package:madnolia/widgets/form_button.dart';
-import 'package:madnolia/widgets/match_card_widget.dart';
+import 'package:Madnolia/widgets/form_button.dart';
+import 'package:Madnolia/widgets/match_card_widget.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:toast/toast.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/views/user_view.dart';
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:Madnolia/views/user_view.dart';
+import 'package:Madnolia/widgets/background.dart';
+import 'package:Madnolia/widgets/custom_scaffold.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});

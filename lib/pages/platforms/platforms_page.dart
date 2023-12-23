@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/views/platforms_view.dart';
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:Madnolia/views/platforms_view.dart';
+import 'package:Madnolia/widgets/background.dart';
+import 'package:Madnolia/widgets/custom_scaffold.dart';
 
 class PlatformsPage extends StatelessWidget {
   const PlatformsPage({super.key});

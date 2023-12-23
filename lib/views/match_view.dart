@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/blocs/message_bloc.dart';
+import 'package:Madnolia/blocs/message_bloc.dart';
 
-import 'package:madnolia/models/match_model.dart';
-import 'package:madnolia/models/message_model.dart';
-import 'package:madnolia/providers/user_provider.dart';
-import 'package:madnolia/services/match_service.dart';
-import 'package:madnolia/services/sockets_service.dart';
-import 'package:madnolia/widgets/chat_message_widget.dart';
-import 'package:madnolia/widgets/custom_input_widget.dart';
+import 'package:Madnolia/models/match_model.dart';
+import 'package:Madnolia/models/message_model.dart';
+import 'package:Madnolia/providers/user_provider.dart';
+import 'package:Madnolia/services/match_service.dart';
+import 'package:Madnolia/services/sockets_service.dart';
+import 'package:Madnolia/widgets/chat_message_widget.dart';
+import 'package:Madnolia/widgets/custom_input_widget.dart';
 import 'package:provider/provider.dart';
 
 class MatchOwnerView extends StatelessWidget {

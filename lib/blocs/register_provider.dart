@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:madnolia/blocs/register_bloc.dart';
-export 'package:madnolia/blocs/register_bloc.dart';
+import 'package:Madnolia/blocs/register_bloc.dart';
+export 'package:Madnolia/blocs/register_bloc.dart';
 
 class RegisterProvider extends InheritedWidget {
   // static RegisterProvider? _instance;

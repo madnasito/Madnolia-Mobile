@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/super_cube.dart';
+import 'package:Madnolia/widgets/background.dart';
+import 'package:Madnolia/widgets/super_cube.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

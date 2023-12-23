@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:madnolia/blocs/message_bloc.dart';
-export 'package:madnolia/blocs/message_bloc.dart';
+import 'package:Madnolia/blocs/message_bloc.dart';
+export 'package:Madnolia/blocs/message_bloc.dart';
 
 class MessageProvider extends InheritedWidget {
   static MessageProvider? _instance;

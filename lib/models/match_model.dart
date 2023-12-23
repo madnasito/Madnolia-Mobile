@@ -67,5 +67,6 @@ class Match {
         "date": date,
         "user": user,
         "chat": List<dynamic>.from(chat.map((x) => x)),
+        "img": img != null ? img : ""
       };
 }

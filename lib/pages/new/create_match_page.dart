@@ -1,11 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:madnolia/providers/user_provider.dart';
-import 'package:madnolia/views/create_match_view.dart';
-import 'package:madnolia/views/platforms_view.dart';
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:Madnolia/providers/user_provider.dart';
+import 'package:Madnolia/views/create_match_view.dart';
+import 'package:Madnolia/views/platforms_view.dart';
+import 'package:Madnolia/widgets/background.dart';
+import 'package:Madnolia/widgets/custom_scaffold.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/platform_icon_widget.dart';

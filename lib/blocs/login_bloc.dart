@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:madnolia/blocs/validators.dart';
+import 'package:Madnolia/blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
 
 class LoginBloc with Validators {

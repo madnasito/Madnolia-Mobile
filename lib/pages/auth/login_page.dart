@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/blocs/login_provider.dart';
-import 'package:madnolia/services/auth_service.dart';
-import 'package:madnolia/widgets/alert_widget.dart';
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_input_widget.dart';
-import 'package:madnolia/widgets/form_button.dart';
+import 'package:Madnolia/blocs/login_provider.dart';
+import 'package:Madnolia/services/auth_service.dart';
+import 'package:Madnolia/widgets/alert_widget.dart';
+import 'package:Madnolia/widgets/background.dart';
+import 'package:Madnolia/widgets/custom_input_widget.dart';
+import 'package:Madnolia/widgets/form_button.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});

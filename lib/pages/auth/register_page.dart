@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/blocs/register_provider.dart';
-import 'package:madnolia/services/auth_service.dart';
-import 'package:madnolia/views/platforms_view.dart';
-import 'package:madnolia/widgets/alert_widget.dart';
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_input_widget.dart';
-import 'package:madnolia/widgets/form_button.dart';
+import 'package:Madnolia/blocs/register_provider.dart';
+import 'package:Madnolia/services/auth_service.dart';
+import 'package:Madnolia/views/platforms_view.dart';
+import 'package:Madnolia/widgets/alert_widget.dart';
+import 'package:Madnolia/widgets/background.dart';
+import 'package:Madnolia/widgets/custom_input_widget.dart';
+import 'package:Madnolia/widgets/form_button.dart';
 
 import '../../models/user_model.dart';
 
@@ -111,10 +111,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void register(BuildContext context, RegisterBloc bloc) async {
     final resp = await AuthService().verifyUser(bloc.username!, bloc.email!);
+
     if (!resp["ok"]) {
       String message = resp["message"];
       // ignore: use_build_context_synchronously
-      showAlert(context, message);
+      return showAlert(context, message);
     }
 
     widget.user.name = bloc.name!;
@@ -122,11 +123,11 @@ class _RegisterPageState extends State<RegisterPage> {
     widget.user.username = bloc.username!;
     widget.user.password = bloc.password!;
 
-    if (widget.user.platforms.isEmpty) setState(() {});
+    if (!verifiedUser && widget.user.platforms.isEmpty) setState(() {});
 
     if (verifiedUser && widget.user.platforms.isEmpty) {
       // ignore: use_build_context_synchronously
-      showAlert(context, "Select at least one platform");
+      return showAlert(context, "Select at least one platform");
     }
     verifiedUser = true;
 

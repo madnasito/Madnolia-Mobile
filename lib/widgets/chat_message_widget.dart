@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/providers/user_provider.dart';
+import 'package:Madnolia/providers/user_provider.dart';
 
-import 'package:madnolia/models/message_model.dart';
+import 'package:Madnolia/models/message_model.dart';
 
 import 'package:provider/provider.dart';
 

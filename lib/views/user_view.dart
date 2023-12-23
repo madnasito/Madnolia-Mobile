@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:madnolia/blocs/edit_user_bloc.dart';
-import 'package:madnolia/blocs/edit_user_provider.dart';
-import 'package:madnolia/services/upload_service.dart';
-import 'package:madnolia/widgets/custom_input_widget.dart';
-import 'package:madnolia/widgets/form_button.dart';
+import 'package:Madnolia/blocs/edit_user_bloc.dart';
+import 'package:Madnolia/blocs/edit_user_provider.dart';
+import 'package:Madnolia/services/upload_service.dart';
+import 'package:Madnolia/widgets/custom_input_widget.dart';
+import 'package:Madnolia/widgets/form_button.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user_model.dart';

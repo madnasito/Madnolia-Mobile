@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/blocs/login_bloc.dart';
-export 'package:madnolia/blocs/login_bloc.dart';
+import 'package:Madnolia/blocs/login_bloc.dart';
+export 'package:Madnolia/blocs/login_bloc.dart';
 
 class LoginProvider extends InheritedWidget {
   static LoginProvider? _instance;

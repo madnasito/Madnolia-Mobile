@@ -1,0 +1,112 @@
+{
+    "PRESENTATION":{
+        "TITLE": "Conecta con gamers de todo el mundo",
+        "SUBTITLE": "Crea partidas para cualquier consola retro o moderna"
+    },
+    "HEADER": {
+      "PLATFORMS": "Plataformas",
+      "MATCH": "Crear partida",
+      "NOTIFICATIONS": "Notificaciones",
+      "REGISTER": "Registrarse",
+      "LOGIN": "Login",
+      "PROFILE": "Perfil",
+      "LOGOUT": "Salir"
+    },
+
+    "HOME":{
+        "MATCH": "Partida creada",
+        "MATCHES": "Partidas creadas"
+    },
+    "REGISTER":{
+        "TITLE": "Crear cuenta",
+        "NAME": "Nombre",
+        "USERNAME": "Nombre de usuario",
+        "EMAIL": "Correo",
+        "PASSWORD": "Contraseña",
+        "PASSWORD2": "Repita la Contraseña",
+        "VALIDATIONS":{
+            "NAME": "El nombre no es valido",
+            "USERNAME": "El nombre de usuario no es valido",
+            "EMAIL": "Ingrese una dirección de correo correcta",
+            "PASSWORD": "La contraseña es muy corta",
+            "PASSWORD2":"Las contraseñas son diferentes"
+        },
+        "SELECT_PLATFORMS": "Selecciona tus plataformas de juegos",
+        "PHONE": "Movil",
+        "SUBTITLE": "¿Ya tienes una cuenta?",
+        "SUB_LOGIN": " Inicia sesión",
+        "NEXT": "Siguiente",
+        "TOAST_SIGN_UP": "¡Perfecto! Registro exitoso"
+    },
+    "LOGIN":{
+        "BUTTON": "Iniciar Sesión",
+        "ERRORS":{
+            "USER": "No se ha encontrado al usuario",
+            "PASSWORD": "La contraseña es invalida"
+        }
+    },
+    "CREATE_MATCH":{
+        "TITLE": "Selecciona la plataforma",
+        "SEARCH_GAME": "Buscar juego",
+        "SEARCH_RESULTS": "Resultados de la busqueda",
+        "PLATFORMS_EMPTY": "No has seleccionado una plataforma",
+        "ADD_PLATFORMS": "Ingresa aquí para añadir plataformas",
+        "SEARCHING": "Buscando",
+        "SEARCH_USER": "Invitar compañeros a tu partida",
+        "MATCH_NAME": "Nombre de la partida",
+        "INVITEDS": "Invitados",
+        "DATE": "Fecha",
+        "TIME": "Hora",
+        "CLOCK_MESSAGE": "Presiona el reloj",
+        "SUBMIT": "Enviar",
+        "CREATE_MATCH": "Crear partida",
+        "MATCH_CREATED": "¡Partida creada!",
+        "DATE_ERROR": "Cree una fecha y hora correctas"
+    },
+    "GAME":{
+        "GAME": "Juego",
+        "MATCH": "Partida",
+        "DATE": "Fecha",
+        "PLATFORM": "Plataforma"
+    },
+    "NOTIFICATIONS":{
+        "INVITATIONS": "Invitaciones"
+    },
+    "PROFILE":{
+        "YOU": "Perfil",
+        "MATCHES": "Partidas",
+        "PLATFORMS": "Tus plataformas",
+        "MATCHES_PAGE":{
+            "TITLE": "Tus partidas",
+            "EMPTY": "Aun no has creado una partida"
+        },
+        "USER_PAGE":{
+            "NAME": "Nombre",
+            "USERNAME": "Nombre de usuario",
+            "EMAIL": "Correo",
+            "INVITATIONS":{
+                "TITLE": "Aceptar invitaciondes de:",
+                "ALL": "Lo que sea, quiero jugar",
+                "PARTNERS": "Solo colegas",
+                "NOBODY": "Ya, dejame en paz"
+            },
+
+            "ERRORS":{
+                "VERIFY": "Por favor verifica tú información",
+                "EMAIL": "Ya hay una cuenta registrada con este CORREO",
+                "USERNAME": "Ya hay otro usuario usando este NOMBRE DE USUARIO",
+                "IMG_SIZE": "La imagen no puede ser mayor de 2MB",
+                "IMG_EXTENSION": "La extensión no es valida, por favor usa: 'JPG', 'JPEG'. 'PNG'",
+                "IMG_UPDATING": "Error actualizando la imagen"
+            },
+            "UPLOADING_IMG": "Subiendo la imagen, espere un momento por favor",
+            "UPDATED": "Cuenta actualizada",
+            "UPDATE": "Actualizar"
+        },
+        "PLATFORMS_PAGE":{
+            "TITLE": "Tus plataformas",
+            "SUCCESS": "¡Plataformas actualizadas!"
+        }
+    }
+}
+

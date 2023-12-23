@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:madnolia/services/rawg_service.dart';
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
-import 'package:madnolia/widgets/match_card_widget.dart';
+import 'package:Madnolia/services/rawg_service.dart';
+import 'package:Madnolia/widgets/background.dart';
+import 'package:Madnolia/widgets/custom_scaffold.dart';
+import 'package:Madnolia/widgets/match_card_widget.dart';
 
 class PlatformGames extends StatelessWidget {
   final String id;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/game_model.dart';
 
-import 'package:madnolia/models/match_model.dart';
+import 'package:Madnolia/models/match_model.dart';
 
 class GameCard extends StatelessWidget {
   final Game game;

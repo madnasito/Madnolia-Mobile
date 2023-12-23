@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:madnolia/global/environment.dart';
+import 'package:Madnolia/global/environment.dart';
 
 import '../models/user_model.dart';
 

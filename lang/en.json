@@ -1,0 +1,112 @@
+{
+  "PRESENTATION":{
+      "TITLE": "Connect with gamers around the world",
+      "SUBTITLE": "Create matches for any retro or modern platform"
+  },
+  "HEADER": {
+    "PLATFORMS": "Platforms",
+    "MATCH": "Create Match!",
+    "NOTIFICATIONS": "Notifications",
+    "REGISTER": "Register",
+    "LOGIN": "Login",
+    "PROFILE": "Profile",
+    "LOGOUT": "Logout"
+  },
+
+  "HOME":{
+      "MATCH": "Created match",
+      "MATCHES": "Created matches"
+  },
+  "REGISTER":{
+      "TITLE": "Register",
+      "NAME": "Name",
+      "USERNAME": "Username",
+      "EMAIL": "Email",
+      "PASSWORD": "Password",
+      "PASSWORD2": "Repeat password",
+      "VALIDATIONS":{
+          "NAME": "The name is not valid",
+          "USERNAME": "The username is not valid",
+          "EMAIL": "The email is not correct",
+          "PASSWORD": "The password is too short",
+          "PASSWORD2":"The passwords are diffenrents"
+      },
+      "SELECT_PLATFORMS": "Select your game platforms",
+      "PHONE": "Mobile",
+      "SUBTITLE": "Do you have an account?",
+      "SUB_LOGIN": " Login here",
+      "NEXT": "Next",
+      "TOAST_SIGN_UP": "Great! Thanks for sign up"
+  },
+  "LOGIN":{
+      "BUTTON": "Login",
+      "ERRORS":{
+          "USER": "No founded user",
+          "PASSWORD": "No valid password"
+      }
+  },
+  "CREATE_MATCH":{
+      "TITLE": "Select the platform",
+      "SEARCH_GAME": "Search game",
+      "SEARCH_RESULTS": "Search's results",
+      "PLATFORMS_EMPTY": "You have not selected a platform",
+      "ADD_PLATFORMS": "Press here for to add a platform",
+      "SEARCHING": "Searching",
+      "SEARCH_USER": "Invite partners to your match",
+      "MATCH_NAME": "Match name",
+      "INVITEDS": "Inviteds",
+      "DATE": "Date",
+      "TIME": "Time",
+      "CLOCK_MESSAGE": "Press the clock",
+      "SUBMIT": "Submit",
+      "CREATE_MATCH": "Create Match!",
+      "MATCH_CREATED": "Created Match!",
+      "DATE_ERROR": "Create a correct date and time"
+  },
+  "GAME":{
+      "GAME": "Game",
+      "MATCH": "Match",
+      "DATE": "Date",
+      "PLATFORM": "Platform"
+  },
+  "NOTIFICATIONS":{
+      "INVITATIONS": "Invitations"
+  },
+  "PROFILE":{
+      "YOU": "You",
+      "MATCHES": "Matches",
+      "PLATFORMS": "Your platforms",
+      "MATCHES_PAGE":{
+          "TITLE": "Your matches",
+          "EMPTY": "You haven't created a match yet"
+      },
+      "USER_PAGE":{
+          "NAME": "Name",
+          "USERNAME": "Username",
+          "EMAIL": "Email",
+          "INVITATIONS":{
+              "TITLE": "Accept invitations from:",
+              "ALL": "Whatever, i want to play",
+              "PARTNERS": "Only my hommies",
+              "NOBODY": "Please, let me alone"
+          },
+
+          "ERRORS":{
+              "VERIFY": "Please verify your information",
+              "EMAIL": "There is another user using this EMAIL",
+              "USERNAME": "There is another user using this USERNAME",
+              "IMG_SIZE": "The image size cant' moore than 2mb",
+              "IMG_EXTENSION": "The extension is not valid, please use: 'JPG', 'PNG', 'JPEG'",
+              "IMG_UPDATING": "Error updating the image"
+          },
+          "UPLOADING_IMG": "Uploading image, wait a moment please",
+          "UPDATED": "Updated!",
+          "UPDATE": "Update"
+      },
+      "PLATFORMS_PAGE":{
+          "TITLE": "Your platforms",
+          "SUCCESS": "Updated platforms!"
+      }
+  }
+}
+

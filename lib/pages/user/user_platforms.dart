@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:toast/toast.dart';
 
-import 'package:madnolia/services/user_service.dart';
-import 'package:madnolia/views/platforms_view.dart';
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
-import 'package:madnolia/widgets/form_button.dart';
+import 'package:Madnolia/services/user_service.dart';
+import 'package:Madnolia/views/platforms_view.dart';
+import 'package:Madnolia/widgets/background.dart';
+import 'package:Madnolia/widgets/custom_scaffold.dart';
+import 'package:Madnolia/widgets/form_button.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/user_provider.dart';

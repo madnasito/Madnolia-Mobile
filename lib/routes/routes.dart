@@ -2,28 +2,31 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:madnolia/pages/auth/login_page.dart';
-import 'package:madnolia/pages/auth/register_page.dart';
-// import 'package:madnolia/pages/auth/register_page.dart';
-import 'package:madnolia/pages/new/create_match_page.dart';
-import 'package:madnolia/pages/home/home_new_page.dart';
-import 'package:madnolia/pages/match_page.dart';
-import 'package:madnolia/pages/new/match_form_page.dart';
-import 'package:madnolia/pages/notifications_page.dart';
-import 'package:madnolia/pages/platforms/platform_games_page.dart';
-// import 'package:madnolia/pages/home/home_new_page.dart';
-import 'package:madnolia/pages/platforms/platforms_page.dart';
-import 'package:madnolia/pages/user/edit_user_page.dart';
-import 'package:madnolia/pages/user/user_matches_page.dart';
-import 'package:madnolia/pages/user/user_page.dart';
-import 'package:madnolia/pages/user/user_platforms.dart';
-import 'package:madnolia/views/create_match_view.dart';
-// import 'package:madnolia/pages/user/user_platforms.dart';
+import 'package:Madnolia/pages/auth/login_page.dart';
+import 'package:Madnolia/pages/auth/register_page.dart';
+// import 'package:Madnolia/pages/auth/register_page.dart';
+import 'package:Madnolia/pages/new/create_match_page.dart';
+import 'package:Madnolia/pages/home/home_new_page.dart';
+import 'package:Madnolia/pages/match_page.dart';
+import 'package:Madnolia/pages/new/match_form_page.dart';
+import 'package:Madnolia/pages/notifications_page.dart';
+import 'package:Madnolia/pages/platforms/platform_games_page.dart';
+// import 'package:Madnolia/pages/home/home_new_page.dart';
+import 'package:Madnolia/pages/platforms/platforms_page.dart';
+import 'package:Madnolia/pages/user/edit_user_page.dart';
+import 'package:Madnolia/pages/user/user_matches_page.dart';
+import 'package:Madnolia/pages/user/user_page.dart';
+import 'package:Madnolia/pages/user/user_platforms.dart';
+import 'package:Madnolia/views/create_match_view.dart';
+// import 'package:Madnolia/pages/user/user_platforms.dart';
 
 import '../pages/home/home_user_page.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 /// The route configuration.
 final GoRouter router = GoRouter(
+  navigatorKey: navigatorKey,
   initialLocation: "/",
   routes: <RouteBase>[
     GoRoute(

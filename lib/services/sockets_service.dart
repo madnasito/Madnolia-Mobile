@@ -1,4 +1,6 @@
 // ignore: library_prefixes
+import 'package:Madnolia/models/match_model.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -6,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../global/environment.dart';
+import 'notification_service.dart';
 
 enum ServerStatus { online, offline, connecting }
 
@@ -31,9 +34,24 @@ class SocketService with ChangeNotifier {
             .enableForceNew()
             .build());
 
-    _socket.onConnect((_) {
+    _socket.onConnect((_) async {
       _serverStatus = ServerStatus.online;
       // Mueve la notificación aquí
+
+      _socket.on("notification", (data) async {
+        print(data);
+        Match match = Match.fromJson(data["match"]);
+
+        await NotificationService.showNotification(
+            title: "Invitation to a Match",
+            body: "Game name",
+            notificationLayout: match.img != null
+                ? NotificationLayout.BigPicture
+                : NotificationLayout.Default,
+            bigPicture: match.img != null ? match.img : null,
+            payload: {"match": matchToJson(match)},
+            actionButtons: []);
+      });
       notifyListeners();
     });
 
@@ -42,8 +60,12 @@ class SocketService with ChangeNotifier {
       notifyListeners();
     });
 
-    _socket.on("message", (payload) {
-      // print("nuevo mensaje: $payload");
+    _socket.on("message", (payload) async {
+      print("nuevo mensaje: $payload");
+      await NotificationService.showNotification(
+          title: payload["user"]["username"],
+          body: payload["text"],
+          notificationLayout: NotificationLayout.Messaging);
     });
   }
 

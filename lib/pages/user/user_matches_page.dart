@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/services/user_service.dart';
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
-import 'package:madnolia/models/match_model.dart';
-import 'package:madnolia/widgets/match_card_widget.dart';
+import 'package:Madnolia/services/user_service.dart';
+import 'package:Madnolia/widgets/background.dart';
+import 'package:Madnolia/widgets/custom_scaffold.dart';
+import 'package:Madnolia/models/match_model.dart';
+import 'package:Madnolia/widgets/match_card_widget.dart';
 
 class UserMatchesPage extends StatelessWidget {
   const UserMatchesPage({super.key});

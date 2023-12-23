@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:madnolia/global/environment.dart';
+import 'package:Madnolia/global/environment.dart';
 import 'package:mime_type/mime_type.dart';
 
 class UploadFileService {
