@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:Madnolia/services/notification_service.dart';
 import 'package:Madnolia/widgets/notification_button.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Madnolia/models/user_model.dart';
@@ -18,7 +18,6 @@ import 'package:provider/provider.dart';
 class HomeUserPage extends StatefulWidget {
   const HomeUserPage({super.key});
 
-  static const String name = 'Awesome Notifications - Example App';
   static const Color mainColor = Colors.deepPurple;
 
   @override

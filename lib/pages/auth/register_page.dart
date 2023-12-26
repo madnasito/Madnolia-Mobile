@@ -1,3 +1,4 @@
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
@@ -9,6 +10,7 @@ import 'package:Madnolia/widgets/alert_widget.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_input_widget.dart';
 import 'package:Madnolia/widgets/form_button.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 
 import '../../models/user_model.dart';
 
@@ -33,6 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    LangSupport langData = LanguageBuilder.langData;
     return RegisterProvider(
       child: Scaffold(
         body: Background(
@@ -43,7 +46,8 @@ class _RegisterPageState extends State<RegisterPage> {
             !verifiedUser
                 ? Center(
                     child: FadeIn(
-                        child: const Text("Sign up!",
+                        child: Text(
+                            langData.getValue(route: ["REGISTER", "TITLE"]),
                             style: TextStyle(fontSize: 40))),
                   )
                 : Container(),
@@ -59,23 +63,27 @@ class _RegisterPageState extends State<RegisterPage> {
                           CustomInput(
                             icon: Icons.abc,
                             stream: widget.bloc.nameStream,
-                            placeholder: "Name",
+                            placeholder:
+                                langData.getValue(route: ["REGISTER", "NAME"]),
                             onChanged: widget.bloc.changeName,
                           ),
                           CustomInput(
                               icon: Icons.account_circle_outlined,
-                              placeholder: "User name",
+                              placeholder: langData
+                                  .getValue(route: ["REGISTER", "USERNAME"]),
                               stream: widget.bloc.usernameStream,
                               onChanged: widget.bloc.changeUsername),
                           CustomInput(
                               icon: Icons.mail_outline,
                               keyboardType: TextInputType.emailAddress,
-                              placeholder: "Email",
+                              placeholder: langData
+                                  .getValue(route: ["REGISTER", "EMAIL"]),
                               stream: widget.bloc.emailStream,
                               onChanged: widget.bloc.changeEmail),
                           CustomInput(
                               icon: Icons.lock_outlined,
-                              placeholder: "Password",
+                              placeholder: langData
+                                  .getValue(route: ["REGISTER", "PASSWORD"]),
                               isPassword: true,
                               stream: widget.bloc.passwordStream,
                               onChanged: widget.bloc.changePassword),
@@ -95,10 +103,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 stream: widget.bloc.userValidStream,
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   return FormButton(
-                      text: "Next",
+                      text: langData.getValue(route: ["REGISTER", "NEXT"]),
                       color: Colors.transparent,
                       onPressed: (snapshot.hasData)
-                          ? () => register(context, widget.bloc)
+                          ? () => register(context, widget.bloc, langData)
                           : null);
                 },
               ),
@@ -109,12 +117,13 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void register(BuildContext context, RegisterBloc bloc) async {
+  void register(
+      BuildContext context, RegisterBloc bloc, LangSupport langData) async {
     final resp = await AuthService().verifyUser(bloc.username!, bloc.email!);
 
     if (!resp["ok"]) {
       String message = resp["message"];
-      // ignore: use_build_context_synchronously
+      debugPrint(resp["message"]);
       return showAlert(context, message);
     }
 
@@ -126,8 +135,10 @@ class _RegisterPageState extends State<RegisterPage> {
     if (!verifiedUser && widget.user.platforms.isEmpty) setState(() {});
 
     if (verifiedUser && widget.user.platforms.isEmpty) {
-      // ignore: use_build_context_synchronously
-      return showAlert(context, "Select at least one platform");
+      return showAlert(
+        context,
+        langData.getValue(route: ["CREATE_MATCH", "PLATFORMS_EMPTY"]),
+      );
     }
     verifiedUser = true;
 
@@ -135,10 +146,8 @@ class _RegisterPageState extends State<RegisterPage> {
       final register = await AuthService().register(widget.user);
 
       if (register["ok"]) {
-        // ignore: use_build_context_synchronously
         context.go("/");
       } else {
-        // ignore: use_build_context_synchronously
         showAlert(context, "Failed sign up");
       }
     }

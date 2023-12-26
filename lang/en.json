@@ -18,7 +18,7 @@
       "MATCHES": "Created matches"
   },
   "REGISTER":{
-      "TITLE": "Register",
+      "TITLE": "Sign Up!",
       "NAME": "Name",
       "USERNAME": "Username",
       "EMAIL": "Email",
@@ -31,7 +31,7 @@
           "PASSWORD": "The password is too short",
           "PASSWORD2":"The passwords are diffenrents"
       },
-      "SELECT_PLATFORMS": "Select your game platforms",
+      "SELECT_PLATFORMS": "Please, select your platforms",
       "PHONE": "Mobile",
       "SUBTITLE": "Do you have an account?",
       "SUB_LOGIN": " Login here",
@@ -39,6 +39,7 @@
       "TOAST_SIGN_UP": "Great! Thanks for sign up"
   },
   "LOGIN":{
+        "WELCOME": "Welcome, Player",
       "BUTTON": "Login",
       "ERRORS":{
           "USER": "No founded user",
@@ -61,7 +62,9 @@
       "SUBMIT": "Submit",
       "CREATE_MATCH": "Create Match!",
       "MATCH_CREATED": "Created Match!",
-      "DATE_ERROR": "Create a correct date and time"
+      "DATE_ERROR": "Create a correct date and time",
+      "UPLOADING_MESSAGE": "The match is creating",
+      "ERROR": "Error creating the match"
   },
   "GAME":{
       "GAME": "Game",

@@ -1,3 +1,4 @@
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 
@@ -6,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:Madnolia/widgets/platform_icon_widget.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 
 int currentFather = 0;
 
@@ -132,13 +134,14 @@ class _PlatformsViewState extends State<PlatformsView> {
 
   @override
   Widget build(BuildContext context) {
+    final LangSupport langData = LanguageBuilder.langData;
     return Column(
       children: [
         const SizedBox(height: 20),
         FadeIn(
             delay: const Duration(milliseconds: 300),
-            child: const Text(
-              "Please, select your platforms",
+            child: Text(
+              langData.getValue(route: ["REGISTER", "SELECT_PLATFORMS"]),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,

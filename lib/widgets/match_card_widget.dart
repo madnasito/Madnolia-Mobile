@@ -21,7 +21,10 @@ class GameCard extends StatelessWidget {
           Stack(
             children: [
               game.backgroundImage != null
-                  ? Image.network(game.backgroundImage!)
+                  ? FadeInImage(
+                      placeholder: const AssetImage('assets/loading.gif'),
+                      image: NetworkImage(game.backgroundImage!))
+                  // ? Image.network(game.backgroundImage!)
                   : Image.asset("assets/no image.jpg"),
               Positioned(
                   bottom: 2,
@@ -56,7 +59,14 @@ class MatchCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Image.network(match.img != null ? match.img.toString() : ""),
+              match.img != null
+                  ? FadeInImage(
+                      fadeInDuration: Duration(milliseconds: 300),
+                      placeholder: const AssetImage('assets/loading.gif'),
+                      image: NetworkImage(match.img!))
+                  // ? Image.network(game.backgroundImage!)
+                  : Image.asset("assets/no image.jpg"),
+              // Image.network(match.img != null ? match.img.toString() : ""),
               Positioned(
                   bottom: 2,
                   left: 2,

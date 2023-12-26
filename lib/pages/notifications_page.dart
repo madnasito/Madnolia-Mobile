@@ -1,5 +1,7 @@
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 
 import '../models/match_model.dart';
 
@@ -13,6 +15,7 @@ class NotificationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LangSupport langData = LanguageBuilder.langData;
     return CustomScaffold(
         body: Background(
       child: SafeArea(
@@ -22,8 +25,8 @@ class NotificationsPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 width: double.infinity,
-                child: const Text(
-                  "Invitations",
+                child: Text(
+                  langData.getValue(route: ["NOTIFICATIONS", "INVITATIONS"]),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: "Cyberverse",

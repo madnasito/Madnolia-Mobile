@@ -39,6 +39,7 @@
         "TOAST_SIGN_UP": "¡Perfecto! Registro exitoso"
     },
     "LOGIN":{
+        "WELCOME": "Login",
         "BUTTON": "Iniciar Sesión",
         "ERRORS":{
             "USER": "No se ha encontrado al usuario",

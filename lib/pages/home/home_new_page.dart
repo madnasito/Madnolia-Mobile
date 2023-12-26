@@ -1,7 +1,10 @@
+import 'package:Madnolia/main.dart';
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/super_cube.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,6 +12,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+
+    LangSupport langData = LanguageBuilder.langData;
 
     return Background(
         child: SafeArea(
@@ -51,8 +56,8 @@ class HomePage extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 45, vertical: 15)),
                                 onPressed: () => context.go("/login"),
-                                child: const Text(
-                                  "Login",
+                                child: Text(
+                                  langData.getValue(route: ["HEADER", "LOGIN"]),
                                   style: TextStyle(
                                       color:
                                           Color.fromARGB(255, 255, 255, 122)),
@@ -66,16 +71,17 @@ class HomePage extends StatelessWidget {
                                   shape: const StadiumBorder(
                                       side: BorderSide(
                                           color: Colors.blue, width: 2))),
-                              child: const Text(
-                                "Sign up",
+                              child: Text(
+                                langData
+                                    .getValue(route: ["HEADER", "REGISTER"]),
                                 style: TextStyle(color: Colors.blue),
                               ),
                             )
                           ],
                         )
                       ])),
-                  const Text(
-                    "Connect with gamers around the world",
+                  Text(
+                    langData.getValue(route: ["PRESENTATION", "TITLE"]),
                     style: TextStyle(
                       color: Colors.white,
                       decoration: TextDecoration.none,
@@ -84,8 +90,8 @@ class HomePage extends StatelessWidget {
                     textAlign: TextAlign.right,
                   ),
                   const SizedBox(height: 30),
-                  const Text(
-                    "Create matches for any retro or modern platform",
+                  Text(
+                    langData.getValue(route: ["PRESENTATION", "SUBTITLE"]),
                     style: TextStyle(
                         color: Colors.white70,
                         decoration: TextDecoration.none,

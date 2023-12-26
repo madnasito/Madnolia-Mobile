@@ -65,6 +65,7 @@ dependencies:
   toast: ^0.3.0
   awesome_notifications: ^0.8.2
   flutter_launcher_icons: ^0.13.1
+  multi_language_json: ^1.2.0
   
 
 dev_dependencies:

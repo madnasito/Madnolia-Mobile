@@ -48,20 +48,18 @@ class CustomInput extends StatelessWidget {
             obscureText: isPassword,
             keyboardType: keyboardType,
             decoration: InputDecoration(
-                prefixIconColor: const Color.fromARGB(211, 233, 30, 98),
-                focusedErrorBorder: warningBorder,
-                enabledBorder: snapshot.data != null ? validBorder : null,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: const BorderSide(color: Colors.blue, width: 3)),
-                errorBorder: errorBorder,
-                prefixIcon: icon != null
-                    ? Icon(
-                        icon,
-                      )
-                    : null,
-                hintText: placeholder,
-                errorText: snapshot.error as String?),
+              prefixIcon: icon != null ? Icon(icon) : null,
+              hintText: placeholder,
+              errorText: snapshot.error as String?,
+              errorBorder: errorBorder,
+              enabledBorder: snapshot.hasData ? validBorder : null,
+              focusedErrorBorder: warningBorder,
+              focusedBorder: focusedBorder,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: const BorderSide(color: Colors.blue, width: 3),
+              ),
+            ),
             onChanged: onChanged,
           ),
         );

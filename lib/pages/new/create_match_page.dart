@@ -1,3 +1,4 @@
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:Madnolia/views/create_match_view.dart';
 import 'package:Madnolia/views/platforms_view.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
 
 import '../../widgets/platform_icon_widget.dart';
@@ -21,7 +23,7 @@ class NewPage extends StatefulWidget {
 class _NewPageState extends State<NewPage> {
   @override
   Widget build(BuildContext context) {
-    // final searchController = TextEditingController();
+    final LangSupport langData = LanguageBuilder.langData;
 
     return CustomScaffold(
         body: Background(
@@ -32,8 +34,9 @@ class _NewPageState extends State<NewPage> {
                         const SizedBox(height: 20),
                         FadeIn(
                             delay: const Duration(milliseconds: 300),
-                            child: const Text(
-                              "Please, select your platforms",
+                            child: Text(
+                              langData
+                                  .getValue(route: ["CREATE_MATCH", "TITLE"]),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 20,

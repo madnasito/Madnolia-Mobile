@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:Madnolia/providers/user_provider.dart';
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +12,9 @@ import 'package:Madnolia/utils/platform_id_ico.dart';
 
 import 'package:Madnolia/widgets/form_button.dart';
 import 'package:Madnolia/widgets/match_card_widget.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
 import '../models/game_model.dart';
@@ -170,13 +174,15 @@ class _SearchGameViewState extends State<SearchGameView> {
 
   @override
   Widget build(BuildContext context) {
+    LangSupport langData = LanguageBuilder.langData;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SimpleCustomInput(
           controller: controller,
-          placeholder: "Search Game",
+          placeholder:
+              langData.getValue(route: ["CREATE_MATCH", "SEARCH_GAME"]),
           onChanged: (value) async {
             counter++;
             Timer(
@@ -238,9 +244,12 @@ class MatchFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LangSupport langData = LanguageBuilder.langData;
     ToastContext().init(context);
     bool uploading = false;
     String fullDate = "";
+    UserProvider userProvider =
+        Provider.of<UserProvider>(context, listen: false);
     String newDateTime = "";
     final dateController = TextEditingController();
     final nameController = TextEditingController();
@@ -273,11 +282,13 @@ class MatchFormView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             SimpleCustomInput(
-                placeholder: "Match Name", controller: nameController),
+                placeholder:
+                    langData.getValue(route: ["CREATE_MATCH", "MATCH_NAME"]),
+                controller: nameController),
             const SizedBox(height: 20),
             SimpleCustomInput(
               keyboardType: TextInputType.none,
-              placeholder: "Date",
+              placeholder: langData.getValue(route: ["CREATE_MATCH", "DATE"]),
               controller: dateController,
               onTap: () async {
                 DateTime? dateTime = await showOmniDateTimePicker(
@@ -349,21 +360,26 @@ class MatchFormView extends StatelessWidget {
                   ),
                 ]),
             const SizedBox(height: 20),
-            const Text("MADNA", style: TextStyle(fontSize: 10)),
+            Text(userProvider.user.name, style: TextStyle(fontSize: 10)),
             const SizedBox(height: 10),
             FormButton(
-                text: "Create Match",
+                text:
+                    langData.getValue(route: ["CREATE_MATCH", "CREATE_MATCH"]),
                 color: Colors.transparent,
                 onPressed: () async {
                   if (uploading == true) {
-                    return Toast.show("The match is creating",
+                    return Toast.show(
+                        langData.getValue(
+                            route: ["CREATE_MATCH", "UPLOADING_MESSAGE"]),
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
                         duration: 3);
                   }
                   if (newDateTime.isEmpty || newDateTime == "null") {
-                    return Toast.show("Please create a date for the match",
+                    return Toast.show(
+                        langData
+                            .getValue(route: ["CREATE_MATCH", "DATE_ERROR"]),
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
@@ -386,13 +402,16 @@ class MatchFormView extends StatelessWidget {
                   final resp = await MatchService().createMatch(match);
                   uploading = false;
                   if (resp["ok"] == true) {
-                    Toast.show("Match Created",
+                    Toast.show(
+                        langData
+                            .getValue(route: ["CREATE_MATCH", "MATCH_CREATED"]),
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
                         duration: 3);
                   } else {
-                    Toast.show("Error creating the match",
+                    Toast.show(
+                        langData.getValue(route: ["CREATE_MATCH", "ERROR"]),
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
