@@ -80,7 +80,7 @@
       "MATCHES": "Matches",
       "PLATFORMS": "Your platforms",
       "MATCHES_PAGE":{
-          "TITLE": "Your matches",
+          "TITLE": "My matches",
           "EMPTY": "You haven't created a match yet"
       },
       "USER_PAGE":{

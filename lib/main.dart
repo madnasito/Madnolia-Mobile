@@ -35,14 +35,15 @@ class MyApp extends StatelessWidget {
               create: (BuildContext context) => SocketService())
         ],
         child: MessageProvider(
-          child: MaterialApp.router(
-            supportedLocales: [const Locale("en"), const Locale("es")],
-            theme: ThemeData(
-              brightness: Brightness.dark,
+          child: LanguageBuilder(
+            child: MaterialApp.router(
+              theme: ThemeData(
+                brightness: Brightness.dark,
+              ),
+              title: 'Madnolia',
+              routerConfig: router,
+              key: navigatorKey,
             ),
-            title: 'Madnolia',
-            routerConfig: router,
-            key: navigatorKey,
           ),
         ),
       ),

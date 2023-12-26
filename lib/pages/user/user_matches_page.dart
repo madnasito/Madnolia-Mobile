@@ -1,3 +1,4 @@
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Madnolia/services/user_service.dart';
@@ -5,6 +6,7 @@ import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
 import 'package:Madnolia/models/match_model.dart';
 import 'package:Madnolia/widgets/match_card_widget.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 
 class UserMatchesPage extends StatelessWidget {
   const UserMatchesPage({super.key});
@@ -12,6 +14,8 @@ class UserMatchesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // List<Widget> matchesWidgets = [];
+
+    final LangSupport langData = LanguageBuilder.langData;
     return CustomScaffold(
         body: Background(
       child: SafeArea(
@@ -21,8 +25,9 @@ class UserMatchesPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 width: double.infinity,
-                child: const Text(
-                  "My matches",
+                child: Text(
+                  langData
+                      .getValue(route: ["PROFILE", "MATCHES_PAGE", "TITLE"]),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       fontFamily: "Cyberverse",

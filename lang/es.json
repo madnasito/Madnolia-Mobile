@@ -78,7 +78,7 @@
         "MATCHES": "Partidas",
         "PLATFORMS": "Tus plataformas",
         "MATCHES_PAGE":{
-            "TITLE": "Tus partidas",
+            "TITLE": "Mis partidas",
             "EMPTY": "Aun no has creado una partida"
         },
         "USER_PAGE":{
