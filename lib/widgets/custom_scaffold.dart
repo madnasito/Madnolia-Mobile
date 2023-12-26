@@ -1,6 +1,8 @@
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
@@ -12,6 +14,7 @@ class CustomScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final LangSupport langData = LanguageBuilder.langData;
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       drawer: Drawer(
@@ -41,7 +44,7 @@ class CustomScaffold extends StatelessWidget {
                   ],
                 ),
               ),
-              const Column(
+              Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -53,17 +56,18 @@ class CustomScaffold extends StatelessWidget {
                   // ),
                   _MenuButton(
                     icon: Icons.bolt_outlined,
-                    title: "Create match",
+                    title: langData.getValue(route: ["HEADER", "MATCH"]),
                     route: "/new",
                   ),
                   _MenuButton(
                     icon: Icons.notifications_outlined,
-                    title: "Notifications",
+                    title:
+                        langData.getValue(route: ["HEADER", "NOTIFICATIONS"]),
                     route: "/notifications",
                   ),
                   _MenuButton(
                       icon: Icons.person_outline_outlined,
-                      title: "Profile",
+                      title: langData.getValue(route: ["HEADER", "PROFILE"]),
                       route: "/user"),
                   SizedBox(height: 230),
                 ],

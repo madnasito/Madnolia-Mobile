@@ -1,3 +1,4 @@
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Madnolia/blocs/login_provider.dart';
@@ -6,6 +7,7 @@ import 'package:Madnolia/widgets/alert_widget.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_input_widget.dart';
 import 'package:Madnolia/widgets/form_button.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -16,6 +18,8 @@ class LoginPage extends StatelessWidget {
 
     final formKey = GlobalKey<FormState>();
 
+    LangSupport langData = LanguageBuilder.langData;
+
     return Scaffold(
       body: Background(
         child: SafeArea(
@@ -24,16 +28,16 @@ class LoginPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                const Center(
+                Center(
                   child: Text(
-                    "Welcome player",
+                    langData.getValue(route: ["LOGIN", "WELCOME"]),
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
                 const SizedBox(height: 100),
-                const Center(
+                Center(
                   child: Text(
-                    "Sign in",
+                    langData.getValue(route: ["LOGIN", "BUTTON"]),
                     style: TextStyle(fontSize: 40),
                   ),
                 ),
@@ -42,28 +46,30 @@ class LoginPage extends StatelessWidget {
                   key: formKey,
                   children: [
                     CustomInput(
-                        stream: bloc.usernameStream,
-                        onChanged: bloc.changeEmail,
-                        icon: Icons.account_circle_outlined,
-                        keyboardType: TextInputType.emailAddress,
-                        placeholder: "User"),
-                    CustomInput(
-                        stream: bloc.passwordStream,
-                        onChanged: bloc.changePassword,
-                        icon: Icons.lock_outline,
-                        isPassword: true,
-                        placeholder: "Password"),
-                    StreamBuilder(
-                      stream: bloc.formValidStream,
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        return FormButton(
-                            text: "Login",
-                            color: const Color.fromARGB(0, 33, 149, 243),
-                            onPressed: snapshot.hasData
-                                ? () => _login(context, bloc)
-                                : null);
-                      },
+                      stream: bloc.usernameStream,
+                      onChanged: bloc.changeEmail,
+                      icon: Icons.account_circle_outlined,
+                      keyboardType: TextInputType.emailAddress,
+                      placeholder: "Hola",
                     ),
+                    // CustomInput(
+                    //     stream: bloc.passwordStream,
+                    //     onChanged: bloc.changePassword,
+                    //     icon: Icons.lock_outline,
+                    //     isPassword: true,
+                    //     placeholder: "HOLA 2"),
+                    // StreamBuilder(
+                    //   stream: bloc.formValidStream,
+                    //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    //     return FormButton(
+                    //         text:
+                    //             langData.getValue(route: ["LOGIN", "WELCOME"]),
+                    //         color: const Color.fromARGB(0, 33, 149, 243),
+                    //         onPressed: snapshot.hasData
+                    //             ? () => _login(context, bloc)
+                    //             : null);
+                    //   },
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 30),
@@ -80,7 +86,6 @@ class LoginPage extends StatelessWidget {
     final resp = await AuthService().login(bloc.username, bloc.password);
 
     if (!resp["ok"]) {
-      // ignore: use_build_context_synchronously
       showAlert(context, resp["message"]);
     } else {
       // ignore: use_build_context_synchronously

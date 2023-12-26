@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,7 +9,9 @@ import 'package:Madnolia/blocs/edit_user_provider.dart';
 import 'package:Madnolia/services/upload_service.dart';
 import 'package:Madnolia/widgets/custom_input_widget.dart';
 import 'package:Madnolia/widgets/form_button.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 import '../models/user_model.dart';
 import '../providers/user_provider.dart';
@@ -19,21 +22,22 @@ class UserMainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    LangSupport langData = LanguageBuilder.langData;
+    return Column(
       children: [
         _Card(
           icon: Icons.person,
-          title: "You",
+          title: langData.getValue(route: ["PROFILE", "YOU"]),
           routeName: "/user/edit",
         ),
         _Card(
           icon: Icons.bolt,
-          title: "Matches",
+          title: langData.getValue(route: ["PROFILE", "MATCHES"]),
           routeName: "/user/matches",
         ),
         _Card(
           icon: Icons.gamepad_outlined,
-          title: "Platforms",
+          title: langData.getValue(route: ["PROFILE", "PLATFORMS"]),
           routeName: "/user/platforms",
         )
       ],
@@ -81,6 +85,7 @@ class EditUserView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LangSupport langData = LanguageBuilder.langData;
     final bloc = EditUserProvider.of(context);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -191,18 +196,21 @@ class EditUserView extends StatelessWidget {
                 CustomInput(
                     controller: nameController,
                     icon: Icons.abc,
-                    placeholder: "Name",
+                    placeholder: langData
+                        .getValue(route: ["PROFILE", "USER_PAGE", "NAME"]),
                     stream: bloc.nameStream,
                     onChanged: bloc.changeName),
                 CustomInput(
                     icon: Icons.account_circle_outlined,
-                    placeholder: "User name",
+                    placeholder: langData
+                        .getValue(route: ["PROFILE", "USER_PAGE", "USERNAME"]),
                     stream: bloc.usernameStream,
                     onChanged: bloc.changeUsername,
                     controller: usernameController),
                 CustomInput(
                     icon: Icons.email_outlined,
-                    placeholder: "Email",
+                    placeholder: langData
+                        .getValue(route: ["PROFILE", "USER_PAGE", "EMAIL"]),
                     stream: bloc.emailStream,
                     onChanged: bloc.changeEmail,
                     controller: emailController),
@@ -218,7 +226,8 @@ class EditUserView extends StatelessWidget {
                   builder:
                       (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                     return FormButton(
-                        text: "Update",
+                        text: langData.getValue(
+                            route: ["PROFILE", "USER_PAGE", "UPDATE"]),
                         color: const Color.fromARGB(0, 33, 149, 243),
                         onPressed: snapshot.hasData
                             ? () => _uptadeUser(
@@ -249,6 +258,7 @@ _loadInfo(UserProvider user) async {
 
 _uptadeUser(
     EditUserBloc bloc, UserProvider provider, String invitations) async {
+  LangSupport langData = LanguageBuilder.langData;
   User user = User(
       email: bloc.email,
       name: bloc.name,
@@ -256,6 +266,10 @@ _uptadeUser(
       username: bloc.username,
       acceptInvitations: invitations);
   Map<String, dynamic> resp = await UserService().updateUser(user);
+
+  if (resp["ok"] == false) {
+    // return Toast.show("Error");
+  }
 
   final newUser = User.fromJson(resp);
 
