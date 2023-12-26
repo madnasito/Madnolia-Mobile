@@ -21,8 +21,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = WidgetsFlutterBinding.ensureInitialized().window.locale;
 
-// Imprime el idioma predeterminado, por ejemplo: "es"
-    print(locale.languageCode);
     return LoginProvider(
       child: MultiProvider(
         providers: [
@@ -32,7 +30,6 @@ class MyApp extends StatelessWidget {
         ],
         child: MessageProvider(
           child: MaterialApp.router(
-            supportedLocales: [const Locale("en"), const Locale("es")],
             theme: ThemeData(
               brightness: Brightness.dark,
             ),
