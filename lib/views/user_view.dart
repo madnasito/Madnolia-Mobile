@@ -68,6 +68,7 @@ class _Card extends StatelessWidget {
             Icon(icon),
             Text(
               title,
+              textAlign: TextAlign.center,
               style: const TextStyle(
                   fontSize: 30,
                   fontFamily: "Cyberverse",

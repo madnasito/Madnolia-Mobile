@@ -50,26 +50,28 @@ class LoginPage extends StatelessWidget {
                       onChanged: bloc.changeEmail,
                       icon: Icons.account_circle_outlined,
                       keyboardType: TextInputType.emailAddress,
-                      placeholder: "Hola",
+                      placeholder:
+                          langData.getValue(route: ["REGISTER", "USERNAME"]),
                     ),
-                    // CustomInput(
-                    //     stream: bloc.passwordStream,
-                    //     onChanged: bloc.changePassword,
-                    //     icon: Icons.lock_outline,
-                    //     isPassword: true,
-                    //     placeholder: "HOLA 2"),
-                    // StreamBuilder(
-                    //   stream: bloc.formValidStream,
-                    //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    //     return FormButton(
-                    //         text:
-                    //             langData.getValue(route: ["LOGIN", "WELCOME"]),
-                    //         color: const Color.fromARGB(0, 33, 149, 243),
-                    //         onPressed: snapshot.hasData
-                    //             ? () => _login(context, bloc)
-                    //             : null);
-                    //   },
-                    // ),
+                    CustomInput(
+                        stream: bloc.passwordStream,
+                        onChanged: bloc.changePassword,
+                        icon: Icons.lock_outline,
+                        isPassword: true,
+                        placeholder:
+                            langData.getValue(route: ["REGISTER", "PASSWORD"])),
+                    StreamBuilder(
+                      stream: bloc.formValidStream,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        return FormButton(
+                            text:
+                                langData.getValue(route: ["LOGIN", "WELCOME"]),
+                            color: const Color.fromARGB(0, 33, 149, 243),
+                            onPressed: snapshot.hasData
+                                ? () => _login(context, bloc)
+                                : null);
+                      },
+                    ),
                   ],
                 ),
                 const SizedBox(height: 30),

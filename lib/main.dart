@@ -23,20 +23,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LanguageBuilder(
-      child: LoginProvider(
-        child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => UserProvider()),
-            ChangeNotifierProvider(
-                create: (BuildContext context) => SocketService())
-          ],
-          child: MessageProvider(
+    return LoginProvider(
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => UserProvider()),
+          ChangeNotifierProvider(
+              create: (BuildContext context) => SocketService())
+        ],
+        child: MessageProvider(
+          child: LanguageBuilder(
             child: MaterialApp.router(
-              supportedLocales: [
-                const Locale('en', 'US'), // Inglés
-                const Locale('es', 'ES'), // Español
-              ],
               theme: ThemeData(
                 brightness: Brightness.dark,
               ),
