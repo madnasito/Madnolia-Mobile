@@ -1,13 +1,13 @@
-import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:Madnolia/widgets/platform_icon_widget.dart';
-import 'package:multi_language_json/multi_language_json.dart';
+import 'package:Madnolia/widgets/language_builder.dart';
 
 int currentFather = 0;
 
@@ -44,6 +44,8 @@ class PlatformsView extends StatefulWidget {
   List<Platform> nintendoItems = [];
 
   List<Platform> xboxItems = [];
+
+  List<Platform> otherItems = [];
 }
 
 class _PlatformsViewState extends State<PlatformsView> {
@@ -84,7 +86,7 @@ class _PlatformsViewState extends State<PlatformsView> {
 
     widget.nintendoItems = [
       Platform(
-          id: 4,
+          id: 9,
           active: widget.platforms.contains(4) ? true : false,
           path: "assets/platforms/nintendo_ds.svg",
           size: 20),
@@ -123,6 +125,32 @@ class _PlatformsViewState extends State<PlatformsView> {
           path: "assets/platforms/xbox_series.svg",
           size: 30)
     ];
+
+    widget.xboxItems = [
+      // Platform(active: false, path: "assets/platforms/xbox_360.svg", size: 70),
+      Platform(
+          id: 1,
+          active: widget.platforms.contains(1) ? true : false,
+          path: "assets/platforms/xbox_one.svg",
+          size: 70),
+      Platform(
+          id: 186,
+          active: widget.platforms.contains(186) ? true : false,
+          path: "assets/platforms/xbox_series.svg",
+          size: 30)
+    ];
+    widget.otherItems = [
+      Platform(
+          id: 4,
+          path: "assets/platforms/pc.svg",
+          active: widget.platforms.contains(4) ? true : false,
+          size: 25),
+      Platform(
+          id: 21,
+          path: "assets/platforms/smartphone.svg",
+          active: widget.platforms.contains(21) ? true : false,
+          size: 25),
+    ];
     super.initState();
   }
 
@@ -148,9 +176,15 @@ class _PlatformsViewState extends State<PlatformsView> {
               ),
             )),
         const SizedBox(height: 40),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [..._fatherToMap(widget.fatherPlatforms)],
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 20,
+          alignment: WrapAlignment.spaceAround,
+          direction: Axis.horizontal,
+          children: [
+            ..._fatherToMap(widget.fatherPlatforms),
+            ..._toMap(widget.otherItems),
+          ],
         ),
         SingleChildScrollView(
           dragStartBehavior: DragStartBehavior.start,

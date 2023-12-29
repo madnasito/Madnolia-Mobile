@@ -22,6 +22,8 @@ PlatformInfo getPlatformInfo(int id) {
           path: "$path/playstation_5.svg", name: "PlayStation 5");
 
     // Nintendo's Platforms
+    case 9:
+      return PlatformInfo(path: "$path/nintendo_ds.svg", name: "Nintendo DS");
     case 7:
       return PlatformInfo(
           path: "$path/nintendo_switch.svg", name: "Nintendo Switch");
