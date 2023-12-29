@@ -56,7 +56,12 @@ class MatchService {
       final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
 
       final resp = await http.post(url,
-          headers: {"token": (token != null) ? token : ""}, body: body);
+          headers: {
+            'Content-type': 'application/json',
+            'Accept': 'application/json',
+            "token": (token != null) ? token : ""
+          },
+          body: jsonEncode(body));
 
       authenticating = false;
 

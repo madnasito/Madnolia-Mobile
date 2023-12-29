@@ -34,9 +34,8 @@ PlatformInfo getPlatformInfo(int id) {
     case 11:
       return PlatformInfo(path: "$path/nintendo_wii.svg", name: "Nintendo Wii");
 
-    // case 80:
-    //   return PlatformInfo(
-    //       path: "$path/xbox_class.svg", name: "Nintendo Wii");
+    case 80:
+      return PlatformInfo(path: "$path/xbox.svg", name: "Xbox Classic");
     case 14:
       return PlatformInfo(path: "$path/xbox_360.svg", name: "Xbox 360");
     case 1:
@@ -44,9 +43,13 @@ PlatformInfo getPlatformInfo(int id) {
     case 186:
       return PlatformInfo(path: "$path/xbox_series.svg", name: "Xbox Series");
 
+    case 4:
+      return PlatformInfo(path: "$path/pc.svg", name: "PC");
+    case 4:
+      return PlatformInfo(path: "$path/smartphone.svg", name: "Mobile");
+
     default:
-      return PlatformInfo(
-          path: "$path/playstation_4.svg", name: "PlayStation 4");
+      return PlatformInfo(path: "$path/mobile.svg", name: "PlayStation 4");
   }
 }
 

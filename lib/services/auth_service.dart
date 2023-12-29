@@ -15,7 +15,6 @@ class AuthService {
     try {
       final url = Uri.parse("${Environment.apiUrl}/login");
 
-      print(url);
       authenticating = true;
       final resp = await http.post(url,
           // headers: {"Content-Type": "application/json"},h

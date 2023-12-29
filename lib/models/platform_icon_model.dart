@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Platform {
+class PlatformIcon {
   String path;
   bool active;
   int size;
 
-  Platform(
+  PlatformIcon(
       {required this.path,
       required this.active,
       required this.size,

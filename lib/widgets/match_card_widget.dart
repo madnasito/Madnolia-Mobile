@@ -22,8 +22,9 @@ class GameCard extends StatelessWidget {
             children: [
               game.backgroundImage != null
                   ? FadeInImage(
+                      fadeInDuration: const Duration(milliseconds: 300),
                       placeholder: const AssetImage('assets/loading.gif'),
-                      image: NetworkImage(game.backgroundImage!))
+                      image: NetworkImage(_resizeImage(game.backgroundImage)))
                   // ? Image.network(game.backgroundImage!)
                   : Image.asset("assets/no image.jpg"),
               Positioned(
@@ -81,5 +82,18 @@ class MatchCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+_resizeImage(String? url) {
+  if (url != null) {
+    List image = url.split("/");
+    if (image[image.length - 3] == "screenshots") {
+      return "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
+    } else {
+      return "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
+    }
+  } else {
+    return null;
   }
 }

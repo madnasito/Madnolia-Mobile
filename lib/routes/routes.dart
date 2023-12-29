@@ -1,3 +1,4 @@
+import 'package:Madnolia/pages/game/game_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -131,7 +132,9 @@ final GoRouter router = GoRouter(
           path: "match",
           name: "match",
           builder: (context, state) => const MatchPage(),
-        )
+        ),
+        GoRoute(
+            path: "game", name: "game", builder: (context, state) => GamePage())
       ],
     ),
   ],

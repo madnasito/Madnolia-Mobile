@@ -1,10 +1,11 @@
 import 'dart:convert';
 
+import 'package:Madnolia/services/games_service.dart';
+import 'package:Madnolia/utils/platform_id_ico.dart';
+import 'package:Madnolia/widgets/match_card_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:Madnolia/services/notification_service.dart';
-import 'package:Madnolia/widgets/notification_button.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Madnolia/models/user_model.dart';
 import 'package:Madnolia/providers/user_provider.dart';
@@ -14,6 +15,9 @@ import 'package:Madnolia/services/user_service.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
 import 'package:provider/provider.dart';
+import 'package:Madnolia/models/game_home_model.dart';
+
+import 'package:Madnolia/models/game_model.dart' as gameCard;
 
 class HomeUserPage extends StatefulWidget {
   const HomeUserPage({super.key});
@@ -45,84 +49,94 @@ class _HomeUserPageState extends State<HomeUserPage> {
         if (snapshot.hasData) {
           return CustomScaffold(
               body: Background(
-                  child: SafeArea(
-                      child: Center(
-                          child: Column(
-            children: [
-              NotificationButton(
-                  onPressed: () async {
-                    await NotificationService.showNotification(
-                        title: "Normal notification",
-                        body: "Notification body");
-                  },
-                  text: "Normal Notification"),
-              NotificationButton(
-                  onPressed: () async {
-                    await NotificationService.showNotification(
-                        title: "Title of notification",
-                        body: "Body of notification",
-                        summary: "Small summary");
-                  },
-                  text: "Notification with summary"),
-              NotificationButton(
-                  onPressed: () async {
-                    await NotificationService.showNotification(
-                        title: "Title of notification",
-                        body: "Body of notification",
-                        summary: "Small summary",
-                        notificationLayout: NotificationLayout.Inbox);
-                  },
-                  text: "Notification with summary"),
-              NotificationButton(
-                  onPressed: () async {
-                    await NotificationService.showNotification(
-                        title: "Title of notification",
-                        body: "Body of notification",
-                        summary: "Small summary",
-                        notificationLayout: NotificationLayout.ProgressBar);
-                  },
-                  text: "Progress bar notification"),
-              NotificationButton(
-                  onPressed: () async {
-                    await NotificationService.showNotification(
-                        title: "Title of notification",
-                        body: "Body of notification",
-                        summary: "Small summary",
-                        notificationLayout: NotificationLayout.Messaging);
-                  },
-                  text: "Message notification"),
-              NotificationButton(
-                  onPressed: () async {
-                    await NotificationService.showNotification(
-                        title: "Title of notification",
-                        body: "Body of notification",
-                        summary: "Small summary",
-                        notificationLayout: NotificationLayout.BigPicture,
-                        bigPicture:
-                            "https://media.rawg.io/media/games/b54/b542d8ff41fddb6f5dd45aa27bc293c5.jpg");
-                  },
-                  text: "Notification with big picture"),
-              NotificationButton(
-                  onPressed: () async {
-                    await NotificationService.showNotification(
-                        title: "Title of notification",
-                        body: "Body of notification",
-                        summary: "Small summary",
-                        payload: {"match": "658058af10301b0d09057e9c"},
-                        actionButtons: []);
-                  },
-                  text: "Action buttons Notification"),
-              NotificationButton(
-                  onPressed: () async {
-                    await NotificationService.showNotification(
-                        title: "Title of notification",
-                        body: "Body of notification",
-                        scheduled: true,
-                        interval: 5);
-                  },
-                  text: "Scheduled notification"),
-            ],
-          )))));
+            child: SafeArea(
+                child: FutureBuilder(
+              future: _loadGames(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<List<dynamic>> snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemCount: snapshot.data?.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        print(getPlatformInfo(snapshot.data?[index].platform)
+                            .path);
+                        return Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              color: Colors.black,
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                runAlignment: WrapAlignment.center,
+                                spacing: 20,
+                                children: [
+                                  Text(snapshot.data?[index].name,
+                                      style: TextStyle(fontSize: 20)),
+                                  SvgPicture.asset(
+                                    getPlatformInfo(
+                                            snapshot.data?[index].platform)
+                                        .path,
+                                    height: 50,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemCount: snapshot.data?[index].games.length,
+                              itemBuilder: (BuildContext context, int i) {
+                                final game = snapshot.data?[index].games[i];
+                                final platforms = game.platforms;
+
+                                var plataformaEncontrada = platforms.firstWhere(
+                                    (plataforma) =>
+                                        plataforma.platformId ==
+                                        snapshot.data?[index].platform);
+
+                                return GestureDetector(
+                                  onTap: () => GoRouter.of(context)
+                                      .push("/game", extra: {
+                                    "platform_category":
+                                        snapshot.data?[index].platformCategory,
+                                    "platform": snapshot.data?[index].platform,
+                                    "game": gameCard.Game(
+                                        backgroundImage: game.backgroundImage,
+                                        id: game.gameId,
+                                        name: game.name)
+                                  }),
+                                  child: GameCard(
+                                      game: gameCard.Game(
+                                          backgroundImage: game.backgroundImage,
+                                          id: game.gameId,
+                                          name: game.name),
+                                      bottom: Text(
+                                          "\n ${plataformaEncontrada.amount} Matches created")),
+                                );
+                              },
+                            )
+                          ],
+                        );
+                      });
+                } else {
+                  return Center(
+                    child: Column(
+                      children: [
+                        CircularProgressIndicator(),
+                        Text("Loading games")
+                      ],
+                    ),
+                  );
+                }
+              },
+            )),
+          ));
         } else {
           return const Center(
             child: CircularProgressIndicator(),
@@ -148,5 +162,20 @@ class _HomeUserPageState extends State<HomeUserPage> {
     user.user = userFromJson(jsonEncode(userInfo));
 
     return userInfo;
+  }
+
+  Future<List> _loadGames() async {
+    final gamesResp = await GamesService().getHomeGames();
+
+    if (gamesResp["ok"]) {
+      final platforms = gamesResp["platforms"];
+
+      final values =
+          platforms.map((e) => GamesHomeResponse.fromJson(e)).toList();
+
+      return values;
+    } else {
+      return [];
+    }
   }
 }

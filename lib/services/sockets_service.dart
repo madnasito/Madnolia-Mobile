@@ -62,10 +62,10 @@ class SocketService with ChangeNotifier {
 
     _socket.on("message", (payload) async {
       print("nuevo mensaje: $payload");
-      await NotificationService.showNotification(
-          title: payload["user"]["username"],
-          body: payload["text"],
-          notificationLayout: NotificationLayout.Messaging);
+      // await NotificationService.showNotification(
+      //     title: payload["user"]["username"],
+      //     body: payload["text"],
+      //     notificationLayout: NotificationLayout.Messaging);
     });
   }
 

@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:Madnolia/providers/user_provider.dart';
 import 'package:Madnolia/widgets/language_builder.dart';
+import 'package:Madnolia/widgets/search_user_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -254,6 +256,7 @@ class MatchFormView extends StatelessWidget {
     final dateController = TextEditingController();
     final nameController = TextEditingController();
     final platformInfo = getPlatformInfo(platformId);
+    List<String> users = [];
     return Container(
       height: double.infinity,
       color: const Color.fromARGB(43, 0, 0, 0),
@@ -336,9 +339,10 @@ class MatchFormView extends StatelessWidget {
                     ? dateTime.toString().substring(0, 16)
                     : "";
                 newDateTime = dateTime.toString();
-                print(dateTime);
               },
             ),
+            const SizedBox(height: 20),
+            SeatchUser(users: users),
             const SizedBox(height: 20),
             Text(
               game!.name,
@@ -395,6 +399,7 @@ class MatchFormView extends StatelessWidget {
                     "date": formDate.toString(),
                     "name": nameController.text,
                     "img": game.backgroundImage,
+                    "users": List<String>.from(users.map((x) => x))
                     // "tournament_match": "false"
                   };
 

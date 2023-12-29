@@ -10,7 +10,7 @@ String matchToJson(Match data) => json.encode(data.toJson());
 
 class Match {
   String id;
-  List<dynamic> users;
+  List<String> users;
   String? img;
   String message;
   List<String> likes;
@@ -40,7 +40,7 @@ class Match {
 
   factory Match.fromJson(Map<String, dynamic> json) => Match(
         id: json["_id"],
-        users: List<dynamic>.from(json["users"].map((x) => x)),
+        users: List<String>.from(json["users"].map((x) => x)),
         message: json["message"],
         likes: List<String>.from(json["likes"].map((x) => x)),
         active: json["active"],
@@ -56,7 +56,7 @@ class Match {
 
   Map<String, dynamic> toJson() => {
         "_id": id,
-        "users": List<dynamic>.from(users.map((x) => x)),
+        "users": List<String>.from(users.map((x) => x)),
         "message": message,
         "likes": List<dynamic>.from(likes.map((x) => x)),
         "active": active,

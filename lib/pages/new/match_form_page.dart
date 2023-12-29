@@ -11,7 +11,8 @@ class MatchFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var extra = GoRouterState.of(context).extra as Map;
+    late var extra = GoRouterState.of(context).extra as Map;
+
     Game game = extra["game"] as Game;
     return CustomScaffold(
         body: Background(

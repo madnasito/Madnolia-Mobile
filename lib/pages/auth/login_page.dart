@@ -64,8 +64,7 @@ class LoginPage extends StatelessWidget {
                       stream: bloc.formValidStream,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         return FormButton(
-                            text:
-                                langData.getValue(route: ["LOGIN", "WELCOME"]),
+                            text: langData.getValue(route: ["LOGIN", "BUTTON"]),
                             color: const Color.fromARGB(0, 33, 149, 243),
                             onPressed: snapshot.hasData
                                 ? () => _login(context, bloc)
