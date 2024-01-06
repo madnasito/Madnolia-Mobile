@@ -71,7 +71,7 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
       return;
     }
 
-    final respMessages = resp["chat"];
+    final respMessages = resp["match"]["chat"];
 
     List history = respMessages.map((e) => Message.fromJson(e)).toList();
     List<Widget> messages = history

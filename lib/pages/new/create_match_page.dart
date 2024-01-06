@@ -125,6 +125,11 @@ class _NewPageState extends State<NewPage> {
           path: "assets/platforms/nintendo_switch.svg",
           size: 70),
       Platform(
+          id: 14,
+          active: userProvider.user.platforms.contains(14) ? true : false,
+          path: "assets/platforms/xbox_360.svg",
+          size: 70),
+      Platform(
           id: 1,
           active: userProvider.user.platforms.contains(1) ? true : false,
           path: "assets/platforms/xbox_one.svg",

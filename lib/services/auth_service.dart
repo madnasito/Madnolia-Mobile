@@ -59,6 +59,7 @@ class AuthService {
       authenticating = false;
 
       final respDecoded = jsonDecode(response.body);
+      print(respDecoded);
 
       if (response.statusCode == 200 && respDecoded["ok"]) {
         _storage.write(key: "token", value: respDecoded["token"]);

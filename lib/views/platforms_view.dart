@@ -87,7 +87,7 @@ class _PlatformsViewState extends State<PlatformsView> {
     widget.nintendoItems = [
       Platform(
           id: 9,
-          active: widget.platforms.contains(4) ? true : false,
+          active: widget.platforms.contains(9) ? true : false,
           path: "assets/platforms/nintendo_ds.svg",
           size: 20),
       Platform(
@@ -127,7 +127,11 @@ class _PlatformsViewState extends State<PlatformsView> {
     ];
 
     widget.xboxItems = [
-      // Platform(active: false, path: "assets/platforms/xbox_360.svg", size: 70),
+      Platform(
+          id: 14,
+          active: widget.platforms.contains(186) ? true : false,
+          path: "assets/platforms/xbox_360.svg",
+          size: 70),
       Platform(
           id: 1,
           active: widget.platforms.contains(1) ? true : false,

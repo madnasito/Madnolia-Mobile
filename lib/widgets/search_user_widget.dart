@@ -148,10 +148,20 @@ class _SeatchUserState extends State<SeatchUser> {
                         return ListTile(
                           title: Wrap(
                             spacing: 10,
+                            crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
-                              Image.network(
-                                usersList[index]["img"],
-                                width: 50,
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(60),
+                                    border:
+                                        Border.all(color: Colors.greenAccent)),
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      usersList[index]["img"],
+                                      scale: 0.1),
+                                  minRadius: 25,
+                                  maxRadius: 35,
+                                ),
                               ),
                               Text(usersList[index]["name"])
                             ],

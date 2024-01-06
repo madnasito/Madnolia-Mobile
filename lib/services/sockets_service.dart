@@ -39,7 +39,6 @@ class SocketService with ChangeNotifier {
       // Mueve la notificación aquí
 
       _socket.on("notification", (data) async {
-        print(data);
         Match match = Match.fromJson(data["match"]);
 
         await NotificationService.showNotification(
@@ -52,6 +51,16 @@ class SocketService with ChangeNotifier {
             payload: {"match": matchToJson(match)},
             actionButtons: []);
       });
+
+      _socket.on("match_ready", (data) async {
+        // Match match = Match.fromJson(data["match"]);
+
+        await NotificationService.showNotification(
+            title: "The match is ready",
+            body: data["name"],
+            actionButtons: [],
+            payload: {"match": data["match"]});
+      });
       notifyListeners();
     });
 
@@ -61,7 +70,6 @@ class SocketService with ChangeNotifier {
     });
 
     _socket.on("message", (payload) async {
-      print("nuevo mensaje: $payload");
       // await NotificationService.showNotification(
       //     title: payload["user"]["username"],
       //     body: payload["text"],

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:Madnolia/services/games_service.dart';
 import 'package:Madnolia/utils/platform_id_ico.dart';
+import 'package:Madnolia/widgets/form_button.dart';
 import 'package:Madnolia/widgets/match_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -61,8 +62,6 @@ class _HomeUserPageState extends State<HomeUserPage> {
                       shrinkWrap: true,
                       itemCount: snapshot.data?.length,
                       itemBuilder: (BuildContext context, int index) {
-                        print(getPlatformInfo(snapshot.data?[index].platform)
-                            .path);
                         return Column(
                           children: [
                             Container(
@@ -80,47 +79,85 @@ class _HomeUserPageState extends State<HomeUserPage> {
                                     getPlatformInfo(
                                             snapshot.data?[index].platform)
                                         .path,
-                                    height: 50,
+                                    width: 60,
                                     color: Colors.white,
                                   ),
                                 ],
                               ),
                             ),
-                            ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              physics: BouncingScrollPhysics(),
-                              itemCount: snapshot.data?[index].games.length,
-                              itemBuilder: (BuildContext context, int i) {
-                                final game = snapshot.data?[index].games[i];
-                                final platforms = game.platforms;
+                            snapshot.data?[index].games.length > 0
+                                ? ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    shrinkWrap: true,
+                                    physics: BouncingScrollPhysics(),
+                                    itemCount:
+                                        snapshot.data?[index].games.length,
+                                    itemBuilder: (BuildContext context, int i) {
+                                      final game =
+                                          snapshot.data?[index].games[i];
+                                      final platforms = game.platforms;
 
-                                var plataformaEncontrada = platforms.firstWhere(
-                                    (plataforma) =>
-                                        plataforma.platformId ==
-                                        snapshot.data?[index].platform);
+                                      var plataformaEncontrada =
+                                          platforms.firstWhere((plataforma) =>
+                                              plataforma.platformId ==
+                                              snapshot.data?[index].platform);
 
-                                return GestureDetector(
-                                  onTap: () => GoRouter.of(context)
-                                      .push("/game", extra: {
-                                    "platform_category":
-                                        snapshot.data?[index].platformCategory,
-                                    "platform": snapshot.data?[index].platform,
-                                    "game": gameCard.Game(
-                                        backgroundImage: game.backgroundImage,
-                                        id: game.gameId,
-                                        name: game.name)
-                                  }),
-                                  child: GameCard(
-                                      game: gameCard.Game(
-                                          backgroundImage: game.backgroundImage,
-                                          id: game.gameId,
-                                          name: game.name),
-                                      bottom: Text(
-                                          "\n ${plataformaEncontrada.amount} Matches created")),
-                                );
-                              },
-                            )
+                                      return GestureDetector(
+                                        onTap: () => GoRouter.of(context)
+                                            .push("/game", extra: {
+                                          "platform_category": snapshot
+                                              .data?[index].platformCategory,
+                                          "platform":
+                                              snapshot.data?[index].platform,
+                                          "game": gameCard.Game(
+                                              backgroundImage:
+                                                  game.backgroundImage,
+                                              id: game.gameId,
+                                              name: game.name)
+                                        }),
+                                        child: GameCard(
+                                            game: gameCard.Game(
+                                                backgroundImage:
+                                                    game.backgroundImage,
+                                                id: game.gameId,
+                                                name: game.name),
+                                            bottom: Text(
+                                                "\n ${plataformaEncontrada.amount} Matches created")),
+                                      );
+                                    },
+                                  )
+                                : Container(
+                                    margin: EdgeInsets.only(bottom: 10),
+                                    width: double.maxFinite,
+                                    color: Colors.black,
+                                    child: Wrap(
+                                      alignment: WrapAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
+                                      runAlignment: WrapAlignment.center,
+                                      spacing: 10,
+                                      direction: Axis.vertical,
+                                      children: [
+                                        Text(
+                                          "There is no games for ${snapshot.data?[index].name}",
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () =>
+                                              GoRouter.of(context).push("/new"),
+                                          child: Text("Create one here"),
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.white,
+                                            shadowColor: Colors.black,
+                                            side: const BorderSide(
+                                                color: Colors.blue, width: 3),
+                                            backgroundColor: Colors.black,
+                                            shape: const StadiumBorder(),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
                           ],
                         );
                       });

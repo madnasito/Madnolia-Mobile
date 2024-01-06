@@ -48,9 +48,7 @@ class NotificationService {
 
   // Use this method to detect when a new notification or a schedule is created
   static Future<void> onNotificationCreatedMethod(
-      ReceivedNotification receivedNotification) async {
-    debugPrint("OntificationCreateMethod");
-  }
+      ReceivedNotification receivedNotification) async {}
 
   /// Use this method to detect every time that a new notification is displayed
   static Future<void> onNotificationDisplayedMethod(
@@ -58,17 +56,14 @@ class NotificationService {
 
   /// Use this method to detect if the user dismissed a notification
   static Future<void> onDismissActionReceivedMethod(
-      ReceivedAction receivedAction) async {
-    print("DEA");
-    debugPrint("Dismisable");
-  }
+      ReceivedAction receivedAction) async {}
 
   /// Use this method to detect when the user taps on a notification or action button
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
     final payload = receivedAction.payload ?? {};
     if (payload.containsKey("match")) {
-      Match match = matchFromJson(payload["match"]!);
+      String match = payload["match"]!;
       router.go("/match", extra: match);
     }
   }

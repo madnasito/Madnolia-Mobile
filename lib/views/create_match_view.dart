@@ -345,7 +345,7 @@ class MatchFormView extends StatelessWidget {
             SeatchUser(users: users),
             const SizedBox(height: 20),
             Text(
-              game!.name,
+              game.name,
               style: const TextStyle(
                 fontSize: 25,
               ),
