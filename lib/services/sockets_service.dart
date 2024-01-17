@@ -25,17 +25,13 @@ class SocketService with ChangeNotifier {
   void connect() async {
     final token = await const FlutterSecureStorage().read(key: "token");
 
-    if (serverStatus != ServerStatus.online){
-
       _socket = IO.io(
           Environment.socketUrl,
           IO.OptionBuilder()
               .setTransports(['websocket']) // for Flutter or Dart VM
               .enableAutoConnect() // disable auto-connection
               .setExtraHeaders({"x-token": token})
-              .enableForceNew()
               .build());
-    }
     // Init socket
 
     _socket.onConnect((_) async {
