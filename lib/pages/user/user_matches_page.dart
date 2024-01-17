@@ -38,7 +38,7 @@ class UserMatchesPage extends StatelessWidget {
               FutureBuilder(
                 future: UserService().getUserMatches(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.hasData) {
+                  if (snapshot.hasData && snapshot.data["ok"] == true) {
                     List matches = snapshot.data["matches"];
 
                     final list = matches.map((e) => Match.fromJson(e)).toList();
