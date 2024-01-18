@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:Madnolia/providers/user_provider.dart';
+import 'package:Madnolia/services/sockets_service.dart';
 import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:Madnolia/widgets/search_user_widget.dart';
 import 'package:flutter/material.dart';
@@ -208,7 +209,7 @@ class _SearchGameViewState extends State<SearchGameView> {
                     (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                   if (snapshot.hasData) {
                     return Flexible(
-                        child: ListView.builder(
+                        child: snapshot.data.isNotEmpty ? ListView.builder(
                             itemCount: snapshot.data.length,
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
@@ -222,7 +223,7 @@ class _SearchGameViewState extends State<SearchGameView> {
                                     game: snapshot.data[index],
                                     bottom: const Text("")),
                               );
-                            }));
+                            }): Text(langData.getValue(route: ["CREATE_MATCH", "EMPTY_SEARCH"])));
                   } else {
                     return const CircularProgressIndicator();
                   }
@@ -407,6 +408,8 @@ class MatchFormView extends StatelessWidget {
                   final resp = await MatchService().createMatch(match);
                   uploading = false;
                   if (resp["ok"] == true) {
+                    
+                    
                     Toast.show(
                         langData
                             .getValue(route: ["CREATE_MATCH", "MATCH_CREATED"]),

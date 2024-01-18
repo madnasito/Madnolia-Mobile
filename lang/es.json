@@ -15,7 +15,8 @@
 
     "HOME":{
         "MATCH": "Partida creada",
-        "MATCHES": "Partidas creadas"
+        "MATCHES": "Partidas creadas",
+        "CREATE": "Crea una aquí"
     },
     "REGISTER":{
         "TITLE": "Crear cuenta",
@@ -26,6 +27,7 @@
         "PASSWORD2": "Repita la Contraseña",
         "VALIDATIONS":{
             "NAME": "El nombre no es valido",
+            "LONG_NAME": "El nombre es muy largo",
             "USERNAME": "El nombre de usuario no es valido",
             "EMAIL": "Ingrese una dirección de correo correcta",
             "PASSWORD": "La contraseña es muy corta",
@@ -50,6 +52,7 @@
         "TITLE": "Selecciona la plataforma",
         "SEARCH_GAME": "Buscar juego",
         "SEARCH_RESULTS": "Resultados de la busqueda",
+        "EMPTY_SEARCH": "No se encontraron juegos, por favor intente con otro nombre",
         "PLATFORMS_EMPTY": "No has seleccionado una plataforma",
         "ADD_PLATFORMS": "Ingresa aquí para añadir plataformas",
         "SEARCHING": "Buscando",

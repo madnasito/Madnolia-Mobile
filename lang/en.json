@@ -15,7 +15,8 @@
 
   "HOME":{
       "MATCH": "Created match",
-      "MATCHES": "Created matches"
+      "MATCHES": "Created matches",
+      "CREATE": "Create one here"
   },
   "REGISTER":{
       "TITLE": "Sign Up!",
@@ -26,6 +27,7 @@
       "PASSWORD2": "Repeat password",
       "VALIDATIONS":{
           "NAME": "The name is not valid",
+        "LONG_NAME": "The name is too long",
           "USERNAME": "The username is not valid",
           "EMAIL": "The email is not correct",
           "PASSWORD": "The password is too short",
@@ -50,6 +52,7 @@
       "TITLE": "Select the platform",
       "SEARCH_GAME": "Search game",
       "SEARCH_RESULTS": "Search's results",
+      "EMPTY_SEARCH": "No founded games, please try another name",
       "PLATFORMS_EMPTY": "You have not selected a platform",
       "ADD_PLATFORMS": "Press here for to add a platform",
       "SEARCHING": "Searching",

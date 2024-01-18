@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:Madnolia/services/games_service.dart';
 import 'package:Madnolia/utils/platform_id_ico.dart';
-import 'package:Madnolia/widgets/form_button.dart';
+import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:Madnolia/widgets/match_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -15,6 +15,7 @@ import 'package:Madnolia/services/user_service.dart';
 // import 'package:Madnolia/widgets/alert_widget.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
+import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
 import 'package:Madnolia/models/game_home_model.dart';
 
@@ -37,13 +38,18 @@ class _HomeUserPageState extends State<HomeUserPage> {
   void initState() {
     userProvider = Provider.of<UserProvider>(context, listen: false);
     socketService = Provider.of<SocketService>(context, listen: false);
-    socketService.connect();
+
+    if(socketService.serverStatus != ServerStatus.online){
+
+      socketService.connect();
+    }
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final LangSupport langData = LanguageBuilder.langData;
     return FutureBuilder(
       future: _loadInfo(context, userProvider),
       builder: (context, snapshot) {
@@ -122,7 +128,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                                                 id: game.gameId,
                                                 name: game.name),
                                             bottom: Text(
-                                                "\n ${plataformaEncontrada.amount} Matches created")),
+                                                "\n ${plataformaEncontrada.amount} ${langData.getValue(route: plataformaEncontrada.amount == 1 ? ["HOME", "MATCH"] : ["HOME", "MATCHES"])}")),
                                       );
                                     },
                                   )
@@ -144,7 +150,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () =>
-                                              GoRouter.of(context).push("/new"),
+                                              GoRouter.of(context).push("/new", extra: snapshot.data?[index].platform),
                                           child: Text("Create one here"),
                                           style: ElevatedButton.styleFrom(
                                             foregroundColor: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:provider/provider.dart';
 import 'package:animate_do/animate_do.dart';
@@ -28,6 +29,15 @@ class _NewPageState extends State<NewPage> {
   Widget build(BuildContext context) {
     final LangSupport langData = LanguageBuilder.langData;
 
+    if(GoRouterState.of(context).extra != null){
+      
+      if(GoRouterState.of(context).extra is int){
+        widget.selectedPlatform = GoRouterState.of(context).extra as int;
+      }
+
+    }
+
+    
     return CustomScaffold(
         body: Background(
             child: widget.selectedPlatform == 0
