@@ -1,4 +1,5 @@
 // ignore: library_prefixes
+import 'package:Madnolia/models/invitation_model.dart';
 import 'package:Madnolia/models/match_model.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
@@ -25,13 +26,13 @@ class SocketService with ChangeNotifier {
   void connect() async {
     final token = await const FlutterSecureStorage().read(key: "token");
 
-      _socket = IO.io(
-          Environment.socketUrl,
-          IO.OptionBuilder()
-              .setTransports(['websocket']) // for Flutter or Dart VM
-              .enableAutoConnect() // disable auto-connection
-              .setExtraHeaders({"x-token": token})
-              .build());
+    _socket = IO.io(
+        Environment.socketUrl,
+        IO.OptionBuilder()
+            .setTransports(['websocket']) // for Flutter or Dart VM
+            .enableAutoConnect() // disable auto-connection
+            .setExtraHeaders({"x-token": token})
+            .build());
     // Init socket
 
     _socket.onConnect((_) async {
@@ -39,7 +40,8 @@ class SocketService with ChangeNotifier {
       // Mueve la notificación aquí
 
       _socket.on("notification", (data) async {
-        Match match = Match.fromJson(data["match"]);
+        // Match match = Match.fromJson(data["match"]);
+        Invitation match = Invitation.fromJson(data);
 
         await NotificationService.showNotification(
             title: "Invitation to a Match",
@@ -48,8 +50,21 @@ class SocketService with ChangeNotifier {
                 ? NotificationLayout.BigPicture
                 : NotificationLayout.Default,
             bigPicture: match.img != null ? match.img : null,
-            payload: {"match": matchToJson(match)},
-            actionButtons: []);
+            payload: {
+              "match": match.match
+            },
+            actionButtons: [
+              NotificationActionButton(
+                  key: "accept",
+                  label: "Accept",
+                  color: Colors.blue,
+                  actionType: ActionType.SilentAction),
+              NotificationActionButton(
+                  key: "decline",
+                  label: "Decline",
+                  actionType: ActionType.SilentAction,
+                  color: Colors.blueGrey)
+            ]);
       });
 
       _socket.on("match_ready", (data) async {

@@ -89,22 +89,26 @@ class _PlatformsViewState extends State<PlatformsView> {
           id: 9,
           active: widget.platforms.contains(9) ? true : false,
           path: "assets/platforms/nintendo_ds.svg",
-          size: 20),
+          size: 12,
+          padding: 10),
       Platform(
           id: 8,
           active: widget.platforms.contains(8) ? true : false,
           path: "assets/platforms/nintendo_3ds.svg",
-          size: 20),
+          size: 10,
+          padding: 10),
       Platform(
           id: 11,
           active: widget.platforms.contains(11) ? true : false,
           path: "assets/platforms/nintendo_wii.svg",
-          size: 20),
+          size: 20,
+          padding: 10),
       Platform(
           id: 10,
           active: widget.platforms.contains(10) ? true : false,
           path: "assets/platforms/nintendo_wiiu.svg",
-          size: 20),
+          size: 20,
+          padding: 10),
       Platform(
           id: 7,
           active: widget.platforms.contains(7) ? true : false,
@@ -229,9 +233,14 @@ class _PlatformsViewState extends State<PlatformsView> {
             delay: const Duration(milliseconds: 700),
             child: GestureDetector(
               onTap: () async {
-                item.active = true;
+                if (currentFather != item.id) {
+                  item.active = true;
 
-                currentFather = item.id;
+                  currentFather = item.id;
+                } else {
+                  item.active = false;
+                  currentFather = 0;
+                }
 
                 for (var element in widget.fatherPlatforms) {
                   if (element.active && element.id != item.id) {

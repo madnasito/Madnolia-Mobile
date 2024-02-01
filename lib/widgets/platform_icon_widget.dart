@@ -24,13 +24,16 @@ class _PlatformIconState extends State<PlatformIcon> {
       //     // context.go("/platforms/${widget.platform.id}");
       //   });
       // },
-      child: SvgPicture.asset(
-        widget.platform.path,
-        height: iconSize,
-        width: iconSize,
-        color: (widget.platform.active)
-            ? Colors.white
-            : const Color.fromARGB(172, 109, 109, 109),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: widget.platform.padding),
+        child: SvgPicture.asset(
+          widget.platform.path,
+          height: iconSize,
+          width: iconSize,
+          color: (widget.platform.active)
+              ? Colors.white
+              : const Color.fromARGB(172, 109, 109, 109),
+        ),
       ),
     );
   }
@@ -41,6 +44,7 @@ class Platform {
   String path;
   bool active;
   int size;
+  double padding;
   Color background = Colors.white;
 
   Platform(
@@ -48,5 +52,6 @@ class Platform {
       required this.path,
       required this.active,
       required this.size,
-      this.background = Colors.white});
+      this.background = Colors.white,
+      this.padding = 0});
 }

@@ -47,7 +47,7 @@ PlatformInfo getPlatformInfo(int id) {
 
     case 4:
       return PlatformInfo(path: "$path/pc.svg", name: "PC");
-    case 4:
+    case 21:
       return PlatformInfo(path: "$path/smartphone.svg", name: "Mobile");
 
     default:

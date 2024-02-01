@@ -10,6 +10,7 @@ import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.initializeNotification();
 
   runApp(const MyApp());
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
     final locale = WidgetsFlutterBinding.ensureInitialized().window.locale;
 
 // Imprime el idioma predeterminado, por ejemplo: "es"
-    print(locale.languageCode);
+    // print(locale.languageCode);
     return LoginProvider(
       child: MultiProvider(
         providers: [

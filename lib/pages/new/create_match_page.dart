@@ -29,15 +29,12 @@ class _NewPageState extends State<NewPage> {
   Widget build(BuildContext context) {
     final LangSupport langData = LanguageBuilder.langData;
 
-    if(GoRouterState.of(context).extra != null){
-      
-      if(GoRouterState.of(context).extra is int){
+    if (GoRouterState.of(context).extra != null) {
+      if (GoRouterState.of(context).extra is int) {
         widget.selectedPlatform = GoRouterState.of(context).extra as int;
       }
-
     }
 
-    
     return CustomScaffold(
         body: Background(
             child: widget.selectedPlatform == 0
@@ -113,22 +110,26 @@ class _NewPageState extends State<NewPage> {
           id: 9,
           active: userProvider.user.platforms.contains(9) ? true : false,
           path: "assets/platforms/nintendo_ds.svg",
-          size: 20),
+          size: 13,
+          padding: 10),
       Platform(
           id: 8,
           active: userProvider.user.platforms.contains(8) ? true : false,
           path: "assets/platforms/nintendo_3ds.svg",
-          size: 20),
+          size: 10,
+          padding: 10),
       Platform(
           id: 11,
           active: userProvider.user.platforms.contains(11) ? true : false,
           path: "assets/platforms/nintendo_wii.svg",
-          size: 20),
+          size: 20,
+          padding: 12),
       Platform(
           id: 10,
           active: userProvider.user.platforms.contains(10) ? true : false,
           path: "assets/platforms/nintendo_wiiu.svg",
-          size: 20),
+          size: 20,
+          padding: 12),
       Platform(
           id: 7,
           active: userProvider.user.platforms.contains(7) ? true : false,

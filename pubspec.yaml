@@ -1,5 +1,5 @@
 name: Madnolia
-description: A new Flutter project.
+description: App for gamers.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -30,7 +30,7 @@ icons_launcher:
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.8.0+1
+version: 0.8.0+2
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -66,6 +66,7 @@ dependencies:
   awesome_notifications: ^0.8.2
   flutter_launcher_icons: ^0.13.1
   multi_language_json: ^1.2.0
+  liquid_pull_to_refresh: ^3.0.1
   
 
 dev_dependencies:
