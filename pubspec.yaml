@@ -67,6 +67,7 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
   multi_language_json: ^1.2.0
   liquid_pull_to_refresh: ^3.0.1
+  change_app_package_name: ^1.1.0
   
 
 dev_dependencies:
