@@ -1,13 +1,12 @@
+import 'package:Madnolia/models/chat_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:Madnolia/providers/user_provider.dart';
-
-import 'package:Madnolia/models/message_model.dart';
 
 import 'package:provider/provider.dart';
 
 class ChatMessage extends StatelessWidget {
   final String text;
-  final User user;
+  final ChatUser user;
   final AnimationController animationController;
 
   const ChatMessage(
@@ -76,7 +75,7 @@ class ChatMessage extends StatelessWidget {
     );
   }
 
-  Widget _notMyMessage(User user) {
+  Widget _notMyMessage(ChatUser user) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Row(

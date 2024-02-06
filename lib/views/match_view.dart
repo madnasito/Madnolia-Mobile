@@ -1,13 +1,16 @@
+import 'package:Madnolia/models/chat_user_model.dart';
+import 'package:Madnolia/widgets/chat/input_widget.dart';
+import 'package:Madnolia/widgets/form_button.dart';
 import 'package:flutter/material.dart';
 import 'package:Madnolia/blocs/message_bloc.dart';
 
-import 'package:Madnolia/models/match_model.dart';
+import 'package:Madnolia/models/match/match_model.dart';
 import 'package:Madnolia/models/message_model.dart';
 import 'package:Madnolia/providers/user_provider.dart';
 import 'package:Madnolia/services/match_service.dart';
 import 'package:Madnolia/services/sockets_service.dart';
-import 'package:Madnolia/widgets/chat_message_widget.dart';
-import 'package:Madnolia/widgets/custom_input_widget.dart';
+import 'package:Madnolia/widgets/chat/chat_message_widget.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:provider/provider.dart';
 
 class MatchOwnerView extends StatelessWidget {
@@ -51,6 +54,7 @@ class MatchUserView extends StatelessWidget {
 class MatchChat extends StatefulWidget {
   final Match match;
   final MessageBloc bloc;
+
   const MatchChat({super.key, required this.match, required this.bloc});
 
   @override
@@ -58,12 +62,13 @@ class MatchChat extends StatefulWidget {
 }
 
 class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
+  bool isInMatch = false;
   final List _messages = [];
   final matchService = MatchService();
   late UserProvider userProvider;
 
   late SocketService socketService;
-  late TextEditingController messageController;
+  late GlobalKey<FlutterMentionsState> messageKey;
   void _loadHistory(String id) async {
     final resp = await matchService.getMatch(id);
 
@@ -83,13 +88,6 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
               ..forward()))
         .toList();
 
-    // mensajes.map((e) => ChatMessage(
-    //     text: e["mensaje"],
-    //     username: e["from"],
-    // animationController: AnimationController(
-    //     vsync: this, duration: const Duration(milliseconds: 0))
-    //   ..forward()));
-
     setState(() {
       _messages.addAll(messages.reversed);
     });
@@ -97,6 +95,8 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
 
   void _listenMessage(Map<String, dynamic> payload) {
     Message decodedMessage = Message.fromJson(payload);
+
+    if (decodedMessage.room != widget.match.id) return;
 
     ChatMessage message = ChatMessage(
         text: decodedMessage.text,
@@ -114,20 +114,33 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
     _loadHistory(widget.match.id);
-    messageController = TextEditingController();
+    messageKey = GlobalKey<FlutterMentionsState>();
     socketService = Provider.of<SocketService>(context, listen: false);
     socketService.socket.on("message", (data) => _listenMessage(data));
+    socketService.socket.on("new_player_to_match", (data) {
+      ChatUser user = ChatUser.fromJson(data);
+
+      debugPrint(user.name);
+    });
+    socketService.socket.on("added_to_match", (data) {
+      if (data == true) {
+        isInMatch = true;
+        setState(() {});
+      }
+    });
 
     socketService.emit("init_match_chat", widget.match.id);
   }
 
   @override
   void dispose() {
+    socketService.emit("disconnect_chat");
     for (ChatMessage message in _messages) {
       message.animationController.dispose();
     }
-    socketService.socket.off("message");
+    socketService.socket.off("added_to_match");
     super.dispose();
   }
 
@@ -178,67 +191,74 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
           ),
         ),
         Container(
-          color: Colors.black54,
-          padding: const EdgeInsets.only(top: 10),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: const EdgeInsets.only(right: 8),
-                width: 270,
-                child: CustomInput(
-                    controller: messageController,
-                    placeholder: "Message",
-                    stream: widget.bloc.messageStream,
-                    onChanged: widget.bloc.changeMessage),
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: ElevatedButton(
-                  onPressed: () {
-                    _handleSubmit(widget.bloc.message);
-                    widget.bloc.changeMessage("");
-                    messageController.text = "";
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shape: const StadiumBorder(),
-                      side: const BorderSide(
-                        color: Color.fromARGB(255, 65, 169, 255),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10)),
-                  child: const Icon(Icons.send_outlined),
-                ),
-              )
-              // ElevatedButton.icon(
-              //     onPressed: () {}, icon: Icon(Icons.abc), label: Text(""))
-            ],
-          ),
-        )
+            color: Colors.black54,
+            padding: const EdgeInsets.only(top: 10),
+            child: _bottomRow(widget.match, userProvider, isInMatch))
       ],
     );
   }
 
-  _handleSubmit(String text) {
+  Widget _bottomRow(Match match, UserProvider userProvider, bool isInMatch) {
+    bool owner = userProvider.user.id == match.user ? true : false;
+    List<ChatUser> founded =
+        match.likes.where((e) => userProvider.user.id == e.id).toList();
+
+    print(match.likes);
+
+    if (owner || founded.isNotEmpty || isInMatch) {
+      isInMatch = true;
+      Size screenSize = MediaQuery.of(context).size;
+
+      double screenWidth = screenSize.width;
+      return Wrap(
+        children: [
+          Container(
+            width: screenWidth * 0.8,
+            margin: const EdgeInsets.only(right: 8),
+            child: InputGroupMessage(
+              inputKey: messageKey,
+              usersList: widget.match.likes,
+              stream: widget.bloc.messageStream,
+              placeholder: "Message",
+              onChanged: widget.bloc.changeMessage,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: ElevatedButton(
+              onPressed: () {
+                _handleSubmit(widget.bloc.message);
+                widget.bloc.changeMessage("");
+                messageKey.currentState?.controller?.clear();
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shape: const StadiumBorder(),
+                  side: const BorderSide(
+                    color: Color.fromARGB(255, 65, 169, 255),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+              child: const Icon(Icons.send_outlined),
+            ),
+          ),
+          // ElevatedButton.icon(
+          //     onPressed: () {}, icon: Icon(Icons.abc), label: Text(""))
+        ],
+      );
+    } else {
+      return FormButton(
+          text: "Join to match",
+          color: Colors.transparent,
+          onPressed: () {
+            socketService.emit("join_to_match", match.id);
+          });
+    }
+  }
+
+  void _handleSubmit(String text) {
     if (text.isEmpty) return;
-
-    // final userService = Provider.of<UserProvider>(context, listen: false);
-    // final newMessage = ChatMessage(
-    //     text: text,
-    //     user: User(
-    //         thumbImg: userService.user.thumbImg.toString(),
-    //         id: "",
-    //         name: userService.user.name,
-    //         username: userService.user.username),
-    //     animationController: AnimationController(
-    //         vsync: this, duration: const Duration(milliseconds: 200)));
-
-    // _messages.insert(0, newMessage);
-
-    // newMessage.animationController.forward();
-    socketService.emit("message", text);
+    socketService.emit("message", {"message": text, "room": widget.match.id});
     setState(() {});
   }
 }

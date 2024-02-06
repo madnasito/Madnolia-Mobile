@@ -6,12 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:Madnolia/blocs/edit_user_bloc.dart';
 import 'package:Madnolia/blocs/edit_user_provider.dart';
-import 'package:Madnolia/services/upload_service.dart';
 import 'package:Madnolia/widgets/custom_input_widget.dart';
 import 'package:Madnolia/widgets/form_button.dart';
 import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
-import 'package:toast/toast.dart';
 
 import '../models/user_model.dart';
 import '../providers/user_provider.dart';
@@ -259,7 +257,6 @@ _loadInfo(UserProvider user) async {
 
 _uptadeUser(
     EditUserBloc bloc, UserProvider provider, String invitations) async {
-  LangSupport langData = LanguageBuilder.langData;
   User user = User(
       email: bloc.email,
       name: bloc.name,

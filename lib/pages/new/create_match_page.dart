@@ -16,6 +16,7 @@ import 'package:Madnolia/widgets/language_builder.dart';
 
 import '../../widgets/platform_icon_widget.dart';
 
+// ignore: must_be_immutable
 class NewPage extends StatefulWidget {
   NewPage({super.key});
 

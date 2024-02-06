@@ -11,6 +11,7 @@ import 'package:Madnolia/widgets/language_builder.dart';
 
 int currentFather = 0;
 
+// ignore: must_be_immutable
 class PlatformsView extends StatefulWidget {
   final List platforms;
   PlatformsView({super.key, required this.platforms});
@@ -322,6 +323,7 @@ class _FatherPlatformIcon extends State<FatherPlatformIcon> {
         widget.platform.path,
         height: iconSize,
         width: iconSize,
+        // ignore: deprecated_member_use
         color: (widget.platform.active)
             ? Colors.white
             : const Color.fromARGB(172, 109, 109, 109),

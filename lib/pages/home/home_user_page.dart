@@ -66,7 +66,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                     showChildOpacityTransition: false,
                     animSpeedFactor: 5.0,
                     height: 70,
-                    onRefresh: () => _loadGames(),
+                    onRefresh: () => _reload(),
                     child: ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.vertical,
@@ -91,6 +91,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                                               snapshot.data?[index].platform)
                                           .path,
                                       width: 60,
+                                      // ignore: deprecated_member_use
                                       color: Colors.white,
                                     ),
                                   ],
@@ -157,7 +158,10 @@ class _HomeUserPageState extends State<HomeUserPage> {
                                         direction: Axis.vertical,
                                         children: [
                                           Text(
-                                            "There is no games for ${snapshot.data?[index].name}",
+                                            "${langData.getValue(route: [
+                                                  "HOME",
+                                                  "NO_MATCHES"
+                                                ])} ${snapshot.data?[index].name}",
                                             style:
                                                 TextStyle(color: Colors.grey),
                                           ),
@@ -167,7 +171,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
                                                     "/new",
                                                     extra: snapshot
                                                         .data?[index].platform),
-                                            child: Text("Create one here"),
+                                            child: Text(langData.getValue(
+                                                route: ["HOME", "CREATE"])),
                                             style: ElevatedButton.styleFrom(
                                               foregroundColor: Colors.white,
                                               shadowColor: Colors.black,
@@ -237,5 +242,9 @@ class _HomeUserPageState extends State<HomeUserPage> {
     } else {
       return [];
     }
+  }
+
+  Future _reload() async {
+    setState(() {});
   }
 }

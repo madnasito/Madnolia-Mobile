@@ -1,16 +1,14 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:toast/toast.dart';
+import 'package:provider/provider.dart';
 
 import 'package:Madnolia/services/user_service.dart';
 import 'package:Madnolia/views/platforms_view.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
 import 'package:Madnolia/widgets/form_button.dart';
-import 'package:provider/provider.dart';
 
 import '../../providers/user_provider.dart';
 
@@ -55,8 +53,8 @@ class UserPlatformsPage extends StatelessWidget {
 
                             updating = true;
 
-                            final jsonBody =
-                                platforms.map((platform) => platforms).toList();
+                            // final jsonBody =
+                            //     platforms.map((platform) => platforms).toList();
 
                             final resp = await UserService()
                                 .updateUserPlatforms(

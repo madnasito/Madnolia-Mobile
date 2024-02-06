@@ -1,4 +1,4 @@
-import 'package:Madnolia/models/match_model.dart';
+import 'package:Madnolia/models/match/match_model.dart';
 import 'package:Madnolia/services/games_service.dart';
 import 'package:Madnolia/widgets/match_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +41,7 @@ class GamePage extends StatelessWidget {
                 SvgPicture.asset(
                   platformPath,
                   width: 50,
+                  // ignore: deprecated_member_use
                   color: Colors.white,
                 ),
                 Text(getPlatformInfo(data["platform"]).name)
@@ -68,28 +69,31 @@ class GamePage extends StatelessWidget {
                         child: ListTile(
                           onTap: () => GoRouter.of(context)
                               .push("/match", extra: matches[index]),
-                          title: Wrap(
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            alignment: WrapAlignment.spaceEvenly,
-                            spacing: 10,
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(matches[index].message),
-                              Text(
-                                game.name,
-                                style: TextStyle(overflow: TextOverflow.fade),
-                              ),
+                              // Text(
+                              //   game.name,
+                              //   style: TextStyle(overflow: TextOverflow.fade),
+                              // ),
                               SvgPicture.asset(
                                 getPlatformInfo(data["platform"]).path,
+                                // ignore: deprecated_member_use
                                 color: Colors.white,
                                 width: 60,
                               )
                             ],
                           ),
                           shape: CircleBorder(),
-                          subtitle: Text(DateTime.fromMillisecondsSinceEpoch(
-                                  matches[index].date)
-                              .toString()
-                              .substring(0, 16)),
+                          subtitle: Text(
+                            DateTime.fromMillisecondsSinceEpoch(
+                                    matches[index].date)
+                                .toString()
+                                .substring(0, 16),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       );
                     },

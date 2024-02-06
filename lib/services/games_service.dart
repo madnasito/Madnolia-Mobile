@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:Madnolia/models/game_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:Madnolia/global/environment.dart';

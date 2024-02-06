@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:Madnolia/models/chat_user_model.dart';
+
 Match matchFromJson(String str) => Match.fromJson(json.decode(str));
 
 String matchToJson(Match data) => json.encode(data.toJson());
@@ -13,7 +15,7 @@ class Match {
   List<String> users;
   String? img;
   String message;
-  List<String> likes;
+  List<ChatUser> likes;
   bool active;
   bool tournamentMatch;
   String gameName;
@@ -42,7 +44,8 @@ class Match {
         id: json["_id"],
         users: List<String>.from(json["users"].map((x) => x)),
         message: json["message"],
-        likes: List<String>.from(json["likes"].map((x) => x)),
+        likes:
+            List<ChatUser>.from(json["likes"].map((x) => ChatUser.fromJson(x))),
         active: json["active"],
         tournamentMatch: json["tournament_match"],
         gameName: json["game_name"],
@@ -58,7 +61,7 @@ class Match {
         "_id": id,
         "users": List<String>.from(users.map((x) => x)),
         "message": message,
-        "likes": List<dynamic>.from(likes.map((x) => x)),
+        "likes": List<dynamic>.from(likes.map((x) => x.toJson())),
         "active": active,
         "tournament_match": tournamentMatch,
         "game_name": gameName,

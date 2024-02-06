@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:Madnolia/providers/user_provider.dart';
 import 'package:Madnolia/services/sockets_service.dart';
@@ -8,7 +7,6 @@ import 'package:Madnolia/widgets/search_user_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:Madnolia/models/match_model.dart';
 import 'package:Madnolia/services/match_service.dart';
 import 'package:Madnolia/utils/platform_id_ico.dart';
 // import 'package:flutter/services.dart';
@@ -129,7 +127,6 @@ class MatchFormView extends StatelessWidget {
     LangSupport langData = LanguageBuilder.langData;
     ToastContext().init(context);
     bool uploading = false;
-    String fullDate = "";
     UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
 
@@ -159,7 +156,7 @@ class MatchFormView extends StatelessWidget {
                     bottom: 2,
                     left: 2,
                     child: Text(
-                      game!.name,
+                      game.name,
                       style: const TextStyle(backgroundColor: Colors.black54),
                     ),
                   )
@@ -242,6 +239,7 @@ class MatchFormView extends StatelessWidget {
                   // Icon(Icons.gamepad_outlined),
                   SvgPicture.asset(
                     platformInfo.path,
+                    // ignore: deprecated_member_use
                     color: Colors.white,
                     width: 110,
                   ),

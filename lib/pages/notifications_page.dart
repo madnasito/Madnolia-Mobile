@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multi_language_json/multi_language_json.dart';
 
-import '../models/match_model.dart';
+import '../models/match/match_model.dart';
 
 import '../services/user_service.dart';
 import '../widgets/background.dart';

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:Madnolia/services/user_service.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
-import 'package:Madnolia/models/match_model.dart';
+import 'package:Madnolia/models/match/match_model.dart';
 import 'package:Madnolia/widgets/match_card_widget.dart';
 import 'package:multi_language_json/multi_language_json.dart';
 

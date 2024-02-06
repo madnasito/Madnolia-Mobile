@@ -174,7 +174,6 @@ class _SeatchUserState extends State<SeatchUser> {
               ),
       ],
     );
-    ;
   }
 
   _seatchUser(String user) {

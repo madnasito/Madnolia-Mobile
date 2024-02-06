@@ -6,6 +6,7 @@ import 'package:Madnolia/blocs/message_provider.dart';
 import 'package:Madnolia/providers/user_provider.dart';
 import 'package:Madnolia/routes/routes.dart';
 import 'package:Madnolia/services/sockets_service.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
 
@@ -24,10 +25,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = WidgetsFlutterBinding.ensureInitialized().window.locale;
-
-// Imprime el idioma predeterminado, por ejemplo: "es"
-    // print(locale.languageCode);
     return LoginProvider(
       child: MultiProvider(
         providers: [
@@ -37,13 +34,15 @@ class MyApp extends StatelessWidget {
         ],
         child: MessageProvider(
           child: LanguageBuilder(
-            child: MaterialApp.router(
-              theme: ThemeData(
-                brightness: Brightness.dark,
+            child: Portal(
+              child: MaterialApp.router(
+                theme: ThemeData(
+                  brightness: Brightness.dark,
+                ),
+                title: 'Madnolia',
+                routerConfig: router,
+                key: navigatorKey,
               ),
-              title: 'Madnolia',
-              routerConfig: router,
-              key: navigatorKey,
             ),
           ),
         ),

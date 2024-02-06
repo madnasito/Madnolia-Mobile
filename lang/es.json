@@ -16,7 +16,8 @@
     "HOME":{
         "MATCH": "Partida creada",
         "MATCHES": "Partidas creadas",
-        "CREATE": "Crea una aquí"
+        "CREATE": "Crea una aquí",
+        "NO_MATCHES": "No partidas para "
     },
     "REGISTER":{
         "TITLE": "Crear cuenta",

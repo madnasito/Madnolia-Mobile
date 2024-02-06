@@ -18,7 +18,7 @@ import 'package:Madnolia/pages/user/edit_user_page.dart';
 import 'package:Madnolia/pages/user/user_matches_page.dart';
 import 'package:Madnolia/pages/user/user_page.dart';
 import 'package:Madnolia/pages/user/user_platforms.dart';
-import 'package:Madnolia/views/create_match_view.dart';
+
 // import 'package:Madnolia/pages/user/user_platforms.dart';
 
 import '../pages/home/home_user_page.dart';

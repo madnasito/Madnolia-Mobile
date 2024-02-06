@@ -1,9 +1,12 @@
-// ignore: library_prefixes
+import 'package:Madnolia/main.dart';
 import 'package:Madnolia/models/invitation_model.dart';
-import 'package:Madnolia/models/match_model.dart';
+import 'package:Madnolia/models/message_model.dart';
+import 'package:Madnolia/providers/user_provider.dart';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
 
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -26,6 +29,10 @@ class SocketService with ChangeNotifier {
   void connect() async {
     final token = await const FlutterSecureStorage().read(key: "token");
 
+    final userProvider = Provider.of<UserProvider>(
+        MyApp.navigatorKey.currentContext!,
+        listen: false);
+
     _socket = IO.io(
         Environment.socketUrl,
         IO.OptionBuilder()
@@ -37,7 +44,35 @@ class SocketService with ChangeNotifier {
 
     _socket.onConnect((_) async {
       _serverStatus = ServerStatus.online;
-      // Mueve la notificación aquí
+
+      _socket.on("message", (payload) async {
+        Message message = Message.fromJson(payload);
+
+        final List<String> wordsList = message.text.split(" ");
+
+        List<String> mentions = wordsList
+            .where((element) => element == "@${userProvider.user.username}")
+            .toList();
+
+        if (mentions.isNotEmpty) {
+          await NotificationService.showNotification(
+              title: "",
+              body: message.text,
+              summary: message.user.name,
+              notificationLayout: NotificationLayout.Messaging,
+              actionButtons: [
+                NotificationActionButton(
+                    key: "reply",
+                    label: "Reply",
+                    autoDismissible: true,
+                    requireInputText: true,
+                    actionType: ActionType.SilentAction),
+              ],
+              payload: {
+                "match": message.room
+              });
+        }
+      });
 
       _socket.on("notification", (data) async {
         // Match match = Match.fromJson(data["match"]);
@@ -46,9 +81,11 @@ class SocketService with ChangeNotifier {
         await NotificationService.showNotification(
             title: "Invitation to a Match",
             body: "Game name",
+            // ignore: unnecessary_null_comparison
             notificationLayout: match.img != null
                 ? NotificationLayout.BigPicture
                 : NotificationLayout.Default,
+            // ignore: unnecessary_null_comparison
             bigPicture: match.img != null ? match.img : null,
             payload: {
               "match": match.match
@@ -58,7 +95,8 @@ class SocketService with ChangeNotifier {
                   key: "accept",
                   label: "Accept",
                   color: Colors.blue,
-                  actionType: ActionType.SilentAction),
+                  actionType: ActionType.DismissAction,
+                  autoDismissible: true),
               NotificationActionButton(
                   key: "decline",
                   label: "Decline",
@@ -82,13 +120,6 @@ class SocketService with ChangeNotifier {
     _socket.onDisconnect((_) {
       _serverStatus = ServerStatus.offline;
       notifyListeners();
-    });
-
-    _socket.on("message", (payload) async {
-      // await NotificationService.showNotification(
-      //     title: payload["user"]["username"],
-      //     body: payload["text"],
-      //     notificationLayout: NotificationLayout.Messaging);
     });
   }
 

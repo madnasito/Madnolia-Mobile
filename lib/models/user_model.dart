@@ -35,7 +35,7 @@ class User {
       platforms: List<int>.from(json["platforms"].map((x) => x)),
       img: json["img"],
       thumbImg: json["thumb_img"],
-      id: json["_id"]);
+      id: json["uid"]);
 
   Map<String, dynamic> toJson() => {
         "name": name,

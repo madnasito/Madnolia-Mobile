@@ -6,7 +6,7 @@ import 'package:Madnolia/views/match_view.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
 
-import 'package:Madnolia/models/match_model.dart';
+import 'package:Madnolia/models/match/match_model.dart';
 
 class MatchPage extends StatelessWidget {
   const MatchPage({super.key});
