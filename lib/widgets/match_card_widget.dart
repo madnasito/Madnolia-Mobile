@@ -1,8 +1,7 @@
+import 'package:Madnolia/models/match/minimal_match_model.dart';
 import 'package:flutter/material.dart';
 
 import '../models/game_model.dart';
-
-import 'package:Madnolia/models/match/match_model.dart';
 
 class GameCard extends StatelessWidget {
   final Game game;
@@ -45,7 +44,7 @@ class GameCard extends StatelessWidget {
 }
 
 class MatchCard extends StatelessWidget {
-  final Match match;
+  final MinimalMatch match;
   final Widget bottom;
   const MatchCard({super.key, required this.match, required this.bottom});
 

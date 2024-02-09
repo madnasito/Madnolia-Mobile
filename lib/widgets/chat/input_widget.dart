@@ -41,8 +41,6 @@ class InputGroupMessage extends StatelessWidget {
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
           child: FlutterMentions(
             key: inputKey,
-            appendSpaceOnAdd: true,
-            autofocus: true,
             suggestionPosition: SuggestionPosition.Top,
             maxLines: 5,
             minLines: 1,

@@ -23,7 +23,6 @@ class Match {
   int platform;
   int date;
   String user;
-  List<dynamic> chat;
 
   Match(
       {this.id = "",
@@ -37,7 +36,6 @@ class Match {
       required this.platform,
       required this.date,
       this.user = "",
-      required this.chat,
       this.img});
 
   factory Match.fromJson(Map<String, dynamic> json) => Match(
@@ -54,7 +52,6 @@ class Match {
         platform: json["platform"],
         date: json["date"],
         user: json["user"],
-        chat: List<dynamic>.from(json["chat"].map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
@@ -69,7 +66,6 @@ class Match {
         "platform": platform,
         "date": date,
         "user": user,
-        "chat": List<dynamic>.from(chat.map((x) => x)),
         "img": img != null ? img : ""
       };
 }

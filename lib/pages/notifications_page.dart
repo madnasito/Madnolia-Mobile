@@ -1,9 +1,8 @@
+import 'package:Madnolia/models/match/minimal_match_model.dart';
 import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:multi_language_json/multi_language_json.dart';
-
-import '../models/match/match_model.dart';
 
 import '../services/user_service.dart';
 import '../widgets/background.dart';
@@ -40,7 +39,8 @@ class NotificationsPage extends StatelessWidget {
                   if (snapshot.hasData) {
                     List matches = snapshot.data["invitations"];
 
-                    List list = matches.map((e) => Match.fromJson(e)).toList();
+                    List list =
+                        matches.map((e) => MinimalMatch.fromJson(e)).toList();
                     if (list.isEmpty) {
                       return Center(child: Text("Empty"));
                     }
@@ -52,7 +52,7 @@ class NotificationsPage extends StatelessWidget {
                           return GestureDetector(
                             onTap: () {
                               GoRouter.of(context)
-                                  .push('/match', extra: list[index]);
+                                  .push('/match', extra: list[index].id);
                             },
                             child: MatchCard(
                                 match: list[index],

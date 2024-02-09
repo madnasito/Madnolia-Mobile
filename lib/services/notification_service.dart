@@ -105,11 +105,14 @@ class NotificationService {
       final String? bigPicture,
       final List<NotificationActionButton>? actionButtons,
       final bool scheduled = false,
+      final String? largeIcon,
       final int? interval}) async {
     assert(!scheduled || (scheduled && interval != null));
 
     await AwesomeNotifications().createNotification(
         content: NotificationContent(
+            backgroundColor: Colors.transparent,
+            largeIcon: largeIcon,
             id: -1,
             channelKey: 'basic_channel',
             title: title,

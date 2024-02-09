@@ -11,7 +11,6 @@ import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.initializeNotification();
 
   runApp(const MyApp());

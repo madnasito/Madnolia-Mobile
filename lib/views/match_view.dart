@@ -13,34 +13,6 @@ import 'package:Madnolia/widgets/chat/chat_message_widget.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:provider/provider.dart';
 
-class MatchOwnerView extends StatelessWidget {
-  final Match match;
-  const MatchOwnerView({super.key, required this.match});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              Image.network(match.img != null ? match.img.toString() : ""),
-              Positioned(
-                bottom: 2,
-                left: 2,
-                child: Text(
-                  match.gameName,
-                  style: const TextStyle(backgroundColor: Colors.black54),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class MatchUserView extends StatelessWidget {
   final Match match;
   const MatchUserView({super.key, required this.match});
@@ -53,9 +25,14 @@ class MatchUserView extends StatelessWidget {
 
 class MatchChat extends StatefulWidget {
   final Match match;
+  final List matchMessages;
   final MessageBloc bloc;
 
-  const MatchChat({super.key, required this.match, required this.bloc});
+  const MatchChat(
+      {super.key,
+      required this.match,
+      required this.bloc,
+      required this.matchMessages});
 
   @override
   State<MatchChat> createState() => _MatchChatState();
@@ -67,7 +44,7 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   final matchService = MatchService();
   late UserProvider userProvider;
 
-  late SocketService socketService;
+  late dynamic socketService;
   late GlobalKey<FlutterMentionsState> messageKey;
   void _loadHistory(String id) async {
     final resp = await matchService.getMatch(id);
@@ -76,9 +53,11 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
       return;
     }
 
-    final respMessages = resp["match"]["chat"];
+    // final respMessages = resp["match"]["chat"];
 
-    List history = respMessages.map((e) => Message.fromJson(e)).toList();
+    List history =
+        widget.matchMessages.map((e) => Message.fromJson(e)).toList();
+    // List idk = widget.matchMessages.map((e) => Message.fromJson(e)).toList();
     List<Widget> messages = history
         .map((e) => ChatMessage(
             text: e.text,
@@ -94,6 +73,9 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   }
 
   void _listenMessage(Map<String, dynamic> payload) {
+    if (!mounted) {
+      return;
+    }
     Message decodedMessage = Message.fromJson(payload);
 
     if (decodedMessage.room != widget.match.id) return;
@@ -112,26 +94,33 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   }
 
   @override
+  // TODO: implement mounted
+  bool get mounted => super.mounted;
+
+  @override
   void initState() {
     super.initState();
     userProvider = Provider.of<UserProvider>(context, listen: false);
     _loadHistory(widget.match.id);
     messageKey = GlobalKey<FlutterMentionsState>();
     socketService = Provider.of<SocketService>(context, listen: false);
-    socketService.socket.on("message", (data) => _listenMessage(data));
-    socketService.socket.on("new_player_to_match", (data) {
-      ChatUser user = ChatUser.fromJson(data);
 
-      debugPrint(user.name);
-    });
-    socketService.socket.on("added_to_match", (data) {
-      if (data == true) {
-        isInMatch = true;
-        setState(() {});
-      }
-    });
+    if (mounted) {
+      socketService.socket.on("message", (data) => _listenMessage(data));
+      socketService.socket.on("new_player_to_match", (data) {
+        ChatUser user = ChatUser.fromJson(data);
 
-    socketService.emit("init_match_chat", widget.match.id);
+        debugPrint(user.name);
+      });
+      socketService.socket.on("added_to_match", (data) {
+        if (data == true) {
+          isInMatch = true;
+          setState(() {});
+        }
+      });
+
+      socketService.emit("init_match_chat", widget.match.id);
+    }
   }
 
   @override
@@ -140,7 +129,11 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
     for (ChatMessage message in _messages) {
       message.animationController.dispose();
     }
-    socketService.socket.off("added_to_match");
+
+    // socketService.socket.off("message");
+    socketService.socket.off("new_player_to_match");
+    socketService = null;
+
     super.dispose();
   }
 

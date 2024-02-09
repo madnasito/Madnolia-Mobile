@@ -56,8 +56,9 @@ class SocketService with ChangeNotifier {
 
         if (mentions.isNotEmpty) {
           await NotificationService.showNotification(
-              title: "",
+              title: message.user.name,
               body: message.text,
+              largeIcon: message.user.thumbImg,
               summary: message.user.name,
               notificationLayout: NotificationLayout.Messaging,
               actionButtons: [

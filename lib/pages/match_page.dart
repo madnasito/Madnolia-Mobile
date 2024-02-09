@@ -18,29 +18,28 @@ class MatchPage extends StatelessWidget {
     return CustomScaffold(
       body: Background(
         child: SafeArea(
-            child: extraInfo is Match
-                ? MatchChat(
-                    match: extraInfo,
-                    bloc: bloc,
-                  )
-                : FutureBuilder(
-                    future: MatchService().getMatch(extraInfo.toString()),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data["ok"]) {
-                          snapshot.data["match"]["users"] = [];
-                          final match = Match.fromJson(snapshot.data["match"]);
+            child: FutureBuilder(
+          future: MatchService().getMatch(extraInfo.toString()),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data["ok"]) {
+                snapshot.data["match"]["users"] = [];
+                final match = Match.fromJson(snapshot.data["match"]);
+                final respMessages = snapshot.data["messages"];
 
-                          return MatchChat(match: match, bloc: bloc);
-                        } else {
-                          return Center(child: Text("Error loading match."));
-                        }
-                      } else {
-                        return Center(child: const CircularProgressIndicator());
-                      }
-                    },
-                  )),
+                return MatchChat(
+                  match: match,
+                  bloc: bloc,
+                  matchMessages: respMessages,
+                );
+              } else {
+                return Center(child: Text("Error loading match."));
+              }
+            } else {
+              return Center(child: const CircularProgressIndicator());
+            }
+          },
+        )),
       ),
     );
   }

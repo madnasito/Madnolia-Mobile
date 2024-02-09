@@ -1,10 +1,10 @@
+import 'package:Madnolia/models/match/minimal_match_model.dart';
 import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Madnolia/services/user_service.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
-import 'package:Madnolia/models/match/match_model.dart';
 import 'package:Madnolia/widgets/match_card_widget.dart';
 import 'package:multi_language_json/multi_language_json.dart';
 
@@ -41,7 +41,8 @@ class UserMatchesPage extends StatelessWidget {
                   if (snapshot.hasData && snapshot.data["ok"] == true) {
                     List matches = snapshot.data["matches"];
 
-                    final list = matches.map((e) => Match.fromJson(e)).toList();
+                    final list =
+                        matches.map((e) => MinimalMatch.fromJson(e)).toList();
                     return ListView.builder(
                         physics: const BouncingScrollPhysics(),
                         shrinkWrap: true,
@@ -50,7 +51,7 @@ class UserMatchesPage extends StatelessWidget {
                           return GestureDetector(
                             onTap: () {
                               GoRouter.of(context)
-                                  .push('/match', extra: list[index]);
+                                  .push('/match', extra: list[index].id);
                             },
                             child: MatchCard(
                                 match: list[index],
