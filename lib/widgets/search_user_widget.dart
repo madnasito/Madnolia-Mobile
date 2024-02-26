@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Madnolia/models/chat_user_model.dart';
 import 'package:Madnolia/models/user_model.dart';
 import 'package:Madnolia/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,7 @@ class _SeatchUserState extends State<SeatchUser> {
                     if (resp["ok"] == false) return Container();
 
                     final users =
-                        resp["users"].map((e) => User.fromJson(e)).toList();
+                        resp["users"].map((e) => ChatUser.fromJson(e)).toList();
                     return Column(
                       children: [
                         Text(

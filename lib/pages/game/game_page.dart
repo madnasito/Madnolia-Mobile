@@ -65,6 +65,7 @@ class GamePage extends StatelessWidget {
                         margin:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                         decoration: BoxDecoration(
+                            color: Colors.black26,
                             border: Border.all(color: Colors.blue, width: 1),
                             borderRadius: BorderRadius.circular(20)),
                         child: ListTile(
