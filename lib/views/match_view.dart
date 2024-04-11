@@ -94,7 +94,6 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   }
 
   @override
-  // TODO: implement mounted
   bool get mounted => super.mounted;
 
   @override
@@ -196,7 +195,7 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
     List<ChatUser> founded =
         match.likes.where((e) => userProvider.user.id == e.id).toList();
 
-    print(match.likes);
+    print(match.users);
 
     if (owner || founded.isNotEmpty || isInMatch) {
       isInMatch = true;

@@ -24,6 +24,7 @@ class AuthService {
 
       final respBody = jsonDecode(resp.body);
 
+      print(respBody);
       if (respBody["ok"]) {
         await _storage.write(key: "token", value: respBody["token"]);
         return {"ok": true};

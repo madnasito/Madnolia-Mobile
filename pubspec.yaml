@@ -30,7 +30,7 @@ icons_launcher:
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.8.0+2
+version: 0.8.0+3
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -54,7 +54,7 @@ dependencies:
   socket_io_client: ^2.0.3+1
   google_fonts: ^6.1.0
   omni_datetime_picker: ^1.0.9
-  go_router: ^12.1.1
+  go_router: ^13.2.2
   flutter_svg: ^2.0.9
   animate_do: ^3.3.3
   gradient_borders: ^1.0.0
@@ -63,7 +63,7 @@ dependencies:
   mime_type: ^1.0.0
   image_picker: ^1.0.4
   toast: ^0.3.0
-  awesome_notifications: ^0.8.2
+  awesome_notifications: ^0.9.3+1
   flutter_launcher_icons: ^0.13.1
   multi_language_json: ^1.2.0
   liquid_pull_to_refresh: ^3.0.1

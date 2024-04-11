@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:Madnolia/models/chat_user_model.dart';
-import 'package:Madnolia/models/user_model.dart';
 import 'package:Madnolia/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_language_json/multi_language_json.dart';
