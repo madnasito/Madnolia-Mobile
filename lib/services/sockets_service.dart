@@ -38,11 +38,14 @@ class SocketService with ChangeNotifier {
         IO.OptionBuilder()
             .setTransports(['websocket']) // for Flutter or Dart VM
             .enableAutoConnect() // disable auto-connection
+            .disableForceNew()
+            .disableMultiplex()
             .setExtraHeaders({"x-token": token})
             .build());
     // Init socket
 
     _socket.onConnect((_) async {
+      print("conected");
       _serverStatus = ServerStatus.online;
 
       _socket.on("message", (payload) async {
@@ -55,6 +58,7 @@ class SocketService with ChangeNotifier {
             .toList();
 
         if (mentions.isNotEmpty) {
+          print("Crea notification");
           await NotificationService.showNotification(
               title: message.user.name,
               body: message.text,

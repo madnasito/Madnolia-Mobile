@@ -109,6 +109,7 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
       socketService.socket.on("new_player_to_match", (data) {
         ChatUser user = ChatUser.fromJson(data);
 
+        debugPrint("USER NAME");
         debugPrint(user.name);
       });
       socketService.socket.on("added_to_match", (data) {

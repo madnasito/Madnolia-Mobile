@@ -16,6 +16,7 @@ class GamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(GoRouterState.of(context).extra == null) context.go("/home-user");
     final Map data = GoRouterState.of(context).extra as Map;
 
     final Game game = data["game"] as Game;

@@ -58,7 +58,6 @@ class NotificationService {
   /// Use this method to detect if the user dismissed a notification
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
-    print(receivedAction);
   }
 
   /// Use this method to detect when the user taps on a notification or action button
@@ -75,15 +74,12 @@ class NotificationService {
     }
 
     if (action == "accept") {
-      print(MyApp.navigatorKey.currentContext);
       SocketService socketService = Provider.of<SocketService>(
           MyApp.navigatorKey.currentContext!,
           listen: false);
       socketService.emit("join_to_match", payload["match"]);
     }
     if (action == "reply") {
-      print(receivedAction.buttonKeyInput);
-      print(payload);
       // print(MyApp.navigatorKey.currentContext);
       SocketService socketService = Provider.of<SocketService>(
           MyApp.navigatorKey.currentContext!,
@@ -112,6 +108,7 @@ class NotificationService {
     await AwesomeNotifications().createNotification(
         content: NotificationContent(
             backgroundColor: Colors.transparent,
+            roundedLargeIcon: true,
             largeIcon: largeIcon,
             id: -1,
             channelKey: 'basic_channel',

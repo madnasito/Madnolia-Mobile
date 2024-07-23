@@ -114,6 +114,8 @@ class _SearchGameViewState extends State<SearchGameView> {
     return RawgService().searchGame(game: title, platform: platform);
   }
 }
+final dateController = TextEditingController();
+final nameController = TextEditingController();
 
 class MatchFormView extends StatelessWidget {
   final Game game;
@@ -132,9 +134,7 @@ class MatchFormView extends StatelessWidget {
 
     SocketService socketService =
         Provider.of<SocketService>(context, listen: false);
-    String newDateTime = "";
-    final dateController = TextEditingController();
-    final nameController = TextEditingController();
+    
     final platformInfo = getPlatformInfo(platformId);
     List<String> users = [];
     return Container(
@@ -218,7 +218,6 @@ class MatchFormView extends StatelessWidget {
                 dateController.text = dateTime != null
                     ? dateTime.toString().substring(0, 16)
                     : "";
-                newDateTime = dateTime.toString();
               },
             ),
             const SizedBox(height: 20),
@@ -253,6 +252,7 @@ class MatchFormView extends StatelessWidget {
                 color: Colors.transparent,
                 onPressed: () async {
                   if (uploading == true) {
+                    
                     return Toast.show(
                         langData.getValue(
                             route: ["CREATE_MATCH", "UPLOADING_MESSAGE"]),
@@ -261,7 +261,7 @@ class MatchFormView extends StatelessWidget {
                         textStyle: const TextStyle(fontSize: 18),
                         duration: 3);
                   }
-                  if (newDateTime.isEmpty || newDateTime == "null") {
+                  if (dateController.text == "") {
                     return Toast.show(
                         langData
                             .getValue(route: ["CREATE_MATCH", "DATE_ERROR"]),
@@ -271,7 +271,7 @@ class MatchFormView extends StatelessWidget {
                         duration: 3);
                   }
                   int formDate =
-                      DateTime.parse(newDateTime).millisecondsSinceEpoch;
+                      DateTime.parse(dateController.text).millisecondsSinceEpoch;
 
                   Map match = {
                     "game_name": game.name,
@@ -305,6 +305,8 @@ class MatchFormView extends StatelessWidget {
                         duration: 3);
                   }
                   // ignore: use_build_context_synchronously
+                  dateController.clear();
+                  nameController.clear();
                   context.goNamed("user-matches");
                 })
           ],
