@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/services/games_service.dart';
 import 'package:Madnolia/utils/platform_id_ico.dart';
 import 'package:Madnolia/widgets/language_builder.dart';
@@ -214,15 +215,21 @@ class _HomeUserPageState extends State<HomeUserPage> {
   _loadInfo(BuildContext context, UserProvider user) async {
     final userInfo = await UserService().getUserInfo();
 
+    final userBloc = context.read<UserBloc>();
     if (userInfo["ok"] == false) {
       const storage = FlutterSecureStorage();
 
       await storage.delete(key: "token");
+
+      userBloc.logOutUser();
       // ignore: use_build_context_synchronously
       // showAlert(context, "Token error");
       // ignore: use_build_context_synchronously
       return context.go("/home");
     }
+
+
+    userBloc.loadInfo(userFromJson(jsonEncode(userInfo)));
 
     user.user = userFromJson(jsonEncode(userInfo));
 
