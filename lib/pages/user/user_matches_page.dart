@@ -32,7 +32,7 @@ class UserMatchesPage extends StatelessWidget {
                   style: TextStyle(
                       fontFamily: "Cyberverse",
                       fontSize: 30,
-                      color: Colors.greenAccent),
+                      color: Colors.white),
                 ),
               ),
               FutureBuilder(

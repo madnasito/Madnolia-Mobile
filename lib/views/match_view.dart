@@ -1,3 +1,4 @@
+import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/models/chat_user_model.dart';
 import 'package:Madnolia/widgets/chat/input_widget.dart';
 import 'package:Madnolia/widgets/form_button.dart';
@@ -6,7 +7,6 @@ import 'package:Madnolia/blocs/message_bloc.dart';
 
 import 'package:Madnolia/models/match/match_model.dart';
 import 'package:Madnolia/models/message_model.dart';
-import 'package:Madnolia/providers/user_provider.dart';
 import 'package:Madnolia/services/match_service.dart';
 import 'package:Madnolia/services/sockets_service.dart';
 import 'package:Madnolia/widgets/chat/chat_message_widget.dart';
@@ -40,9 +40,9 @@ class MatchChat extends StatefulWidget {
 
 class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   bool isInMatch = false;
-  final List _messages = [];
+  final List<ChatMessage> _messages = [];
   final matchService = MatchService();
-  late UserProvider userProvider;
+  late UserBloc userBloc;
 
   late dynamic socketService;
   late GlobalKey<FlutterMentionsState> messageKey;
@@ -55,16 +55,22 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
 
     // final respMessages = resp["match"]["chat"];
 
-    List history =
+    List<Message> history =
         widget.matchMessages.map((e) => Message.fromJson(e)).toList();
-    // List idk = widget.matchMessages.map((e) => Message.fromJson(e)).toList();
-    List<Widget> messages = history
-        .map((e) => ChatMessage(
+        
+    String lastUser = "";
+    List<ChatMessage> messages = history
+        .map((e) {
+          final isTheSame = e.user.id == lastUser ? false: true;
+          lastUser = e.user.id;
+          return  ChatMessage(
             text: e.text,
             user: e.user,
+            mainMessage: isTheSame,
             animationController: AnimationController(
                 vsync: this, duration: const Duration(milliseconds: 0))
-              ..forward()))
+              ..forward());
+        })
         .toList();
 
     setState(() {
@@ -80,7 +86,9 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
 
     if (decodedMessage.room != widget.match.id) return;
 
+    
     ChatMessage message = ChatMessage(
+      mainMessage: _messages[0].user.username == decodedMessage.user.username ? false : true,
         text: decodedMessage.text,
         user: decodedMessage.user,
         animationController: AnimationController(
@@ -99,10 +107,10 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    userProvider = Provider.of<UserProvider>(context, listen: false);
     _loadHistory(widget.match.id);
     messageKey = GlobalKey<FlutterMentionsState>();
     socketService = Provider.of<SocketService>(context, listen: false);
+    userBloc = context.read<UserBloc>();
 
     if (mounted) {
       socketService.socket.on("message", (data) => _listenMessage(data));
@@ -120,12 +128,15 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
       });
 
       socketService.emit("init_match_chat", widget.match.id);
+
+      userBloc.updateChatRoom(widget.match.id);
+
     }
   }
 
   @override
   void dispose() {
-    socketService.emit("disconnect_chat");
+    // socketService.emit("disconnect_chat");
     for (ChatMessage message in _messages) {
       message.animationController.dispose();
     }
@@ -134,11 +145,14 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
     socketService.socket.off("new_player_to_match");
     socketService = null;
 
+    
+    userBloc.updateChatRoom("");
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final UserState userState = context.watch<UserBloc>().state;
     return Column(
       children: [
         Container(
@@ -186,15 +200,15 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
         Container(
             color: Colors.black54,
             padding: const EdgeInsets.only(top: 10),
-            child: _bottomRow(widget.match, userProvider, isInMatch))
+            child: _bottomRow(widget.match, userState, isInMatch))
       ],
     );
   }
 
-  Widget _bottomRow(Match match, UserProvider userProvider, bool isInMatch) {
-    bool owner = userProvider.user.id == match.user ? true : false;
+  Widget _bottomRow(Match match, UserState userState, bool isInMatch) {
+    bool owner = userState.id == match.user ? true : false;
     List<ChatUser> founded =
-        match.likes.where((e) => userProvider.user.id == e.id).toList();
+        match.likes.where((e) => userState.id == e.id).toList();
 
     print(match.users);
 

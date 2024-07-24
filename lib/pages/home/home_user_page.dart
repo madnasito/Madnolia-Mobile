@@ -10,7 +10,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Madnolia/models/user_model.dart';
-import 'package:Madnolia/providers/user_provider.dart';
 import 'package:Madnolia/services/sockets_service.dart';
 import 'package:Madnolia/services/user_service.dart';
 // import 'package:Madnolia/widgets/alert_widget.dart';
@@ -34,15 +33,13 @@ class HomeUserPage extends StatefulWidget {
 
 class _HomeUserPageState extends State<HomeUserPage> {
   late SocketService socketService;
-  late UserProvider userProvider;
 
   @override
   void initState() {
-    userProvider = Provider.of<UserProvider>(context, listen: false);
     socketService = Provider.of<SocketService>(context, listen: false);
 
     if (socketService.serverStatus != ServerStatus.online) {
-      socketService.connect();
+      socketService.connect(context);
     }
 
     super.initState();
@@ -52,7 +49,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
   Widget build(BuildContext context) {
     final LangSupport langData = LanguageBuilder.langData;
     return FutureBuilder(
-      future: _loadInfo(context, userProvider),
+      future: _loadInfo(context),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return CustomScaffold(
@@ -212,7 +209,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
     );
   }
 
-  _loadInfo(BuildContext context, UserProvider user) async {
+  _loadInfo(BuildContext context) async {
     final userInfo = await UserService().getUserInfo();
 
     final userBloc = context.read<UserBloc>();
@@ -231,7 +228,6 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
     userBloc.loadInfo(userFromJson(jsonEncode(userInfo)));
 
-    user.user = userFromJson(jsonEncode(userInfo));
 
     return userInfo;
   }

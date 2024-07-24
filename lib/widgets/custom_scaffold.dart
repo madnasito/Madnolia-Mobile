@@ -1,3 +1,4 @@
+import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -5,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
 
-import '../providers/user_provider.dart';
 // import 'package:madnolia/widgets/form_button.dart';
 
 class CustomScaffold extends StatelessWidget {
@@ -15,11 +15,11 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final LangSupport langData = LanguageBuilder.langData;
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userState = context.read<UserBloc>().state;
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
-        backgroundColor: const Color.fromARGB(33, 68, 37, 155),
+        backgroundColor: Color.fromARGB(32, 39, 21, 88),
         child: SafeArea(
           child: Stack(
             children: [
@@ -32,13 +32,13 @@ class CustomScaffold extends StatelessWidget {
                     const SizedBox(width: 0),
                     CircleAvatar(
                       backgroundImage:
-                          NetworkImage(userProvider.user.thumbImg.toString()),
+                          NetworkImage(userState.thumbImg.toString()),
                       minRadius: 40,
                       maxRadius: 50,
                       backgroundColor: Colors.white,
                     ),
                     Text(
-                      userProvider.user.name,
+                      userState.name,
                       style: const TextStyle(fontSize: 20),
                     )
                   ],
@@ -124,6 +124,8 @@ class _MenuButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
+    final fullPath = GoRouterState.of(context).fullPath;
+    print(fullPath);
     return ElevatedButton(
         onPressed: () {
           if (route != "" && route != currentRouteName) {
@@ -144,7 +146,7 @@ class _MenuButton extends StatelessWidget {
           margin: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(60),
-            gradient: currentRouteName == route
+            gradient: startsWithPattern(fullPath!, route)
                 ? const LinearGradient(
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
@@ -173,5 +175,16 @@ class _MenuButton extends StatelessWidget {
             ],
           ),
         ));
+  }
+
+  bool startsWithPattern(String input, String pattern) {
+    // Escapa el patrón para que sea seguro usarlo en una expresión regular
+    String escapedPattern = RegExp.escape(pattern);
+    
+    // Crea una expresión regular que verifica si el string comienza con el patrón
+    RegExp regExp = RegExp('^$escapedPattern');
+
+    // Verifica si el input coincide con la expresión regular
+    return regExp.hasMatch(input);
   }
 }

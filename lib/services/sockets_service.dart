@@ -1,7 +1,6 @@
-import 'package:Madnolia/main.dart';
+import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/models/invitation_model.dart';
 import 'package:Madnolia/models/message_model.dart';
-import 'package:Madnolia/providers/user_provider.dart';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +25,10 @@ class SocketService with ChangeNotifier {
 
   Function get emit => _socket.emit;
 
-  void connect() async {
+  void connect(BuildContext context) async {
     final token = await const FlutterSecureStorage().read(key: "token");
 
-    final userProvider = Provider.of<UserProvider>(
-        MyApp.navigatorKey.currentContext!,
-        listen: false);
+    final userBloc = context.read<UserBloc>();
 
     _socket = IO.io(
         Environment.socketUrl,
@@ -54,10 +51,10 @@ class SocketService with ChangeNotifier {
         final List<String> wordsList = message.text.split(" ");
 
         List<String> mentions = wordsList
-            .where((element) => element == "@${userProvider.user.username}")
+            .where((element) => element == "@${userBloc.state.username}")
             .toList();
 
-        if (mentions.isNotEmpty) {
+        if (mentions.isNotEmpty && message.room != userBloc.state.chatRoom) {
           print("Crea notification");
           await NotificationService.showNotification(
               title: message.user.name,

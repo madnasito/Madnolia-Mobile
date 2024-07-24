@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:Madnolia/blocs/login_provider.dart';
 import 'package:Madnolia/blocs/message_provider.dart';
-import 'package:Madnolia/providers/user_provider.dart';
 import 'package:Madnolia/routes/routes.dart';
 import 'package:Madnolia/services/sockets_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,7 +32,6 @@ class MyApp extends StatelessWidget {
       child: LoginProvider(
         child: MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => UserProvider()),
             ChangeNotifierProvider(
                 create: (BuildContext context) => SocketService())
           ],

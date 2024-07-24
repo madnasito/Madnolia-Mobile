@@ -1,6 +1,7 @@
 part of 'user_bloc.dart';
 
 class UserState extends Equatable {
+  final bool loadedUser;
   final String name;
   final String email;
   final String username;
@@ -8,9 +9,11 @@ class UserState extends Equatable {
   final String img;
   final String thumbImg;
   final String id;
-  final bool loadedUser;
+  final String acceptInvitations;
+  final String chatRoom;
 
   const UserState({
+  this.loadedUser = false,
   this.name = "",
   this.email = "",
   this.username = "",
@@ -18,7 +21,8 @@ class UserState extends Equatable {
   this.img = "",
   this.thumbImg = "",
   this.id = "",
-  this.loadedUser = false
+  this.acceptInvitations = "",
+  this.chatRoom= "",
   });
 
   UserState copyWith({
@@ -29,7 +33,9 @@ class UserState extends Equatable {
     String? img,
     String? thumbImg,
     String? id,
-    bool? loadedUser
+    bool? loadedUser,
+    String? acceptInvitations,
+    String? chatRoom
   }) => UserState(
     name: name ?? this.name,
     email: email ?? this.email,
@@ -38,11 +44,13 @@ class UserState extends Equatable {
     img: img ?? this.img,
     thumbImg: thumbImg ?? this.thumbImg,
     id: id ?? this.id,
-    loadedUser: loadedUser ?? this.loadedUser
+    loadedUser: loadedUser ?? this.loadedUser,
+    acceptInvitations: acceptInvitations ?? this.acceptInvitations,
+    chatRoom: chatRoom ?? this.chatRoom
   );
   
   @override
   List<Object> get props => [
-    name, email, username, platforms, img, thumbImg, id, loadedUser
+    name, email, username, platforms, img, thumbImg, id, loadedUser, acceptInvitations, chatRoom
   ];
 }

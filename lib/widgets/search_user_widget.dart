@@ -130,48 +130,51 @@ class _SeatchUserState extends State<SeatchUser> {
                   }
                 },
               )
-            : Column(
-                children: [
-                  Text(
-                    "Inviteds:\n",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Container(
-                    color: Colors.black38,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemCount: usersList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Wrap(
-                            spacing: 10,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(60),
-                                    border:
-                                        Border.all(color: Colors.greenAccent)),
-                                child: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      usersList[index]["img"],
-                                      scale: 0.1),
-                                  minRadius: 25,
-                                  maxRadius: 35,
-                                ),
-                              ),
-                              Text(usersList[index]["name"])
-                            ],
-                          ),
-                        );
-                      },
+            : Visibility(
+              visible: usersList.length > 0,
+              child: Column(
+                  children: [
+                    Text(
+                      "Inviteds:\n",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20),
                     ),
-                  ),
-                ],
-              ),
+                    Container(
+                      color: Colors.black38,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: usersList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(
+                            title: Wrap(
+                              spacing: 10,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(60),
+                                      border:
+                                          Border.all(color: Colors.greenAccent)),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        usersList[index]["img"],
+                                        scale: 0.1),
+                                    minRadius: 25,
+                                    maxRadius: 35,
+                                  ),
+                                ),
+                                Text(usersList[index]["name"])
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+            ),
       ],
     );
   }

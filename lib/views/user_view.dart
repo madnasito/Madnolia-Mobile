@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,7 +13,6 @@ import 'package:multi_language_json/multi_language_json.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user_model.dart';
-import '../providers/user_provider.dart';
 import '../services/user_service.dart';
 
 class UserMainView extends StatelessWidget {
@@ -70,7 +70,7 @@ class _Card extends StatelessWidget {
               style: const TextStyle(
                   fontSize: 30,
                   fontFamily: "Cyberverse",
-                  color: Colors.greenAccent),
+                  color: Colors.white),
             )
           ],
         ),
@@ -86,23 +86,23 @@ class EditUserView extends StatelessWidget {
   Widget build(BuildContext context) {
     LangSupport langData = LanguageBuilder.langData;
     final bloc = EditUserProvider.of(context);
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userBloc = context.watch<UserBloc>();
 
-    final nameController = TextEditingController(text: userProvider.user.name);
+    final nameController = TextEditingController(text: userBloc.state.name);
     final usernameController =
-        TextEditingController(text: userProvider.user.username);
+        TextEditingController(text: userBloc.state.username);
     final emailController =
-        TextEditingController(text: userProvider.user.email);
+        TextEditingController(text: userBloc.state.email);
 
     bloc.changeName(nameController.text);
     bloc.changeEmail(emailController.text);
     bloc.changeUsername(usernameController.text);
-    bloc.changeImg(userProvider.user.img.toString());
-    bloc.changeThumbImg(userProvider.user.thumbImg.toString());
+    bloc.changeImg(userBloc.state.img);
+    bloc.changeThumbImg(userBloc.state.thumbImg);
 
-    String acceptInvitations = userProvider.user.acceptInvitations.toString();
+    String acceptInvitations = userBloc.state.acceptInvitations;
     return FutureBuilder(
-      future: _loadInfo(userProvider),
+      future: _loadInfo(context),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return SingleChildScrollView(
@@ -113,7 +113,7 @@ class EditUserView extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
                 Text(
-                  userProvider.user.name,
+                  userBloc.state.name,
                   style: const TextStyle(fontSize: 20),
                 ),
                 Container(
@@ -130,8 +130,7 @@ class EditUserView extends StatelessWidget {
                         if (picker != null) {
                           final resp = await bloc.uploadImage(picker);
                           if (resp["ok"]) {
-                            userProvider.user.img = resp["img"];
-                            userProvider.user.img = resp["thumb_img"];
+                            userBloc.updateImages(resp["img"], resp["thumb_img"]);
                           }
                         }
                       },
@@ -214,7 +213,7 @@ class EditUserView extends StatelessWidget {
                     onChanged: bloc.changeEmail,
                     controller: emailController),
                 DropDownWidget(
-                  value: userProvider.user.acceptInvitations.toString(),
+                  value: userBloc.state.acceptInvitations,
                   onChanged: (value) {
                     acceptInvitations = value.toString();
                   },
@@ -230,7 +229,7 @@ class EditUserView extends StatelessWidget {
                         color: const Color.fromARGB(0, 33, 149, 243),
                         onPressed: snapshot.hasData
                             ? () => _uptadeUser(
-                                bloc, userProvider, acceptInvitations)
+                                bloc, userBloc, acceptInvitations)
                             : null);
                   },
                 ),
@@ -247,16 +246,19 @@ class EditUserView extends StatelessWidget {
   }
 }
 
-_loadInfo(UserProvider user) async {
+_loadInfo(BuildContext context) async {
   final userInfo = await UserService().getUserInfo();
 
-  user.user = userFromJson(jsonEncode(userInfo));
+  final userBloc = context.read<UserBloc>();
+
+  userBloc.loadInfo(userFromJson(jsonEncode(userInfo)));
+
 
   return userInfo;
 }
 
 _uptadeUser(
-    EditUserBloc bloc, UserProvider provider, String invitations) async {
+    EditUserBloc bloc, UserBloc userBloc, String invitations) async {
   User user = User(
       email: bloc.email,
       name: bloc.name,
@@ -269,7 +271,7 @@ _uptadeUser(
     // return Toast.show("Error");
   }
 
-  final newUser = User.fromJson(resp);
+  final User newUser = User.fromJson(resp);
 
-  provider.user = newUser;
+  userBloc.loadInfo(newUser);
 }

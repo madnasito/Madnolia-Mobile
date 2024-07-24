@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:Madnolia/providers/user_provider.dart';
+import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/services/sockets_service.dart';
 import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:Madnolia/widgets/search_user_widget.dart';
@@ -55,20 +55,23 @@ class _SearchGameViewState extends State<SearchGameView> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SimpleCustomInput(
-          controller: controller,
-          placeholder:
-              langData.getValue(route: ["CREATE_MATCH", "SEARCH_GAME"]),
-          onChanged: (value) async {
-            counter++;
-            Timer(
-              const Duration(seconds: 1),
-              () {
-                counter--;
-                setState(() {});
-              },
-            );
-          },
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SimpleCustomInput(
+            controller: controller,
+            placeholder:
+                langData.getValue(route: ["CREATE_MATCH", "SEARCH_GAME"]),
+            onChanged: (value) async {
+              counter++;
+              Timer(
+                const Duration(seconds: 1),
+                () {
+                  counter--;
+                  setState(() {});
+                },
+              );
+            },
+          ),
         ),
         const SizedBox(
           height: 20,
@@ -129,9 +132,7 @@ class MatchFormView extends StatelessWidget {
     LangSupport langData = LanguageBuilder.langData;
     ToastContext().init(context);
     bool uploading = false;
-    UserProvider userProvider =
-        Provider.of<UserProvider>(context, listen: false);
-
+    final userState = context.read<UserBloc>().state;
     SocketService socketService =
         Provider.of<SocketService>(context, listen: false);
     
@@ -244,7 +245,7 @@ class MatchFormView extends StatelessWidget {
                   ),
                 ]),
             const SizedBox(height: 20),
-            Text(userProvider.user.name, style: TextStyle(fontSize: 10)),
+            Text(userState.name, style: TextStyle(fontSize: 10)),
             const SizedBox(height: 10),
             FormButton(
                 text:

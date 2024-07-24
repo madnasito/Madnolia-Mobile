@@ -16,9 +16,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           name: user.name,
           email: user.email,
           id: user.id,
-          img: user.id,
+          img: user.img,
           thumbImg: user.thumbImg,
-          platforms: user.platforms
+          platforms: user.platforms,
+          username: user.username,
+          acceptInvitations: user.acceptInvitations
         ));
       }
 
@@ -27,6 +29,17 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           state.copyWith(loadedUser: false)
         );
       }
+
+      if( event is UserUpdateImg){
+        emit(
+          state.copyWith(
+            img: event.img,
+            thumbImg: event.thumbImg
+          )
+        );
+      }
+
+      if(event is UserUpdateChatRoom) emit(state.copyWith(chatRoom: event.chatRoom));
     });
   }
   
@@ -34,6 +47,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   void loadInfo(User user){
     add(UserLoadInfo(userModel: user));
   }
+
+  void updateImages(String thumbImg, String img){
+    add(UserUpdateImg(thumbImg: thumbImg, img: img));
+  }
+
+  void updateChatRoom(String room) => add(UserUpdateChatRoom(chatRoom: room));
 
   void logOutUser() => add(UserLogOut());
   

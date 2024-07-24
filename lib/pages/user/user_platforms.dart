@@ -1,3 +1,4 @@
+import 'package:Madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
@@ -10,16 +11,14 @@ import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
 import 'package:Madnolia/widgets/form_button.dart';
 
-import '../../providers/user_provider.dart';
-
 class UserPlatformsPage extends StatelessWidget {
   const UserPlatformsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final userBloc = context.read<UserBloc>();
 
-    List platforms = userProvider.user.platforms;
+    List platforms = userBloc.state.platforms;
 
     ToastContext().init(context);
 
