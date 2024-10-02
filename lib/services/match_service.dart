@@ -11,33 +11,39 @@ class MatchService {
   final _storage = const FlutterSecureStorage();
 
   // Getting the match
-  Future<Map> getMatch(String id) => matchGetRequest("match/$id");
+  Future getMatch(String id) => matchGetRequest("info/$id");
+
+  // Getting the match
+  Future getMatchWithGame(String id) => matchGetRequest("with-game/$id");
+
+  // Getting the match
+  Future getFullMatch(String id) => matchGetRequest("full/$id");
 
   // Get all matches created by an user
-  Future<Map> getUserMatches() => matchGetRequest("player_matches");
+  Future getUserMatches() => matchGetRequest("player-matches");
 
   // Get all matches by a platform
-  Future<Map> getMatchesByPlatform(String platform) =>
-      matchGetRequest("player/matches_of/$platform");
+  Future getMatchesByPlatform(int platform) =>
+      matchGetRequest("platform/$platform");
 
   // Get a game match specifing a game & platform
-  Future<Map> getMatchesByGameAndPlatform(String game, String platform) =>
+  Future getMatchesByGameAndPlatform(String game, String platform) =>
       matchGetRequest("matches_of_game/$platform/$game");
 
-  Future<Map> createMatch(Map match) => matchPostRequest("match", match);
+  Future createMatch(Map match) => matchPostRequest("create", match);
 
-  Future<Map> editMatch(Map match) => matchPutRequest("edit_match", match);
+  Future editMatch(Map match) => matchPutRequest("update", match);
 
-  Future<Map> deleteMatch(String id) => matchDeleteRequest("delete_match/$id");
+  Future deleteMatch(String id) => matchDeleteRequest("delete/$id");
 
-  Future<Map> matchGetRequest(String apiUrl) async {
+  Future matchGetRequest(String apiUrl) async {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
+      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
 
       final resp =
-          await http.get(url, headers: {"token": (token != null) ? token : ""});
+          await http.get(url, headers: {"Authorization": "Bearer $token"});
 
       authenticating = false;
 
@@ -45,7 +51,7 @@ class MatchService {
     } catch (e) {
       authenticating = false;
       // print(e);
-      return {"ok": false};
+      return {"message": "Network error", "error": "Network error"};
     }
   }
 
@@ -53,13 +59,13 @@ class MatchService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
+      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
 
       final resp = await http.post(url,
           headers: {
             'Content-type': 'application/json',
             'Accept': 'application/json',
-            "token": (token != null) ? token : ""
+            "Authorization": "Bearer $token"
           },
           body: jsonEncode(body));
 
@@ -69,7 +75,7 @@ class MatchService {
     } catch (e) {
       authenticating = false;
       // print(e);
-      return {"ok": false};
+      return {"message": "Network error"};
     }
   }
 
@@ -77,10 +83,12 @@ class MatchService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
+      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
 
       final resp = await http.put(url,
-          headers: {"token": (token != null) ? token : ""}, body: body);
+          headers: {
+            "Authorization": "Bearer $token"
+          }, body: body);
 
       authenticating = false;
 
@@ -96,10 +104,10 @@ class MatchService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
+      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
 
       final resp = await http
-          .delete(url, headers: {"token": (token != null) ? token : ""});
+          .delete(url, headers: {"Authorization": "Bearer $token"});
 
       authenticating = false;
 

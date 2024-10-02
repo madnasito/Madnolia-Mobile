@@ -1,9 +1,9 @@
-import 'package:Madnolia/widgets/language_builder.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/super_cube.dart';
-import 'package:multi_language_json/multi_language_json.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,7 +12,6 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
 
-    LangSupport langData = LanguageBuilder.langData;
 
     return Background(
         child: SafeArea(
@@ -55,9 +54,8 @@ class HomePage extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 45, vertical: 15)),
                                 onPressed: () => context.go("/login"),
-                                child: Text(
-                                  langData.getValue(route: ["HEADER", "LOGIN"]),
-                                  style: TextStyle(
+                                child: Text(translate("HEADER.LOGIN"),
+                                  style: const TextStyle(
                                       color:
                                           Color.fromARGB(255, 255, 255, 122)),
                                 )),
@@ -70,18 +68,16 @@ class HomePage extends StatelessWidget {
                                   shape: const StadiumBorder(
                                       side: BorderSide(
                                           color: Colors.blue, width: 2))),
-                              child: Text(
-                                langData
-                                    .getValue(route: ["HEADER", "REGISTER"]),
-                                style: TextStyle(color: Colors.blue),
+                              child: Text( translate("HEADER.REGISTER"),
+                                style: const TextStyle(color: Colors.blue),
                               ),
                             )
                           ],
                         )
                       ])),
                   Text(
-                    langData.getValue(route: ["PRESENTATION", "TITLE"]),
-                    style: TextStyle(
+                    translate("PRESENTATION.TITLE"),
+                    style: const TextStyle(
                       color: Colors.white,
                       decoration: TextDecoration.none,
                       fontSize: 20,
@@ -90,8 +86,8 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   Text(
-                    langData.getValue(route: ["PRESENTATION", "SUBTITLE"]),
-                    style: TextStyle(
+                    translate("PRESENTATION.SUBTITLE"),
+                    style: const TextStyle(
                         color: Colors.white70,
                         decoration: TextDecoration.none,
                         fontSize: 15),

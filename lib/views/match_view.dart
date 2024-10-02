@@ -1,20 +1,24 @@
 import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/models/chat_user_model.dart';
+import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:Madnolia/models/match/full_match.model.dart';
+import 'package:Madnolia/models/match/match_with_game_model.dart';
 import 'package:Madnolia/widgets/chat/input_widget.dart';
 import 'package:Madnolia/widgets/form_button.dart';
 import 'package:flutter/material.dart';
 import 'package:Madnolia/blocs/message_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
-import 'package:Madnolia/models/match/match_model.dart';
-import 'package:Madnolia/models/message_model.dart';
+import '../models/chat/message_model.dart';
 import 'package:Madnolia/services/match_service.dart';
-import 'package:Madnolia/services/sockets_service.dart';
 import 'package:Madnolia/widgets/chat/chat_message_widget.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
-import 'package:provider/provider.dart';
+
+
+import '../models/chat_user_model.dart';
 
 class MatchUserView extends StatelessWidget {
-  final Match match;
+  final MatchWithGame match;
   const MatchUserView({super.key, required this.match});
 
   @override
@@ -24,15 +28,16 @@ class MatchUserView extends StatelessWidget {
 }
 
 class MatchChat extends StatefulWidget {
-  final Match match;
+  final FullMatch match;
   final List matchMessages;
   final MessageBloc bloc;
+  final Socket socketClient;
 
   const MatchChat(
       {super.key,
       required this.match,
       required this.bloc,
-      required this.matchMessages});
+      required this.matchMessages, required this.socketClient});
 
   @override
   State<MatchChat> createState() => _MatchChatState();
@@ -43,13 +48,13 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   final List<ChatMessage> _messages = [];
   final matchService = MatchService();
   late UserBloc userBloc;
+  // late Socket socketClient;
 
-  late dynamic socketService;
   late GlobalKey<FlutterMentionsState> messageKey;
   void _loadHistory(String id) async {
     final resp = await matchService.getMatch(id);
 
-    if (resp["ok"] == false) {
+    if (resp.containsKey("error")) {
       return;
     }
 
@@ -89,10 +94,12 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
     
     ChatMessage message = ChatMessage(
       mainMessage: _messages[0].user.username == decodedMessage.user.username ? false : true,
-        text: decodedMessage.text,
-        user: decodedMessage.user,
-        animationController: AnimationController(
-            vsync: this, duration: const Duration(milliseconds: 300)));
+      text: decodedMessage.text,
+      user: decodedMessage.user,
+      animationController: AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300))
+    );
 
     setState(() {
       _messages.insert(0, message);
@@ -101,33 +108,31 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
     message.animationController.forward();
   }
 
-  @override
-  bool get mounted => super.mounted;
 
   @override
   void initState() {
     super.initState();
     _loadHistory(widget.match.id);
     messageKey = GlobalKey<FlutterMentionsState>();
-    socketService = Provider.of<SocketService>(context, listen: false);
+    // socketClient = context.read<SocketsBloc>().state.clientSocket;
     userBloc = context.read<UserBloc>();
 
     if (mounted) {
-      socketService.socket.on("message", (data) => _listenMessage(data));
-      socketService.socket.on("new_player_to_match", (data) {
+      widget.socketClient.on("message", (data) => _listenMessage(data));
+      widget.socketClient.on("new_player_to_match", (data) {
         ChatUser user = ChatUser.fromJson(data);
 
         debugPrint("USER NAME");
         debugPrint(user.name);
       });
-      socketService.socket.on("added_to_match", (data) {
+      widget.socketClient.on("added_to_match", (data) {
         if (data == true) {
           isInMatch = true;
           setState(() {});
         }
       });
 
-      socketService.emit("init_match_chat", widget.match.id);
+      widget.socketClient.emit("init_chat", widget.match.id);
 
       userBloc.updateChatRoom(widget.match.id);
 
@@ -136,14 +141,14 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // socketService.emit("disconnect_chat");
+    widget.socketClient.emit("disconnect_chat");
     for (ChatMessage message in _messages) {
       message.animationController.dispose();
     }
 
-    // socketService.socket.off("message");
-    socketService.socket.off("new_player_to_match");
-    socketService = null;
+    widget.socketClient.off("message");
+    widget.socketClient.off("new_player_to_match");
+    
 
     
     userBloc.updateChatRoom("");
@@ -152,7 +157,7 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final UserState userState = context.watch<UserBloc>().state;
+    
     return Column(
       children: [
         Container(
@@ -164,11 +169,11 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
               Column(
                 children: [
                   Text(
-                    widget.match.message,
+                    widget.match.title,
                     style: const TextStyle(fontSize: 20),
                   ),
                   Text(
-                    widget.match.gameName,
+                    widget.match.game.name,
                     style: const TextStyle(fontSize: 6),
                   ),
                 ],
@@ -179,7 +184,7 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
                     BoxDecoration(borderRadius: BorderRadius.circular(20)),
                 child: Image.network(
                   filterQuality: FilterQuality.medium,
-                  widget.match.img.toString(),
+                  widget.match.game.background.toString(),
                   width: 80,
                 ),
               ),
@@ -200,17 +205,17 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
         Container(
             color: Colors.black54,
             padding: const EdgeInsets.only(top: 10),
-            child: _bottomRow(widget.match, userState, isInMatch))
+            child: _bottomRow(widget.match, userBloc.state, isInMatch))
       ],
     );
   }
 
-  Widget _bottomRow(Match match, UserState userState, bool isInMatch) {
+  Widget _bottomRow(FullMatch match, UserState userState, bool isInMatch) {
     bool owner = userState.id == match.user ? true : false;
-    List<ChatUser> founded =
-        match.likes.where((e) => userState.id == e.id).toList();
+    List<dynamic> founded =
+        match.likes.where((e) => userState.id == e).toList();
 
-    print(match.users);
+    print(match.likes);
 
     if (owner || founded.isNotEmpty || isInMatch) {
       isInMatch = true;
@@ -258,14 +263,14 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
           text: "Join to match",
           color: Colors.transparent,
           onPressed: () {
-            socketService.emit("join_to_match", match.id);
+            widget.socketClient.emit("join_to_match", match.id);
           });
     }
   }
 
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
-    socketService.emit("message", {"message": text, "room": widget.match.id});
+    widget.socketClient.emit("message", {"text": text, "room": widget.match.id});
     setState(() {});
   }
 }

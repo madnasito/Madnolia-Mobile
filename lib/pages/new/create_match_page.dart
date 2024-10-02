@@ -1,18 +1,17 @@
 import 'package:Madnolia/blocs/blocs.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:provider/provider.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:multi_language_json/multi_language_json.dart';
 
 
 import 'package:Madnolia/views/create_match_view.dart';
 
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
-import 'package:Madnolia/widgets/language_builder.dart';
 
 import '../../widgets/platform_icon_widget.dart';
 
@@ -28,7 +27,6 @@ class NewPage extends StatefulWidget {
 class _NewPageState extends State<NewPage> {
   @override
   Widget build(BuildContext context) {
-    final LangSupport langData = LanguageBuilder.langData;
 
     if (GoRouterState.of(context).extra != null) {
       if (GoRouterState.of(context).extra is int) {
@@ -46,10 +44,9 @@ class _NewPageState extends State<NewPage> {
                         FadeIn(
                             delay: const Duration(milliseconds: 300),
                             child: Text(
-                              langData
-                                  .getValue(route: ["CREATE_MATCH", "TITLE"]),
+                              translate("CREATE_MATCH.TITLE"),
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 20,
                               ),
                             )),

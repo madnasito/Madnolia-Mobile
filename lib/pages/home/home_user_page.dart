@@ -1,26 +1,21 @@
-import 'dart:convert';
-
 import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/services/games_service.dart';
+import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:Madnolia/models/game/home_game_model.dart';
+import 'package:Madnolia/services/match_service.dart';
 import 'package:Madnolia/utils/platform_id_ico.dart';
-import 'package:Madnolia/widgets/language_builder.dart';
-import 'package:Madnolia/widgets/match_card_widget.dart';
+import 'package:Madnolia/widgets/molecules/platform_matches_molecule.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:Madnolia/models/user_model.dart';
-import 'package:Madnolia/services/sockets_service.dart';
+import 'package:Madnolia/models/user/user_model.dart';
 import 'package:Madnolia/services/user_service.dart';
 // import 'package:Madnolia/widgets/alert_widget.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:Madnolia/widgets/custom_scaffold.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-import 'package:multi_language_json/multi_language_json.dart';
-import 'package:provider/provider.dart';
-import 'package:Madnolia/models/game_home_model.dart';
-
-import 'package:Madnolia/models/game_model.dart' as gameCard;
+import 'package:socket_io_client/socket_io_client.dart';
 
 class HomeUserPage extends StatefulWidget {
   const HomeUserPage({super.key});
@@ -32,188 +27,118 @@ class HomeUserPage extends StatefulWidget {
 }
 
 class _HomeUserPageState extends State<HomeUserPage> {
-  late SocketService socketService;
 
   @override
   void initState() {
-    socketService = Provider.of<SocketService>(context, listen: false);
 
-    if (socketService.serverStatus != ServerStatus.online) {
-      socketService.connect(context);
-    }
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final LangSupport langData = LanguageBuilder.langData;
-    return FutureBuilder(
-      future: _loadInfo(context),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return CustomScaffold(
-              body: Background(
-            child: SafeArea(
-                child: FutureBuilder(
-              future: _loadGames(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<List<dynamic>> snapshot) {
-                if (snapshot.hasData) {
-                  return LiquidPullToRefresh(
-                    showChildOpacityTransition: false,
-                    animSpeedFactor: 5.0,
-                    height: 70,
-                    onRefresh: () => _reload(),
-                    child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: snapshot.data?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Column(
+    
+    return  FutureBuilder(
+        future: _loadInfo(context),
+        builder: (context, snapshot) {
+          final userBloc = context.read<UserBloc>().state;
+          final socketBloc = context.read<SocketsBloc>();
+          socketBloc.state.clientSocket.onConnect((_) async {
+            socketBloc.updateServerStatus(ServerStatus.online);
+          });
+          if (snapshot.hasData) {
+            return CustomScaffold(
+                body: Background(
+                child: SafeArea(
+                  child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: userBloc.platforms.length,
+                  itemBuilder: (BuildContext context, int platformIndex) {
+                    return Column(
+                      children:[ 
+                        Container(
+                          width: double.infinity,
+                          color: Colors.black45,
+                          child: Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            runAlignment: WrapAlignment.center,
+                            spacing: 20,
                             children: [
-                              Container(
-                                width: double.infinity,
-                                color: Colors.black,
-                                child: Wrap(
-                                  alignment: WrapAlignment.center,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  runAlignment: WrapAlignment.center,
-                                  spacing: 20,
-                                  children: [
-                                    Text(snapshot.data?[index].name,
-                                        style: TextStyle(fontSize: 20)),
-                                    SvgPicture.asset(
-                                      getPlatformInfo(
-                                              snapshot.data?[index].platform)
-                                          .path,
-                                      width: 60,
-                                      // ignore: deprecated_member_use
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              snapshot.data?[index].games.length > 0
-                                  ? ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      shrinkWrap: true,
-                                      physics: BouncingScrollPhysics(),
-                                      itemCount:
-                                          snapshot.data?[index].games.length,
-                                      itemBuilder:
-                                          (BuildContext context, int i) {
-                                        final game =
-                                            snapshot.data?[index].games[i];
-                                        final platforms = game.platforms;
-
-                                        var plataformaEncontrada =
-                                            platforms.firstWhere((plataforma) =>
-                                                plataforma.platformId ==
-                                                snapshot.data?[index].platform);
-
-                                        return GestureDetector(
-                                          onTap: () => GoRouter.of(context)
-                                              .push("/game", extra: {
-                                            "platform_category": snapshot
-                                                .data?[index].platformCategory,
-                                            "platform":
-                                                snapshot.data?[index].platform,
-                                            "game": gameCard.Game(
-                                                backgroundImage:
-                                                    game.backgroundImage,
-                                                id: game.gameId,
-                                                name: game.name)
-                                          }),
-                                          child: GameCard(
-                                              game: gameCard.Game(
-                                                  backgroundImage:
-                                                      game.backgroundImage,
-                                                  id: game.gameId,
-                                                  name: game.name),
-                                              bottom: Text(
-                                                  "\n ${plataformaEncontrada.amount} ${langData.getValue(route: plataformaEncontrada.amount == 1 ? [
-                                                      "HOME",
-                                                      "MATCH"
-                                                    ] : [
-                                                      "HOME",
-                                                      "MATCHES"
-                                                    ])}")),
-                                        );
-                                      },
-                                    )
-                                  : Container(
-                                      margin: EdgeInsets.only(bottom: 10),
-                                      width: double.maxFinite,
-                                      color: Colors.black,
-                                      child: Wrap(
-                                        alignment: WrapAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            WrapCrossAlignment.center,
-                                        runAlignment: WrapAlignment.center,
-                                        spacing: 10,
-                                        direction: Axis.vertical,
-                                        children: [
-                                          Text(
-                                            "${langData.getValue(route: [
-                                                  "HOME",
-                                                  "NO_MATCHES"
-                                                ])} ${snapshot.data?[index].name}",
-                                            style:
-                                                TextStyle(color: Colors.grey),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () =>
-                                                GoRouter.of(context).push(
-                                                    "/new",
-                                                    extra: snapshot
-                                                        .data?[index].platform),
-                                            child: Text(langData.getValue(
-                                                route: ["HOME", "CREATE"])),
-                                            style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.white,
-                                              shadowColor: Colors.black,
-                                              side: const BorderSide(
-                                                  color: Colors.blue, width: 3),
-                                              backgroundColor: Colors.black,
-                                              shape: const StadiumBorder(),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                            ],
-                          );
-                        }),
-                  );
-                } else {
-                  return Center(
-                    child: Column(
-                      children: [
-                        CircularProgressIndicator(),
-                        Text("Loading games")
-                      ],
-                    ),
-                  );
-                }
-              },
-            )),
-          ));
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
+                              Text(getPlatformInfo(userBloc.platforms[platformIndex]).name),
+                              SvgPicture.asset(
+                              getPlatformInfo(userBloc.platforms[platformIndex]).path,
+                              width: 60,
+                              color: Colors.white,
+                            )],
+                          ),
+                        ),
+                        PlatformMatchesMolecule(platform: userBloc.platforms[platformIndex])
+                      ]
+                    );
+                  })
+                  )
+                ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      
     );
   }
 
-  _loadInfo(BuildContext context) async {
-    final userInfo = await UserService().getUserInfo();
+  Container _createNewMatchForPlatform(AsyncSnapshot<List<dynamic>> snapshot, int index, BuildContext context) {
+    return Container(
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    width: double.maxFinite,
+                                    color: Colors.black,
+                                    child: Wrap(
+                                      alignment: WrapAlignment.spaceAround,
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
+                                      runAlignment: WrapAlignment.center,
+                                      spacing: 10,
+                                      direction: Axis.vertical,
+                                      children: [
+                                        Text(
+                                          "${translate("HOME.NO_MATCHES")} ${snapshot.data?[index].name}",
+                                          style:
+                                              const TextStyle(color: Colors.grey),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () =>
+                                              GoRouter.of(context).push(
+                                                  "/new",
+                                                  extra: snapshot
+                                                      .data?[index].platform),
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.white,
+                                            shadowColor: Colors.black,
+                                            side: const BorderSide(
+                                                color: Colors.blue, width: 3),
+                                            backgroundColor: Colors.black,
+                                            shape: const StadiumBorder(),
+                                          ),
+                                          child: Text(translate("HOME.CREATE")),
+                                        )
+                                      ],
+                                    ),
+                                  );
+  }
 
-    final userBloc = context.read<UserBloc>();
-    if (userInfo["ok"] == false) {
+  _loadInfo(BuildContext context) async {
+    try {
+      final Map<String, dynamic> userInfo = await UserService().getUserInfo();
+
+    // ignore: use_build_context_synchronously
+    final userBloc = context. read<UserBloc>();
+    final socketBloc = context.read<SocketsBloc>();
+    if (userInfo.isEmpty) {
       const storage = FlutterSecureStorage();
 
       await storage.delete(key: "token");
@@ -225,29 +150,40 @@ class _HomeUserPageState extends State<HomeUserPage> {
       return context.go("/home");
     }
 
+    final User user = User.fromJson(userInfo);
 
-    userBloc.loadInfo(userFromJson(jsonEncode(userInfo)));
+    userBloc.loadInfo(user);
+    socketBloc.updateSocket();
 
 
     return userInfo;
+    } catch (e) {
+      print(e);
+      return {};
+    }
+    
   }
 
-  Future<List> _loadGames() async {
-    final gamesResp = await GamesService().getHomeGames();
-
-    if (gamesResp["ok"]) {
-      final platforms = gamesResp["platforms"];
-
+  Future<List<HomeGame>> _loadGames(int platformId) async {
+    try {
+      
+    final List gamesResp = await MatchService().getMatchesByPlatform(platformId);
       final values =
-          platforms.map((e) => GamesHomeResponse.fromJson(e)).toList();
+          gamesResp.map((e) => HomeGame.fromJson(e)).toList();
 
       return values;
-    } else {
+    } catch (e) {
       return [];
     }
+
+    
+
+      
+
+    
   }
 
-  Future _reload() async {
+  Future  _reload() async {
     setState(() {});
   }
 }

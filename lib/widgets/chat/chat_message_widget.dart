@@ -1,6 +1,5 @@
 import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/models/chat_user_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -46,7 +45,6 @@ class ChatMessage extends StatelessWidget {
           Flexible(
             child: Container(
               padding: const EdgeInsets.all(8),
-              
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.blue, width: 0.5)),
@@ -57,9 +55,9 @@ class ChatMessage extends StatelessWidget {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 5),
+            margin: const EdgeInsets.symmetric(horizontal: 5),
             child: CircleAvatar(
-                backgroundImage: mainMessage ? NetworkImage(user.thumbImg) : null,
+                backgroundImage: mainMessage ? NetworkImage(user.thumb) : null,
                 backgroundColor: Colors.transparent,
             ),
           ),
@@ -73,29 +71,22 @@ class ChatMessage extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          CircleAvatar(backgroundImage: mainMessage ? NetworkImage(user.thumbImg) : null, backgroundColor: Colors.transparent,),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 2),
+            child: CircleAvatar(backgroundImage: mainMessage ? NetworkImage(user.thumb) : null, backgroundColor: Colors.transparent,)
+          ),
           Flexible(
             child: Container(
               padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.only(bottom: 10, left: 5, right: 50),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.white38, width: 0.5)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  mainMessage ? Text(
-                    "${user.username}\n",
-                    overflow: TextOverflow.clip,
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(color: Colors.greenAccent),
-                  ) : Container(),
-                  Text(
+              child: Text(
                     text,
                     overflow: TextOverflow.clip,
                   ),
-                ],
-              ),
+                
+              
             ),
           ),
         ],

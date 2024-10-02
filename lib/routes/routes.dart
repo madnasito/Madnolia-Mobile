@@ -10,7 +10,7 @@ import 'package:Madnolia/pages/new/create_match_page.dart';
 import 'package:Madnolia/pages/home/home_new_page.dart';
 import 'package:Madnolia/pages/match_page.dart';
 import 'package:Madnolia/pages/new/match_form_page.dart';
-import 'package:Madnolia/pages/notifications_page.dart';
+import 'package:Madnolia/pages/invitations_page.dart';
 import 'package:Madnolia/pages/platforms/platform_games_page.dart';
 // import 'package:Madnolia/pages/home/home_new_page.dart';
 import 'package:Madnolia/pages/platforms/platforms_page.dart';
@@ -87,7 +87,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: "notifications",
           name: "notifications",
-          builder: (context, state) => const NotificationsPage(),
+          builder: (context, state) => const InvitationsPage(),
         ),
         GoRoute(
             name: "user",
@@ -134,7 +134,7 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const MatchPage(),
         ),
         GoRoute(
-            path: "game", name: "game", builder: (context, state) => GamePage())
+            path: "game", name: "game", builder: (context, state) => const GamePage())
       ],
     ),
   ],

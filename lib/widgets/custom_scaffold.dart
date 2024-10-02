@@ -1,10 +1,9 @@
 import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/widgets/language_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:multi_language_json/multi_language_json.dart';
-import 'package:provider/provider.dart';
 
 // import 'package:madnolia/widgets/form_button.dart';
 
@@ -14,12 +13,12 @@ class CustomScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LangSupport langData = LanguageBuilder.langData;
+    
     final userState = context.read<UserBloc>().state;
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
-        backgroundColor: Color.fromARGB(32, 39, 21, 88),
+        backgroundColor: const Color.fromARGB(96, 9, 4, 24),
         child: SafeArea(
           child: Stack(
             children: [
@@ -32,7 +31,7 @@ class CustomScaffold extends StatelessWidget {
                     const SizedBox(width: 0),
                     CircleAvatar(
                       backgroundImage:
-                          NetworkImage(userState.thumbImg.toString()),
+                          NetworkImage(userState.thumb),
                       minRadius: 40,
                       maxRadius: 50,
                       backgroundColor: Colors.white,
@@ -48,7 +47,7 @@ class CustomScaffold extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(height: 230),
+                  const SizedBox(height: 230),
                   // _MenuButton(
                   //   icon: Icons.gamepad_outlined,
                   //   title: "Platforms",
@@ -56,20 +55,20 @@ class CustomScaffold extends StatelessWidget {
                   // ),
                   _MenuButton(
                     icon: Icons.bolt_outlined,
-                    title: langData.getValue(route: ["HEADER", "MATCH"]),
+                    title: translate("HEADER.MATCH"),
                     route: "/new",
                   ),
                   _MenuButton(
                     icon: Icons.notifications_outlined,
                     title:
-                        langData.getValue(route: ["HEADER", "NOTIFICATIONS"]),
+                        translate("HEADER.NOTIFICATIONS"),
                     route: "/notifications",
                   ),
                   _MenuButton(
                       icon: Icons.person_outline_outlined,
-                      title: langData.getValue(route: ["HEADER", "PROFILE"]),
+                      title: translate("HEADER.PROFILE"),
                       route: "/user"),
-                  SizedBox(height: 230),
+                  const SizedBox(height: 230),
                 ],
               ),
               Positioned(

@@ -1,45 +1,43 @@
 import 'dart:convert';
+import 'package:Madnolia/models/user/update_user_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:Madnolia/global/environment.dart';
 
-import '../models/user_model.dart';
 
 class UserService {
   bool authenticating = false;
 
   final _storage = const FlutterSecureStorage();
 
-  Future<Map> getUserInfo() => userGetRequest("user_info");
+  Future getUserInfo() => userGetRequest("user/info");
 
-  Future<Map> getUserMatches() => userGetRequest("player_matches");
+  Future getPartners() => userGetRequest("get_partners");
 
-  Future<Map> getPartners() => userGetRequest("get_partners");
+  Future getInvitations() => userGetRequest("match/invitations");
 
-  Future<Map> getInvitations() => userGetRequest("invitations");
+  Future resetNotifications() => userGetRequest("user/reset-notifications");
 
-  Future<Map> resetNotifications() => userGetRequest("reset_notifications");
-
-  Future<Map> searchUser(String user) => userGetRequest("search_user/$user");
+  Future searchUser(String user) => userGetRequest("user/search/$user");
 
   Future<Map> addUserPartner({partner}) =>
       userPutRequest("add_partner", partner);
 
-  Future<Map<String, dynamic>> updateUser(User user) =>
-      userPutRequest("update_user", user);
+  Future<Map<String, dynamic>> updateUser(UpdateUser user) =>
+      userPutRequest("user/update", user);
 
   Future<Map> updateUserPlatforms({platforms}) =>
-      userPutRequest("update_user_platforms", platforms);
+      userPutRequest("user/update", platforms);
 
-  Future<Map> userGetRequest(String apiUrl) async {
+  Future userGetRequest(String apiUrl) async {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
       final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
 
-      final resp = await http.get(url, headers: {"token": token!});
+      final resp = await http.get(url, headers: {"Authorization": "Bearer $token"});
 
       authenticating = false;
 
@@ -47,7 +45,7 @@ class UserService {
     } catch (e) {
       authenticating = false;
       // print(e);
-      return {"ok": false};
+      return {"error": e};
     }
   }
 
@@ -57,7 +55,7 @@ class UserService {
       final String? token = await _storage.read(key: "token");
       final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
 
-      final resp = await http.post(url, headers: {"token": token!}, body: body);
+      final resp = await http.post(url, headers: {"Authorization": "Bearer $token"}, body: body);
 
       authenticating = false;
 
@@ -75,9 +73,10 @@ class UserService {
       final String? token = await _storage.read(key: "token");
       final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
 
+      
       body = jsonEncode(body);
       final resp = await http.put(url,
-          headers: {"token": token!, 'Content-Type': 'application/json'},
+          headers: {"Authorization": "Bearer $token", 'Content-Type': 'application/json'},
           body: body);
 
       authenticating = false;
@@ -85,7 +84,7 @@ class UserService {
       return jsonDecode(resp.body);
     } catch (e) {
       // print(e);
-      return {"ok": false};
+      return {"error": "Network error", "message": "Network error"};
     }
   }
 }

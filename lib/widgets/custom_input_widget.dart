@@ -69,7 +69,7 @@ class CustomInput extends StatelessWidget {
 }
 
 class DropDownWidget extends StatefulWidget {
-  final String value;
+  final int value;
   final void Function(String?)? onChanged;
   const DropDownWidget(
       {super.key, required this.onChanged, required this.value});
@@ -113,7 +113,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
           child: Text("Please, let me alone"),
         )
       ],
-      onChanged: (value) => widget.onChanged!(value),
+      onChanged: (value) => widget.onChanged!(value as String?),
     );
   }
 }

@@ -50,21 +50,20 @@ class InputGroupMessage extends StatelessWidget {
               Mention(
                   disableMarkup: true,
                   trigger: '@',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.amber,
                   ),
                   data: usersList
                       .map((e) => {
-                            "id": e.id,
                             "display": e.username,
                             "full_name": e.name,
-                            "photo": e.thumbImg
+                            "photo": e.thumb
                           })
                       .toList(),
                   matchAll: false,
                   suggestionBuilder: (data) {
                     return Container(
-                      padding: EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(10.0),
                       child: Wrap(
                         children: <Widget>[
                           SizedBox(
@@ -75,7 +74,7 @@ class InputGroupMessage extends StatelessWidget {
                               data['photo'],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 20.0,
                           ),
                           Column(

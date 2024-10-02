@@ -39,6 +39,6 @@ class MinimalMatch {
         "message": message,
         "game_name": gameName,
         "platform": platform,
-        "img": img != null ? img : ""
+        "img": img ?? ""
       };
 }

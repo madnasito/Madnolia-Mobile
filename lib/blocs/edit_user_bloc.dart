@@ -8,7 +8,7 @@ class EditUserBloc with Validators {
   final _usernameController = BehaviorSubject<String>();
   final _emailController = BehaviorSubject<String>();
   final _imgController = BehaviorSubject<String>();
-  final _thumbImgController = BehaviorSubject<String>();
+  final _thumbController = BehaviorSubject<String>();
 
   final _loadingController = BehaviorSubject<bool>();
 
@@ -21,7 +21,7 @@ class EditUserBloc with Validators {
       _emailController.stream.transform(validateEmail);
 
   Stream<String> get imgStream => _imgController.stream;
-  Stream<String> get thumbImgStream => _thumbImgController.stream;
+  Stream<String> get thumbStream => _thumbController.stream;
 
   Stream<bool> get loadingStream => _loadingController.stream;
 
@@ -33,7 +33,7 @@ class EditUserBloc with Validators {
   Function(String) get changeUsername => _usernameController.sink.add;
   Function(String) get changeEmail => _emailController.sink.add;
   Function(String) get changeImg => _imgController.sink.add;
-  Function(String) get changeThumbImg => _thumbImgController.sink.add;
+  Function(String) get changeThumb => _thumbController.sink.add;
 
   Future uploadImage(XFile image) async {
     _loadingController.sink.add(true);
@@ -42,7 +42,7 @@ class EditUserBloc with Validators {
 
     if (imageUrl["ok"] == true) {
       changeImg(imageUrl["img"]);
-      changeThumbImg(imageUrl["thumb_img"]);
+      changeThumb(imageUrl["thumb_img"]);
     }
 
     return imageUrl;
@@ -52,5 +52,5 @@ class EditUserBloc with Validators {
   String get email => _emailController.value;
   String get username => _usernameController.value;
   String get img => _imgController.value;
-  String get thumbImg => _thumbImgController.value;
+  String get thumb => _thumbController.value;
 }

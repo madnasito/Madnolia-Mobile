@@ -22,8 +22,8 @@ class PlatformGames extends StatelessWidget {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
-                      return GameCard(
-                          game: snapshot.data[index], bottom: const Text(""));
+                      // return GameCard(
+                      //     game: snapshot.data[index], bottom: const Text(""));
                     });
               } else {
                 return const CircularProgressIndicator();

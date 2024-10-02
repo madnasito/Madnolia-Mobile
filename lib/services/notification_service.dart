@@ -1,8 +1,5 @@
 // import 'package:Madnolia/routes/routes.dart';
-import 'package:Madnolia/main.dart';
-import 'package:provider/provider.dart';
 import 'package:Madnolia/routes/routes.dart';
-import 'package:Madnolia/services/sockets_service.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:flutter/material.dart';
@@ -74,18 +71,18 @@ class NotificationService {
     }
 
     if (action == "accept") {
-      SocketService socketService = Provider.of<SocketService>(
-          MyApp.navigatorKey.currentContext!,
-          listen: false);
-      socketService.emit("join_to_match", payload["match"]);
+      // SocketService socketService = Provider.of<SocketService>(
+      //     MyApp.navigatorKey.currentContext!,
+      //     listen: false);
+      // socketService.emit("join_to_match", payload["match"]);
     }
     if (action == "reply") {
       // print(MyApp.navigatorKey.currentContext);
-      SocketService socketService = Provider.of<SocketService>(
-          MyApp.navigatorKey.currentContext!,
-          listen: false);
-      socketService.emit("message",
-          {"message": receivedAction.buttonKeyInput, "room": payload["match"]});
+      // SocketService socketService = Provider.of<SocketService>(
+      //     MyApp.navigatorKey.currentContext!,
+      //     listen: false);
+      // socketService.emit("message",
+      //     {"message": receivedAction.buttonKeyInput, "room": payload["match"]});
       AwesomeNotifications().dismiss(notificationId!);
     }
   }
@@ -102,6 +99,7 @@ class NotificationService {
       final List<NotificationActionButton>? actionButtons,
       final bool scheduled = false,
       final String? largeIcon,
+      
       final int? interval}) async {
     assert(!scheduled || (scheduled && interval != null));
 
@@ -110,7 +108,7 @@ class NotificationService {
             backgroundColor: Colors.transparent,
             roundedLargeIcon: true,
             largeIcon: largeIcon,
-            id: -1,
+            id: DateTime.now().millisecond,
             channelKey: 'basic_channel',
             title: title,
             body: body,

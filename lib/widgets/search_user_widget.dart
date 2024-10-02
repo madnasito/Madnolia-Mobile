@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:Madnolia/models/chat_user_model.dart';
 import 'package:Madnolia/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:multi_language_json/multi_language_json.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 
 import 'custom_input_widget.dart';
-import 'language_builder.dart';
 
 class SeatchUser extends StatefulWidget {
   final List<String> users;
@@ -38,7 +37,7 @@ class _SeatchUserState extends State<SeatchUser> {
 
   @override
   Widget build(BuildContext context) {
-    LangSupport langData = LanguageBuilder.langData;
+    // var localizationDelegate = LocalizedApp.of(context).delegate;
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,7 +45,7 @@ class _SeatchUserState extends State<SeatchUser> {
         SimpleCustomInput(
           controller: controller,
           placeholder:
-              langData.getValue(route: ["CREATE_MATCH", "SEARCH_USER"]),
+              translate("CREATE_MATCH.SEARCH_USER"),
           onChanged: (value) async {
             counter++;
             Timer(
@@ -65,17 +64,17 @@ class _SeatchUserState extends State<SeatchUser> {
             ? FutureBuilder(
                 future: _seatchUser(controller.text),
                 builder:
-                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     final resp = snapshot.data;
 
-                    if (resp["ok"] == false) return Container();
+                    if (resp!.isEmpty) return Container();
 
                     final users =
-                        resp["users"].map((e) => ChatUser.fromJson(e)).toList();
+                        resp.map((e) => ChatUser.fromJson(e)).toList();
                     return Column(
                       children: [
-                        Text(
+                        const Text(
                           "Results: \n",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 20),
@@ -97,11 +96,11 @@ class _SeatchUserState extends State<SeatchUser> {
                                   var foundedUser = usersList.where(
                                       (user) => user["id"] == users[index].id);
 
-                                  if (foundedUser.length == 0) {
+                                  if (foundedUser.isEmpty) {
                                     usersList.add({
                                       "id": users[index].id,
                                       "name": users[index].name,
-                                      "img": users[index].thumbImg!
+                                      "img": users[index].thumb
                                     });
                                     widget.users.add(users[index].id);
                                   }
@@ -112,7 +111,7 @@ class _SeatchUserState extends State<SeatchUser> {
                                   crossAxisAlignment: WrapCrossAlignment.center,
                                   children: [
                                     Image.network(
-                                      users[index].thumbImg!,
+                                      users[index].thumb,
                                       width: 50,
                                       height: 50,
                                     ),
@@ -131,10 +130,10 @@ class _SeatchUserState extends State<SeatchUser> {
                 },
               )
             : Visibility(
-              visible: usersList.length > 0,
+              visible: usersList.isNotEmpty,
               child: Column(
                   children: [
-                    Text(
+                    const Text(
                       "Inviteds:\n",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 20),

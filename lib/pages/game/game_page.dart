@@ -1,6 +1,5 @@
 import 'package:Madnolia/models/match/minimal_match_model.dart';
 import 'package:Madnolia/services/games_service.dart';
-import 'package:Madnolia/widgets/match_card_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Madnolia/widgets/custom_scaffold.dart';
@@ -29,10 +28,10 @@ class GamePage extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
-            GameCard(
-              game: game,
-              bottom: Text(""),
-            ),
+            // GameCard(
+            //   game: game,
+            //   bottom: const Text(""),
+            // ),
             Wrap(
               spacing: 10,
               alignment: WrapAlignment.center,
@@ -64,7 +63,7 @@ class GamePage extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
                         margin:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                            const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                         decoration: BoxDecoration(
                             color: Colors.black26,
                             border: Border.all(color: Colors.blue, width: 1),
@@ -89,7 +88,7 @@ class GamePage extends StatelessWidget {
                               )
                             ],
                           ),
-                          shape: CircleBorder(),
+                          shape: const CircleBorder(),
                           subtitle: Text(
                             DateTime.fromMillisecondsSinceEpoch(
                                     matches[index].date)
@@ -102,7 +101,7 @@ class GamePage extends StatelessWidget {
                     },
                   );
                 } else {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
               },
             ),

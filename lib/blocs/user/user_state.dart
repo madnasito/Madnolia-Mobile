@@ -7,9 +7,9 @@ class UserState extends Equatable {
   final String username;
   final List<int> platforms;
   final String img;
-  final String thumbImg;
+  final String thumb;
   final String id;
-  final String acceptInvitations;
+  final int availability;
   final String chatRoom;
 
   const UserState({
@@ -19,9 +19,9 @@ class UserState extends Equatable {
   this.username = "",
   this.platforms = const [],
   this.img = "",
-  this.thumbImg = "",
+  this.thumb = "",
   this.id = "",
-  this.acceptInvitations = "",
+  this.availability = 1,
   this.chatRoom= "",
   });
 
@@ -31,10 +31,10 @@ class UserState extends Equatable {
     String? username,
     List<int>? platforms,
     String? img,
-    String? thumbImg,
+    String? thumb,
     String? id,
     bool? loadedUser,
-    String? acceptInvitations,
+    int? availability,
     String? chatRoom
   }) => UserState(
     name: name ?? this.name,
@@ -42,15 +42,15 @@ class UserState extends Equatable {
     username: username ?? this.username,
     platforms: platforms ?? this.platforms,
     img: img ?? this.img,
-    thumbImg: thumbImg ?? this.thumbImg,
+    thumb: thumb ?? this.thumb,
     id: id ?? this.id,
     loadedUser: loadedUser ?? this.loadedUser,
-    acceptInvitations: acceptInvitations ?? this.acceptInvitations,
+    availability: availability ?? this.availability,
     chatRoom: chatRoom ?? this.chatRoom
   );
   
   @override
   List<Object> get props => [
-    name, email, username, platforms, img, thumbImg, id, loadedUser, acceptInvitations, chatRoom
+    name, email, username, platforms, img, thumb, id, loadedUser, availability, chatRoom
   ];
 }

@@ -1,12 +1,12 @@
-import 'package:Madnolia/models/match/minimal_match_model.dart';
+import 'package:Madnolia/models/match/match_with_game_model.dart';
+// import 'package:Madnolia/models/match/minimal_match_model.dart';
 import 'package:flutter/material.dart';
 
-import '../models/game_model.dart';
-
 class GameCard extends StatelessWidget {
-  final Game game;
+  final String name;
+  final String? background;
   final Widget bottom;
-  const GameCard({super.key, required this.game, required this.bottom});
+  const GameCard({super.key,required this.name,  required this.background, required this.bottom});
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +19,18 @@ class GameCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              game.backgroundImage != null
+              background != null
                   ? FadeInImage(
                       fadeInDuration: const Duration(milliseconds: 300),
                       placeholder: const AssetImage('assets/loading.gif'),
-                      image: NetworkImage(_resizeImage(game.backgroundImage)))
+                      image: NetworkImage(_resizeImage(background!)))
                   // ? Image.network(game.backgroundImage!)
                   : Image.asset("assets/no image.jpg"),
               Positioned(
                   bottom: 2,
                   left: 2,
                   child: Text(
-                    game.name,
+                    name,
                     style: const TextStyle(
                         backgroundColor: Colors.black54, fontSize: 15),
                   ))
@@ -44,7 +44,7 @@ class GameCard extends StatelessWidget {
 }
 
 class MatchCard extends StatelessWidget {
-  final MinimalMatch match;
+  final MatchWithGame match;
   final Widget bottom;
   const MatchCard({super.key, required this.match, required this.bottom});
 
@@ -59,11 +59,11 @@ class MatchCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              match.img != null
+              match.game.background != null
                   ? FadeInImage(
-                      fadeInDuration: Duration(milliseconds: 300),
+                      fadeInDuration: const Duration(milliseconds: 300),
                       placeholder: const AssetImage('assets/loading.gif'),
-                      image: NetworkImage(match.img!))
+                      image: NetworkImage(_resizeImage(match.game.background!)))
                   // ? Image.network(game.backgroundImage!)
                   : Image.asset("assets/no image.jpg"),
               // Image.network(match.img != null ? match.img.toString() : ""),
@@ -71,7 +71,7 @@ class MatchCard extends StatelessWidget {
                   bottom: 2,
                   left: 2,
                   child: Text(
-                    match.gameName,
+                    match.game.name,
                     style: const TextStyle(
                         backgroundColor: Colors.black54, fontSize: 15),
                   ))
@@ -84,15 +84,12 @@ class MatchCard extends StatelessWidget {
   }
 }
 
-_resizeImage(String? url) {
-  if (url != null) {
+String _resizeImage(String url) {
     List image = url.split("/");
     if (image[image.length - 3] == "screenshots") {
       return "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
     } else {
       return "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
     }
-  } else {
-    return null;
-  }
+  
 }

@@ -1,4 +1,4 @@
-import 'package:Madnolia/models/user_model.dart';
+import 'package:Madnolia/models/user/user_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -6,7 +6,7 @@ part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
-  UserBloc():super(UserState()){
+  UserBloc():super(const UserState()){
 
     on<UserEvent>((event, emit){
       if(event is UserLoadInfo){
@@ -17,10 +17,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           email: user.email,
           id: user.id,
           img: user.img,
-          thumbImg: user.thumbImg,
+          thumb: user.thumb,
           platforms: user.platforms,
           username: user.username,
-          acceptInvitations: user.acceptInvitations
+          availability: user.availability
         ));
       }
 
@@ -34,7 +34,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(
           state.copyWith(
             img: event.img,
-            thumbImg: event.thumbImg
+            thumb: event.thumbImg
           )
         );
       }

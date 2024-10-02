@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/services/sockets_service.dart';
-import 'package:Madnolia/widgets/language_builder.dart';
+import 'package:Madnolia/models/match/create_match_model.dart';
 import 'package:Madnolia/widgets/search_user_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:Madnolia/services/match_service.dart';
 import 'package:Madnolia/utils/platform_id_ico.dart';
@@ -13,7 +13,6 @@ import 'package:Madnolia/utils/platform_id_ico.dart';
 
 import 'package:Madnolia/widgets/form_button.dart';
 import 'package:Madnolia/widgets/match_card_widget.dart';
-import 'package:multi_language_json/multi_language_json.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
@@ -50,7 +49,7 @@ class _SearchGameViewState extends State<SearchGameView> {
 
   @override
   Widget build(BuildContext context) {
-    LangSupport langData = LanguageBuilder.langData;
+    
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,7 +59,7 @@ class _SearchGameViewState extends State<SearchGameView> {
           child: SimpleCustomInput(
             controller: controller,
             placeholder:
-                langData.getValue(route: ["CREATE_MATCH", "SEARCH_GAME"]),
+                translate("CREATE_MATCH.SEARCH_GAME"),
             onChanged: (value) async {
               counter++;
               Timer(
@@ -96,13 +95,13 @@ class _SearchGameViewState extends State<SearchGameView> {
                                         "platformId": widget.platformId
                                       });
                                     }),
-                                    child: GameCard(
-                                        game: snapshot.data[index],
+                                    child:  GameCard(
+                                        background: snapshot.data[index].backgroundImage,
+                                        name: snapshot.data[index].name,
                                         bottom: const Text("")),
                                   );
                                 })
-                            : Text(langData.getValue(
-                                route: ["CREATE_MATCH", "EMPTY_SEARCH"])));
+                            : Text(translate("CREATE_MATCH.EMPTY_SEARCH")));
                   } else {
                     return const CircularProgressIndicator();
                   }
@@ -129,12 +128,9 @@ class MatchFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LangSupport langData = LanguageBuilder.langData;
     ToastContext().init(context);
     bool uploading = false;
     final userState = context.read<UserBloc>().state;
-    SocketService socketService =
-        Provider.of<SocketService>(context, listen: false);
     
     final platformInfo = getPlatformInfo(platformId);
     List<String> users = [];
@@ -167,12 +163,12 @@ class MatchFormView extends StatelessWidget {
             const SizedBox(height: 20),
             SimpleCustomInput(
                 placeholder:
-                    langData.getValue(route: ["CREATE_MATCH", "MATCH_NAME"]),
+                    translate("CREATE_MATCH.MATCH_NAME"),
                 controller: nameController),
             const SizedBox(height: 20),
             SimpleCustomInput(
               keyboardType: TextInputType.none,
-              placeholder: langData.getValue(route: ["CREATE_MATCH", "DATE"]),
+              placeholder: translate("CREATE_MATCH.DATE"),
               controller: dateController,
               onTap: () async {
                 DateTime? dateTime = await showOmniDateTimePicker(
@@ -245,18 +241,18 @@ class MatchFormView extends StatelessWidget {
                   ),
                 ]),
             const SizedBox(height: 20),
-            Text(userState.name, style: TextStyle(fontSize: 10)),
+            Text(userState.name, style: const TextStyle(fontSize: 10)),
             const SizedBox(height: 10),
             FormButton(
                 text:
-                    langData.getValue(route: ["CREATE_MATCH", "CREATE_MATCH"]),
+                    translate("CREATE_MATCH.CREATE_MATCH"),
                 color: Colors.transparent,
                 onPressed: () async {
+                  
                   if (uploading == true) {
                     
                     return Toast.show(
-                        langData.getValue(
-                            route: ["CREATE_MATCH", "UPLOADING_MESSAGE"]),
+                        translate("CREATE_MATCH.UPLOADING_MESSAGE"),
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
@@ -264,8 +260,15 @@ class MatchFormView extends StatelessWidget {
                   }
                   if (dateController.text == "") {
                     return Toast.show(
-                        langData
-                            .getValue(route: ["CREATE_MATCH", "DATE_ERROR"]),
+                        translate("CREATE_MATCH.DATE_ERROR"),
+                        gravity: 100,
+                        border: Border.all(color: Colors.blueAccent),
+                        textStyle: const TextStyle(fontSize: 18),
+                        duration: 3);
+                  }
+                  if (nameController.text == "") {
+                    return Toast.show(
+                        translate("CREATE_MATCH.TITLE_EMPTY"),
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
@@ -274,41 +277,48 @@ class MatchFormView extends StatelessWidget {
                   int formDate =
                       DateTime.parse(dateController.text).millisecondsSinceEpoch;
 
-                  Map match = {
-                    "game_name": game.name,
-                    "game_id": game.id.toString(),
-                    "platform": platformId.toString(),
-                    "date": formDate.toString(),
-                    "name": nameController.text,
-                    "img": game.backgroundImage,
-                    "users": List<String>.from(users.map((x) => x))
+                  // Map match = {
+                    // "game_name": game.name,
+                    // "game": game.id.toString(),
+                    // "platform": platformId.toString(),
+                    // "date": formDate.toString(),
+                    // "name": nameController.text,
+                    // "img": game.backgroundImage,
+                    // "users": List<String>.from(users.map((x) => x))
                     // "tournament_match": "false"
-                  };
+                  // };
+
+                  CreateMatch match = CreateMatch(
+                    title: nameController.text,
+                    date: formDate,
+                    inviteds: users,
+                    game: game.id,
+                    platform: platformId,
+                    );
 
                   uploading = true;
-                  final resp = await MatchService().createMatch(match);
+                  final Map<String, dynamic> resp = await MatchService().createMatch(match.toJson());
                   uploading = false;
-                  if (resp["ok"] == true) {
+                  if (resp.containsKey("message")) {
                     Toast.show(
-                        langData
-                            .getValue(route: ["CREATE_MATCH", "MATCH_CREATED"]),
+                        translate("CREATE_MATCH.ERROR"),
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
                         duration: 3);
-                    socketService.emit("match_created", resp["matchDB"]["_id"]);
                   } else {
                     Toast.show(
-                        langData.getValue(route: ["CREATE_MATCH", "ERROR"]),
+                        translate("CREATE_MATCH.MATCH_CREATED"),
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
                         duration: 3);
+                      // MatchCreated matchCreated = MatchCreated.fromJson(resp);
+                    dateController.clear();
+                    nameController.clear();
+                    context.goNamed("user-matches");
                   }
                   // ignore: use_build_context_synchronously
-                  dateController.clear();
-                  nameController.clear();
-                  context.goNamed("user-matches");
                 })
           ],
         ),
