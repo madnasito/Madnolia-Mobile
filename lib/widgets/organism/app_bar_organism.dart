@@ -120,7 +120,6 @@ class _MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
     final fullPath = GoRouterState.of(context).fullPath;
-    print(fullPath);
     return ElevatedButton(
         onPressed: () {
           if (route != "" && route != currentRouteName) {

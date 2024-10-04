@@ -1,39 +1,14 @@
-import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/models/chat_user_model.dart';
 import 'package:flutter/material.dart';
 
-import 'package:provider/provider.dart';
+class MyMessageMolecule extends StatelessWidget {
 
-class ChatMessage extends StatelessWidget {
   final String text;
-  final ChatUser user;
-  final AnimationController animationController;
+  final String thumb;
   final bool mainMessage;
-
-  const ChatMessage(
-      {super.key,
-      required this.text,
-      required this.user,
-      required this.animationController, required this.mainMessage});
+  const MyMessageMolecule({super.key, required this.text, required this.thumb, required this.mainMessage});
 
   @override
   Widget build(BuildContext context) {
-    final userState = context.read<UserBloc>().state;
-    return FadeTransition(
-      opacity: animationController,
-      child: SizeTransition(
-        sizeFactor: CurvedAnimation(
-            parent: animationController, curve: Curves.easeInOut),
-        child: Container(
-          child: user.username == userState.username
-              ? _myMessage(userState, mainMessage)
-              : _notMyMessage(user, mainMessage),
-        ),
-      ),
-    );
-  }
-
-  Widget _myMessage(UserState user, bool mainMessage) {
     return Align(
       alignment: Alignment.centerRight,
       child: Row(
@@ -57,7 +32,7 @@ class ChatMessage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 5),
             child: CircleAvatar(
-                backgroundImage: mainMessage ? NetworkImage(user.thumb) : null,
+                backgroundImage: mainMessage ? NetworkImage(thumb) : null,
                 backgroundColor: Colors.transparent,
             ),
           ),
@@ -65,15 +40,25 @@ class ChatMessage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _notMyMessage(ChatUser user, bool mainMessage) {
+class NotMyMessageMolecule extends StatelessWidget {
+
+  final String thumb;
+  final String text;
+  final bool mainMessage;
+  const NotMyMessageMolecule({super.key, required this.thumb, required this.text, required this.mainMessage});
+
+  @override
+  Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 2),
-            child: CircleAvatar(backgroundImage: mainMessage ? NetworkImage(user.thumb) : null, backgroundColor: Colors.transparent,)
+            child: CircleAvatar(backgroundImage: mainMessage ? NetworkImage(thumb) : null,
+            backgroundColor: Colors.transparent,)
           ),
           Flexible(
             child: Container(

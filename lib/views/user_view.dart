@@ -11,7 +11,6 @@ import 'package:Madnolia/blocs/edit_user_bloc.dart';
 import 'package:Madnolia/blocs/edit_user_provider.dart';
 import 'package:Madnolia/widgets/custom_input_widget.dart';
 import 'package:Madnolia/widgets/form_button.dart';
-import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
 import '../models/user/user_model.dart';

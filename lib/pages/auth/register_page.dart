@@ -119,7 +119,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (resp.containsKey("error")) {
       String message = resp["error"];
-      debugPrint(resp["error"]);
       return showAlert(context, message);
     }
 

@@ -14,7 +14,7 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final userState = context.read<UserBloc>().state;
+    final userBloc = context.read<UserBloc>();
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
@@ -31,13 +31,13 @@ class CustomScaffold extends StatelessWidget {
                     const SizedBox(width: 0),
                     CircleAvatar(
                       backgroundImage:
-                          NetworkImage(userState.thumb),
+                          NetworkImage(userBloc.state.thumb),
                       minRadius: 40,
                       maxRadius: 50,
                       backgroundColor: Colors.white,
                     ),
                     Text(
-                      userState.name,
+                      userBloc.state.name,
                       style: const TextStyle(fontSize: 20),
                     )
                   ],
@@ -79,6 +79,7 @@ class CustomScaffold extends StatelessWidget {
                       const storage = FlutterSecureStorage();
                       storage.delete(key: "token");
                       GoRouter.of(context).push("/home");
+                      userBloc.logOutUser();
                     },
                     child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -101,7 +102,7 @@ class CustomScaffold extends StatelessWidget {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 18, 0, 24),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         shadowColor: Colors.transparent,
         centerTitle: true,
         title: IconButton(
@@ -124,7 +125,6 @@ class _MenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
     final fullPath = GoRouterState.of(context).fullPath;
-    print(fullPath);
     return ElevatedButton(
         onPressed: () {
           if (route != "" && route != currentRouteName) {

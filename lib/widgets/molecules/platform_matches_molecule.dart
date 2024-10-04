@@ -101,10 +101,10 @@ Future<List<HomeGame>> _loadGames(int platformId) async {
       
       final resp = await MatchService().getMatchesByPlatform(platformId);
     List gamesResp = [];
-    print(resp);
       final values =
           resp.map((e) => HomeGame.fromJson(e)).toList();
-
+    
+    debugPrint("Loaded games of $platformId");
       return values;
     } catch (e) {
       return [];

@@ -25,6 +25,8 @@ class GamePage extends StatelessWidget {
     final String game = data["game"];
     final int platform = data["platform"];
 
+    Game? gameLoaded;
+
 
     return CustomScaffold(
         body: Background(
@@ -34,7 +36,7 @@ class GamePage extends StatelessWidget {
               child: Column(
                   children:[ 
                     FutureBuilder(
-                      future: _loadGameInfo(game), 
+                      future: _loadGameInfo(game, gameLoaded), 
                       builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
                         if(snapshot.hasData){
                           final Game game = snapshot.data!;
@@ -148,10 +150,17 @@ class GamePage extends StatelessWidget {
     return matches;
   }
 }
-  Future<Game> _loadGameInfo(String game) async {
+  Future<Game> _loadGameInfo(String game, Game? gameLoaded) async {
+
+    if(gameLoaded != null){
+      return gameLoaded;
+    }
+
     final respData = await GamesService().getGameInfo(game);
 
     final Game gameData = Game.fromJson(respData);
+
+    gameLoaded = gameData;
 
     return gameData;
   }

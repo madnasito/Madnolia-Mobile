@@ -14,6 +14,7 @@ class GamesService {
       final token = await _storage.read(key: "token");
       final resp = await http.get(url, headers: {"token": token!});
 
+      debugPrint("Getting game info");
       return jsonDecode(resp.body);
     } catch (e) {
       debugPrint(e as String?);

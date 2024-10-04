@@ -10,7 +10,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 import '../models/chat/message_model.dart';
 import 'package:Madnolia/services/match_service.dart';
-import 'package:Madnolia/widgets/chat/chat_message_widget.dart';
+import 'package:Madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
 
@@ -44,7 +44,7 @@ class MatchChat extends StatefulWidget {
 
 class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   bool isInMatch = false;
-  final List<ChatMessage> _messages = [];
+  final List<ChatMessageOrganism> _messages = [];
   final matchService = MatchService();
   late UserBloc userBloc;
   // late Socket socketClient;
@@ -63,11 +63,11 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
         widget.matchMessages.map((e) => Message.fromJson(e)).toList();
         
     String lastUser = "";
-    List<ChatMessage> messages = history
+    List<ChatMessageOrganism> messages = history
         .map((e) {
           final isTheSame = e.user.id == lastUser ? false: true;
           lastUser = e.user.id;
-          return  ChatMessage(
+          return  ChatMessageOrganism(
             text: e.text,
             user: e.user,
             mainMessage: isTheSame,
@@ -91,8 +91,8 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
     if (decodedMessage.room != widget.match.id) return;
 
     
-    ChatMessage message = ChatMessage(
-      mainMessage: _messages[0].user.username == decodedMessage.user.username ? false : true,
+    ChatMessageOrganism message = ChatMessageOrganism(
+      mainMessage: _messages[0].user.id == decodedMessage.user.id ? false : true,
       text: decodedMessage.text,
       user: decodedMessage.user,
       animationController: AnimationController(
@@ -120,8 +120,6 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
       widget.socketClient.on("message", (data) => _listenMessage(data));
       widget.socketClient.on("new_player_to_match", (data) {
         ChatUser user = ChatUser.fromJson(data);
-
-        debugPrint("USER NAME");
         debugPrint(user.name);
       });
       widget.socketClient.on("added_to_match", (data) {
@@ -141,7 +139,7 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   @override
   void dispose() {
     widget.socketClient.emit("disconnect_chat");
-    for (ChatMessage message in _messages) {
+    for (ChatMessageOrganism message in _messages) {
       message.animationController.dispose();
     }
 
@@ -211,10 +209,9 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
 
   Widget _bottomRow(FullMatch match, UserState userState, bool isInMatch) {
     bool owner = userState.id == match.user ? true : false;
-    List<dynamic> founded =
-        match.likes.where((e) => userState.id == e).toList();
+    List<ChatUser> founded =
+        match.likes.where((e) => userState.id == e.id).toList();
 
-    print(match.likes);
 
     if (owner || founded.isNotEmpty || isInMatch) {
       isInMatch = true;
@@ -262,7 +259,11 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
           text: "Join to match",
           color: Colors.transparent,
           onPressed: () {
-            widget.socketClient.emit("join_to_match", match.id);
+            try {
+              widget.socketClient.emit("join_to_match", match.id);
+            } catch (e) {
+              print(e);
+            }
           });
     }
   }
@@ -270,6 +271,5 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
     widget.socketClient.emit("message", {"text": text, "room": widget.match.id});
-    setState(() {});
   }
 }

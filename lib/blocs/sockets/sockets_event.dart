@@ -15,4 +15,6 @@ class UpdateServerStatus extends SocketsEvent {
   const UpdateServerStatus({required this.serverStatus});
 }
 
+class DisconnectToken extends SocketsEvent {}
+
 class UpdatedToken extends SocketsEvent {}

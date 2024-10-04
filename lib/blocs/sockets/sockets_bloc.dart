@@ -20,18 +20,23 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
       if(event is UpdatedToken){
         socket = await socketHandler();
       }
+
+      if( event is DisconnectToken){
+        socket.disconnect();
+      }
     });
   }
 
   
   void updateServerStatus(ServerStatus status) {
-
-    
     add(UpdateServerStatus(serverStatus: status));
   } 
 
   void updateSocket() {
-    add(UpdatedToken());
+  }
+
+  void disconnect(){
+    add(DisconnectToken());
   }
 
 
