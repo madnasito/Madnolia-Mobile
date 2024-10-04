@@ -113,6 +113,10 @@
             "TITLE": "Tus plataformas",
             "SUCCESS": "¡Plataformas actualizadas!"
         }
-    }
+    },
+    "UTILS":{
+      "SHOW_MORE": "Mostrar más",
+      "SHOW_LESS": "Mostrar menos"
+  }
 }
 

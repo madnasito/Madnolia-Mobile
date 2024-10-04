@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -8,9 +7,9 @@ import 'package:Madnolia/global/environment.dart';
 class GamesService {
   final _storage = const FlutterSecureStorage();
 
-  Future getHomeGames() async {
+  Future getGameInfo(String game) async {
     try {
-      final url = Uri.parse("${Environment.apiUrl}/home/user-matches");
+      final url = Uri.parse("${Environment.apiUrl}/games/$game");
 
       final token = await _storage.read(key: "token");
       final resp = await http.get(url, headers: {"token": token!});
@@ -18,6 +17,7 @@ class GamesService {
       return jsonDecode(resp.body);
     } catch (e) {
       debugPrint(e as String?);
+      return {};
     }
   }
 

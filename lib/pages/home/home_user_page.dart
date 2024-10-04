@@ -51,6 +51,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                 body: Background(
                 child: SafeArea(
                   child: ListView.builder(
+                  cacheExtent: 90000,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -91,46 +92,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       
     );
   }
-
-  Container _createNewMatchForPlatform(AsyncSnapshot<List<dynamic>> snapshot, int index, BuildContext context) {
-    return Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    width: double.maxFinite,
-                                    color: Colors.black,
-                                    child: Wrap(
-                                      alignment: WrapAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.center,
-                                      runAlignment: WrapAlignment.center,
-                                      spacing: 10,
-                                      direction: Axis.vertical,
-                                      children: [
-                                        Text(
-                                          "${translate("HOME.NO_MATCHES")} ${snapshot.data?[index].name}",
-                                          style:
-                                              const TextStyle(color: Colors.grey),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () =>
-                                              GoRouter.of(context).push(
-                                                  "/new",
-                                                  extra: snapshot
-                                                      .data?[index].platform),
-                                          style: ElevatedButton.styleFrom(
-                                            foregroundColor: Colors.white,
-                                            shadowColor: Colors.black,
-                                            side: const BorderSide(
-                                                color: Colors.blue, width: 3),
-                                            backgroundColor: Colors.black,
-                                            shape: const StadiumBorder(),
-                                          ),
-                                          child: Text(translate("HOME.CREATE")),
-                                        )
-                                      ],
-                                    ),
-                                  );
-  }
-
+  
   _loadInfo(BuildContext context) async {
     try {
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
@@ -164,26 +126,4 @@ class _HomeUserPageState extends State<HomeUserPage> {
     
   }
 
-  Future<List<HomeGame>> _loadGames(int platformId) async {
-    try {
-      
-    final List gamesResp = await MatchService().getMatchesByPlatform(platformId);
-      final values =
-          gamesResp.map((e) => HomeGame.fromJson(e)).toList();
-
-      return values;
-    } catch (e) {
-      return [];
-    }
-
-    
-
-      
-
-    
-  }
-
-  Future  _reload() async {
-    setState(() {});
-  }
 }

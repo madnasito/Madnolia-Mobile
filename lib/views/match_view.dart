@@ -1,5 +1,4 @@
 import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:Madnolia/models/match/full_match.model.dart';
 import 'package:Madnolia/models/match/match_with_game_model.dart';
 import 'package:Madnolia/widgets/chat/input_widget.dart';

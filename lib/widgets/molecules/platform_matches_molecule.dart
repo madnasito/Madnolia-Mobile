@@ -27,6 +27,13 @@ class PlatformMatchesMolecule extends StatelessWidget {
               itemBuilder: (BuildContext context, int index, int realIndex) {  
                 final HomeGame game = snapshot.data![index];
                 return GestureDetector(
+                  onTap: (){
+                    GoRouter.of(context)
+                              .push("/game", extra: {
+                                "platform": platform,
+                                "game": snapshot.data![index].id
+                              });
+                  },
                   child: GameCard(
                     name: game.name,
                     background: game.background,
@@ -35,7 +42,7 @@ class PlatformMatchesMolecule extends StatelessWidget {
                 );
               },
               options: CarouselOptions(
-                aspectRatio: 1.3,
+                aspectRatio: 1.262,
                 enlargeFactor: 0.1,
                 viewportFraction: 0.9,
                 disableCenter: true,
@@ -43,22 +50,7 @@ class PlatformMatchesMolecule extends StatelessWidget {
                 ),
               disableGesture: true,
             );
-            // return ListView.builder(
-            //   scrollDirection: Axis.vertical,
-            //   shrinkWrap: true,
-            //   physics: const BouncingScrollPhysics(),
-            //   itemCount: snapshot.data?.length,
-            //   itemBuilder: (BuildContext context, int index) { 
-            //     final HomeGame game = snapshot.data![index];
-            //     return GestureDetector(
-            //       child: GameCard(
-            //         name: game.name,
-            //         background: game.background,
-            //         bottom: Text("${game.count} ${ game.count == 0 ? translate('HOME.NO_MATCHES') : translate('HOME.MATCH') }")
-            //       ),
-            //     );
-            //   },
-            // );
+            
           }else{
             return Container(
                 margin: const EdgeInsets.only(bottom: 10),
@@ -107,9 +99,11 @@ class PlatformMatchesMolecule extends StatelessWidget {
 Future<List<HomeGame>> _loadGames(int platformId) async {
     try {
       
-    final List gamesResp = await MatchService().getMatchesByPlatform(platformId);
+      final resp = await MatchService().getMatchesByPlatform(platformId);
+    List gamesResp = [];
+    print(resp);
       final values =
-          gamesResp.map((e) => HomeGame.fromJson(e)).toList();
+          resp.map((e) => HomeGame.fromJson(e)).toList();
 
       return values;
     } catch (e) {

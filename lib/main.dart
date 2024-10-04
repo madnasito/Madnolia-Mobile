@@ -1,8 +1,6 @@
 import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:Madnolia/services/notification_service.dart';
-import 'package:Madnolia/widgets/custom_scaffold.dart';
-import 'package:Madnolia/widgets/organism/app_bar_organism.dart';
 import 'package:flutter/material.dart';
 import 'package:Madnolia/blocs/login_provider.dart';
 import 'package:Madnolia/blocs/message_provider.dart';

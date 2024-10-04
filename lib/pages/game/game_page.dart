@@ -1,13 +1,17 @@
+import 'package:Madnolia/models/game/game_model.dart';
 import 'package:Madnolia/models/match/minimal_match_model.dart';
 import 'package:Madnolia/services/games_service.dart';
+import 'package:Madnolia/services/match_service.dart';
+import 'package:Madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:Madnolia/widgets/custom_scaffold.dart';
 import 'package:Madnolia/widgets/background.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../models/game_model.dart';
 import '../../utils/platform_id_ico.dart';
 
 class GamePage extends StatelessWidget {
@@ -18,103 +22,136 @@ class GamePage extends StatelessWidget {
     if(GoRouterState.of(context).extra == null) context.go("/home-user");
     final Map data = GoRouterState.of(context).extra as Map;
 
-    final Game game = data["game"] as Game;
+    final String game = data["game"];
+    final int platform = data["platform"];
 
-    final String platformPath =
-        "assets/platforms/${data['platform_category'].toString().toLowerCase()}.svg";
 
     return CustomScaffold(
         body: Background(
       child: SafeArea(
-        child: Column(
-          children: [
-            // GameCard(
-            //   game: game,
-            //   bottom: const Text(""),
-            // ),
-            Wrap(
-              spacing: 10,
-              alignment: WrapAlignment.center,
-              runAlignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  platformPath,
-                  width: 50,
-                  // ignore: deprecated_member_use
-                  color: Colors.white,
+        child: 
+            SingleChildScrollView(
+              child: Column(
+                  children:[ 
+                    FutureBuilder(
+                      future: _loadGameInfo(game), 
+                      builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
+                        if(snapshot.hasData){
+                          final Game game = snapshot.data!;
+                          return  Column(
+                              children: [
+                                GameImageAtom(name: game.name, background: game.background),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                      Colors.black12,
+                                      Colors.black26,
+                                      Colors.black,
+                                      Colors.black26,
+                                      Colors.black12
+                                    ])
+                                  ),
+                                  child: ExpandableText(
+                                    game.description,
+                                    expandText: translate("UTILS.SHOW_MORE"),
+                                    collapseText: translate("UTILS.SHOW_LESS"),
+                                    maxLines: 6,
+                                    animation: true,
+                                    collapseOnTextTap: true,
+                                    expandOnTextTap: true,
+                                    urlStyle: const TextStyle(
+                                      color: Color.fromARGB(255, 169, 145, 255)
+                                    ),
+                                    ),
+                                ),
+                                Text(getPlatformInfo(platform).name),
+                              ],
+                            );
+                        }else{
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                      }
+                    ),
+                    FutureBuilder(
+                      future: _loadMatches(game, platform),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          return _matchesList(snapshot.data, platform);
+                        } else {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                  ],
                 ),
-                Text(getPlatformInfo(data["platform"]).name)
-              ],
             ),
-            FutureBuilder(
-              future: _loadInfo(game.id, data["platform"]),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  final matches = snapshot.data
-                      .map((e) => MinimalMatch.fromJson(e))
-                      .toList();
-
-                  return ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: matches.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        margin:
-                            const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                        decoration: BoxDecoration(
-                            color: Colors.black26,
-                            border: Border.all(color: Colors.blue, width: 1),
-                            borderRadius: BorderRadius.circular(20)),
-                        child: ListTile(
-                          onTap: () => GoRouter.of(context)
-                              .push("/match", extra: matches[index].id),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(matches[index].message),
-                              // Text(
-                              //   game.name,
-                              //   style: TextStyle(overflow: TextOverflow.fade),
-                              // ),
-                              SvgPicture.asset(
-                                getPlatformInfo(data["platform"]).path,
-                                // ignore: deprecated_member_use
-                                color: Colors.white,
-                                width: 60,
-                              )
-                            ],
-                          ),
-                          shape: const CircleBorder(),
-                          subtitle: Text(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                    matches[index].date)
-                                .toString()
-                                .substring(0, 16),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
             ),
-          ],
-        ),
       ),
-    ));
+    );
   }
 
-  _loadInfo(int gameId, int platformId) async {
-    final info =
-        await GamesService().getPlatformGameMatches(platformId, gameId);
+  ListView _matchesList(List<MinimalMatch> matches, int platform) {
+    return ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: matches.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(
+                      margin:
+                          const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                      decoration: BoxDecoration(
+                          color: Colors.black26,
+                          border: Border.all(color: Colors.blue, width: 1),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: ListTile(
+                        onTap: () => GoRouter.of(context)
+                            .push("/match", extra: matches[index].id),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(matches[index].title),
+                            SvgPicture.asset(
+                              getPlatformInfo(platform).path,
+                              // ignore: deprecated_member_use
+                              color: Colors.white,
+                              width: 60,
+                            )
+                          ],
+                        ),
+                        shape: const CircleBorder(),
+                        subtitle: Text(
+                          DateTime.fromMillisecondsSinceEpoch(
+                                  matches[index].date)
+                              .toString()
+                              .substring(0, 16),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  },
+                );
+  }
 
-    return info;
+  Future<List<MinimalMatch>> _loadMatches(String game, int platform) async {
+    final List info =
+        await MatchService().getMatchesByPlatformAndGame(platform, game);
+
+    final List<MinimalMatch> matches = info.map((e) => MinimalMatch.fromJson(e)).toList();
+
+    return matches;
   }
 }
+  Future<Game> _loadGameInfo(String game) async {
+    final respData = await GamesService().getGameInfo(game);
+
+    final Game gameData = Game.fromJson(respData);
+
+    return gameData;
+  }

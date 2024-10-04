@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Madnolia/models/game/home_game_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,12 +24,12 @@ class MatchService {
   Future getUserMatches() => matchGetRequest("player-matches");
 
   // Get all matches by a platform
-  Future getMatchesByPlatform(int platform) =>
-      matchGetRequest("platform/$platform");
+  Future<List> getMatchesByPlatform(int platform) =>
+      matchGetListRequest("platform/$platform");
 
   // Get a game match specifing a game & platform
-  Future getMatchesByGameAndPlatform(String game, String platform) =>
-      matchGetRequest("matches_of_game/$platform/$game");
+  Future getMatchesByPlatformAndGame(int platform, String game) =>
+      matchGetListRequest("by-platform-and-game/$platform/$game");
 
   Future createMatch(Map match) => matchPostRequest("create", match);
 
@@ -52,6 +53,25 @@ class MatchService {
       authenticating = false;
       // print(e);
       return {"message": "Network error", "error": "Network error"};
+    }
+  }
+
+  Future<List> matchGetListRequest(String apiUrl) async {
+    try {
+      authenticating = true;
+      final String? token = await _storage.read(key: "token");
+      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
+
+      final resp =
+          await http.get(url, headers: {"Authorization": "Bearer $token"});
+
+      authenticating = false;
+
+      return jsonDecode(resp.body);
+    } catch (e) {
+      authenticating = false;
+      // print(e);
+      return [];
     }
   }
 

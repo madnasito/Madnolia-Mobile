@@ -12,7 +12,7 @@ class HomeGame {
     String id;
     int count;
     String name;
-    String background;
+    String? background;
     String slug;
 
     HomeGame({

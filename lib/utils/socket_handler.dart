@@ -2,7 +2,6 @@ import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/global/environment.dart';
 import 'package:Madnolia/main.dart';
 import 'package:Madnolia/models/chat/message_model.dart';
-import 'package:Madnolia/widgets/custom_scaffold.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +43,6 @@ Future<Socket> socketHandler() async {
             .toList();
       
       if (mentions.isNotEmpty && message.room != userBloc?.state.chatRoom) {
-          print("Crea notification");
           await NotificationService.showNotification(
               title: message.user.name,
               body: message.text,
