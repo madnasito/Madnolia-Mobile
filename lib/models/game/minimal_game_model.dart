@@ -11,7 +11,7 @@ String minimalGameToJson(MinimalGame data) => json.encode(data.toJson());
 class MinimalGame {
     String id;
     String name;
-    String background;
+    String? background;
     String slug;
 
     MinimalGame({

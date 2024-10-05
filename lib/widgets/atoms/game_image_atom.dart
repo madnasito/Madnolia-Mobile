@@ -9,13 +9,13 @@ class GameImageAtom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
             children: [
-              background != null
-                  ? FadeInImage(
+              background == null || background == ""
+                  ? Image.asset("assets/no image.jpg")
+                  // ? Image.network(game.backgroundImage!)
+                  : FadeInImage(
                       fadeInDuration: const Duration(milliseconds: 300),
                       placeholder: const AssetImage('assets/loading.gif'),
-                      image: NetworkImage(_resizeImage(background!)))
-                  // ? Image.network(game.backgroundImage!)
-                  : Image.asset("assets/no image.jpg"),
+                      image: NetworkImage(_resizeImage(background!))),
               Positioned(
                   bottom: 2,
                   left: 2,

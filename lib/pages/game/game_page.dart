@@ -1,3 +1,4 @@
+import 'package:Madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:Madnolia/models/game/game_model.dart';
 import 'package:Madnolia/models/match/minimal_match_model.dart';
 import 'package:Madnolia/services/games_service.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'package:Madnolia/widgets/custom_scaffold.dart';
 import 'package:Madnolia/widgets/background.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
@@ -25,8 +27,7 @@ class GamePage extends StatelessWidget {
     final String game = data["game"];
     final int platform = data["platform"];
 
-    Game? gameLoaded;
-
+    final gameDataBloc = context.watch<GameDataBloc>();
 
     return CustomScaffold(
         body: Background(
@@ -36,7 +37,7 @@ class GamePage extends StatelessWidget {
               child: Column(
                   children:[ 
                     FutureBuilder(
-                      future: _loadGameInfo(game, gameLoaded), 
+                      future: _loadGameInfo(game, gameDataBloc), 
                       builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
                         if(snapshot.hasData){
                           final Game game = snapshot.data!;
@@ -95,6 +96,8 @@ class GamePage extends StatelessWidget {
             ),
       ),
     );
+
+    
   }
 
   ListView _matchesList(List<MinimalMatch> matches, int platform) {
@@ -146,21 +149,30 @@ class GamePage extends StatelessWidget {
         await MatchService().getMatchesByPlatformAndGame(platform, game);
 
     final List<MinimalMatch> matches = info.map((e) => MinimalMatch.fromJson(e)).toList();
-
     return matches;
   }
-}
-  Future<Game> _loadGameInfo(String game, Game? gameLoaded) async {
+  
+  Future<Game> _loadGameInfo(String game, GameDataBloc gameDataBloc) async {
 
-    if(gameLoaded != null){
-      return gameLoaded;
+    if(gameDataBloc.state.id == game){
+      final gameData = gameDataBloc.state;
+      return Game(
+        id: gameData.id,
+        name: gameData.name,
+        slug: gameData.slug,
+        gameId: gameData.gameId,
+        background: gameData.background,
+        screenshots: gameData.screenshots,
+        description: gameData.description
+      );
     }
 
     final respData = await GamesService().getGameInfo(game);
 
     final Game gameData = Game.fromJson(respData);
 
-    gameLoaded = gameData;
+    gameDataBloc.updateGame(gameData);
 
     return gameData;
   }
+}

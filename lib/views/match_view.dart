@@ -70,10 +70,7 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
           return  ChatMessageOrganism(
             text: e.text,
             user: e.user,
-            mainMessage: isTheSame,
-            animationController: AnimationController(
-                vsync: this, duration: const Duration(milliseconds: 0))
-              ..forward());
+            mainMessage: isTheSame);
         })
         .toList();
 
@@ -94,17 +91,13 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
     ChatMessageOrganism message = ChatMessageOrganism(
       mainMessage: _messages[0].user.id == decodedMessage.user.id ? false : true,
       text: decodedMessage.text,
-      user: decodedMessage.user,
-      animationController: AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300))
+      user: decodedMessage.user
     );
 
     setState(() {
       _messages.insert(0, message);
     });
 
-    message.animationController.forward();
   }
 
 
@@ -139,15 +132,8 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
   @override
   void dispose() {
     widget.socketClient.emit("disconnect_chat");
-    for (ChatMessageOrganism message in _messages) {
-      message.animationController.dispose();
-    }
-
-    widget.socketClient.off("message");
     widget.socketClient.off("new_player_to_match");
-    
 
-    
     userBloc.updateChatRoom("");
     super.dispose();
   }
@@ -179,11 +165,11 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
                 clipBehavior: Clip.antiAlias,
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                child: Image.network(
+                child: widget.match.game.background != null ? Image.network(
                   filterQuality: FilterQuality.medium,
                   widget.match.game.background.toString(),
                   width: 80,
-                ),
+                ) :Image.asset("assets/no image.jpg", width: 80),
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:Madnolia/blocs/blocs.dart';
+import 'package:Madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:Madnolia/services/notification_service.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (BuildContext context) => getIt<UserBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<SocketsBloc>()),
+        BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>()),
       ],
       child: LoginProvider(
         child:  MessageProvider(

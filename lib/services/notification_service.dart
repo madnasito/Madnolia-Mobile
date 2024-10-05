@@ -105,19 +105,19 @@ class NotificationService {
 
     await AwesomeNotifications().createNotification(
         content: NotificationContent(
-            backgroundColor: Colors.transparent,
-            roundedLargeIcon: true,
-            largeIcon: largeIcon,
-            id: DateTime.now().millisecond,
-            channelKey: 'basic_channel',
-            title: title,
-            body: body,
-            actionType: actionType,
-            notificationLayout: notificationLayout,
-            summary: summary,
-            category: category,
-            payload: payload,
-            bigPicture: bigPicture),
+        backgroundColor: Colors.transparent,
+        roundedLargeIcon: true,
+        largeIcon: largeIcon,
+        id: DateTime.now().millisecond,
+        channelKey: 'basic_channel',
+        title: title,
+        body: body,
+        actionType: actionType,
+        notificationLayout: notificationLayout,
+        summary: summary,
+        category: category,
+        payload: payload,
+        bigPicture: bigPicture),
         actionButtons: actionButtons,
         schedule: scheduled
             ? NotificationInterval(

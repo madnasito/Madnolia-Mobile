@@ -5,33 +5,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
-class ChatMessageOrganism extends StatelessWidget {
+class ChatMessageOrganism extends StatefulWidget {
   final String text;
   final ChatUser user;
-  final AnimationController animationController;
   final bool mainMessage;
 
   const ChatMessageOrganism(
       {super.key,
       required this.text,
       required this.user,
-      required this.animationController, required this.mainMessage});
+      required this.mainMessage});
+
+  @override
+  State<ChatMessageOrganism> createState() => _ChatMessageOrganismState();
+}
+
+class _ChatMessageOrganismState extends State<ChatMessageOrganism> with SingleTickerProviderStateMixin {
+  late AnimationController animationController;
+
+  @override
+  void initState() {
+    animationController = AnimationController(
+                vsync: this, duration: const Duration(milliseconds: 300))
+              ..forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final userState = context.read<UserBloc>().state;
+    final userState = context.read<UserBloc>().state; 
     return FadeTransition(
       opacity: animationController,
       child: SizeTransition(
         sizeFactor: CurvedAnimation(
             parent: animationController, curve: Curves.easeInOut),
         child: Container(
-          child: user.id == userState.id
-              ? MyMessageMolecule(text: text, thumb: userState.thumb, mainMessage: mainMessage)
-              : NotMyMessageMolecule(thumb: userState.thumb, text: text, mainMessage: mainMessage),
+          child: widget.user.id == userState.id
+              ? MyMessageMolecule(text: widget.text, thumb: userState.thumb, mainMessage: widget.mainMessage)
+              : NotMyMessageMolecule(thumb: userState.thumb, text: widget.text, mainMessage: widget.mainMessage),
         ),
       ),
     );
   }
-
 }

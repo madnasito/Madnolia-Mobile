@@ -22,6 +22,7 @@ Future<Socket> socketHandler() async {
          .setTransports(['websocket']) // for Flutter or Dart VM
          .enableAutoConnect() // disable auto-connection
          .disableForceNew()
+         .disableForceNewConnection()
          .disableMultiplex()
          .setExtraHeaders({"token": token})
          .build());
@@ -67,9 +68,13 @@ Future<Socket> socketHandler() async {
     });
 
     socket.on("invitation", (data) async {
+
+
+      try {
         // Match match = Match.fromJson(data["match"]);
         Invitation match = Invitation.fromJson(data);
 
+        print(socket);
         await NotificationService.showNotification(
             title: "Invitation to a Match",
             body: "Game name",
@@ -95,6 +100,10 @@ Future<Socket> socketHandler() async {
                   actionType: ActionType.SilentAction,
                   color: Colors.blueGrey)
             ]);
+      } catch (e) {
+        print(e);
+      }
+        
       });
 
     socket.on("match_ready", (data) async {

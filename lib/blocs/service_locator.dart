@@ -1,5 +1,6 @@
 
 import 'package:Madnolia/blocs/blocs.dart';
+import 'package:Madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:Madnolia/utils/socket_handler.dart';
 import 'package:get_it/get_it.dart';
@@ -13,5 +14,6 @@ Future<void> serviceLocatorInit() async {
 
   getIt.registerSingleton(UserBloc());
   getIt.registerSingleton(SocketsBloc(socket: socket));
+  getIt.registerSingleton(GameDataBloc());
 }
 
