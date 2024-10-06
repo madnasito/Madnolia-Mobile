@@ -13,7 +13,6 @@ import 'package:Madnolia/services/match_service.dart';
 import 'package:Madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
-
 import '../models/chat_user_model.dart';
 
 class MatchUserView extends StatelessWidget {
@@ -42,12 +41,11 @@ class MatchChat extends StatefulWidget {
   State<MatchChat> createState() => _MatchChatState();
 }
 
-class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
+class _MatchChatState extends State<MatchChat> {
   bool isInMatch = false;
   final List<ChatMessageOrganism> _messages = [];
   final matchService = MatchService();
   late UserBloc userBloc;
-  // late Socket socketClient;
 
   late GlobalKey<FlutterMentionsState> messageKey;
   void _loadHistory(String id) async {
@@ -106,7 +104,6 @@ class _MatchChatState extends State<MatchChat> with TickerProviderStateMixin {
     super.initState();
     _loadHistory(widget.match.id);
     messageKey = GlobalKey<FlutterMentionsState>();
-    // socketClient = context.read<SocketsBloc>().state.clientSocket;
     userBloc = context.read<UserBloc>();
 
     if (mounted) {

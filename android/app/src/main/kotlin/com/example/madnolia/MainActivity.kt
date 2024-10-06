@@ -1,4 +1,4 @@
-package com.example.madnolia
+package com.madnolia.app
 
 import io.flutter.embedding.android.FlutterActivity
 

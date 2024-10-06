@@ -99,6 +99,7 @@ flutter:
    - assets/platforms/
    - lang/
    - assets/i18n/
+   - assets/madnolia-logo.svg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

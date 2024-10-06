@@ -2,6 +2,7 @@ import 'package:Madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,7 +32,7 @@ class CustomScaffold extends StatelessWidget {
                     const SizedBox(width: 0),
                     CircleAvatar(
                       backgroundImage:
-                          NetworkImage(userBloc.state.thumb),
+                          NetworkImage(userBloc.state.img),
                       minRadius: 40,
                       maxRadius: 50,
                       backgroundColor: Colors.white,
@@ -106,7 +107,8 @@ class CustomScaffold extends StatelessWidget {
         shadowColor: Colors.transparent,
         centerTitle: true,
         title: IconButton(
-            icon: const Icon(Icons.home),
+            icon: SvgPicture.asset("assets/madnolia-logo.svg",
+            width: MediaQuery.of(context).size.width / 11),
             onPressed: () => GoRouter.of(context).push("/")),
       ),
       body: body,

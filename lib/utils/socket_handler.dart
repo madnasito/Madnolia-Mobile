@@ -45,22 +45,22 @@ Future<Socket> socketHandler() async {
       
       if (mentions.isNotEmpty && message.room != userBloc?.state.chatRoom) {
           await NotificationService.showNotification(
-              title: message.user.name,
-              body: message.text,
-              largeIcon: message.user.thumb,
-              summary: message.user.name,
-              notificationLayout: NotificationLayout.Messaging,
-              actionButtons: [
-                NotificationActionButton(
-                    key: "reply",
-                    label: "Reply",
-                    autoDismissible: true,
-                    requireInputText: true,
-                    actionType: ActionType.SilentAction),
-              ],
-              payload: {
-                "match": message.room
-              });
+            title: message.user.name,
+            body: message.text,
+            largeIcon: message.user.thumb,
+            summary: message.user.name,
+            notificationLayout: NotificationLayout.Messaging,
+            // actionButtons: [
+            //   NotificationActionButton(
+            //     key: "reply",
+            //     label: "Reply",
+            //     autoDismissible: true,
+            //     requireInputText: true,
+            //     actionType: ActionType.SilentAction),
+            // ],
+            payload: {
+              "match": message.room
+            });
         }
 
         
@@ -89,16 +89,17 @@ Future<Socket> socketHandler() async {
             },
             actionButtons: [
               NotificationActionButton(
-                  key: "accept",
-                  label: "Accept",
-                  color: Colors.blue,
-                  actionType: ActionType.DismissAction,
-                  autoDismissible: true),
+                key: "accept",
+                label: "Accept",
+                color: Colors.blue,
+                actionType: ActionType.DismissAction,
+                autoDismissible: true),
               NotificationActionButton(
-                  key: "decline",
-                  label: "Decline",
-                  actionType: ActionType.SilentAction,
-                  color: Colors.blueGrey)
+                key: "decline",
+                label: "Decline",
+                actionType: ActionType.SilentAction,
+                color: Colors.blueGrey,
+              )
             ]);
       } catch (e) {
         print(e);
@@ -108,7 +109,6 @@ Future<Socket> socketHandler() async {
 
     socket.on("match_ready", (data) async {
         // Match match = Match.fromJson(data["match"]);
-
         await NotificationService.showNotification(
             title: "The match is ready",
             body: data["title"],
