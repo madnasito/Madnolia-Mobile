@@ -108,7 +108,7 @@ class CustomScaffold extends StatelessWidget {
         centerTitle: true,
         title: IconButton(
             icon: SvgPicture.asset("assets/madnolia-logo.svg",
-            width: MediaQuery.of(context).size.width / 11),
+            width: MediaQuery.of(context).size.width / 11,),
             onPressed: () => GoRouter.of(context).push("/")),
       ),
       body: body,

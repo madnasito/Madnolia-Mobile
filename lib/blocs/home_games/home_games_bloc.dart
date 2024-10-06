@@ -1,9 +1,6 @@
 import 'package:Madnolia/models/game/home_game_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../widgets/molecules/platform_matches_molecule.dart';
-
 part 'home_games_event.dart';
 part 'home_games_state.dart';
 

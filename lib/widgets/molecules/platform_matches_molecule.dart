@@ -1,7 +1,5 @@
-import 'package:Madnolia/blocs/home_games/home_games_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,9 +16,8 @@ class PlatformMatchesMolecule extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final homeGamesBloc = context.watch<HomeGamesBloc>();
     return  FutureBuilder(
-      future: _loadGames(homeGamesBloc, platform),
+      future: _loadGames(platform),
       builder: (BuildContext context, AsyncSnapshot<List<HomeGame>> snapshot) { 
         if(snapshot.hasData){
 
@@ -99,24 +96,16 @@ class PlatformMatchesMolecule extends StatelessWidget {
   }
 }
 
-Future<List<HomeGame>> _loadGames(HomeGamesBloc homeGamesBloc, int platformId) async {
-
-  final blocGames = homeGamesBloc.state.homeGames.map((e) => e.platformId == platformId).toList();
-
-
+Future<List<HomeGame>> _loadGames(int platformId) async {
     try {
       
       final resp = await MatchService().getMatchesByPlatform(platformId);
       final values =
           resp.map((e) => HomeGame.fromJson(e)).toList();
     
-      debugPrint("Loaded games of $platformId");
-
-
+    debugPrint("Loaded games of $platformId");
       return values;
     } catch (e) {
       return [];
     }
 }
-
-
