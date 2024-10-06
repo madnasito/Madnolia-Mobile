@@ -1,5 +1,6 @@
 import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/blocs/game_data/game_data_bloc.dart';
+import 'package:Madnolia/blocs/home_games/home_games_bloc.dart';
 import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:Madnolia/services/notification_service.dart';
 import 'package:flutter/material.dart';
@@ -9,13 +10,16 @@ import 'package:Madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'dart:ui'; //for mobile
 
 void main() async {
   await NotificationService.initializeNotification();
   serviceLocatorInit();
+  Locale deviceLocale = window.locale;// or html.window.locale
+  String langCode = deviceLocale.languageCode;
 
    var delegate = await LocalizationDelegate.create(
-          fallbackLocale: 'en',
+          fallbackLocale: langCode,
           supportedLocales: ['en', 'es']);
   
   runApp(LocalizedApp(delegate, const MyApp()) );
@@ -37,6 +41,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getIt<UserBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<SocketsBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>()),
+        BlocProvider(create: (BuildContext context) => getIt<HomeGamesBloc>()),
       ],
       child: LoginProvider(
         child:  MessageProvider(

@@ -55,8 +55,6 @@ class _MatchChatState extends State<MatchChat> {
       return;
     }
 
-    // final respMessages = resp["match"]["chat"];
-
     List<Message> history =
         widget.matchMessages.map((e) => Message.fromJson(e)).toList();
         
