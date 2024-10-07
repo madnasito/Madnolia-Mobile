@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
@@ -9,7 +11,9 @@ import 'package:Madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'dart:ui'; //for mobile
+import 'dart:ui';
+
+import 'package:google_mobile_ads/google_mobile_ads.dart'; //for mobile
 
 void main() async {
   await NotificationService.initializeNotification();
@@ -22,7 +26,9 @@ void main() async {
    var delegate = await LocalizationDelegate.create(
           fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
           supportedLocales: supportedLangs);
-  
+    
+  WidgetsFlutterBinding.ensureInitialized();
+  unawaited(MobileAds.instance.initialize());
   runApp(LocalizedApp(delegate, const MyApp()) );
 }
 
