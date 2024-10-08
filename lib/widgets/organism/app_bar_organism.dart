@@ -78,7 +78,8 @@ class AppBarOrganism extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () async {
                       const storage = FlutterSecureStorage();
-                      storage.delete(key: "token");
+                      await storage.delete(key: "token");
+                      // ignore: use_build_context_synchronously
                       GoRouter.of(context).push("/home");
                     },
                     child: const Wrap(

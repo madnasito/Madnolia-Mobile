@@ -97,7 +97,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
 
     // ignore: use_build_context_synchronously
-    final userBloc = context. read<UserBloc>();
+    final userBloc = context.read<UserBloc>();
     final socketBloc = context.read<SocketsBloc>();
     if (userInfo.isEmpty) {
       const storage = FlutterSecureStorage();

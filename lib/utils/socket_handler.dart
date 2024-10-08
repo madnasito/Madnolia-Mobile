@@ -14,7 +14,7 @@ import '../models/invitation_model.dart';
 
 Future<Socket> socketHandler() async {
 
-  final token = await const FlutterSecureStorage().read(key: "token");
+  final String? token = await const FlutterSecureStorage().read(key: "token");
 
   final Socket socket = io(
         Environment.socketUrl,
@@ -22,9 +22,8 @@ Future<Socket> socketHandler() async {
          .setTransports(['websocket']) // for Flutter or Dart VM
          .enableAutoConnect() // disable auto-connection
          .disableForceNew()
-         .disableForceNewConnection()
          .disableMultiplex()
-         .setExtraHeaders({"token": token})
+         .setExtraHeaders({"token": token ?? ""})
          .build());
 
   socket.onConnect((_){

@@ -16,7 +16,8 @@ import 'dart:ui';
 import 'package:google_mobile_ads/google_mobile_ads.dart'; //for mobile
 
 void main() async {
-  await NotificationService.initializeNotification();
+  WidgetsFlutterBinding.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
   serviceLocatorInit();
   Locale deviceLocale = window.locale;// or html.window.locale
   String langCode = deviceLocale.languageCode;
@@ -27,8 +28,8 @@ void main() async {
           fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
           supportedLocales: supportedLangs);
     
-  WidgetsFlutterBinding.ensureInitialized();
   unawaited(MobileAds.instance.initialize());
+  await NotificationService.initializeNotification();
   runApp(LocalizedApp(delegate, const MyApp()) );
 }
 

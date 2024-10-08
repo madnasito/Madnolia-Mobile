@@ -10,24 +10,27 @@ class NotificationService {
         // set the icon to null if you want to use the default app icon
         null,
         [
-          NotificationChannel(
-              channelGroupKey: 'basic_channel_group',
-              channelKey: 'basic_channel',
-              channelName: 'Basic notifications',
-              channelDescription: 'Notification channel for basic tests',
-              defaultColor: const Color(0xFF9D50DD),
-              ledColor: Colors.white,
-              importance: NotificationImportance.Max,
-              channelShowBadge: true,
-              playSound: true,
-              criticalAlerts: true),
-        ],
+        NotificationChannel(
+          channelGroupKey: 'high_importance_channel',
+          channelKey: 'high_importance_channel',
+          channelName: 'Basic notifications',
+          channelDescription: 'Notification channel for basic tests',
+          defaultColor: const Color(0xFF9D50DD),
+          ledColor: Colors.white,
+          importance: NotificationImportance.Max,
+          channelShowBadge: true,
+          onlyAlertOnce: true,
+          playSound: true,
+          criticalAlerts: true,
+        )
+      ],
         // Channel groups are only visual and are not required
         channelGroups: [
-          NotificationChannelGroup(
-              channelGroupKey: 'basic_channel_group',
-              channelGroupName: 'Basic group')
-        ],
+        NotificationChannelGroup(
+          channelGroupKey: 'high_importance_channel_group',
+          channelGroupName: 'Group 1',
+        )
+      ],
         debug: true);
     await AwesomeNotifications().isNotificationAllowed().then(
       (isAllowed) async {
@@ -38,10 +41,11 @@ class NotificationService {
     );
 
     await AwesomeNotifications().setListeners(
-        onActionReceivedMethod: onActionReceivedMethod,
-        onNotificationCreatedMethod: onNotificationCreatedMethod,
-        onNotificationDisplayedMethod: onNotificationDisplayedMethod,
-        onDismissActionReceivedMethod: onDismissActionReceivedMethod);
+      onActionReceivedMethod: onActionReceivedMethod,
+      onNotificationCreatedMethod: onNotificationCreatedMethod,
+      onNotificationDisplayedMethod: onNotificationDisplayedMethod,
+      onDismissActionReceivedMethod: onDismissActionReceivedMethod,
+    );
   }
 
   // Use this method to detect when a new notification or a schedule is created
