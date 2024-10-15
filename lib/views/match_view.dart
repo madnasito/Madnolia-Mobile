@@ -1,17 +1,20 @@
-import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/models/match/full_match.model.dart';
-import 'package:Madnolia/models/match/match_with_game_model.dart';
-import 'package:Madnolia/widgets/chat/input_widget.dart';
-import 'package:Madnolia/widgets/form_button.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/models/match/full_match.model.dart';
+import 'package:madnolia/models/match/match_with_game_model.dart';
+import 'package:madnolia/widgets/chat/input_widget.dart';
+import 'package:madnolia/widgets/form_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:Madnolia/blocs/message_bloc.dart';
+import 'package:madnolia/blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/blocs/user/user_bloc.dart';
+import 'package:madnolia/widgets/organism/chat_organism.dart';
+
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../models/chat/message_model.dart';
-import 'package:Madnolia/services/match_service.dart';
-import 'package:Madnolia/widgets/organism/chat_message_organism.dart';
+import 'package:madnolia/services/match_service.dart';
+import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
 import '../models/chat_user_model.dart';
@@ -180,17 +183,7 @@ class _MatchChatState extends State<MatchChat> {
             ],
           ),
         ),
-        Flexible(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
-            color: Colors.black38,
-            child: ListView.builder(
-                reverse: true,
-                itemCount: _messages.length,
-                physics: const BouncingScrollPhysics(),
-                itemBuilder: (_, i) => _messages[i]),
-          ),
-        ),
+        ChatOrganism(match: widget.match.id),
         Container(
             color: Colors.black54,
             padding: const EdgeInsets.only(top: 10),

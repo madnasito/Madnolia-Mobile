@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:Madnolia/widgets/background.dart';
-import 'package:Madnolia/widgets/super_cube.dart';
+import 'package:madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/super_cube.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
                       heightFactor: 3,
                       child: Column(children: [
                         const Text(
-                          "Madnolia",
+                          "madnolia",
                           style: TextStyle(
                               color: Colors.white,
                               fontFamily: "Cyberverse",

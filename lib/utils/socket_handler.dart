@@ -1,7 +1,7 @@
-import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/global/environment.dart';
-import 'package:Madnolia/main.dart';
-import 'package:Madnolia/models/chat/message_model.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/global/environment.dart';
+import 'package:madnolia/main.dart';
+import 'package:madnolia/models/chat/message_model.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

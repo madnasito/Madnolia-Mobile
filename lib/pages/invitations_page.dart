@@ -1,4 +1,4 @@
-import 'package:Madnolia/models/match/match_with_game_model.dart';
+import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:Madnolia/views/create_match_view.dart';
-import 'package:Madnolia/widgets/background.dart';
-import 'package:Madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/views/create_match_view.dart';
+import 'package:madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../models/game_model.dart';
 

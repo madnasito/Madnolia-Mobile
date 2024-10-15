@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:Madnolia/models/chat_user_model.dart';
+import 'package:madnolia/models/chat_user_model.dart';
 
 Message messageFromJson(String str) => Message.fromJson(json.decode(str));
 

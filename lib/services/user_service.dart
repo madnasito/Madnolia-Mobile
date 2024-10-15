@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:Madnolia/models/user/update_user_model.dart';
+import 'package:madnolia/models/user/update_user_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-import 'package:Madnolia/global/environment.dart';
+import 'package:madnolia/global/environment.dart';
 
 
 class UserService {

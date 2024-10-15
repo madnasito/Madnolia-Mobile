@@ -1,15 +1,15 @@
-import 'package:Madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toast/toast.dart';
 
-import 'package:Madnolia/services/user_service.dart';
-import 'package:Madnolia/views/platforms_view.dart';
-import 'package:Madnolia/widgets/background.dart';
-import 'package:Madnolia/widgets/custom_scaffold.dart';
-import 'package:Madnolia/widgets/form_button.dart';
+import 'package:madnolia/services/user_service.dart';
+import 'package:madnolia/views/platforms_view.dart';
+import 'package:madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/form_button.dart';
 
 class UserPlatformsPage extends StatelessWidget {
   const UserPlatformsPage({super.key});

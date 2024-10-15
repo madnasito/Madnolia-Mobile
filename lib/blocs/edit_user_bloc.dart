@@ -1,6 +1,6 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:Madnolia/blocs/validators.dart';
-import 'package:Madnolia/services/upload_service.dart';
+import 'package:madnolia/blocs/validators.dart';
+import 'package:madnolia/services/upload_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EditUserBloc with Validators {

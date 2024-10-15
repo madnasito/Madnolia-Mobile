@@ -1,19 +1,19 @@
 import 'dart:async';
 
-import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/models/match/create_match_model.dart';
-import 'package:Madnolia/widgets/search_user_widget.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/models/match/create_match_model.dart';
+import 'package:madnolia/widgets/search_user_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:Madnolia/services/match_service.dart';
-import 'package:Madnolia/utils/platform_id_ico.dart';
+import 'package:madnolia/services/match_service.dart';
+import 'package:madnolia/utils/platform_id_ico.dart';
 // import 'package:flutter/services.dart';
 
-import 'package:Madnolia/widgets/form_button.dart';
-import 'package:Madnolia/widgets/match_card_widget.dart';
+import 'package:madnolia/widgets/form_button.dart';
+import 'package:madnolia/widgets/match_card_widget.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';

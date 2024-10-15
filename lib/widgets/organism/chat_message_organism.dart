@@ -1,6 +1,6 @@
-import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/models/chat_user_model.dart';
-import 'package:Madnolia/widgets/molecules/chat_message_molecule.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/models/chat_user_model.dart';
+import 'package:madnolia/widgets/molecules/chat_message_molecule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

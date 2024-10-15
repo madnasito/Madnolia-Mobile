@@ -1,4 +1,4 @@
-import 'package:Madnolia/models/chat_user_model.dart';
+import 'package:madnolia/models/chat_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 

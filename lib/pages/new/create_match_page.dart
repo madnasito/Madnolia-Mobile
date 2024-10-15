@@ -1,4 +1,4 @@
-import 'package:Madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -8,10 +8,10 @@ import 'package:provider/provider.dart';
 import 'package:animate_do/animate_do.dart';
 
 
-import 'package:Madnolia/views/create_match_view.dart';
+import 'package:madnolia/views/create_match_view.dart';
 
-import 'package:Madnolia/widgets/background.dart';
-import 'package:Madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../widgets/platform_icon_widget.dart';
 

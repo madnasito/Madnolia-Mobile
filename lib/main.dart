@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/blocs/game_data/game_data_bloc.dart';
-import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
-import 'package:Madnolia/services/notification_service.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
+import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:madnolia/services/notification_service.dart';
 import 'package:flutter/material.dart';
-import 'package:Madnolia/blocs/login_provider.dart';
-import 'package:Madnolia/blocs/message_provider.dart';
-import 'package:Madnolia/routes/routes.dart';
+import 'package:madnolia/blocs/login_provider.dart';
+import 'package:madnolia/blocs/message_provider.dart';
+import 'package:madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
                   theme: ThemeData(
                     brightness: Brightness.dark,
                   ),
-                  title: 'Madnolia',
+                  title: 'madnolia',
                   routerConfig: router,
                   localizationsDelegates: [
                     localizationDelegate

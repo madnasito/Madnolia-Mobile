@@ -1,5 +1,5 @@
-import 'package:Madnolia/models/match/match_with_game_model.dart';
-import 'package:Madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:madnolia/models/match/match_with_game_model.dart';
+import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import 'package:flutter/material.dart';
 
 class GameCard extends StatelessWidget {

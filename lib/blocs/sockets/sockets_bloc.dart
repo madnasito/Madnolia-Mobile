@@ -1,4 +1,4 @@
-import 'package:Madnolia/utils/socket_handler.dart';
+import 'package:madnolia/utils/socket_handler.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart';

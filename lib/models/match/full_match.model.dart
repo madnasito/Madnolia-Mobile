@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-import 'package:Madnolia/models/chat_user_model.dart';
-import 'package:Madnolia/models/game/minimal_game_model.dart';
+import 'package:madnolia/models/chat_user_model.dart';
+import 'package:madnolia/models/game/minimal_game_model.dart';
 
 FullMatch fullMatchFromJson(String str) => FullMatch.fromJson(json.decode(str));
 

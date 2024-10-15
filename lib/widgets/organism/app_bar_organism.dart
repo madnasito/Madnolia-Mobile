@@ -1,4 +1,4 @@
-import 'package:Madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

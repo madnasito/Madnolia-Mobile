@@ -1,4 +1,4 @@
-import 'package:Madnolia/models/game/home_game_model.dart';
+import 'package:madnolia/models/game/home_game_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 part 'home_games_event.dart';

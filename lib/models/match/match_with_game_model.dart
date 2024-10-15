@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:Madnolia/models/game/game_model.dart';
+import 'package:madnolia/models/game/game_model.dart';
 
 MatchWithGame matchWithGameFromJson(String str) => MatchWithGame.fromJson(json.decode(str));
 

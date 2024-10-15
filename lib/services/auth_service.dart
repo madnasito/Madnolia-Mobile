@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:Madnolia/models/auth/register_model.dart';
+import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:Madnolia/global/environment.dart';
+import 'package:madnolia/global/environment.dart';
 
 class AuthService {
   bool authenticating = false;

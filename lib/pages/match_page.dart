@@ -1,13 +1,13 @@
-import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
-import 'package:Madnolia/models/match/full_match.model.dart';
-import 'package:Madnolia/services/match_service.dart';
+import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:madnolia/models/match/full_match.model.dart';
+import 'package:madnolia/services/match_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:Madnolia/blocs/message_provider.dart';
-import 'package:Madnolia/views/match_view.dart';
-import 'package:Madnolia/widgets/background.dart';
-import 'package:Madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/blocs/message_provider.dart';
+import 'package:madnolia/views/match_view.dart';
+import 'package:madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/custom_scaffold.dart';
 
 class MatchPage extends StatelessWidget {
   const MatchPage({super.key});

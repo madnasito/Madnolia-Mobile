@@ -1,4 +1,4 @@
-import 'package:Madnolia/models/user/user_model.dart';
+import 'package:madnolia/models/user/user_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

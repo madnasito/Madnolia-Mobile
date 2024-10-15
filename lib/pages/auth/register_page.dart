@@ -1,18 +1,18 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:Madnolia/models/auth/register_model.dart';
+import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:Madnolia/blocs/register_provider.dart';
-import 'package:Madnolia/services/auth_service.dart';
-import 'package:Madnolia/views/platforms_view.dart';
-import 'package:Madnolia/widgets/alert_widget.dart';
-import 'package:Madnolia/widgets/background.dart';
-import 'package:Madnolia/widgets/custom_input_widget.dart';
-import 'package:Madnolia/widgets/form_button.dart';
+import 'package:madnolia/blocs/register_provider.dart';
+import 'package:madnolia/services/auth_service.dart';
+import 'package:madnolia/views/platforms_view.dart';
+import 'package:madnolia/widgets/alert_widget.dart';
+import 'package:madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/custom_input_widget.dart';
+import 'package:madnolia/widgets/form_button.dart';
 
 bool verifiedUser = false;
 

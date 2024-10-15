@@ -1,17 +1,17 @@
-import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/blocs/sockets/sockets_bloc.dart';
-import 'package:Madnolia/utils/platform_id_ico.dart';
-import 'package:Madnolia/widgets/molecules/platform_matches_molecule.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:madnolia/utils/platform_id_ico.dart';
+import 'package:madnolia/widgets/molecules/platform_matches_molecule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:Madnolia/models/user/user_model.dart';
-import 'package:Madnolia/services/user_service.dart';
-// import 'package:Madnolia/widgets/alert_widget.dart';
-import 'package:Madnolia/widgets/background.dart';
-import 'package:Madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/models/user/user_model.dart';
+import 'package:madnolia/services/user_service.dart';
+// import 'package:madnolia/widgets/alert_widget.dart';
+import 'package:madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -150,7 +150,7 @@ class _MyBannerAdWidgetState extends State<MyBannerAdWidget> {
             // Nothing to render yet.
             ? const SizedBox()
             // The actual ad.
-            : Container(
+            : SizedBox(
                 width: _bannerAd!.size.width.toDouble(),
                 height: _bannerAd!.size.height.toDouble(),
                 child: AdWidget(ad: _bannerAd!)),

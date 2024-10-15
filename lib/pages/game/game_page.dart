@@ -1,14 +1,14 @@
-import 'package:Madnolia/blocs/game_data/game_data_bloc.dart';
-import 'package:Madnolia/models/game/game_model.dart';
-import 'package:Madnolia/models/match/minimal_match_model.dart';
-import 'package:Madnolia/services/games_service.dart';
-import 'package:Madnolia/services/match_service.dart';
-import 'package:Madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
+import 'package:madnolia/models/game/game_model.dart';
+import 'package:madnolia/models/match/minimal_match_model.dart';
+import 'package:madnolia/services/games_service.dart';
+import 'package:madnolia/services/match_service.dart';
+import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 
-import 'package:Madnolia/widgets/custom_scaffold.dart';
-import 'package:Madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/background.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';

@@ -1,17 +1,17 @@
 import 'dart:convert';
 
-import 'package:Madnolia/blocs/blocs.dart';
-import 'package:Madnolia/models/user/update_user_model.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/models/user/update_user_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:Madnolia/blocs/edit_user_bloc.dart';
-import 'package:Madnolia/blocs/edit_user_provider.dart';
-import 'package:Madnolia/widgets/custom_input_widget.dart';
-import 'package:Madnolia/widgets/form_button.dart';
+import 'package:madnolia/blocs/edit_user_bloc.dart';
+import 'package:madnolia/blocs/edit_user_provider.dart';
+import 'package:madnolia/widgets/custom_input_widget.dart';
+import 'package:madnolia/widgets/form_button.dart';
 import 'package:toast/toast.dart';
 
 import '../models/user/user_model.dart';
