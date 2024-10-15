@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/models/match/create_match_model.dart';
 import 'package:Madnolia/widgets/search_user_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -147,7 +148,7 @@ class MatchFormView extends StatelessWidget {
               child: Stack(
                 children: [
                   game.backgroundImage != null
-                      ? Image.network(game.backgroundImage!)
+                      ? CachedNetworkImage(imageUrl: game.backgroundImage!)
                       : Image.asset("assets/no image.jpg"),
                   Positioned(
                     bottom: 2,
@@ -266,14 +267,14 @@ class MatchFormView extends StatelessWidget {
                         textStyle: const TextStyle(fontSize: 18),
                         duration: 3);
                   }
-                  if (nameController.text == "") {
-                    return Toast.show(
-                        translate("CREATE_MATCH.TITLE_EMPTY"),
-                        gravity: 100,
-                        border: Border.all(color: Colors.blueAccent),
-                        textStyle: const TextStyle(fontSize: 18),
-                        duration: 3);
-                  }
+                  // if (nameController.text == "") {
+                  //   return Toast.show(
+                  //       translate("CREATE_MATCH.TITLE_EMPTY"),
+                  //       gravity: 100,
+                  //       border: Border.all(color: Colors.blueAccent),
+                  //       textStyle: const TextStyle(fontSize: 18),
+                  //       duration: 3);
+                  // }
                   int formDate =
                       DateTime.parse(dateController.text).millisecondsSinceEpoch;
 

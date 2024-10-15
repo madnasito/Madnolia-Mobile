@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:Madnolia/models/chat_user_model.dart';
 import 'package:Madnolia/services/user_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 
@@ -110,11 +111,7 @@ class _SeatchUserState extends State<SeatchUser> {
                                   spacing: 10,
                                   crossAxisAlignment: WrapCrossAlignment.center,
                                   children: [
-                                    Image.network(
-                                      users[index].thumb,
-                                      width: 50,
-                                      height: 50,
-                                    ),
+                                    CachedNetworkImage(imageUrl: users[index].thumb, width: 50, height: 50),
                                     Text(users[index].username)
                                   ],
                                 ),

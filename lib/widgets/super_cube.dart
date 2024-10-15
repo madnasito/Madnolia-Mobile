@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
@@ -47,16 +48,15 @@ class _SuperCubeState extends State<SuperCube>
     return AnimatedBuilder(
       animation: controller,
       child: Stack(alignment: Alignment.center, children: [
-        Cube(
-          size: widget.size * 1.05,
-          borderWidth: 5,
-        ),
+        Image.asset("assets/madnolia home logo.png", width: 155),
+        // Cube(
+        //   size: widget.size * 1.05,
+        //   borderWidth: 5,
+        // ),
         BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: Cube(
-              size: widget.size,
-              borderWidth: 3,
-            ))
+            child: SvgPicture.asset("assets/madnolia-logo.svg", width: 150)
+            )
       ]),
       builder: (
         BuildContext context,

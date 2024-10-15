@@ -2,8 +2,8 @@ import 'package:Madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:toast/toast.dart';
-import 'package:provider/provider.dart';
 
 import 'package:Madnolia/services/user_service.dart';
 import 'package:Madnolia/views/platforms_view.dart';

@@ -3,6 +3,7 @@ import 'package:Madnolia/models/match/full_match.model.dart';
 import 'package:Madnolia/models/match/match_with_game_model.dart';
 import 'package:Madnolia/widgets/chat/input_widget.dart';
 import 'package:Madnolia/widgets/form_button.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:Madnolia/blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -79,13 +80,25 @@ class _MatchChatState extends State<MatchChat> {
     if (!mounted) {
       return;
     }
+
     Message decodedMessage = Message.fromJson(payload);
 
     if (decodedMessage.room != widget.match.id) return;
 
+    bool mainMessage = false;
+
+    if(_messages.isEmpty) {
+      mainMessage = true;
+    }else if(_messages[0].user.id == decodedMessage.user.id){
+      mainMessage = false;
+    }else{
+      mainMessage = true;
+    }
+
+
     
     ChatMessageOrganism message = ChatMessageOrganism(
-      mainMessage: _messages[0].user.id == decodedMessage.user.id ? false : true,
+      mainMessage: mainMessage,
       text: decodedMessage.text,
       user: decodedMessage.user
     );
@@ -160,11 +173,9 @@ class _MatchChatState extends State<MatchChat> {
                 clipBehavior: Clip.antiAlias,
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                child: widget.match.game.background != null ? Image.network(
-                  filterQuality: FilterQuality.medium,
-                  widget.match.game.background.toString(),
-                  width: 80,
-                ) :Image.asset("assets/no image.jpg", width: 80),
+                child: widget.match.game.background != null 
+                ? CachedNetworkImage(imageUrl: widget.match.game.background!, width: 80) 
+                :Image.asset("assets/no image.jpg", width: 80),
               ),
             ],
           ),
@@ -189,6 +200,10 @@ class _MatchChatState extends State<MatchChat> {
   }
 
   Widget _bottomRow(FullMatch match, UserState userState, bool isInMatch) {
+
+    if(!mounted){
+      return const CircularProgressIndicator();
+    }
     bool owner = userState.id == match.user ? true : false;
     List<ChatUser> founded =
         match.likes.where((e) => userState.id == e.id).toList();

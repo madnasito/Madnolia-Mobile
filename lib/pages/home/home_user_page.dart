@@ -49,10 +49,9 @@ class _HomeUserPageState extends State<HomeUserPage> {
                 body: Background(
                 child: SafeArea(
                   child: ListView.builder(
-                  cacheExtent: 90000,
+                  cacheExtent: 9999999,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
                   itemCount: userBloc.platforms.length,
                   itemBuilder: (BuildContext context, int platformIndex) {
                     return Column(

@@ -41,8 +41,9 @@ Future<Socket> socketHandler() async {
       List<String> mentions = wordsList
             .where((element) => element == "@${userBloc?.state.username}")
             .toList();
-      
-      if (mentions.isNotEmpty && message.room != userBloc?.state.chatRoom) {
+      if(userBloc == null) return;
+
+      if (mentions.isNotEmpty && message.room != userBloc.state.chatRoom) {
           await NotificationService.showNotification(
             title: message.user.name,
             body: message.text,

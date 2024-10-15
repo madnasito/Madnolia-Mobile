@@ -30,6 +30,8 @@ class GamesService {
       final resp = await http.get(url);
 
       return jsonDecode(resp.body);
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 }

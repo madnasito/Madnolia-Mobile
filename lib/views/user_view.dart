@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:Madnolia/blocs/blocs.dart';
 import 'package:Madnolia/models/user/update_user_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -145,9 +146,7 @@ class EditUserView extends StatelessWidget {
                               builder:
                                   (BuildContext context, AsyncSnapshot snapshot) {
                                 if (snapshot.hasData) {
-                                  return Image.network(userBloc.state.img,
-                                      colorBlendMode: BlendMode.darken,
-                                      color: null);
+                                  return CachedNetworkImage(imageUrl: userBloc.state.img);
                                 } else {
                                   return const CircularProgressIndicator();
                                 }
