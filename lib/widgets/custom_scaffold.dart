@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,7 +33,7 @@ class CustomScaffold extends StatelessWidget {
                     const SizedBox(width: 0),
                     CircleAvatar(
                       backgroundImage:
-                          NetworkImage(userBloc.state.img),
+                          CachedNetworkImageProvider(userBloc.state.img),
                       minRadius: 40,
                       maxRadius: 50,
                       backgroundColor: Colors.white,

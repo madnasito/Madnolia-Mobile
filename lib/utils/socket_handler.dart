@@ -15,6 +15,7 @@ import '../models/invitation_model.dart';
 Future<Socket> socketHandler() async {
 
   final String? token = await const FlutterSecureStorage().read(key: "token");
+  
 
   final Socket socket = io(
         Environment.socketUrl,
@@ -22,17 +23,17 @@ Future<Socket> socketHandler() async {
          .setTransports(['websocket']) // for Flutter or Dart VM
          .enableAutoConnect() // disable auto-connection
          .disableForceNew()
-         .disableMultiplex()
          .setExtraHeaders({"token": token ?? ""})
          .build());
 
-  socket.onConnect((_){
+  socket.onConnect((_) async {
+
+
+    socket.on("message", (payload) async {
 
     final BuildContext? context = MyApp.navigatorKey.currentContext;
 
     final userBloc = context?.read<UserBloc>();
-
-    socket.on("message", (payload) async {
 
       Message message = Message.fromJson(payload);
 
@@ -50,14 +51,14 @@ Future<Socket> socketHandler() async {
             largeIcon: message.user.thumb,
             summary: message.user.name,
             notificationLayout: NotificationLayout.Messaging,
-            // actionButtons: [
-            //   NotificationActionButton(
-            //     key: "reply",
-            //     label: "Reply",
-            //     autoDismissible: true,
-            //     requireInputText: true,
-            //     actionType: ActionType.SilentAction),
-            // ],
+            actionButtons: [
+              NotificationActionButton(
+                key: "reply",
+                label: "Reply",
+                autoDismissible: true,
+                requireInputText: true,
+                actionType: ActionType.SilentAction),
+            ],
             payload: {
               "match": message.room
             });

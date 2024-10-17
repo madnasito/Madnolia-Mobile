@@ -47,8 +47,8 @@ class _ChatMessageOrganismState extends State<ChatMessageOrganism> with SingleTi
             parent: animationController, curve: Curves.easeInOut),
         child: Container(
           child: widget.user.id == userState.id
-              ? MyMessageMolecule(text: widget.text, thumb: userState.thumb, mainMessage: widget.mainMessage)
-              : NotMyMessageMolecule(thumb: userState.thumb, text: widget.text, mainMessage: widget.mainMessage),
+              ? MyMessageMolecule(text: widget.text, thumb: userState.img, mainMessage: widget.mainMessage)
+              : NotMyMessageMolecule(thumb: widget.user.thumb, text: widget.text, mainMessage: widget.mainMessage),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class MyMessageMolecule extends StatelessWidget {
@@ -32,7 +33,7 @@ class MyMessageMolecule extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 5),
             child: CircleAvatar(
-                backgroundImage: mainMessage ? NetworkImage(thumb) : null,
+                backgroundImage: mainMessage ? CachedNetworkImageProvider(thumb) : null,
                 backgroundColor: Colors.transparent,
             ),
           ),
@@ -57,7 +58,7 @@ class NotMyMessageMolecule extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 2),
-            child: CircleAvatar(backgroundImage: mainMessage ? NetworkImage(thumb) : null,
+            child: CircleAvatar(backgroundImage: mainMessage ? CachedNetworkImageProvider(thumb) : null,
             backgroundColor: Colors.transparent,)
           ),
           Flexible(

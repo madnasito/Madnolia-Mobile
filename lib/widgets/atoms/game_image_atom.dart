@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class GameImageAtom extends StatelessWidget {
@@ -15,7 +16,7 @@ class GameImageAtom extends StatelessWidget {
                   : FadeInImage(
                       fadeInDuration: const Duration(milliseconds: 300),
                       placeholder: const AssetImage('assets/loading.gif'),
-                      image: NetworkImage(_resizeImage(background!))),
+                      image: CachedNetworkImageProvider(_resizeImage(background!))),
               Positioned(
                   bottom: 2,
                   left: 2,

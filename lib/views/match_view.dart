@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
-import 'package:madnolia/widgets/organism/chat_organism.dart';
 
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -18,7 +17,6 @@ import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
 import '../models/chat_user_model.dart';
-
 class MatchUserView extends StatelessWidget {
   final MatchWithGame match;
   const MatchUserView({super.key, required this.match});
@@ -75,7 +73,7 @@ class _MatchChatState extends State<MatchChat> {
         .toList();
 
     setState(() {
-      _messages.addAll(messages.reversed);
+      _messages.addAll(messages);
     });
   }
 
@@ -129,7 +127,9 @@ class _MatchChatState extends State<MatchChat> {
       widget.socketClient.on("added_to_match", (data) {
         if (data == true) {
           isInMatch = true;
-          setState(() {});
+          if(mounted){
+            setState(() {});
+          }
         }
       });
 
@@ -183,7 +183,17 @@ class _MatchChatState extends State<MatchChat> {
             ],
           ),
         ),
-        ChatOrganism(match: widget.match.id),
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
+            color: Colors.black38,
+            child: ListView.builder(
+                reverse: true,
+                itemCount: _messages.length,
+                physics: const BouncingScrollPhysics(),
+                itemBuilder: (_, i) => _messages[i]),
+          ),
+        ),
         Container(
             color: Colors.black54,
             padding: const EdgeInsets.only(top: 10),

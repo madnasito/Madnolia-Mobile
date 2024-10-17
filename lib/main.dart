@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/chat_messages/chat_messages_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/services/notification_service.dart';
@@ -47,8 +48,9 @@ class MyApp extends StatelessWidget {
       child:  MultiBlocProvider(
       providers: [
         BlocProvider(create: (BuildContext context) => getIt<UserBloc>()),
+        BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<SocketsBloc>()),
-        BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>())
+        BlocProvider(create: (context) => ChatMessagesBloc())
       ],
       child: LoginProvider(
         child:  MessageProvider(
