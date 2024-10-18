@@ -21,8 +21,8 @@ Future<Socket> socketHandler() async {
         Environment.socketUrl,
         OptionBuilder()
          .setTransports(['websocket']) // for Flutter or Dart VM
-         .enableAutoConnect() // disable auto-connection
-         .disableForceNew()
+         .enableAutoConnect()
+         .enableReconnection()
          .setExtraHeaders({"token": token ?? ""})
          .build());
 
@@ -44,11 +44,11 @@ Future<Socket> socketHandler() async {
             .toList();
       if(userBloc == null) return;
 
-      if (mentions.isNotEmpty && message.room != userBloc.state.chatRoom) {
+      if (mentions.isNotEmpty && message.to != userBloc.state.chatRoom) {
           await NotificationService.showNotification(
             title: message.user.name,
             body: message.text,
-            largeIcon: message.user.thumb,
+            // largeIcon: message.user.thumb,
             summary: message.user.name,
             notificationLayout: NotificationLayout.Messaging,
             actionButtons: [
@@ -60,7 +60,7 @@ Future<Socket> socketHandler() async {
                 actionType: ActionType.SilentAction),
             ],
             payload: {
-              "match": message.room
+              "match": message.to
             });
         }
 

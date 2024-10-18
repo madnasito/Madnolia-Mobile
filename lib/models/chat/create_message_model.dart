@@ -9,21 +9,21 @@ CreateMessage createMessageFromJson(String str) => CreateMessage.fromJson(json.d
 String createMessageToJson(CreateMessage data) => json.encode(data.toJson());
 
 class CreateMessage {
-    String room;
+    String to;
     String text;
 
     CreateMessage({
-        required this.room,
+        required this.to,
         required this.text,
     });
 
     factory CreateMessage.fromJson(Map<String, dynamic> json) => CreateMessage(
-        room: json["room"],
+        to: json["to"],
         text: json["text"],
     );
 
     Map<String, dynamic> toJson() => {
-        "room": room,
+        "to": to,
         "text": text,
     };
 }

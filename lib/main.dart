@@ -31,6 +31,7 @@ void main() async {
     
   unawaited(MobileAds.instance.initialize());
   await NotificationService.initializeNotification();
+  MobileAds.instance.initialize();
   runApp(LocalizedApp(delegate, const MyApp()) );
 }
 

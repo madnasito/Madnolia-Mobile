@@ -12,14 +12,14 @@ String messageToJson(Message data) => json.encode(data.toJson());
 
 class Message {
     String id;
-    String room;
+    String to;
     ChatUser user;
     String text;
     DateTime date;
 
     Message({
         required this.id,
-        required this.room,
+        required this.to,
         required this.user,
         required this.text,
         required this.date,
@@ -27,7 +27,7 @@ class Message {
 
     factory Message.fromJson(Map<String, dynamic> json) => Message(
         id: json["_id"],
-        room: json["room"],
+        to: json["to"],
         user: ChatUser.fromJson(json["user"]),
         text: json["text"],
         date: DateTime.parse(json["date"]),
@@ -35,7 +35,7 @@ class Message {
 
     Map<String, dynamic> toJson() => {
         "_id": id,
-        "room": room,
+        "to": to,
         "user": user.toJson(),
         "text": text,
         "date": date.toIso8601String(),

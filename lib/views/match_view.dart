@@ -84,7 +84,7 @@ class _MatchChatState extends State<MatchChat> {
 
     Message decodedMessage = Message.fromJson(payload);
 
-    if (decodedMessage.room != widget.match.id) return;
+    if (decodedMessage.to != widget.match.id) return;
 
     bool mainMessage = false;
 
@@ -119,6 +119,7 @@ class _MatchChatState extends State<MatchChat> {
     userBloc = context.read<UserBloc>();
 
     if (mounted) {
+      
       widget.socketClient.on("message", (data) => _listenMessage(data));
       widget.socketClient.on("new_player_to_match", (data) {
         ChatUser user = ChatUser.fromJson(data);
@@ -269,6 +270,6 @@ class _MatchChatState extends State<MatchChat> {
 
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
-    widget.socketClient.emit("message", {"text": text, "room": widget.match.id});
+    widget.socketClient.emit("message", {"text": text, "to": widget.match.id});
   }
 }

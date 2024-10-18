@@ -1,11 +1,6 @@
-import 'package:madnolia/blocs/blocs.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
-
-import '../main.dart';
-import '../routes/routes.dart';
 
 class NotificationService {
   static Future<void> initializeNotification() async {
@@ -24,6 +19,7 @@ class NotificationService {
           onlyAlertOnce: true,
           playSound: true,
           criticalAlerts: true,
+          
         )
       ],
       channelGroups: [
@@ -32,7 +28,7 @@ class NotificationService {
           channelGroupName: 'Group 1',
         )
       ],
-      debug: true,
+      debug: kDebugMode == true ? true : false,
     );
 
     await AwesomeNotifications().isNotificationAllowed().then(
@@ -73,33 +69,6 @@ class NotificationService {
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
     debugPrint('onActionReceivedMethod');
-    final payload = receivedAction.payload ?? {};
-    final action = receivedAction.buttonKeyPressed;
-    final notificationId = receivedAction.id;
-
-     if (action == "") {
-      if (payload.containsKey("match")) {
-        router.go("/match", extra: payload["match"]!);
-      }
-    }
-
-    if (action == "accept") {
-
-      final BuildContext? context = MyApp.navigatorKey.currentContext;
-
-      final socketsBloc = context?.read<SocketsBloc>();
-      socketsBloc?.state.clientSocket.emit("join_to_match", payload["match"]);
-    }
-    if (action == "reply") {
-      final BuildContext? context = MyApp.navigatorKey.currentContext;
-
-      final socketsBloc = context?.read<SocketsBloc>();
-      socketsBloc?.state.clientSocket.emit("message",
-          {"text": receivedAction.buttonKeyInput, "room": payload["match"]});
-      AwesomeNotifications().dismiss(notificationId!);
-    }
-
-
   }
 
   static Future<void> showNotification({
@@ -114,13 +83,12 @@ class NotificationService {
     final List<NotificationActionButton>? actionButtons,
     final bool scheduled = false,
     final int? interval,
-    final String? largeIcon
   }) async {
     assert(!scheduled || (scheduled && interval != null));
 
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: DateTime.now().millisecond,
+        id: -1,
         channelKey: 'high_importance_channel',
         title: title,
         body: body,
@@ -130,7 +98,6 @@ class NotificationService {
         category: category,
         payload: payload,
         bigPicture: bigPicture,
-        largeIcon: largeIcon
       ),
       actionButtons: actionButtons,
       schedule: scheduled
