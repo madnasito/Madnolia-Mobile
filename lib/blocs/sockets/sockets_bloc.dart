@@ -18,11 +18,17 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
       }
 
       if(event is UpdatedToken){
-        socket = await socketHandler();
+        socket = await socketConnection(token: '');
       }
 
       if( event is DisconnectToken){
         socket.disconnect();
+      }
+
+      if(event is UpdateSocketClient){
+        emit(state.copyWith(
+          clientSocket: socket
+        ));
       }
     });
   }
@@ -32,7 +38,8 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
     add(UpdateServerStatus(serverStatus: status));
   } 
 
-  void updateSocket() {
+  void updateSocket(Socket socket) {
+    add(UpdateSocketClient(socket: socket));
   }
 
   void disconnect(){

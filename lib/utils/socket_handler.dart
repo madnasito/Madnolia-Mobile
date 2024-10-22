@@ -6,16 +6,40 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../services/notification_service.dart';
 import '../models/invitation_model.dart';
 
-Future<Socket> socketHandler() async {
+class SocketHandler {
+  String token;
 
-  final String? token = await const FlutterSecureStorage().read(key: "token");
-  
+  Socket socket = io(
+        Environment.socketUrl,
+        OptionBuilder()
+         .setTransports(['websocket']) // for Flutter or Dart VM
+         .enableAutoConnect()
+         .enableReconnection()
+         .build());
+
+  SocketHandler({this.token = ""});
+
+  updateSocket(Socket socket){
+    this.socket = socket;
+  }
+
+  updateToken(String token){
+    this.token = token;
+  }
+
+  connect() async{
+    socket = await socketConnection(token: token);
+  }
+
+}
+
+Future<Socket> socketConnection({required String token}) async {  
 
   final Socket socket = io(
         Environment.socketUrl,
@@ -23,11 +47,10 @@ Future<Socket> socketHandler() async {
          .setTransports(['websocket']) // for Flutter or Dart VM
          .enableAutoConnect()
          .enableReconnection()
-         .setExtraHeaders({"token": token ?? ""})
+         .setExtraHeaders({"token": token})
          .build());
 
   socket.onConnect((_) async {
-
 
     socket.on("message", (payload) async {
 

@@ -1,6 +1,11 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:madnolia/main.dart';
+import 'package:madnolia/routes/routes.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 class NotificationService {
   static Future<void> initializeNotification() async {
@@ -69,6 +74,32 @@ class NotificationService {
   static Future<void> onActionReceivedMethod(
       ReceivedAction receivedAction) async {
     debugPrint('onActionReceivedMethod');
+    final payload = receivedAction.payload ?? {};
+    final action = receivedAction.buttonKeyPressed;
+    final notificationId = receivedAction.id;
+
+     if (action == "") {
+      if (payload.containsKey("match")) {
+        router.go("/match", extra: payload["match"]!);
+      }
+    }
+
+    if (action == "accept") {
+
+      final BuildContext? context = MyApp.navigatorKey.currentContext;
+
+      final socketsBloc = context?.read<SocketsBloc>();
+      socketsBloc?.state.clientSocket.emit("join_to_match", payload["match"]);
+    }
+    if (action == "reply") {
+      final BuildContext? context = MyApp.navigatorKey.currentContext;
+
+      final socketsBloc = context?.read<SocketsBloc>();
+      socketsBloc?.state.clientSocket.emit("message",
+          {"text": receivedAction.buttonKeyInput, "room": payload["match"]});
+      AwesomeNotifications().dismiss(notificationId!);
+    }
+
   }
 
   static Future<void> showNotification({

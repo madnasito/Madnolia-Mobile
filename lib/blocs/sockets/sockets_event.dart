@@ -1,5 +1,6 @@
 part of 'sockets_bloc.dart';
 
+
 sealed class SocketsEvent extends Equatable {
   const SocketsEvent();
 
@@ -18,3 +19,9 @@ class UpdateServerStatus extends SocketsEvent {
 class DisconnectToken extends SocketsEvent {}
 
 class UpdatedToken extends SocketsEvent {}
+
+class UpdateSocketClient extends SocketsEvent {
+  final Socket socket;
+
+  const UpdateSocketClient({ required this.socket});
+}

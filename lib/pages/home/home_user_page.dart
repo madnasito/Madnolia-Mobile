@@ -1,6 +1,7 @@
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/utils/platform_id_ico.dart';
+import 'package:madnolia/utils/socket_handler.dart';
 import 'package:madnolia/widgets/molecules/platform_matches_molecule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -93,30 +94,32 @@ class _HomeUserPageState extends State<HomeUserPage> {
   
   _loadInfo(BuildContext context) async {
     try {
+      final userBloc = context.read<UserBloc>();
+      
+      if(userBloc.state.id != "") return;
+      
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
+      // ignore: use_build_context_synchronously
 
-    // ignore: use_build_context_synchronously
-    final userBloc = context.read<UserBloc>();
-    final socketBloc = context.read<SocketsBloc>();
-    if (userInfo.isEmpty) {
+      final socketBloc = context.read<SocketsBloc>();
       const storage = FlutterSecureStorage();
+      if (userInfo.isEmpty) {
 
-      await storage.delete(key: "token");
+        await storage.delete(key: "token");
 
-      userBloc.logOutUser();
-      // ignore: use_build_context_synchronously
-      // showAlert(context, "Token error");
-      // ignore: use_build_context_synchronously
-      return context.go("/home");
-    }
+        userBloc.logOutUser();
+        // ignore: use_build_context_synchronously
+        // showAlert(context, "Token error");
+        // ignore: use_build_context_synchronously
+        return context.go("/home");
+      }
+      final User user = User.fromJson(userInfo);
+      
+      print(socketBloc.state.clientSocket.io.options?["extraHeaders"]["token"]);
 
-    final User user = User.fromJson(userInfo);
+      userBloc.loadInfo(user);
 
-    userBloc.loadInfo(user);
-    socketBloc.updateSocket();
-
-
-    return userInfo;
+      return userInfo;
     } catch (e) {
       print(e);
       return {};

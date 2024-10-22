@@ -11,7 +11,7 @@ GetIt getIt = GetIt.instance;
 
 Future<void> serviceLocatorInit() async {
 
-  final Socket socket = await socketHandler();
+  final Socket socket = await socketConnection(token: '');
 
   getIt.registerSingleton(UserBloc());
   getIt.registerSingleton(SocketsBloc(socket: socket));
