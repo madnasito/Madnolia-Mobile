@@ -13,17 +13,11 @@ import '../services/notification_service.dart';
 import '../models/invitation_model.dart';
 
 class SocketHandler {
-  String token;
+  String token = "";
 
-  Socket socket = io(
-        Environment.socketUrl,
-        OptionBuilder()
-         .setTransports(['websocket']) // for Flutter or Dart VM
-         .enableAutoConnect()
-         .enableReconnection()
-         .build());
+  late Socket socket;
 
-  SocketHandler({this.token = ""});
+  SocketHandler();
 
   updateSocket(Socket socket){
     this.socket = socket;
@@ -35,11 +29,13 @@ class SocketHandler {
 
   connect() async{
     socket = await socketConnection(token: token);
+    socket.connect();
   }
 
 }
 
 Future<Socket> socketConnection({required String token}) async {  
+
 
   final Socket socket = io(
         Environment.socketUrl,
@@ -47,6 +43,7 @@ Future<Socket> socketConnection({required String token}) async {
          .setTransports(['websocket']) // for Flutter or Dart VM
          .enableAutoConnect()
          .enableReconnection()
+         .setAuth({"token": token})
          .setExtraHeaders({"token": token})
          .build());
 

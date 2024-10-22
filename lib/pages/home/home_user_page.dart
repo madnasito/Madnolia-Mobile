@@ -1,7 +1,6 @@
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/utils/platform_id_ico.dart';
-import 'package:madnolia/utils/socket_handler.dart';
 import 'package:madnolia/widgets/molecules/platform_matches_molecule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +13,6 @@ import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 class HomeUserPage extends StatefulWidget {
   const HomeUserPage({super.key});
@@ -42,9 +40,9 @@ class _HomeUserPageState extends State<HomeUserPage> {
         builder: (context, snapshot) {
           final userBloc = context.read<UserBloc>().state;
           final socketBloc = context.read<SocketsBloc>();
-          socketBloc.state.clientSocket.onConnect((_) async {
-            socketBloc.updateServerStatus(ServerStatus.online);
-          });
+          // socketBloc.state.clientSocket.onConnect((_) async {
+          //   socketBloc.updateServerStatus(ServerStatus.online);
+          // });
           if (snapshot.hasData) {
             return CustomScaffold(
                 body: Background(
@@ -96,13 +94,15 @@ class _HomeUserPageState extends State<HomeUserPage> {
     try {
       final userBloc = context.read<UserBloc>();
       
-      if(userBloc.state.id != "") return;
+      if(userBloc.state.id != "") return {};
       
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
+
       // ignore: use_build_context_synchronously
 
       final socketBloc = context.read<SocketsBloc>();
       const storage = FlutterSecureStorage();
+      final token = await storage.read(key: "token");
       if (userInfo.isEmpty) {
 
         await storage.delete(key: "token");
@@ -114,10 +114,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
         return context.go("/home");
       }
       final User user = User.fromJson(userInfo);
-      
-      print(socketBloc.state.clientSocket.io.options?["extraHeaders"]["token"]);
-
       userBloc.loadInfo(user);
+      socketBloc.updateToken(token.toString());
 
       return userInfo;
     } catch (e) {

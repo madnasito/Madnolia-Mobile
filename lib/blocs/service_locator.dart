@@ -5,16 +5,13 @@ import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/utils/socket_handler.dart';
 import 'package:get_it/get_it.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 GetIt getIt = GetIt.instance;
 
 Future<void> serviceLocatorInit() async {
 
-  final Socket socket = await socketConnection(token: '');
-
   getIt.registerSingleton(UserBloc());
-  getIt.registerSingleton(SocketsBloc(socket: socket));
+  getIt.registerSingleton(SocketsBloc(SocketHandler()));
   getIt.registerSingleton(GameDataBloc());
   getIt.registerSingleton(ChatMessagesBloc());
 }

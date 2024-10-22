@@ -18,8 +18,13 @@ class UpdateServerStatus extends SocketsEvent {
 
 class DisconnectToken extends SocketsEvent {}
 
-class UpdatedToken extends SocketsEvent {}
+class UpdateToken extends SocketsEvent {
+  final String token;
+  const UpdateToken({required this.token});
+}
 
+class ConnectSockets extends SocketsEvent{
+}
 class UpdateSocketClient extends SocketsEvent {
   final Socket socket;
 

@@ -37,7 +37,7 @@ class MatchPage extends StatelessWidget {
                   match: match,
                   bloc: bloc,
                   matchMessages: respMessages,
-                  socketClient: socketBloc.state.clientSocket
+                  socketClient: socketBloc.state.socketHandler.socket
                 );
               } else {
                 return const Center(child: Text("Error loading match."));

@@ -89,13 +89,13 @@ class NotificationService {
       final BuildContext? context = MyApp.navigatorKey.currentContext;
 
       final socketsBloc = context?.read<SocketsBloc>();
-      socketsBloc?.state.clientSocket.emit("join_to_match", payload["match"]);
+      socketsBloc?.state.socketHandler.socket.emit("join_to_match", payload["match"]);
     }
     if (action == "reply") {
       final BuildContext? context = MyApp.navigatorKey.currentContext;
 
       final socketsBloc = context?.read<SocketsBloc>();
-      socketsBloc?.state.clientSocket.emit("message",
+      socketsBloc?.state.socketHandler.socket.emit("message",
           {"text": receivedAction.buttonKeyInput, "room": payload["match"]});
       AwesomeNotifications().dismiss(notificationId!);
     }

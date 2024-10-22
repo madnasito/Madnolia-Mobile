@@ -7,8 +7,9 @@ part 'sockets_state.dart';
 
 class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
   
-  Socket socket;
-  SocketsBloc({required this.socket}) : super(SocketsState(clientSocket: socket)) {
+  final SocketHandler socketHandler;
+
+  SocketsBloc(this.socketHandler) : super( SocketsState(socketHandler: socketHandler)) {
     on<SocketsEvent>((event, emit) async {
       
       if(event is UpdateServerStatus){
@@ -17,18 +18,21 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
         ));
       }
 
-      if(event is UpdatedToken){
-        socket = await socketConnection(token: '');
+      if(event is UpdateToken){
+        state.socketHandler.updateToken(event.token);
+        final Socket newSocket = await socketConnection(token: event.token);
+        final handler = state.socketHandler;
+        handler.socket = newSocket;
+        handler.socket.connect();
+        emit(state.copyWith(
+          socketHandler: handler
+        ));
       }
 
       if( event is DisconnectToken){
-        socket.disconnect();
       }
 
       if(event is UpdateSocketClient){
-        emit(state.copyWith(
-          clientSocket: socket
-        ));
       }
     });
   }
@@ -36,10 +40,18 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
   
   void updateServerStatus(ServerStatus status) {
     add(UpdateServerStatus(serverStatus: status));
-  } 
+  }
+
+  void updateToken(String token){
+    add(UpdateToken(token: token));
+  }
 
   void updateSocket(Socket socket) {
     add(UpdateSocketClient(socket: socket));
+  }
+
+  void connect(){
+    add(ConnectSockets());
   }
 
   void disconnect(){

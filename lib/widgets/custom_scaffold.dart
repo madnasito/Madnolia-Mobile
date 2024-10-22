@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 
 // import 'package:madnolia/widgets/form_button.dart';
 
@@ -17,6 +18,7 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     
     final userBloc = context.read<UserBloc>();
+    final socketBloc = context.read<SocketsBloc>();
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
@@ -83,6 +85,7 @@ class CustomScaffold extends StatelessWidget {
                       // ignore: use_build_context_synchronously
                       GoRouter.of(context).push("/home");
                       userBloc.logOutUser();
+                      socketBloc.socketHandler.socket.disconnect();
                     },
                     child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,

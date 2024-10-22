@@ -4,23 +4,23 @@ enum ServerStatus { online, offline, connecting }
 // ignore: must_be_immutable
 class SocketsState extends Equatable {
   ServerStatus serverStatus;
-  Socket clientSocket; // Use a nullable type
+  SocketHandler socketHandler;
 
   
   SocketsState({
     this.serverStatus = ServerStatus.connecting,
-    required this.clientSocket,
+    required this.socketHandler,
   });
 
   SocketsState copyWith({
     ServerStatus? serverStatus,
-    Socket? clientSocket
+    SocketHandler? socketHandler
   }) => SocketsState(
     serverStatus: serverStatus ?? this.serverStatus,
-    clientSocket: clientSocket ?? this.clientSocket
+    socketHandler: socketHandler ?? this.socketHandler
   );
 
   
   @override
-  List<Object> get props => [serverStatus, clientSocket];
+  List<Object> get props => [serverStatus, socketHandler];
 }
