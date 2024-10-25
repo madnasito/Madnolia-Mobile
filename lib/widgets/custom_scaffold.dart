@@ -85,7 +85,7 @@ class CustomScaffold extends StatelessWidget {
                       // ignore: use_build_context_synchronously
                       GoRouter.of(context).push("/home");
                       userBloc.logOutUser();
-                      socketBloc.socketHandler.socket.disconnect();
+                      socketBloc.disconnect();
                     },
                     child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,

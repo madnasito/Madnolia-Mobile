@@ -103,6 +103,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final socketBloc = context.read<SocketsBloc>();
       const storage = FlutterSecureStorage();
       final token = await storage.read(key: "token");
+      socketBloc.updateToken(token.toString());
       if (userInfo.isEmpty) {
 
         await storage.delete(key: "token");
@@ -115,7 +116,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       }
       final User user = User.fromJson(userInfo);
       userBloc.loadInfo(user);
-      socketBloc.updateToken(token.toString());
+      
 
       return userInfo;
     } catch (e) {

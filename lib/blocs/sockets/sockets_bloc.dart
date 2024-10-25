@@ -30,6 +30,10 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
       }
 
       if( event is DisconnectToken){
+        final disconnectedHandler = SocketHandler();
+        emit(state.copyWith(
+          socketHandler: disconnectedHandler
+        ));
       }
 
       if(event is UpdateSocketClient){
