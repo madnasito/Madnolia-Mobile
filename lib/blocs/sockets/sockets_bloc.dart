@@ -1,3 +1,4 @@
+
 import 'package:madnolia/utils/socket_handler.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,10 +21,10 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
 
       if(event is UpdateToken){
         state.socketHandler.updateToken(event.token);
-        final Socket newSocket = await socketConnection(token: event.token);
+        final Socket newSocket = await socketConnection();
         final handler = state.socketHandler;
         handler.socket = newSocket;
-        handler.socket.connect();
+        
         emit(state.copyWith(
           socketHandler: handler
         ));
@@ -37,6 +38,13 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
       }
 
       if(event is UpdateSocketClient){
+        final newState = state;
+        newState.socketHandler.socket = event.socket;
+
+        emit(state.copyWith(
+          socketHandler: newState.socketHandler
+        ));
+        
       }
     });
   }
@@ -61,6 +69,8 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
   void disconnect(){
     add(DisconnectToken());
   }
+
+  
 
 
 }

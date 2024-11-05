@@ -1,5 +1,6 @@
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/platform_id_ico.dart';
 import 'package:madnolia/widgets/molecules/platform_matches_molecule.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,6 @@ import 'package:madnolia/services/user_service.dart';
 // import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class HomeUserPage extends StatefulWidget {
   const HomeUserPage({super.key});
@@ -55,7 +55,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                   itemBuilder: (BuildContext context, int platformIndex) {
                     return Column(
                       children:[ 
-                        const MyBannerAdWidget(),
+                        // const MyBannerAdWidget(),
                         Container(
                           width: double.infinity,
                           color: Colors.black45,
@@ -94,7 +94,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
     try {
       final userBloc = context.read<UserBloc>();
       
-      if(userBloc.state.id != "") return {};
+      
       
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
 
@@ -104,6 +104,9 @@ class _HomeUserPageState extends State<HomeUserPage> {
       const storage = FlutterSecureStorage();
       final token = await storage.read(key: "token");
       socketBloc.updateToken(token.toString());
+      await initializeService();
+    
+      
       if (userInfo.isEmpty) {
 
         await storage.delete(key: "token");
@@ -128,69 +131,69 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
 }
 
-class MyBannerAdWidget extends StatefulWidget {
-  final AdSize adSize;
-  final String adUnitId = "ca-app-pub-5842948645365527/5704194412";
-  const MyBannerAdWidget({super.key, this.adSize = AdSize.banner});
+// class MyBannerAdWidget extends StatefulWidget {
+//   final AdSize adSize;
+//   final String adUnitId = "ca-app-pub-5842948645365527/5704194412";
+//   const MyBannerAdWidget({super.key, this.adSize = AdSize.banner});
 
-  @override
-  State<MyBannerAdWidget> createState() => _MyBannerAdWidgetState();
-}
+//   @override
+//   State<MyBannerAdWidget> createState() => _MyBannerAdWidgetState();
+// }
 
-class _MyBannerAdWidgetState extends State<MyBannerAdWidget> {
+// class _MyBannerAdWidgetState extends State<MyBannerAdWidget> {
 
-  /// The banner ad to show. This is `null` until the ad is actually loaded.
-  BannerAd? _bannerAd;
+//   /// The banner ad to show. This is `null` until the ad is actually loaded.
+//   BannerAd? _bannerAd;
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: SizedBox(
-        width: widget.adSize.width.toDouble(),
-        height: widget.adSize.height.toDouble(),
-        child: _bannerAd == null
-            // Nothing to render yet.
-            ? const SizedBox()
-            // The actual ad.
-            : SizedBox(
-                width: _bannerAd!.size.width.toDouble(),
-                height: _bannerAd!.size.height.toDouble(),
-                child: AdWidget(ad: _bannerAd!)),
-      ),
-    );
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return SafeArea(
+//       child: SizedBox(
+//         width: widget.adSize.width.toDouble(),
+//         height: widget.adSize.height.toDouble(),
+//         child: _bannerAd == null
+//             // Nothing to render yet.
+//             ? const SizedBox()
+//             // The actual ad.
+//             : SizedBox(
+//                 width: _bannerAd!.size.width.toDouble(),
+//                 height: _bannerAd!.size.height.toDouble(),
+//                 child: AdWidget(ad: _bannerAd!)),
+//       ),
+//     );
+//   }
 
-  @override
-  void initState() {
-    super.initState();
-    _loadAd();
-  }
-  /// Loads a banner ad.
-  void _loadAd() {
-    final bannerAd = BannerAd(
-      size: widget.adSize,
-      adUnitId: widget.adUnitId,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          if (!mounted) {
-            ad.dispose();
-            return;
-          }
-          setState(() {
-            _bannerAd = ad as BannerAd;
-          });
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, error) {
-          debugPrint('BannerAd failed to load: $error');
-          ad.dispose();
-        },
-      ),
-    );
+//   @override
+//   void initState() {
+//     super.initState();
+//     _loadAd();
+//   }
+//   /// Loads a banner ad.
+//   void _loadAd() {
+//     final bannerAd = BannerAd(
+//       size: widget.adSize,
+//       adUnitId: widget.adUnitId,
+//       request: const AdRequest(),
+//       listener: BannerAdListener(
+//         // Called when an ad is successfully received.
+//         onAdLoaded: (ad) {
+//           if (!mounted) {
+//             ad.dispose();
+//             return;
+//           }
+//           setState(() {
+//             _bannerAd = ad as BannerAd;
+//           });
+//         },
+//         // Called when an ad request failed.
+//         onAdFailedToLoad: (ad, error) {
+//           // debugPrint('BannerAd failed to load: $error');
+//           ad.dispose();
+//         },
+//       ),
+//     );
 
-    // Start loading.
-    bannerAd.load();
-  }
-}
+//     // Start loading.
+//     bannerAd.load();
+//   }
+// }

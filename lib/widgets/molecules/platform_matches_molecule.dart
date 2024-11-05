@@ -103,7 +103,7 @@ Future<List<HomeGame>> _loadGames(int platformId) async {
       final values =
           resp.map((e) => HomeGame.fromJson(e)).toList();
     
-    debugPrint("Loaded games of $platformId");
+    // debugPrint("Loaded games of $platformId");
       return values;
     } catch (e) {
       return [];

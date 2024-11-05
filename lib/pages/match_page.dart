@@ -32,7 +32,6 @@ class MatchPage extends StatelessWidget {
                 final respMessages = snapshot.data["messages"];
 
                 final socketBloc = context.watch<SocketsBloc>();
-
                 return MatchChat(
                   match: match,
                   bloc: bloc,

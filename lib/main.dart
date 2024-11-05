@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chat_messages/chat_messages_bloc.dart';
@@ -14,7 +13,7 @@ import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
 
-import 'package:google_mobile_ads/google_mobile_ads.dart'; //for mobile
+//for mobile
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,12 +28,13 @@ void main() async {
           fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
           supportedLocales: supportedLangs);
     
-  unawaited(MobileAds.instance.initialize());
+  // unawaited(MobileAds.instance.initialize());
+  // MobileAds.instance.initialize();
   await NotificationService.initializeNotification();
-  MobileAds.instance.initialize();
   runApp(LocalizedApp(delegate, const MyApp()) );
 }
 
+ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -57,6 +57,7 @@ class MyApp extends StatelessWidget {
         child:  MessageProvider(
               child: Portal(
                 child: MaterialApp.router(
+                  debugShowCheckedModeBanner: false,
                   // builder: (context, child) => Overlay(
                   //   initialEntries: [
                   //     OverlayEntry(builder: (BuildContext context) => AppBarOrganism(child: child!,))

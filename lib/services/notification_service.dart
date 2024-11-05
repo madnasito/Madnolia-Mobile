@@ -6,7 +6,6 @@ import 'package:madnolia/main.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class NotificationService {
   static Future<void> initializeNotification() async {
     await AwesomeNotifications().initialize(
@@ -50,6 +49,13 @@ class NotificationService {
       onNotificationDisplayedMethod: onNotificationDisplayedMethod,
       onDismissActionReceivedMethod: onDismissActionReceivedMethod,
     );
+
+    // AndroidForegroundService.startAndroidForegroundService(
+    //   foregroundStartMode: ForegroundStartMode.stick,
+    //   foregroundServiceType: ForegroundServiceType.phoneCall,
+      
+    // );
+
   }
 
   /// Use this method to detect when a new notification or a schedule is created
@@ -117,9 +123,9 @@ class NotificationService {
   }) async {
     assert(!scheduled || (scheduled && interval != null));
 
-    await AwesomeNotifications().createNotification(
+     AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: -1,
+        id: DateTime.now().millisecond,
         channelKey: 'high_importance_channel',
         title: title,
         body: body,
@@ -141,4 +147,6 @@ class NotificationService {
           : null,
     );
   }
+
+  
 }

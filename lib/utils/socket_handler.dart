@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/global/environment.dart';
 import 'package:madnolia/main.dart';
@@ -28,14 +29,17 @@ class SocketHandler {
   }
 
   connect() async{
-    socket = await socketConnection(token: token);
+    socket = await socketConnection();
     socket.connect();
   }
 
 }
 
-Future<Socket> socketConnection({required String token}) async {  
+Future<Socket> socketConnection() async {  
 
+
+  const storage = FlutterSecureStorage();
+  final token = await storage.read(key: "token");
 
   final Socket socket = io(
         Environment.socketUrl,
@@ -95,7 +99,6 @@ Future<Socket> socketConnection({required String token}) async {
         // Match match = Match.fromJson(data["match"]);
         Invitation match = Invitation.fromJson(data);
 
-        print(socket);
         await NotificationService.showNotification(
             title: "Invitation to a Match",
             body: "Game name",

@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:madnolia/services/sockets_service.dart';
 
 // import 'package:madnolia/widgets/form_button.dart';
 
@@ -86,6 +87,7 @@ class CustomScaffold extends StatelessWidget {
                       GoRouter.of(context).push("/home");
                       userBloc.logOutUser();
                       socketBloc.disconnect();
+                      stopBackgroundService();
                     },
                     child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
