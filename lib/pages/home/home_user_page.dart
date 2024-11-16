@@ -1,7 +1,7 @@
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
-import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/platform_id_ico.dart';
+import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/molecules/platform_matches_molecule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,11 +66,14 @@ class _HomeUserPageState extends State<HomeUserPage> {
                             spacing: 20,
                             children: [
                               Text(getPlatformInfo(userBloc.platforms[platformIndex]).name),
-                              SvgPicture.asset(
-                              getPlatformInfo(userBloc.platforms[platformIndex]).path,
-                              width: 60,
-                              color: Colors.white,
-                            )],
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: SvgPicture.asset(
+                                getPlatformInfo(userBloc.platforms[platformIndex]).path,
+                                width: 90,
+                                color: Colors.white,
+                                                            ),
+                              )],
                           ),
                         ),
                         PlatformMatchesMolecule(platform: userBloc.platforms[platformIndex])
@@ -94,17 +97,17 @@ class _HomeUserPageState extends State<HomeUserPage> {
     try {
       final userBloc = context.read<UserBloc>();
       
-      
-      
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
 
-      // ignore: use_build_context_synchronously
+      if(userInfo.containsKey("error")){
+        return showErrorServerAlert(context, userInfo);
+      }
 
       final socketBloc = context.read<SocketsBloc>();
       const storage = FlutterSecureStorage();
       final token = await storage.read(key: "token");
       socketBloc.updateToken(token.toString());
-      await initializeService();
+      // await initializeService();
     
       
       if (userInfo.isEmpty) {
@@ -113,7 +116,6 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
         userBloc.logOutUser();
         // ignore: use_build_context_synchronously
-        // showAlert(context, "Token error");
         // ignore: use_build_context_synchronously
         return context.go("/home");
       }

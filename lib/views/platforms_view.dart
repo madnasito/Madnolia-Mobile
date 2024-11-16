@@ -61,27 +61,27 @@ class _PlatformsViewState extends State<PlatformsView> {
           id: 15,
           path: "assets/platforms/playstation_2.svg",
           active: widget.platforms.contains(15) ? true : false,
-          size: 60),
+          size: 20, padding: 20),
       Platform(
           id: 16,
           path: "assets/platforms/playstation_3.svg",
           active: widget.platforms.contains(16) ? true : false,
-          size: 60),
+          size: 20, padding: 20),
       Platform(
           id: 18,
           path: "assets/platforms/playstation_4.svg",
           active: widget.platforms.contains(18) ? true : false,
-          size: 60),
+          size: 20, padding: 20),
       Platform(
           id: 187,
           path: "assets/platforms/playstation_5.svg",
           active: widget.platforms.contains(187) ? true : false,
-          size: 60),
+          size: 20, padding: 20),
       Platform(
           id: 19,
           path: "assets/platforms/playstation_vita.svg",
           active: widget.platforms.contains(19) ? true : false,
-          size: 20),
+          size: 20, padding: 20),
     ];
 
     widget.nintendoItems = [
@@ -89,31 +89,32 @@ class _PlatformsViewState extends State<PlatformsView> {
           id: 9,
           active: widget.platforms.contains(9) ? true : false,
           path: "assets/platforms/nintendo_ds.svg",
-          size: 12,
+          size: 20,
           padding: 10),
       Platform(
           id: 8,
           active: widget.platforms.contains(8) ? true : false,
           path: "assets/platforms/nintendo_3ds.svg",
-          size: 10,
-          padding: 10),
+          size: 20,
+          padding: 20),
       Platform(
           id: 11,
           active: widget.platforms.contains(11) ? true : false,
           path: "assets/platforms/nintendo_wii.svg",
           size: 20,
-          padding: 10),
+          padding: 20),
       Platform(
           id: 10,
           active: widget.platforms.contains(10) ? true : false,
           path: "assets/platforms/nintendo_wiiu.svg",
           size: 20,
-          padding: 10),
+          padding: 20),
       Platform(
           id: 7,
           active: widget.platforms.contains(7) ? true : false,
           path: "assets/platforms/nintendo_switch.svg",
-          size: 70)
+          size: 20,
+          padding:20)
     ];
 
     widget.xboxItems = [
@@ -122,12 +123,12 @@ class _PlatformsViewState extends State<PlatformsView> {
           id: 1,
           active: widget.platforms.contains(1) ? true : false,
           path: "assets/platforms/xbox_one.svg",
-          size: 70),
+          size: 20),
       Platform(
           id: 186,
           active: widget.platforms.contains(186) ? true : false,
           path: "assets/platforms/xbox_series.svg",
-          size: 30)
+          size: 20)
     ];
 
     widget.xboxItems = [
@@ -135,17 +136,17 @@ class _PlatformsViewState extends State<PlatformsView> {
           id: 14,
           active: widget.platforms.contains(186) ? true : false,
           path: "assets/platforms/xbox_360.svg",
-          size: 70),
+          size: 20, padding: 15),
       Platform(
           id: 1,
           active: widget.platforms.contains(1) ? true : false,
           path: "assets/platforms/xbox_one.svg",
-          size: 70),
+          size: 20, padding: 15),
       Platform(
           id: 186,
           active: widget.platforms.contains(186) ? true : false,
           path: "assets/platforms/xbox_series.svg",
-          size: 30)
+          size: 20, padding: 15)
     ];
     widget.otherItems = [
       Platform(

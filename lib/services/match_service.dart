@@ -22,6 +22,8 @@ class MatchService {
   // Get all matches created by an user
   Future getUserMatches() => matchGetRequest("player-matches");
 
+  Future getGamesRecomendations(int platform) => matchGetRequest("latest-games/$platform");
+
   // Get all matches by a platform
   Future<List> getMatchesByPlatform(int platform) =>
       matchGetListRequest("platform/$platform");
@@ -51,7 +53,7 @@ class MatchService {
     } catch (e) {
       authenticating = false;
       // print(e);
-      return {"message": "Network error", "error": "Network error"};
+      return {"message": "NETWORK_ERROR", "error": "Network error"};
     }
   }
 
@@ -94,7 +96,7 @@ class MatchService {
     } catch (e) {
       authenticating = false;
       // print(e);
-      return {"message": "Network error"};
+      return {"error": true, "message": "NETWORK_ERROR"};
     }
   }
 
@@ -115,7 +117,7 @@ class MatchService {
     } catch (e) {
       authenticating = false;
       // print(e);
-      return {"ok": false};
+      return {"error": true, "message": "NETWORK_ERROR"};
     }
   }
 
@@ -134,7 +136,7 @@ class MatchService {
     } catch (e) {
       authenticating = false;
       // print(e);
-      return {"ok": false};
+      return {"error": true, "message": "NETWORK_ERROR"};
     }
   }
 }

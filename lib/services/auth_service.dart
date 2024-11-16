@@ -32,7 +32,7 @@ class AuthService {
       }
     } catch (e) {
       print(e);
-      return {"ok": false, "message": "Error"};
+      return {"Error": true, "message": "NETWORK_ERROR"};
     }
   }
 
@@ -68,14 +68,14 @@ class AuthService {
       // Print the exception for debugging purposes
 
       // Return an error response
-      return {"ok": false, "message": "Network error"};
+      return {"Error": true, "message": "NETWORK_ERROR"};
     }
   }
 
   Future verifyUser(String username, String email) async {
     try {
       final url =
-          Uri.parse("${Environment.apiUrl}/user/user-exists/$username/$email");
+        Uri.parse("${Environment.apiUrl}/user/user-exists/$username/$email");
         authenticating = true;
 
       final resp = await http.get(url);
@@ -90,7 +90,7 @@ class AuthService {
 
       return {};
     } catch (e) {
-      return {"ok": false, "message": "Network error"};
+      return {"Error": true, "message": "NETWORK_ERROR"};
     }
   }
 }

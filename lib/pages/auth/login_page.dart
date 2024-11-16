@@ -28,7 +28,6 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 20),
                 Center(
                   child: Text(
-                    // langData.getValue(route: ["LOGIN", "WELCOME"]),
                     translate('LOGIN.WELCOME'),
                     style: const TextStyle(fontSize: 20),
                   ),
@@ -86,7 +85,7 @@ class LoginPage extends StatelessWidget {
     final Map resp = await AuthService().login(bloc.username, bloc.password);
 
     if (resp.containsKey("error")) {
-      showAlert(context, resp["message"]);
+      showErrorServerAlert(context, resp);
     } else {
       // ignore: use_build_context_synchronously
       context.go("/");

@@ -118,8 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final Map resp = await AuthService().verifyUser(bloc.username!, bloc.email!);
 
     if (resp.containsKey("error")) {
-      String message = resp["error"];
-      return showAlert(context, message);
+      return showErrorServerAlert(context, resp);
     }
 
     widget.registerModel.name = bloc.name!;
@@ -144,7 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
         context.go("/");
       } else {
         
-        showAlert(context, register["message"]);
+        showErrorServerAlert(context, register);
       }
     }
    }

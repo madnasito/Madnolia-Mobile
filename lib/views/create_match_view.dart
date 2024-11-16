@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/models/game/minimal_game_model.dart';
 import 'package:madnolia/models/match/create_match_model.dart';
+import 'package:madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:madnolia/widgets/molecules/games_list_molecule.dart';
 import 'package:madnolia/widgets/search_user_widget.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -51,70 +53,101 @@ class _SearchGameViewState extends State<SearchGameView> {
   @override
   Widget build(BuildContext context) {
     
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SimpleCustomInput(
-            controller: controller,
-            placeholder:
-                translate("CREATE_MATCH.SEARCH_GAME"),
-            onChanged: (value) async {
-              counter++;
-              Timer(
-                const Duration(seconds: 1),
-                () {
-                  counter--;
-                  setState(() {});
-                },
-              );
-            },
+    return Expanded(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SimpleCustomInput(
+              controller: controller,
+              placeholder:
+                  translate("CREATE_MATCH.SEARCH_GAME"),
+              onChanged: (value) async {
+                counter++;
+                Timer(
+                  const Duration(seconds: 1),
+                  () {
+                    counter--;
+                    setState(() {});
+                  },
+                );
+              },
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        (counter == 0 && controller.text.isNotEmpty)
-            ? FutureBuilder(
-                future: getGames(
-                    title: controller.text.toString(),
-                    platform: "${widget.platformId}"),
-                builder:
-                    (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                  if (snapshot.hasData) {
-                    return Flexible(
-                        child: snapshot.data.isNotEmpty
-                            ? ListView.builder(
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return GestureDetector(
-                                    onTap: () => setState(() {
-                                      context.go("/new/match", extra: {
-                                        "game": snapshot.data[index],
-                                        "platformId": widget.platformId
-                                      });
-                                    }),
-                                    child:  GameCard(
-                                        background: snapshot.data[index].backgroundImage,
-                                        name: snapshot.data[index].name,
-                                        bottom: const Text("")),
-                                  );
-                                })
-                            : Text(translate("CREATE_MATCH.EMPTY_SEARCH")));
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
-              )
-            : const Text(""),
-      ],
+          const SizedBox(
+            height: 20,
+          ),
+          (controller.text.isEmpty) ? FutureBuilder(
+            future: getRecomendations(widget.platformId),
+            builder: (BuildContext context, AsyncSnapshot<List<MinimalGame>> snapshot) {
+              if(!snapshot.hasData){
+                return const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [Text('Loading recomendations '), CircularProgressIndicator()],);
+              }else if(snapshot.data!.isNotEmpty){
+                return Expanded(
+                  child:  Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text("Recommendations for you", style: TextStyle(fontSize: 15),),
+                    const SizedBox(height: 20),
+                    Flexible(child: GamesListMolecule(games: snapshot.data!, platform: widget.platformId,)),
+                  ],
+                )
+                );
+              }else {
+                return Container();
+              }
+            }
+          ) : Container(),
+          (counter == 0 && controller.text.isNotEmpty)
+              ? FutureBuilder(
+                  future: getGames(
+                      title: controller.text.toString(),
+                      platform: "${widget.platformId}"),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                    if (snapshot.hasData) {
+                      return Flexible(
+                          child: snapshot.data.isNotEmpty
+                              ? ListView.builder(
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return GestureDetector(
+                                      onTap: () => setState(() {
+                                        context.go("/new/match", extra: {
+                                          "game": snapshot.data[index],
+                                          "platformId": widget.platformId
+                                        });
+                                      }),
+                                      child:  GameCard(
+                                          background: snapshot.data[index].backgroundImage,
+                                          name: snapshot.data[index].name,
+                                          bottom: const Text("")),
+                                    );
+                                  })
+                          : Text(translate("CREATE_MATCH.EMPTY_SEARCH")));
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                )
+              : const Text(""),
+        ],
+      ),
     );
   }
 
   Future getGames({required String title, required String platform}) async {
     return RawgService().searchGame(game: title, platform: platform);
+  }
+
+  Future<List<MinimalGame>> getRecomendations(int platform) async {
+    final List resp = await MatchService().getGamesRecomendations(platform);
+
+    final games = resp.map((e) => MinimalGame.fromJson(e)).toList();
+
+    return games;
   }
 }
 final dateController = TextEditingController();
@@ -145,21 +178,7 @@ class MatchFormView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(1),
               color: Colors.white38,
-              child: Stack(
-                children: [
-                  game.backgroundImage != null
-                      ? CachedNetworkImage(imageUrl: game.backgroundImage!)
-                      : Image.asset("assets/no image.jpg"),
-                  Positioned(
-                    bottom: 2,
-                    left: 2,
-                    child: Text(
-                      game.name,
-                      style: const TextStyle(backgroundColor: Colors.black54),
-                    ),
-                  )
-                ],
-              ),
+              child: GameImageAtom(name: game.name, background: game.backgroundImage,),
             ),
             const SizedBox(height: 20),
             SimpleCustomInput(

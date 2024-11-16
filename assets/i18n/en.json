@@ -45,7 +45,7 @@
         "WELCOME": "Welcome, Player",
       "BUTTON": "Login",
       "ERRORS":{
-          "USER": "No founded user",
+          "USER": "Not founded user",
           "PASSWORD": "No valid password"
       }
   },
@@ -119,6 +119,20 @@
   "UTILS":{
       "SHOW_MORE": "Show more",
       "SHOW_LESS": "Show less"
+  },
+  "ERRORS": {
+    "SERVER": {
+        "USER_NOT_FOUND": "User not found",
+        "EMAIL_IN_USE": "Email in use",
+        "USERNAME_IN_USE": "Username in use",
+        "WRONG_PASSWORD": "Wrong password",
+        "NETWORK_ERROR": "Network error",
+        "NO_MATCH_FOUND": "No match found",
+        "NO_GAME_FOUND": "No game found",
+        "MISSING_TOKEN": "Missing authentication token",
+        "NO_MESSAGE": "No message",
+        "NOT_VALID_EXTENSION": "Not valid extension"
+    }
   }
 }
 

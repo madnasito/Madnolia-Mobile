@@ -13,12 +13,14 @@ class MinimalGame {
     String name;
     String? background;
     String slug;
+    int gameId;
 
     MinimalGame({
         required this.id,
         required this.name,
         required this.background,
         required this.slug,
+        required this.gameId,
     });
 
     factory MinimalGame.fromJson(Map<String, dynamic> json) => MinimalGame(
@@ -26,6 +28,7 @@ class MinimalGame {
         name: json["name"],
         background: json["background"],
         slug: json["slug"],
+        gameId: json["gameId"],
     );
 
     Map<String, dynamic> toJson() => {
@@ -33,5 +36,6 @@ class MinimalGame {
         "name": name,
         "background": background,
         "slug": slug,
+        "gameId": gameId
     };
 }

@@ -1,6 +1,7 @@
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
+import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -54,7 +55,7 @@ class _MatchChatState extends State<MatchChat> {
     final resp = await matchService.getMatch(id);
 
     if (resp.containsKey("error")) {
-      return;
+      return showErrorServerAlert(context, resp);
     }
 
     List<Message> history =

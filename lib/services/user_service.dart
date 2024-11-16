@@ -45,7 +45,7 @@ class UserService {
     } catch (e) {
       authenticating = false;
       // print(e);
-      return {"error": e};
+      return {"error": e, "message": "NETWORK_ERROR"};
     }
   }
 

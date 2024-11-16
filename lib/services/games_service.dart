@@ -18,7 +18,7 @@ class GamesService {
       return jsonDecode(resp.body);
     } catch (e) {
       debugPrint(e as String?);
-      return {};
+      return {"error": true, "message": "NETWORK_ERROR"};
     }
   }
 

@@ -1,5 +1,4 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/main.dart';
@@ -31,8 +30,7 @@ class NotificationService {
           channelGroupKey: 'high_importance_channel_group',
           channelGroupName: 'Group 1',
         )
-      ],
-      debug: kDebugMode == true ? true : false,
+      ]
     );
 
     await AwesomeNotifications().isNotificationAllowed().then(

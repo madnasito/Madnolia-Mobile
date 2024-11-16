@@ -25,7 +25,6 @@ class MatchPage extends StatelessWidget {
 
             if (snapshot.hasData) {
 
-
               if (snapshot.data.containsKey("match")) {
                 final FullMatch match = FullMatch.fromJson(snapshot.data["match"]);
                 
