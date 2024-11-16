@@ -117,6 +117,20 @@
     "UTILS":{
       "SHOW_MORE": "Mostrar más",
       "SHOW_LESS": "Mostrar menos"
+  },
+  "ERRORS": {
+    "SERVER": {
+        "USER_NOT_FOUND": "Usuario no encontrado",
+        "EMAIL_IN_USE": "Email en uso",
+        "USERNAME_IN_USE": "Nombre de usuario en uso",
+        "WRONG_PASSWORD": "Contraseña incorrecta",
+        "NETWORK_ERROR": "Error en la red",
+        "NO_MATCH_FOUND": "No hay partida encontrada",
+        "NO_GAME_FOUND": "Juego no encontrado",
+        "MISSING_TOKEN": "Falta el token",
+        "NO_MESSAGE": "No hay mensaje",
+        "NOT_VALID_EXTENSION": "Extensión no valida"
+    }
   }
 }
 
