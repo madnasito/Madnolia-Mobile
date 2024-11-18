@@ -85,7 +85,7 @@ class LoginPage extends StatelessWidget {
     final Map resp = await AuthService().login(bloc.username, bloc.password);
 
     if (resp.containsKey("error")) {
-      showErrorServerAlert(context, resp);
+      return showErrorServerAlert(context, resp);
     } else {
       // ignore: use_build_context_synchronously
       context.go("/");

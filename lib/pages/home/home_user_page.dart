@@ -17,8 +17,6 @@ import 'package:madnolia/widgets/custom_scaffold.dart';
 class HomeUserPage extends StatefulWidget {
   const HomeUserPage({super.key});
 
-  static const Color mainColor = Colors.deepPurple;
-
   @override
   State<HomeUserPage> createState() => _HomeUserPageState();
 }
@@ -106,9 +104,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final socketBloc = context.read<SocketsBloc>();
       const storage = FlutterSecureStorage();
       final token = await storage.read(key: "token");
-      socketBloc.updateToken(token.toString());
-      // await initializeService();
-    
+      socketBloc.updateToken(token.toString());    
       
       if (userInfo.isEmpty) {
 
@@ -116,7 +112,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
         userBloc.logOutUser();
         // ignore: use_build_context_synchronously
-        // ignore: use_build_context_synchronously
+        // ignore: use_build_context_syqnchronously
         return context.go("/home");
       }
       final User user = User.fromJson(userInfo);

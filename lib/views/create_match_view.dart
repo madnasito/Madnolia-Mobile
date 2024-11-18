@@ -53,8 +53,7 @@ class _SearchGameViewState extends State<SearchGameView> {
   @override
   Widget build(BuildContext context) {
     
-    return Expanded(
-      child: Column(
+    return Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -134,8 +133,7 @@ class _SearchGameViewState extends State<SearchGameView> {
                 )
               : const Text(""),
         ],
-      ),
-    );
+      );
   }
 
   Future getGames({required String title, required String platform}) async {

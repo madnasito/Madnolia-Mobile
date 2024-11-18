@@ -82,22 +82,22 @@ class _NewPageState extends State<NewPage> {
           id: 15,
           path: "assets/platforms/playstation_2.svg",
           active: userBloc.state.platforms.contains(15) ? true : false,
-          size: 60),
+          size: 62),
       Platform(
           id: 16,
           path: "assets/platforms/playstation_3.svg",
           active: userBloc.state.platforms.contains(16) ? true : false,
-          size: 60),
+          size: 20),
       Platform(
           id: 18,
           path: "assets/platforms/playstation_4.svg",
           active: userBloc.state.platforms.contains(18) ? true : false,
-          size: 60),
+          size: 20),
       Platform(
           id: 187,
           path: "assets/platforms/playstation_5.svg",
           active: userBloc.state.platforms.contains(187) ? true : false,
-          size: 60),
+          size: 20),
       Platform(
           id: 19,
           path: "assets/platforms/playstation_vita.svg",
@@ -131,17 +131,17 @@ class _NewPageState extends State<NewPage> {
           id: 7,
           active: userBloc.state.platforms.contains(7) ? true : false,
           path: "assets/platforms/nintendo_switch.svg",
-          size: 70),
+          size: 20),
       Platform(
           id: 14,
           active: userBloc.state.platforms.contains(14) ? true : false,
           path: "assets/platforms/xbox_360.svg",
-          size: 70),
+          size: 20),
       Platform(
           id: 1,
           active: userBloc.state.platforms.contains(1) ? true : false,
           path: "assets/platforms/xbox_one.svg",
-          size: 70),
+          size: 20),
       Platform(
           id: 186,
           active: userBloc.state.platforms.contains(186) ? true : false,
@@ -151,12 +151,12 @@ class _NewPageState extends State<NewPage> {
           id: 4,
           active: userBloc.state.platforms.contains(4) ? true : false,
           path: "assets/platforms/pc.svg",
-          size: 40),
+          size: 20),
       Platform(
           id: 21,
           active: userBloc.state.platforms.contains(21) ? true : false,
           path: "assets/platforms/smartphone.svg",
-          size: 40)
+          size: 20)
     ];
     return platforms
         .map((item) => FadeIn(

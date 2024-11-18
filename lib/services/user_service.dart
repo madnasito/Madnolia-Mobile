@@ -41,6 +41,7 @@ class UserService {
 
       authenticating = false;
 
+      print(jsonDecode(resp.body));
       return jsonDecode(resp.body);
     } catch (e) {
       authenticating = false;
@@ -62,7 +63,7 @@ class UserService {
       return jsonDecode(resp.body);
     } catch (e) {
       // print(e);
-      return {"ok": false};
+      return {"error": e, "message": "NETWORK_ERROR"};
     }
   }
 
@@ -84,7 +85,7 @@ class UserService {
       return jsonDecode(resp.body);
     } catch (e) {
       // print(e);
-      return {"error": "Network error", "message": "Network error"};
+      return {"error": "Network error", "message": "NETWORK_ERROR"};
     }
   }
 }
