@@ -1,4 +1,6 @@
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
@@ -18,6 +20,7 @@ import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
 import '../models/chat_user_model.dart';
+
 class MatchUserView extends StatelessWidget {
   final MatchWithGame match;
   const MatchUserView({super.key, required this.match});
@@ -38,7 +41,8 @@ class MatchChat extends StatefulWidget {
       {super.key,
       required this.match,
       required this.bloc,
-      required this.matchMessages, required this.socketClient});
+      required this.matchMessages,
+      required this.socketClient});
 
   @override
   State<MatchChat> createState() => _MatchChatState();
@@ -60,18 +64,14 @@ class _MatchChatState extends State<MatchChat> {
 
     List<Message> history =
         widget.matchMessages.map((e) => Message.fromJson(e)).toList();
-        
+
     String lastUser = "";
-    List<ChatMessageOrganism> messages = history
-        .map((e) {
-          final isTheSame = e.user.id == lastUser ? false: true;
-          lastUser = e.user.id;
-          return  ChatMessageOrganism(
-            text: e.text,
-            user: e.user,
-            mainMessage: isTheSame);
-        })
-        .toList();
+    List<ChatMessageOrganism> messages = history.map((e) {
+      final isTheSame = e.user.id == lastUser ? false : true;
+      lastUser = e.user.id;
+      return ChatMessageOrganism(
+          text: e.text, user: e.user, mainMessage: isTheSame);
+    }).toList();
 
     setState(() {
       _messages.addAll(messages);
@@ -89,28 +89,23 @@ class _MatchChatState extends State<MatchChat> {
 
     bool mainMessage = false;
 
-    if(_messages.isEmpty) {
+    if (_messages.isEmpty) {
       mainMessage = true;
-    }else if(_messages[0].user.id == decodedMessage.user.id){
+    } else if (_messages[0].user.id == decodedMessage.user.id) {
       mainMessage = false;
-    }else{
+    } else {
       mainMessage = true;
     }
 
-
-    
     ChatMessageOrganism message = ChatMessageOrganism(
-      mainMessage: mainMessage,
-      text: decodedMessage.text,
-      user: decodedMessage.user
-    );
+        mainMessage: mainMessage,
+        text: decodedMessage.text,
+        user: decodedMessage.user);
 
     setState(() {
       _messages.insert(0, message);
     });
-
   }
-
 
   @override
   void initState() {
@@ -120,7 +115,6 @@ class _MatchChatState extends State<MatchChat> {
     userBloc = context.read<UserBloc>();
 
     if (mounted) {
-      
       widget.socketClient.on("message", (data) => _listenMessage(data));
       widget.socketClient.on("new_player_to_match", (data) {
         ChatUser user = ChatUser.fromJson(data);
@@ -129,7 +123,7 @@ class _MatchChatState extends State<MatchChat> {
       widget.socketClient.on("added_to_match", (data) {
         if (data == true) {
           isInMatch = true;
-          if(mounted){
+          if (mounted) {
             setState(() {});
           }
         }
@@ -138,7 +132,6 @@ class _MatchChatState extends State<MatchChat> {
       widget.socketClient.emit("init_chat", widget.match.id);
 
       userBloc.updateChatRoom(widget.match.id);
-
     }
   }
 
@@ -153,7 +146,6 @@ class _MatchChatState extends State<MatchChat> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Column(
       children: [
         Container(
@@ -178,9 +170,10 @@ class _MatchChatState extends State<MatchChat> {
                 clipBehavior: Clip.antiAlias,
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                child: widget.match.game.background != null 
-                ? CachedNetworkImage(imageUrl: widget.match.game.background!, width: 80) 
-                :Image.asset("assets/no image.jpg", width: 80),
+                child: widget.match.game.background != null
+                    ? CachedNetworkImage(
+                        imageUrl: widget.match.game.background!, width: 80)
+                    : Image.asset("assets/no image.jpg", width: 80),
               ),
             ],
           ),
@@ -205,55 +198,64 @@ class _MatchChatState extends State<MatchChat> {
   }
 
   Widget _bottomRow(FullMatch match, UserState userState, bool isInMatch) {
-
-    if(!mounted){
+    if (!mounted) {
       return const CircularProgressIndicator();
     }
     bool owner = userState.id == match.user ? true : false;
     List<ChatUser> founded =
         match.likes.where((e) => userState.id == e.id).toList();
 
-
     if (owner || founded.isNotEmpty || isInMatch) {
       isInMatch = true;
       Size screenSize = MediaQuery.of(context).size;
 
       double screenWidth = screenSize.width;
-      return Wrap(
-        children: [
-          Container(
-            width: screenWidth * 0.8,
-            margin: const EdgeInsets.only(right: 8),
-            child: InputGroupMessage(
-              inputKey: messageKey,
-              usersList: widget.match.likes,
-              stream: widget.bloc.messageStream,
-              placeholder: "Message",
-              onChanged: widget.bloc.changeMessage,
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            child: ElevatedButton(
-              onPressed: () {
-                _handleSubmit(widget.bloc.message);
-                widget.bloc.changeMessage("");
-                messageKey.currentState?.controller?.clear();
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shape: const StadiumBorder(),
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 65, 169, 255),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-              child: const Icon(Icons.send_outlined),
-            ),
-          ),
-          // ElevatedButton.icon(
-          //     onPressed: () {}, icon: Icon(Icons.abc), label: Text(""))
-        ],
+
+      return BlocBuilder<SocketsBloc, SocketsState>(
+        builder: (context, state) {
+          if(state.serverStatus == ServerStatus.offline){
+            return Center(child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 7),
+              child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION")),
+            ));
+          }
+          return Wrap(
+            children: [
+              Container(
+                width: screenWidth * 0.8,
+                margin: const EdgeInsets.only(right: 8),
+                child: InputGroupMessage(
+                  inputKey: messageKey,
+                  usersList: widget.match.likes,
+                  stream: widget.bloc.messageStream,
+                  placeholder: "Message",
+                  onChanged: widget.bloc.changeMessage,
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _handleSubmit(widget.bloc.message);
+                    widget.bloc.changeMessage("");
+                    messageKey.currentState?.controller?.clear();
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shape: const StadiumBorder(),
+                      side: const BorderSide(
+                        color: Color.fromARGB(255, 65, 169, 255),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10)),
+                  child: const Icon(Icons.send_outlined),
+                ),
+              ),
+              // ElevatedButton.icon(
+              //     onPressed: () {}, icon: Icon(Icons.abc), label: Text(""))
+            ],
+          );
+        },
       );
     } else {
       return FormButton(

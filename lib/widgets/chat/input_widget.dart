@@ -8,20 +8,16 @@ class InputGroupMessage extends StatelessWidget {
   final Stream<String> stream;
   final GlobalKey<FlutterMentionsState> inputKey;
   final List<ChatUser> usersList;
-  final IconData? icon;
   final String placeholder;
   final TextInputType keyboardType;
-  final bool isPassword;
   final Function(String) onChanged;
   final TextEditingController? controller;
   const InputGroupMessage(
       {super.key,
-      this.icon,
       required this.placeholder,
       required this.stream,
       required this.onChanged,
       this.keyboardType = TextInputType.text,
-      this.isPassword = false,
       this.controller,
       required this.usersList,
       required this.inputKey});
@@ -90,7 +86,6 @@ class InputGroupMessage extends StatelessWidget {
             ],
             keyboardType: keyboardType,
             decoration: InputDecoration(
-              prefixIcon: icon != null ? Icon(icon) : null,
               hintText: placeholder,
               errorText: snapshot.error as String?,
               errorBorder: errorBorder,

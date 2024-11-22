@@ -70,7 +70,4 @@ class SocketsBloc extends Bloc<SocketsEvent, SocketsState> {
     add(DisconnectToken());
   }
 
-  
-
-
 }

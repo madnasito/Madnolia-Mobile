@@ -130,6 +130,9 @@
         "MISSING_TOKEN": "Falta el token",
         "NO_MESSAGE": "No hay mensaje",
         "NOT_VALID_EXTENSION": "Extensión no valida"
+    },
+    "NETWORK": {
+        "VERIFY_CONNECTION": "Verifica tu conexión"
     }
   }
 }

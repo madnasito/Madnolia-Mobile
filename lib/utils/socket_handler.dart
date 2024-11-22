@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/global/environment.dart';
 import 'package:madnolia/main.dart';
 import 'package:madnolia/models/chat/message_model.dart';
@@ -53,9 +54,14 @@ Future<Socket> socketConnection() async {
 
   socket.onConnect((_) async {
 
+    final BuildContext? context = MyApp.navigatorKey.currentContext;
+
+    final socketsBloc = context?.read<SocketsBloc>();
+
+    socketsBloc?.updateServerStatus(ServerStatus.online);
+    
     socket.on("message", (payload) async {
 
-    final BuildContext? context = MyApp.navigatorKey.currentContext;
 
     final userBloc = context?.read<UserBloc>();
 
@@ -141,6 +147,13 @@ Future<Socket> socketConnection() async {
       });
   });
 
+  
+  socket.onDisconnect((data) {
+    final BuildContext? context = MyApp.navigatorKey.currentContext;
 
+    final socketsBloc = context?.read<SocketsBloc>();
+
+    socketsBloc?.updateServerStatus(ServerStatus.offline);
+  });
   return socket;
 }

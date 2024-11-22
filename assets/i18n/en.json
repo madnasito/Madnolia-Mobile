@@ -132,6 +132,9 @@
         "MISSING_TOKEN": "Missing authentication token",
         "NO_MESSAGE": "No message",
         "NOT_VALID_EXTENSION": "Not valid extension"
+    },
+    "NETWORK": {
+        "VERIFY_CONNECTION": "Verify your connection"
     }
   }
 }
