@@ -41,7 +41,6 @@ class UserService {
 
       authenticating = false;
 
-      print(jsonDecode(resp.body));
       return jsonDecode(resp.body);
     } catch (e) {
       authenticating = false;

@@ -10,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madnolia/blocs/edit_user_bloc.dart';
 import 'package:madnolia/blocs/edit_user_provider.dart';
+import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:toast/toast.dart';
@@ -82,9 +83,14 @@ class _Card extends StatelessWidget {
   }
 }
 
-class EditUserView extends StatelessWidget {
+class EditUserView extends StatefulWidget {
   const EditUserView({super.key});
 
+  @override
+  State<EditUserView> createState() => _EditUserViewState();
+}
+
+class _EditUserViewState extends State<EditUserView> {
   @override
   Widget build(BuildContext context) {
     final bloc = EditUserProvider.of(context);
@@ -107,6 +113,7 @@ class EditUserView extends StatelessWidget {
       future: _loadInfo(context),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          bool uploadingImage = false;
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(
                 decelerationRate: ScrollDecelerationRate.fast),
@@ -126,6 +133,11 @@ class EditUserView extends StatelessWidget {
                           color: const Color.fromARGB(181, 255, 255, 255))),
                   child: GestureDetector(
                       onTap: () async {
+                        if(uploadingImage) {
+                          return;
+                        }
+
+                        uploadingImage = true;
                         final picker = await ImagePicker()
                             .pickImage(source: ImageSource.gallery);
 
@@ -133,9 +145,15 @@ class EditUserView extends StatelessWidget {
                           final resp = await bloc.uploadImage(picker);
                           if (resp.containsKey("img")) {
                             userBloc.updateImages(resp["img"], resp["thumb"]);
-                            
+                            setState(() {
+                              
+                            });
+                          }else{
+                            showErrorServerAlert(context, {"message": "NETWORK_ERROR"});
                           }
                         }
+
+                        uploadingImage = false;
                       },
                       child: BlocBuilder(
                         bloc: userBloc,

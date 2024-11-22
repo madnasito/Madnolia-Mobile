@@ -38,7 +38,7 @@ class UploadFileService {
 
       return jsonDecode(resp.body);
     } catch (e) {
-      return {"ok": false, "err": "Network error"};
+      return {"message": "NETWORK_ERROR", "error": "Network error"};
     }
   }
 }
