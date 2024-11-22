@@ -32,7 +32,7 @@ class AuthService {
       }
     } catch (e) {
       print(e);
-      return {"Error": true, "message": "NETWORK_ERROR"};
+      return {"error": true, "message": "NETWORK_ERROR"};
     }
   }
 

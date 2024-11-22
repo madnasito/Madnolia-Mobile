@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
 
     final formKey = GlobalKey<FormState>();
 
-
+bool logging = false;
     return Scaffold(
       body: Background(
         child: SafeArea(
@@ -61,11 +61,12 @@ class LoginPage extends StatelessWidget {
                     StreamBuilder(
                       stream: bloc.formValidStream,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        
                         return FormButton(
                             text: translate("LOGIN.BUTTON"),
                             color: const Color.fromARGB(0, 33, 149, 243),
-                            onPressed: snapshot.hasData
-                                ? () => _login(context, bloc)
+                            onPressed: (snapshot.hasData && !logging)
+                                ? () => _login(context, bloc, logging)
                                 : null);
                       },
                     ),
@@ -81,9 +82,11 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  _login(BuildContext context, LoginBloc bloc) async {
+  _login(BuildContext context, LoginBloc bloc, bool logging) async {
+    logging = true;
     final Map resp = await AuthService().login(bloc.username, bloc.password);
 
+    logging = false;
     if (resp.containsKey("error")) {
       return showErrorServerAlert(context, resp);
     } else {
