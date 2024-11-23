@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,11 +64,21 @@ class CustomScaffold extends StatelessWidget {
                     route: "/new",
                   ),
                   _MenuButton(
-                    icon: Icons.notifications_outlined,
+                    icon: CupertinoIcons.gamecontroller,
+                    title:
+                        translate("HEADER.JOINED_MATCHES"),
+                    route: "/joined",
+                  ),
+                  _MenuButton(
+                    icon: Icons.notifications_none_outlined,
                     title:
                         translate("HEADER.NOTIFICATIONS"),
                     route: "/notifications",
                   ),
+                  // _MenuButton(
+                  //     icon: Icons.groups_2_outlined,
+                  //     title: translate("HEADER.PROFILE"),
+                  //     route: "/user"),
                   _MenuButton(
                       icon: Icons.person_outline_outlined,
                       title: translate("HEADER.PROFILE"),

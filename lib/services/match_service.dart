@@ -22,6 +22,9 @@ class MatchService {
   // Get all matches created by an user
   Future getUserMatches() => matchGetRequest("player-matches");
 
+  // Get all matches joined
+  Future getJoinedMatches() => matchGetRequest("joined");
+
   Future getGamesRecomendations(int platform) => matchGetRequest("latest-games/$platform");
 
   // Get all matches by a platform

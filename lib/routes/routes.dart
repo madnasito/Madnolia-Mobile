@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:madnolia/pages/auth/login_page.dart';
 import 'package:madnolia/pages/auth/register_page.dart';
+import 'package:madnolia/pages/match/joined_page.dart';
 // import 'package:madnolia/pages/auth/register_page.dart';
 import 'package:madnolia/pages/new/create_match_page.dart';
 import 'package:madnolia/pages/home/home_new_page.dart';
@@ -88,6 +89,11 @@ final GoRouter router = GoRouter(
           path: "notifications",
           name: "notifications",
           builder: (context, state) => const InvitationsPage(),
+        ),
+        GoRoute(
+          path: "joined",
+          name: "joined",
+          builder: (context, state) => const JoinedPage(),
         ),
         GoRoute(
             name: "user",

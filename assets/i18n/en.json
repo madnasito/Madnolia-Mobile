@@ -10,7 +10,9 @@
     "REGISTER": "Register",
     "LOGIN": "Login",
     "PROFILE": "Profile",
-    "LOGOUT": "Logout"
+    "LOGOUT": "Logout",
+    "INVITATIONS": "Invitations",
+    "JOINED_MATCHES": "Joined"
   },
 
   "HOME":{
