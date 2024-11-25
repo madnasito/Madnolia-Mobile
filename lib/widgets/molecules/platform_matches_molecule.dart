@@ -37,7 +37,7 @@ class PlatformMatchesMolecule extends StatelessWidget {
                   child: GameCard(
                     name: game.name,
                     background: game.background,
-                    bottom: Text("${game.count} ${ game.count == 0 ? translate('HOME.NO_MATCHES') : translate('HOME.MATCH') }")
+                    bottom: Text(_getMatchesTranslation(game.count))
                   ),
                 );
               },
@@ -93,7 +93,15 @@ class PlatformMatchesMolecule extends StatelessWidget {
         }
       },
     );
+    
   }
+  String _getMatchesTranslation(int amount){
+      if(amount == 0) {
+        return translate('HOME.NO_MATCHES');
+      } else if(amount == 1) {return "$amount ${translate('HOME.MATCH')}";}
+
+      else {return "$amount ${translate('HOME.MATCHES')}";}
+    }
 }
 
 Future<List<HomeGame>> _loadGames(int platformId) async {
