@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/models/game/minimal_game_model.dart';
 import 'package:madnolia/models/match/create_match_model.dart';
+import 'package:madnolia/widgets/atoms/minutes_picker.dart';
 import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import 'package:madnolia/widgets/molecules/games_list_molecule.dart';
 import 'package:madnolia/widgets/search_user_widget.dart';
@@ -58,6 +61,7 @@ class _SearchGameViewState extends State<SearchGameView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: SimpleCustomInput(
+              iconData: CupertinoIcons.search,
               controller: controller,
               placeholder:
                   translate("CREATE_MATCH.SEARCH_GAME"),
@@ -166,6 +170,7 @@ class MatchFormView extends StatelessWidget {
     
     final platformInfo = getPlatformInfo(platformId);
     List<String> users = [];
+    const List<int> minutes =  [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
     return Container(
       height: double.infinity,
       color: const Color.fromARGB(43, 0, 0, 0),
@@ -178,13 +183,19 @@ class MatchFormView extends StatelessWidget {
               color: Colors.white38,
               child: GameImageAtom(name: game.name, background: game.backgroundImage,),
             ),
-            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5), 
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
             SimpleCustomInput(
+              iconData: Icons.title_rounded,
                 placeholder:
                     translate("CREATE_MATCH.MATCH_NAME"),
                 controller: nameController),
             const SizedBox(height: 20),
             SimpleCustomInput(
+              iconData: CupertinoIcons.calendar_today,
               keyboardType: TextInputType.none,
               placeholder: translate("CREATE_MATCH.DATE"),
               controller: dateController,
@@ -236,6 +247,8 @@ class MatchFormView extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
+            const MinutesPicker(items: minutes),
+            const SizedBox(height: 20),
             SeatchUser(users: users),
             const SizedBox(height: 20),
             Text(
@@ -284,27 +297,10 @@ class MatchFormView extends StatelessWidget {
                         textStyle: const TextStyle(fontSize: 18),
                         duration: 3);
                   }
-                  // if (nameController.text == "") {
-                  //   return Toast.show(
-                  //       translate("CREATE_MATCH.TITLE_EMPTY"),
-                  //       gravity: 100,
-                  //       border: Border.all(color: Colors.blueAccent),
-                  //       textStyle: const TextStyle(fontSize: 18),
-                  //       duration: 3);
-                  // }
                   int formDate =
                       DateTime.parse(dateController.text).millisecondsSinceEpoch;
 
-                  // Map match = {
-                    // "game_name": game.name,
-                    // "game": game.id.toString(),
-                    // "platform": platformId.toString(),
-                    // "date": formDate.toString(),
-                    // "name": nameController.text,
-                    // "img": game.backgroundImage,
-                    // "users": List<String>.from(users.map((x) => x))
-                    // "tournament_match": "false"
-                  // };
+                  final matchMinutesCubit = context.read<MatchMinutesCubit>();
 
                   CreateMatch match = CreateMatch(
                     title: nameController.text,
@@ -312,6 +308,7 @@ class MatchFormView extends StatelessWidget {
                     inviteds: users,
                     game: game.id,
                     platform: platformId,
+                    duration: matchMinutesCubit.state.minutes
                     );
 
                   uploading = true;
@@ -334,10 +331,15 @@ class MatchFormView extends StatelessWidget {
                       // MatchCreated matchCreated = MatchCreated.fromJson(resp);
                     dateController.clear();
                     nameController.clear();
+                    matchMinutesCubit.restoreMinutes();
                     context.goNamed("user-matches");
                   }
                   // ignore: use_build_context_synchronously
                 })
+                ],
+              ),
+            ),
+            
           ],
         ),
       ),

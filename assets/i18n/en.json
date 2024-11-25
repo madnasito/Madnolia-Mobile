@@ -71,7 +71,8 @@
       "DATE_ERROR": "Create a correct date and time",
       "UPLOADING_MESSAGE": "The match is creating",
       "ERROR": "Error creating the match",
-      "TITLE_EMPTY": "Title is required"
+      "TITLE_EMPTY": "Title is required",
+      "DURATION": "Duration"
   },
   "GAME":{
       "GAME": "Game",

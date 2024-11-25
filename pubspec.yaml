@@ -70,6 +70,7 @@ dependencies:
   cached_network_image: ^3.4.1
   icons_launcher: ^3.0.0
   flutter_background_service: ^5.0.10
+  bloc: ^8.1.4
 
 dev_dependencies:
   flutter_test:

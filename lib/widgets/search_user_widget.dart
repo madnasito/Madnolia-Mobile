@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -44,6 +45,7 @@ class _SeatchUserState extends State<SeatchUser> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SimpleCustomInput(
+          iconData: CupertinoIcons.person_2,
           controller: controller,
           placeholder:
               translate("CREATE_MATCH.SEARCH_USER"),

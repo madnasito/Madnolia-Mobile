@@ -124,13 +124,14 @@ class SimpleCustomInput extends StatelessWidget {
   final TextInputType keyboardType;
   final void Function()? onTap;
   final void Function(String)? onChanged;
+  final IconData iconData;
   const SimpleCustomInput(
       {super.key,
       required this.placeholder,
       required this.controller,
       this.onTap,
       this.onChanged,
-      this.keyboardType = TextInputType.text});
+      this.keyboardType = TextInputType.text, required this.iconData});
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +140,9 @@ class SimpleCustomInput extends StatelessWidget {
       controller: controller,
       onChanged: onChanged,
       keyboardType: keyboardType,
-      decoration: InputDecoration(hintText: placeholder, border: focusedBorder),
+      decoration: InputDecoration(
+        prefixIcon: Icon(iconData),
+        hintText: placeholder, border: focusedBorder),
     );
   }
 }

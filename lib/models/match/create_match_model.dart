@@ -14,6 +14,7 @@ class CreateMatch {
     List<dynamic> inviteds;
     int game;
     int platform;
+    int duration;
 
     CreateMatch({
         required this.title,
@@ -21,6 +22,7 @@ class CreateMatch {
         required this.inviteds,
         required this.game,
         required this.platform,
+        required this.duration
     });
 
     factory CreateMatch.fromJson(Map<String, dynamic> json) => CreateMatch(
@@ -28,7 +30,8 @@ class CreateMatch {
         date: json["date"],
         inviteds: List<dynamic>.from(json["inviteds"].map((x) => x)),
         game: json["game"],
-        platform: json["platform"]
+        platform: json["platform"],
+        duration: json["duration"]
     );
 
     Map<String, dynamic> toJson() => {
@@ -37,5 +40,6 @@ class CreateMatch {
         "inviteds": List<dynamic>.from(inviteds.map((x) => x)),
         "game": game,
         "platform": platform,
+        "duration": duration,
     };
 }

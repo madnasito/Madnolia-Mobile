@@ -69,7 +69,8 @@
         "CREATE_MATCH": "Crear partida",
         "MATCH_CREATED": "¡Partida creada!",
         "DATE_ERROR": "Cree una fecha y hora correctas",
-        "TITLE_EMPTY": "Escriba el titulo"
+        "TITLE_EMPTY": "Escriba el titulo",
+        "DURATION": "Duración"
     },
     "GAME":{
         "GAME": "Juego",

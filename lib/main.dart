@@ -3,6 +3,7 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chat_messages/chat_messages_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/login_provider.dart';
@@ -19,6 +20,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
   serviceLocatorInit();
+  cubitServiceLocatorInit();
   Locale deviceLocale = window.locale;// or html.window.locale
   String langCode = deviceLocale.languageCode;
 
@@ -51,7 +53,8 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getIt<UserBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<SocketsBloc>()),
-        BlocProvider(create: (context) => ChatMessagesBloc())
+        BlocProvider(create: (BuildContext context) => ChatMessagesBloc()),
+        BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
       ],
       child: LoginProvider(
         child:  MessageProvider(
