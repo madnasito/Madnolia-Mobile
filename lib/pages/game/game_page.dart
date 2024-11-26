@@ -117,11 +117,11 @@ class GamePage extends StatelessWidget {
                       child: ListTile(
                         onTap: () => GoRouter.of(context)
                             .push("/match", extra: matches[index].id),
-                        title: Column(
+                        title: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(matches[index].title),
+                            Text(matches[index].title, style: const TextStyle(fontSize: 20, overflow: TextOverflow.fade),),
                             SvgPicture.asset(
                               getPlatformInfo(platform).path,
                               // ignore: deprecated_member_use
@@ -131,13 +131,17 @@ class GamePage extends StatelessWidget {
                           ],
                         ),
                         shape: const CircleBorder(),
-                        subtitle: Text(
+                        subtitle: matches[index].date > DateTime.now().millisecond ?
+                        Text(
                           DateTime.fromMillisecondsSinceEpoch(
                                   matches[index].date)
                               .toString()
                               .substring(0, 16),
                           textAlign: TextAlign.center,
-                        ),
+                          style: const TextStyle(color: Colors.greenAccent),
+                        ) :
+                        const Text("Currently running!", 
+                        style: TextStyle(color: Color.fromARGB(255, 142, 255, 236), fontSize: 17), textAlign: TextAlign.center,)
                       ),
                     );
                   },
