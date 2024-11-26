@@ -102,6 +102,8 @@ onStart(ServiceInstance service) async {
         });
 
       socket.on("match_ready", (data) async {
+        print("NOW ON BACKGROUND");
+        print(data);
           // Match match = Match.fromJson(data["match"]);
           await NotificationService.showNotification(
               title: "The match is ready",
@@ -124,10 +126,6 @@ onStart(ServiceInstance service) async {
         print(payload);
       });
 
-      Timer.periodic(const Duration(seconds: 1), (timer) {
-        // socket.emit("event-name", "your-message");
-        print("service is successfully running ${DateTime.now().second}");
-      });
     });
 
   }
@@ -153,16 +151,16 @@ class SocketService {
 
   late Socket socket;
 
-  static void startBackgroundService() {
+  static void start() {
     startBackgroundService();
   }
 
-  static void stopBackgroundService() {
+  static void stop() {
     stopBackgroundService();
   }
 
   @pragma('vm:entry-point')
-  static Future<bool> onIosBackground(ServiceInstance service) async => onIosBackground(service);
+  static Future<bool> startOnIos(ServiceInstance service) async => onIosBackground(service);
   
   
 }

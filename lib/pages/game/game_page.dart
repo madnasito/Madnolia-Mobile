@@ -131,14 +131,14 @@ class GamePage extends StatelessWidget {
                           ],
                         ),
                         shape: const CircleBorder(),
-                        subtitle: matches[index].date > DateTime.now().millisecond ?
+                        subtitle: matches[index].date > DateTime.now().millisecondsSinceEpoch ?
                         Text(
                           DateTime.fromMillisecondsSinceEpoch(
                                   matches[index].date)
                               .toString()
                               .substring(0, 16),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: Colors.greenAccent),
+                          style: const TextStyle(color: Color.fromARGB(255, 176, 229, 255)),
                         ) :
                         const Text("Currently running!", 
                         style: TextStyle(color: Color.fromARGB(255, 142, 255, 236), fontSize: 17), textAlign: TextAlign.center,)

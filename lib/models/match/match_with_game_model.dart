@@ -20,8 +20,8 @@ class MatchWithGame {
     String title;
     List<dynamic> likes;
     bool private;
-    bool active;
     bool tournament;
+    int status;
 
     MatchWithGame({
         required this.id,
@@ -33,7 +33,7 @@ class MatchWithGame {
         required this.title,
         required this.likes,
         required this.private,
-        required this.active,
+        required this.status,
         required this.tournament,
     });
 
@@ -47,7 +47,7 @@ class MatchWithGame {
         title: json["title"],
         likes: List<dynamic>.from(json["likes"].map((x) => x)),
         private: json["private"],
-        active: json["active"],
+        status: json["status"],
         tournament: json["tournament"],
     );
 
@@ -61,7 +61,7 @@ class MatchWithGame {
         "title": title,
         "likes": List<dynamic>.from(likes.map((x) => x)),
         "private": private,
-        "active": active,
+        "status": status,
         "tournament": tournament,
     };
 }

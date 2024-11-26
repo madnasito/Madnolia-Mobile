@@ -1,5 +1,6 @@
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/platform_id_ico.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/molecules/platform_matches_molecule.dart';
@@ -105,14 +106,12 @@ class _HomeUserPageState extends State<HomeUserPage> {
       const storage = FlutterSecureStorage();
       final token = await storage.read(key: "token");
       socketBloc.updateToken(token.toString());    
-      
+      await initializeService();
       if (userInfo.isEmpty) {
 
         await storage.delete(key: "token");
 
         userBloc.logOutUser();
-        // ignore: use_build_context_synchronously
-        // ignore: use_build_context_syqnchronously
         return context.go("/home");
       }
       final User user = User.fromJson(userInfo);
