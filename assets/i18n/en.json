@@ -134,7 +134,8 @@
         "NO_GAME_FOUND": "No game found",
         "MISSING_TOKEN": "Missing authentication token",
         "NO_MESSAGE": "No message",
-        "NOT_VALID_EXTENSION": "Not valid extension"
+        "NOT_VALID_EXTENSION": "Not valid extension",
+        "INVALID_DATE": "Invalid date"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verify your connection"

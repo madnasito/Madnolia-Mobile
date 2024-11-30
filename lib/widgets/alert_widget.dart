@@ -20,6 +20,11 @@ void showAlert(BuildContext context, String message) {
 }
 
 void showErrorServerAlert(BuildContext context, Map resp){
-  String message = resp["message"];
-  showAlert(context, translate("ERRORS.SERVER.$message"));
+
+  if( resp['message'] is String){
+    String message = resp["message"];
+    showAlert(context, translate("ERRORS.SERVER.$message"));
+  }else {
+    showAlert(context, resp['message'][0]);
+  }
 }

@@ -6,6 +6,7 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/models/game/minimal_game_model.dart';
 import 'package:madnolia/models/match/create_match_model.dart';
+import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/minutes_picker.dart';
 import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import 'package:madnolia/widgets/molecules/games_list_molecule.dart';
@@ -301,7 +302,6 @@ class MatchFormView extends StatelessWidget {
                       DateTime.parse(dateController.text).millisecondsSinceEpoch;
 
                   final matchMinutesCubit = context.read<MatchMinutesCubit>();
-
                   CreateMatch match = CreateMatch(
                     title: nameController.text,
                     date: formDate,
@@ -315,12 +315,7 @@ class MatchFormView extends StatelessWidget {
                   final Map<String, dynamic> resp = await MatchService().createMatch(match.toJson());
                   uploading = false;
                   if (resp.containsKey("message")) {
-                    Toast.show(
-                        translate("CREATE_MATCH.ERROR"),
-                        gravity: 100,
-                        border: Border.all(color: Colors.blueAccent),
-                        textStyle: const TextStyle(fontSize: 18),
-                        duration: 3);
+                    return showErrorServerAlert(context, resp);
                   } else {
                     Toast.show(
                         translate("CREATE_MATCH.MATCH_CREATED"),

@@ -40,6 +40,7 @@ onStart(ServiceInstance service) async {
 
         // if (mentions.isNotEmpty && message.to != userBloc.state.chatRoom) {
             await NotificationService.showNotification(
+              
               title: message.user.name,
               body: message.text,
               // largeIcon: message.user.thumb,

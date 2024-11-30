@@ -106,7 +106,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       const storage = FlutterSecureStorage();
       final token = await storage.read(key: "token");
       socketBloc.updateToken(token.toString());    
-      await initializeService();
+      // await initializeService();
       if (userInfo.isEmpty) {
 
         await storage.delete(key: "token");

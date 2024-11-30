@@ -79,7 +79,7 @@ class MatchService {
     }
   }
 
-  Future<Map> matchPostRequest(String apiUrl, Map body) async {
+  Future<Map<String, dynamic>> matchPostRequest(String apiUrl, Map body) async {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
