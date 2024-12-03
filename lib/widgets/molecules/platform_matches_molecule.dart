@@ -72,7 +72,7 @@ class PlatformMatchesMolecule extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () =>
                           GoRouter.of(context).push(
-                              "/new",
+                              "/search_game",
                               extra: platform),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
