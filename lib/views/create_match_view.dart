@@ -16,7 +16,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/services/match_service.dart';
-import 'package:madnolia/utils/platform_id_ico.dart';
+import 'package:madnolia/utils/platforms.dart';
 // import 'package:flutter/services.dart';
 
 import 'package:madnolia/widgets/form_button.dart';

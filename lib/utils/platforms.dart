@@ -1,76 +1,75 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:madnolia/blocs/blocs.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
-import 'package:go_router/go_router.dart';
-
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/widgets/platform_icon_widget.dart';
 
+import '../blocs/user/user_bloc.dart';
 
-import 'package:madnolia/views/create_match_view.dart';
+PlatformInfo getPlatformInfo(int id) {
+  const String path = "assets/platforms";
+  switch (id) {
+    // Playstation's platforms
+    case 15:
+      return PlatformInfo(
+          path: "$path/playstation_2.svg", name: "PlayStation 2");
+    case 16:
+      return PlatformInfo(
+          path: "$path/playstation_3.svg", name: "PlayStation 3");
+    case 17:
+      return PlatformInfo(
+          path: "$path/playstation_portable.svg", name: "PlayStation Portable");
+    case 18:
+      return PlatformInfo(
+          path: "$path/playstation_4.svg", name: "PlayStation 4");
+    case 19:
+      return PlatformInfo(
+          path: "$path/playstation_vita.svg", name: "PlayStation Vita");
+    case 187:
+      return PlatformInfo(
+          path: "$path/playstation_5.svg", name: "PlayStation 5");
 
-import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+    // Nintendo's Platforms
+    case 9:
+      return PlatformInfo(path: "$path/nintendo_ds.svg", name: "Nintendo DS");
+    case 7:
+      return PlatformInfo(
+          path: "$path/nintendo_switch.svg", name: "Nintendo Switch");
+    case 8:
+      return PlatformInfo(path: "$path/nintendo_3ds.svg", name: "Nintendo 3DS");
 
-import '../../widgets/platform_icon_widget.dart';
+    case 10:
+      return PlatformInfo(
+          path: "$path/nintendo_wiiu.svg", name: "Nintendo WiiU");
+    case 11:
+      return PlatformInfo(path: "$path/nintendo_wii.svg", name: "Nintendo Wii");
 
-// ignore: must_be_immutable
-class NewPage extends StatefulWidget {
-  NewPage({super.key});
+    case 80:
+      return PlatformInfo(path: "$path/xbox.svg", name: "Xbox Classic");
+    case 14:
+      return PlatformInfo(path: "$path/xbox_360.svg", name: "Xbox 360");
+    case 1:
+      return PlatformInfo(path: "$path/xbox_one.svg", name: "Xbox One");
+    case 186:
+      return PlatformInfo(path: "$path/xbox_series.svg", name: "Xbox Series");
 
-  @override
-  State<NewPage> createState() => _NewPageState();
-  int selectedPlatform = 0;
+    case 4:
+      return PlatformInfo(path: "$path/pc.svg", name: "PC");
+    case 21:
+      return PlatformInfo(path: "$path/smartphone.svg", name: "Mobile");
+
+    default:
+      return PlatformInfo(path: "$path/mobile.svg", name: "PlayStation 4");
+  }
 }
 
-class _NewPageState extends State<NewPage> {
-  @override
-  Widget build(BuildContext context) {
+class PlatformInfo {
+  String path;
+  String name;
+  PlatformInfo({required this.path, required this.name});
+}
 
-    if (GoRouterState.of(context).extra != null) {
-      if (GoRouterState.of(context).extra is int) {
-        widget.selectedPlatform = GoRouterState.of(context).extra as int;
-      }
-    }
 
-  return CustomScaffold(
-      body: Background(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              FadeIn(
-                  delay: const Duration(milliseconds: 300),
-                  child: Text(
-                    translate("CREATE_MATCH.TITLE"),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  )),
-              const SizedBox(height: 40),
-              SingleChildScrollView(
-                dragStartBehavior: DragStartBehavior.start,
-                child: FadeIn(
-                  delay: const Duration(seconds: 1),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 70),
-                      ...userPlatforms(),
-                      const SizedBox(height: 70),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
-      )
-    );
-  }
-
-  List<Widget> userPlatforms() {
+List<Widget> UserPlatforms(BuildContext context, void Function()? onTap) {
     final userBloc = context.watch<UserBloc>();
     List<Platform> platforms = [
       Platform(
@@ -162,13 +161,8 @@ class _NewPageState extends State<NewPage> {
         .map((item) => FadeIn(
             child: item.active
                 ? GestureDetector(
-                    onTap: () {
-                      // widget.selectedPlatform = item.id;
-                      // setState(() {});
-                      context.push("/search_game", extra: item.id);
-                    },
+                    onTap: onTap,
                     child: PlatformIcon(platform: item))
                 : Container()))
         .toList();
   }
-}

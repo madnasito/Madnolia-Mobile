@@ -17,14 +17,7 @@ class _PlatformIconState extends State<PlatformIcon> {
   Widget build(BuildContext context) {
     final iconSize =
         (widget.platform.size * MediaQuery.of(context).size.width) / 100;
-    return GestureDetector(
-      // onTap: () {
-      //   setState(() {
-      //     widget.platform.active = true;
-      //     // context.go("/platforms/${widget.platform.id}");
-      //   });
-      // },
-      child: Padding(
+    return  Padding(
         padding: EdgeInsets.symmetric(vertical: widget.platform.padding),
         child: SvgPicture.asset(
           widget.platform.path,
@@ -35,7 +28,6 @@ class _PlatformIconState extends State<PlatformIcon> {
               ? Colors.white
               : const Color.fromARGB(172, 109, 109, 109),
         ),
-      ),
     );
   }
 }

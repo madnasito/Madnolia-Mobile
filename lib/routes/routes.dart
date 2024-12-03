@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:madnolia/pages/auth/login_page.dart';
 import 'package:madnolia/pages/auth/register_page.dart';
+import 'package:madnolia/pages/game/search_game_page.dart';
 import 'package:madnolia/pages/match/joined_page.dart';
 // import 'package:madnolia/pages/auth/register_page.dart';
 import 'package:madnolia/pages/new/create_match_page.dart';
@@ -140,7 +141,8 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const MatchPage(),
         ),
         GoRoute(
-            path: "game", name: "game", builder: (context, state) => const GamePage())
+            path: "game", name: "game", builder: (context, state) => const GamePage()),
+        GoRoute(path: "search_game", name: "search game", builder: (context, state) => const SearchGamePage())
       ],
     ),
   ],

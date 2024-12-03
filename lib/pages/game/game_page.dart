@@ -14,7 +14,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../utils/platform_id_ico.dart';
+import '../../utils/platforms.dart';
 
 class GamePage extends StatelessWidget {
   const GamePage({super.key});

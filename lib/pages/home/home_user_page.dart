@@ -1,7 +1,6 @@
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
-import 'package:madnolia/services/sockets_service.dart';
-import 'package:madnolia/utils/platform_id_ico.dart';
+import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/molecules/platform_matches_molecule.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +37,6 @@ class _HomeUserPageState extends State<HomeUserPage> {
         future: _loadInfo(context),
         builder: (context, snapshot) {
           final userBloc = context.read<UserBloc>().state;
-          final socketBloc = context.read<SocketsBloc>();
           // socketBloc.state.clientSocket.onConnect((_) async {
           //   socketBloc.updateServerStatus(ServerStatus.online);
           // });
