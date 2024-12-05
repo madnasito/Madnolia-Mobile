@@ -4,7 +4,6 @@ import 'package:madnolia/blocs/chat_messages/chat_messages_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
-import 'package:madnolia/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/login_provider.dart';
 import 'package:madnolia/blocs/message_provider.dart';
@@ -32,7 +31,6 @@ void main() async {
     
   // unawaited(MobileAds.instance.initialize());
   // MobileAds.instance.initialize();
-  await NotificationService.initializeNotification();
   runApp(LocalizedApp(delegate, const MyApp()) );
 }
 

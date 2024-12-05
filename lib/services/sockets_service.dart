@@ -1,12 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/global/environment.dart';
 import 'package:madnolia/models/invitation_model.dart';
-import 'package:madnolia/services/notification_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../models/chat/message_model.dart';
@@ -38,28 +36,9 @@ onStart(ServiceInstance service) async {
         print(payload);
         Message message = Message.fromJson(payload);
 
-        // if (mentions.isNotEmpty && message.to != userBloc.state.chatRoom) {
-            await NotificationService.showNotification(
-              
-              title: message.user.name,
-              body: message.text,
-              // largeIcon: message.user.thumb,
-              summary: message.user.name,
-              notificationLayout: NotificationLayout.Messaging,
-              actionButtons: [
-                NotificationActionButton(
-                  key: "reply",
-                  label: "Reply",
-                  autoDismissible: true,
-                  requireInputText: true,
-                  actionType: ActionType.SilentAction),
-              ],
-              payload: {
-                "match": message.to
-              });
-          // }
+        // TODO: Message notification
+       
 
-        
         
       });
 
@@ -70,32 +49,8 @@ onStart(ServiceInstance service) async {
           // Match match = Match.fromJson(data["match"]);
           Invitation match = Invitation.fromJson(data);
 
-          await NotificationService.showNotification(
-              title: "Invitation to a Match",
-              body: "Game name",
-              // ignore: unnecessary_null_comparison
-              notificationLayout: match.img != null
-                  ? NotificationLayout.BigPicture
-                  : NotificationLayout.Default,
-              // ignore: unnecessary_null_comparison
-              bigPicture: match.img,
-              payload: {
-                "match": match.match
-              },
-              actionButtons: [
-                NotificationActionButton(
-                  key: "accept",
-                  label: "Accept",
-                  color: Colors.blue,
-                  actionType: ActionType.DismissAction,
-                  autoDismissible: true),
-                NotificationActionButton(
-                  key: "decline",
-                  label: "Decline",
-                  actionType: ActionType.SilentAction,
-                  color: Colors.blueGrey,
-                )
-              ]);
+          // TODO: Invitation notification
+          
         } catch (e) {
           print(e);
         }
@@ -105,12 +60,8 @@ onStart(ServiceInstance service) async {
       socket.on("match_ready", (data) async {
         print("NOW ON BACKGROUND");
         print(data);
-          // Match match = Match.fromJson(data["match"]);
-          await NotificationService.showNotification(
-              title: "The match is ready",
-              body: data["title"],
-              actionButtons: [],
-              payload: {"match": data["match"]});
+        // TODO: Ready notification
+          
         });
       service.on("stop").listen((event) {
         service.stopSelf();

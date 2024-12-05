@@ -8,7 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:animate_do/animate_do.dart';
 
 
-import 'package:madnolia/views/create_match_view.dart';
 
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';

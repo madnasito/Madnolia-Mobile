@@ -4,14 +4,12 @@ import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/global/environment.dart';
 import 'package:madnolia/main.dart';
 import 'package:madnolia/models/chat/message_model.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 import 'package:socket_io_client/socket_io_client.dart';
 
-import '../services/notification_service.dart';
 import '../models/invitation_model.dart';
 
 class SocketHandler {
@@ -75,23 +73,7 @@ Future<Socket> socketConnection() async {
       if(userBloc == null) return;
 
       if (mentions.isNotEmpty && message.to != userBloc.state.chatRoom) {
-          await NotificationService.showNotification(
-            title: message.user.name,
-            body: message.text,
-            // largeIcon: message.user.thumb,
-            summary: message.user.name,
-            notificationLayout: NotificationLayout.Messaging,
-            actionButtons: [
-              NotificationActionButton(
-                key: "reply",
-                label: "Reply",
-                autoDismissible: true,
-                requireInputText: true,
-                actionType: ActionType.SilentAction),
-            ],
-            payload: {
-              "match": message.to
-            });
+          // TODO Show notification
         }
 
         
@@ -105,32 +87,8 @@ Future<Socket> socketConnection() async {
         // Match match = Match.fromJson(data["match"]);
         Invitation match = Invitation.fromJson(data);
 
-        await NotificationService.showNotification(
-            title: "Invitation to a Match",
-            body: "Game name",
-            // ignore: unnecessary_null_comparison
-            notificationLayout: match.img != null
-                ? NotificationLayout.BigPicture
-                : NotificationLayout.Default,
-            // ignore: unnecessary_null_comparison
-            bigPicture: match.img,
-            payload: {
-              "match": match.match
-            },
-            actionButtons: [
-              NotificationActionButton(
-                key: "accept",
-                label: "Accept",
-                color: Colors.blue,
-                actionType: ActionType.DismissAction,
-                autoDismissible: true),
-              NotificationActionButton(
-                key: "decline",
-                label: "Decline",
-                actionType: ActionType.SilentAction,
-                color: Colors.blueGrey,
-              )
-            ]);
+        // TODO: Show notification
+
       } catch (e) {
         print(e);
       }
@@ -138,12 +96,8 @@ Future<Socket> socketConnection() async {
       });
 
     socket.on("match_ready", (data) async {
-        // Match match = Match.fromJson(data["match"]);
-        await NotificationService.showNotification(
-            title: "The match is ready",
-            body: data["title"],
-            actionButtons: [],
-            payload: {"match": data["match"]});
+      // TODO: Match ready
+        
       });
   });
 
