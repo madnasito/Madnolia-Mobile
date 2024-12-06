@@ -3,6 +3,7 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
+import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
@@ -78,7 +79,7 @@ class _MatchChatState extends State<MatchChat> {
     });
   }
 
-  void _listenMessage(Map<String, dynamic> payload) {
+  void _listenMessage(Map<String, dynamic> payload) async{
     if (!mounted) {
       return;
     }
@@ -101,6 +102,8 @@ class _MatchChatState extends State<MatchChat> {
         mainMessage: mainMessage,
         text: decodedMessage.text,
         user: decodedMessage.user);
+    
+    await LocalNotificationsService.display(message.text);
 
     setState(() {
       _messages.insert(0, message);

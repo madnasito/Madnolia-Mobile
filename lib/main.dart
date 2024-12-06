@@ -13,6 +13,8 @@ import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
 
+import 'package:madnolia/services/local_notifications_service.dart';
+
 //for mobile
 
 void main() async {
@@ -29,6 +31,7 @@ void main() async {
           fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
           supportedLocales: supportedLangs);
     
+  
   // unawaited(MobileAds.instance.initialize());
   // MobileAds.instance.initialize();
   runApp(LocalizedApp(delegate, const MyApp()) );
@@ -42,6 +45,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LocalNotificationsService.initialize();
     var localizationDelegate = LocalizedApp.of(context).delegate;
     return LocalizationProvider(
       state: LocalizationProvider.of(context).state,
