@@ -1,4 +1,6 @@
 
+import 'dart:async';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chat_messages/chat_messages_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
@@ -32,8 +34,10 @@ void main() async {
           supportedLocales: supportedLangs);
     
   
-  // unawaited(MobileAds.instance.initialize());
-  // MobileAds.instance.initialize();
+  unawaited(MobileAds.instance.initialize());
+  MobileAds.instance.initialize();
+
+
   runApp(LocalizedApp(delegate, const MyApp()) );
 }
 
@@ -62,7 +66,7 @@ class MyApp extends StatelessWidget {
         child:  MessageProvider(
               child: Portal(
                 child: MaterialApp.router(
-                  debugShowCheckedModeBanner: false,
+                  // debugShowCheckedModeBanner: false,
                   // builder: (context, child) => Overlay(
                   //   initialEntries: [
                   //     OverlayEntry(builder: (BuildContext context) => AppBarOrganism(child: child!,))

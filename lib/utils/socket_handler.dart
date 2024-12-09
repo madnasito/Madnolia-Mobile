@@ -6,6 +6,8 @@ import 'package:madnolia/main.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/models/match/match_ready_model.dart';
+import 'package:madnolia/services/local_notifications_service.dart';
 
 
 import 'package:socket_io_client/socket_io_client.dart';
@@ -96,8 +98,8 @@ Future<Socket> socketConnection() async {
       });
 
     socket.on("match_ready", (data) async {
-      // TODO: Match ready
-        
+      MatchReady payload = MatchReady.fromJson(data);
+      await LocalNotificationsService.matchReady(payload);
       });
   });
 

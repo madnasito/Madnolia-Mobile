@@ -10,97 +10,110 @@ import 'package:socket_io_client/socket_io_client.dart';
 import '../models/chat/message_model.dart';
 
 @pragma('vm:entry-point')
-onStart(ServiceInstance service) async {  
+onStart(ServiceInstance service) async {
+  const storage = FlutterSecureStorage();
+  final token = await storage.read(key: "token");
 
-    const storage = FlutterSecureStorage();
-    final token = await storage.read(key: "token");
+  final Socket socket = io(
+    Environment.socketUrl,
+    OptionBuilder()
+      .setTransports(['websocket']) // for Flutter or Dart VM
+      .enableAutoConnect()
+      .enableReconnection()
+      .setAuth({"token": token})
+      .setExtraHeaders({"token": token})
+      .build(),
+  );
 
-    final Socket socket = io(
-          Environment.socketUrl,
-          OptionBuilder()
-          .setTransports(['websocket']) // for Flutter or Dart VM
-          .enableAutoConnect()
-          .enableReconnection()
-          .setAuth({"token": token})
-          .setExtraHeaders({"token": token})
-          .build());
+  socket.onConnect((_) async {
+    print('Connected. Socket ID: ${socket.id}');
 
-    socket.onConnect((_) async {
-
-      print('Connected. Socket ID: ${socket.id}');
-
-      print(socket.id);
-      socket.on("message", (payload) async {
-
-        print("MESSAGE!!!");
-        print(payload);
-        Message message = Message.fromJson(payload);
-
-        // TODO: Message notification
-       
-
-        
-      });
-
-      socket.on("invitation", (data) async {
+    socket.on("message", (payload) async {
+      print("MESSAGE!!!");
+      print(payload);
+      Message message = Message.fromJson(payload);
 
 
-        try {
-          // Match match = Match.fromJson(data["match"]);
-          Invitation match = Invitation.fromJson(data);
-
-          // TODO: Invitation notification
-          
-        } catch (e) {
-          print(e);
-        }
-          
-        });
-
-      socket.on("match_ready", (data) async {
-        print("NOW ON BACKGROUND");
-        print(data);
-        // TODO: Ready notification
-          
-        });
-      service.on("stop").listen((event) {
-        service.stopSelf();
-        print("background process is now stopped");
-      });
-
-      service.on("start").listen((event) {
-        print("Service start");
-      });
-
-      print(service);
-
-      service.on("message").listen((payload){
-        print(payload);
-      });
-
+      // Send message to UI (if app is in foreground)
+      // if (window.isActive) {
+      //   // Create a method to send data to the UI (e.g., using a Stream or Provider)
+      //   // Example:
+      //   // _messageStreamController.sink.add(message); 
+      // } else {
+      //   // Handle background notification for new messages
+      //   // (e.g., using a notification plugin like flutter_local_notifications) 
+      // }
     });
 
-  }
+    socket.on("invitation", (data) async {
+      try {
+        Invitation invitation = Invitation.fromJson(data);
+
+        // Send invitation to UI (if app is in foreground)
+        // if (window.isActive) {
+        //   // Create a method to send data to the UI (e.g., using a Stream or Provider)
+        //   // Example:
+        //   // _invitationStreamController.sink.add(invitation); 
+        // } else {
+        //   // Handle background notification for new invitations
+        //   // (e.g., using a notification plugin like flutter_local_notifications) 
+        // }
+      } catch (e) {
+        print(e);
+      }
+    });
+
+    socket.on("match_ready", (data) async {
+      print("NOW ON BACKGROUND");
+      print(data);
+      // Send match ready event to UI (if app is in foreground)
+      // if (window.isActive) {
+      //   // Create a method to send data to the UI (e.g., using a Stream or Provider)
+      //   // Example:
+      //   // _matchReadyStreamController.sink.add(data); 
+      // } else {
+      //   // Handle background notification for match ready event
+      //   // (e.g., using a notification plugin like flutter_local_notifications) 
+      // }
+    });
+
+    service.on("stop").listen((event) {
+      socket.disconnect(); // Disconnect when the service stops
+      service.stopSelf();
+      print("background process is now stopped");
+    });
+
+    service.on("start").listen((event) {
+      print("Service start");
+    });
+
+    print(service);
+
+    service.on("message").listen((payload) {
+      print(payload);
+    });
+  });
+}
 
 void startBackgroundService() {
-    final service = FlutterBackgroundService();
-    service.startService();
-  }
+  final service = FlutterBackgroundService();
+  service.startService();
+}
 
 void stopBackgroundService() {
-    final service = FlutterBackgroundService();
-    service.invoke("stop");
-  }
+  final service = FlutterBackgroundService();
+  service.invoke("stop");
+}
 
-  @pragma('vm:entry-point')
-  Future<bool> onIosBackground(ServiceInstance service) async {
-    WidgetsFlutterBinding.ensureInitialized();
-    DartPluginRegistrant.ensureInitialized();
+@pragma('vm:entry-point')
+Future<bool> onIosBackground(ServiceInstance service) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
 
-    return true;
-  }
+  return true;
+}
+
 class SocketService {
-
   late Socket socket;
 
   static void start() {
@@ -112,28 +125,26 @@ class SocketService {
   }
 
   @pragma('vm:entry-point')
-  static Future<bool> startOnIos(ServiceInstance service) async => onIosBackground(service);
-  
-  
+  static Future<bool> startOnIos(ServiceInstance service) async =>
+      onIosBackground(service);
 }
 
 Future<FlutterBackgroundService> initializeService() async {
-    final service = FlutterBackgroundService();
+  final service = FlutterBackgroundService();
 
-    await service.configure(
-      iosConfiguration: IosConfiguration(
-        autoStart: true,
-        onForeground: onStart,
-        onBackground: onIosBackground,
-      ),
-      androidConfiguration: AndroidConfiguration(
-        autoStart: true,
-        onStart: onStart,
-        isForegroundMode: false,
-        autoStartOnBoot: true,
-      ),
-    );
+  await service.configure(
+    iosConfiguration: IosConfiguration(
+      autoStart: true,
+      onForeground: onStart,
+      onBackground: onIosBackground,
+    ),
+    androidConfiguration: AndroidConfiguration(
+      autoStart: true,
+      onStart: onStart,
+      isForegroundMode: false,
+      autoStartOnBoot: true,
+    ),
+  );
 
-    return service;
-    
-  }
+  return service;
+}
