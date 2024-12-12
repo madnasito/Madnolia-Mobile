@@ -1,3 +1,9 @@
+import 'dart:convert';
+import 'dart:ffi';
+import 'dart:typed_data';
+
+import 'package:bitmap/bitmap.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:madnolia/models/match/match_ready_model.dart';
@@ -30,21 +36,52 @@ class LocalNotificationsService {
     // To display the notification in device
     try {
 
-      final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      NotificationDetails notificationDetails = const NotificationDetails(
-        android: AndroidNotificationDetails(
-            "Channel Id",
-            "Main Channel",
-            groupKey: "gfg",
-            color: Colors.green,             
-            playSound: true,
-            priority: Priority.high,
-            actions: [
+      const String groupKey = 'com.android.example.WORK_EMAIL';
+      const String groupChannelId = 'grouped channel id';
+      const String groupChannelName = 'grouped channel name';
+      const String groupChannelDescription = 'grouped channel description';
 
-            ]
-            ),
+      Bitmap bitmapImage = await Bitmap.fromProvider(CachedNetworkImageProvider(message.user.thumb));
+
+      final Uint8List imageBytes = bitmapImage.content;
+      final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      NotificationDetails notificationDetails =  NotificationDetails(
+        android: AndroidNotificationDetails(
+          groupChannelId,
+          groupChannelName,
+          groupKey: groupKey,
+          setAsGroupSummary: true,
+          color: Colors.green,             
+          playSound: true,
+          priority: Priority.high,
+          colorized: true,
+          
+          styleInformation: MessagingStyleInformation(Person(
+            bot: false,
+            name: message.user.name,
+            important: true,
+            uri: message.user.username,
+
+          ), groupConversation: true, conversationTitle: "TEst conversation", messages: [Message(message.text, DateTime.now(), Person(name: message.user.name, bot: false, )), Message(message.text, DateTime.now(), Person(name: message.user.name, bot: false, )), Message(message.text, DateTime.now(), Person(name: message.user.name, bot: false, ))]),
+            category: AndroidNotificationCategory.message,
+            
+            
+          // styleInformation: BigPictureStyleInformation(
+          //   ByteArrayAndroidBitmap(imageBytes.buffer.asUint8List()),
+          //   largeIcon: ByteArrayAndroidBitmap(imageBytes.buffer.asUint8List()),
+          //   contentTitle: message.user.name,
+          //   summaryText: message.text
+          // ),
+          actions: [
+          ]
+        ),
       );
+
       await _notificationsPlugin.show(id, message.user.name,message.text, notificationDetails);
+
+      
+      
+      
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -77,13 +114,11 @@ class LocalNotificationsService {
     // To display the notification in device
     try {
       
-
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails = const NotificationDetails(
         android: AndroidNotificationDetails(
             "Channel Id",
             "Main Channel",
-            
             groupKey: "gfg",
             color: Colors.green,             
             playSound: true,
@@ -104,5 +139,18 @@ class LocalNotificationsService {
 
   static void notificationTapBackground(NotificationResponse notificationResponse) {
   
+  }
+
+  static Future<void> getActiveNotifications() async {
+    final List<ActiveNotification> activeNotifications =
+        await _notificationsPlugin.getActiveNotifications();
+
+    if (activeNotifications.isNotEmpty) {
+      for (var notification in activeNotifications) {
+        print('ID: ${notification.id}, Title: ${notification.title}, Payload: ${notification.payload}');
+      }
+    } else {
+      print('No hay notificaciones activas.');
+    }
   }
 }
