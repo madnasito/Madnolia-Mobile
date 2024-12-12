@@ -15,6 +15,8 @@ import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
+import '../../services/sockets_service.dart';
+
 class HomeUserPage extends StatefulWidget {
   const HomeUserPage({super.key});
 
@@ -53,7 +55,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                   itemBuilder: (BuildContext context, int platformIndex) {
                     return Column(
                       children:[ 
-                        const MyBannerAdWidget(),
+                        // const MyBannerAdWidget(),
                         Container(
                           width: double.infinity,
                           color: Colors.black45,
@@ -104,8 +106,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final socketBloc = context.read<SocketsBloc>();
       const storage = FlutterSecureStorage();
       final token = await storage.read(key: "token");
-      socketBloc.updateToken(token.toString());    
-      // await initializeService();
+      // socketBloc.updateToken(token.toString());    
+      await initializeService();
       if (userInfo.isEmpty) {
 
         await storage.delete(key: "token");

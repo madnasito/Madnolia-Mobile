@@ -1,3 +1,4 @@
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/models/user/user_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,6 +46,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   
 
   void loadInfo(User user){
+    final service = FlutterBackgroundService();
+    service.invoke("update_username", {"username": user.username});
     add(UserLoadInfo(userModel: user));
   }
 
