@@ -5,6 +5,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/global/environment.dart';
 import 'package:madnolia/models/invitation_model.dart';
+import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../models/chat/message_model.dart';
@@ -18,22 +19,35 @@ onStart(ServiceInstance service) async {
     Environment.socketUrl,
     OptionBuilder()
       .setTransports(['websocket']) // for Flutter or Dart VM
-      .enableAutoConnect()
       .enableReconnection()
+      .disableForceNew()
       .setAuth({"token": token})
       .setExtraHeaders({"token": token})
       .build(),
   );
 
+  String currentRoom = "";
+  String username = "";
+
   socket.onConnect((_) async {
+
     print('Connected. Socket ID: ${socket.id}');
 
-    socket.on("message", (payload) async {
+  });
+
+  socket.on("message", (payload) async {
       print("MESSAGE!!!");
-      print(payload);
+      print(username);
+      print(currentRoom);
       Message message = Message.fromJson(payload);
 
+      service.invoke("message", payload);
+      
 
+      print(message);
+
+      // if(currentRoom != message.to && message.text.contains("@$username")){
+      // }
       // Send message to UI (if app is in foreground)
       // if (window.isActive) {
       //   // Create a method to send data to the UI (e.g., using a Stream or Provider)
@@ -45,7 +59,7 @@ onStart(ServiceInstance service) async {
       // }
     });
 
-    socket.on("invitation", (data) async {
+  socket.on("invitation", (data) async {
       try {
         Invitation invitation = Invitation.fromJson(data);
 
@@ -63,7 +77,7 @@ onStart(ServiceInstance service) async {
       }
     });
 
-    socket.on("match_ready", (data) async {
+  socket.on("match_ready", (data) async {
       print("NOW ON BACKGROUND");
       print(data);
       // Send match ready event to UI (if app is in foreground)
@@ -77,22 +91,42 @@ onStart(ServiceInstance service) async {
       // }
     });
 
-    service.on("stop").listen((event) {
+  socket.onDisconnect((_) => {
+
+  });
+
+  service.on("update_socket").listen((event) {
+    print("Update socket");
+    print(event);
+  });
+  
+  service.on("update_username").listen((onData) => username = onData?["username"]);
+
+  service.on("stop").listen((event) {
       socket.disconnect(); // Disconnect when the service stops
       service.stopSelf();
       print("background process is now stopped");
     });
 
-    service.on("start").listen((event) {
-      print("Service start");
-    });
+  service.on("init_chat").listen((onData) {
+      socket.emit("init_chat", {onData?["room"]});
+      currentRoom = onData?["room"];
+    }
+  );
 
-    print(service);
+  service.on("new_message").listen((onData) {
+      socket.emit("message", onData);
+      print("Enviando mensaje");}
+    );
 
-    service.on("message").listen((payload) {
-      print(payload);
-    });
+  service.on("disconnect_chat").listen((onData) {
+    socket.emit("disconnect_chat");
+    currentRoom = "";
   });
+
+  service.on("off_new_player_to_match").listen((onData) => socket.emit("off_new_player_to_match"));
+
+  service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));
 }
 
 void startBackgroundService() {

@@ -1,9 +1,11 @@
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
+// import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
@@ -13,7 +15,7 @@ import 'package:madnolia/blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 
-import 'package:socket_io_client/socket_io_client.dart';
+// import 'package:socket_io_client/socket_io_client.dart';
 
 import '../models/chat/message_model.dart';
 import 'package:madnolia/services/match_service.dart';
@@ -36,14 +38,13 @@ class MatchChat extends StatefulWidget {
   final FullMatch match;
   final List matchMessages;
   final MessageBloc bloc;
-  final Socket socketClient;
+  final FlutterBackgroundService service;
 
   const MatchChat(
       {super.key,
       required this.match,
       required this.bloc,
-      required this.matchMessages,
-      required this.socketClient});
+      required this.matchMessages, required this.service});
 
   @override
   State<MatchChat> createState() => _MatchChatState();
@@ -54,6 +55,7 @@ class _MatchChatState extends State<MatchChat> {
   final List<ChatMessageOrganism> _messages = [];
   final matchService = MatchService();
   late UserBloc userBloc;
+  
 
   late GlobalKey<FlutterMentionsState> messageKey;
   void _loadHistory(String id) async {
@@ -105,6 +107,8 @@ class _MatchChatState extends State<MatchChat> {
     
     await LocalNotificationsService.displayMessage(decodedMessage);
 
+    await LocalNotificationsService.getActiveNotifications();
+
     setState(() {
       _messages.insert(0, message);
     });
@@ -116,15 +120,27 @@ class _MatchChatState extends State<MatchChat> {
     _loadHistory(widget.match.id);
     messageKey = GlobalKey<FlutterMentionsState>();
     userBloc = context.read<UserBloc>();
+    
+    
+    widget.service.invoke("start");
 
     if (mounted) {
-      widget.socketClient.on("message", (data) => _listenMessage(data));
-      widget.socketClient.on("new_player_to_match", (data) {
-        ChatUser user = ChatUser.fromJson(data);
+      widget.service.invoke("init");
+      widget.service.on("watch_socket").listen((event)  {
+        print("WATCH socket");
+        print(event);
+      });
+      widget.service.on("test").listen((onData){
+        print("TEST");
+        print(onData);
+      });
+      widget.service.on("message").listen((data) => _listenMessage(data!));
+      widget.service.on("new_player_to_match").listen((data) {
+        ChatUser user = ChatUser.fromJson(data!);
         debugPrint(user.name);
       });
-      widget.socketClient.on("added_to_match", (data) {
-        if (data == true) {
+      widget.service.on("added_to_match").listen((data) {
+        if (data?["resp"] == true) {
           isInMatch = true;
           if (mounted) {
             setState(() {});
@@ -132,7 +148,7 @@ class _MatchChatState extends State<MatchChat> {
         }
       });
 
-      widget.socketClient.emit("init_chat", widget.match.id);
+      widget.service.invoke("init_chat", {"room": widget.match.id});
 
       userBloc.updateChatRoom(widget.match.id);
     }
@@ -140,8 +156,9 @@ class _MatchChatState extends State<MatchChat> {
 
   @override
   void dispose() {
-    widget.socketClient.emit("disconnect_chat");
-    widget.socketClient.off("new_player_to_match");
+    
+    widget.service.invoke("disconnect_chat");
+    widget.service.invoke("off_new_player_to_match");
 
     userBloc.updateChatRoom("");
     super.dispose();
@@ -266,7 +283,7 @@ class _MatchChatState extends State<MatchChat> {
           color: Colors.transparent,
           onPressed: () {
             try {
-              widget.socketClient.emit("join_to_match", match.id);
+              widget.service.invoke("join_to_match", {"match": match.id});
             } catch (e) {
               print(e);
             }
@@ -276,6 +293,7 @@ class _MatchChatState extends State<MatchChat> {
 
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
-    widget.socketClient.emit("message", {"text": text, "to": widget.match.id});
+    print("¡Invoking new message from view!");
+    widget.service.invoke("new_message", {"text": text, "to": widget.match.id});
   }
 }

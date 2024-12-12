@@ -1,3 +1,4 @@
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
@@ -60,8 +61,10 @@ Future<Socket> socketConnection() async {
 
     socketsBloc?.updateServerStatus(ServerStatus.online);
     
+    final service = FlutterBackgroundService();
+    
+    service.invoke("update_socket", {"socket": socket.receiveBuffer});
     socket.on("message", (payload) async {
-
 
     final userBloc = context?.read<UserBloc>();
 
