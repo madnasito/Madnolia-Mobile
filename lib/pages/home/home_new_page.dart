@@ -2,7 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/style/button_style.dart';
+import 'package:madnolia/style/text_style.dart';
+import 'package:madnolia/widgets/atoms/animated_logo_atom.dart';
+import 'package:madnolia/widgets/atoms/text_atoms/styled_text_atom.dart';
 import 'package:madnolia/widgets/background.dart';
+import 'package:madnolia/widgets/molecules/buttons/text_button_molecule.dart';
 import 'package:madnolia/widgets/super_cube.dart';
 
 class HomePage extends StatelessWidget {
@@ -21,7 +26,7 @@ class HomePage extends StatelessWidget {
           children: [
             Positioned(
                 top: screenSize.height * 0.05,
-                child: SuperCube(size: screenSize.width * 0.4)),
+                child: AnimatedLogoAtom(size: screenSize.width * 0.4)),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -31,46 +36,27 @@ class HomePage extends StatelessWidget {
                   Center(
                       heightFactor: 3,
                       child: Column(children: [
-                        const Text(
-                          "madnolia",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: "Cyberverse",
-                              decoration: TextDecoration.none,
-                              fontWeight: FontWeight.normal),
+                        const StyledTextAtom(
+                          text: "madnolia",
+                          style: mainTitleStyle,
                         ),
                         const SizedBox(height: 50),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            TextButton(
-                                style: TextButton.styleFrom(
-                                    foregroundColor: Colors.pink,
-                                    shape: const StadiumBorder(
-                                        side: BorderSide(
-                                            width: 2,
-                                            color: Color.fromARGB(
-                                                255, 255, 255, 116))),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 45, vertical: 15)),
-                                onPressed: () => context.go("/login"),
-                                child: Text(translate("HEADER.LOGIN"),
-                                  style: const TextStyle(
-                                      color:
-                                          Color.fromARGB(255, 255, 255, 122)),
-                                )),
-                            TextButton(
+                            TextButtonMolecule(
+                              onPressed: () => context.go("/login"),
+                              text: translate("HEADER.LOGIN"),
+                              textStye: yellowTextStyle,
+                              buttonStyle: borderedYellowStyle
+                            ),
+   //                         context.go("/register")
+// translate("HEADER.REGISTER")
+                            TextButtonMolecule(
                               onPressed: () => context.go("/register"),
-                              style: TextButton.styleFrom(
-                                  foregroundColor: Colors.pink,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 45, vertical: 15),
-                                  shape: const StadiumBorder(
-                                      side: BorderSide(
-                                          color: Colors.blue, width: 2))),
-                              child: Text( translate("HEADER.REGISTER"),
-                                style: const TextStyle(color: Colors.blue),
-                              ),
+                              text: translate("HEADER.REGISTER"),
+                              textStye: blueTextStyle,
+                              buttonStyle: borderedBlueStyle
                             )
                           ],
                         )
