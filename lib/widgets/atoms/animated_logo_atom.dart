@@ -4,18 +4,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'package:gradient_borders/box_borders/gradient_box_border.dart';
-
-class SuperCube extends StatefulWidget {
+class AnimatedLogoAtom extends StatefulWidget {
   final double size;
 
-  const SuperCube({super.key, required this.size});
+  const AnimatedLogoAtom({super.key, required this.size});
 
   @override
-  State<SuperCube> createState() => _SuperCubeState();
+  State<AnimatedLogoAtom> createState() => _AnimatedLogoAtomState();
 }
 
-class _SuperCubeState extends State<SuperCube>
+class _AnimatedLogoAtomState extends State<AnimatedLogoAtom>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
 

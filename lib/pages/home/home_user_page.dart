@@ -55,7 +55,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                   itemBuilder: (BuildContext context, int platformIndex) {
                     return Column(
                       children:[ 
-                        // const MyBannerAdWidget(),
+                        const MyBannerAdWidget(),
                         Container(
                           width: double.infinity,
                           color: Colors.black45,

@@ -43,7 +43,6 @@ class UserMatchesPage extends StatelessWidget {
                       return Container();
                     }
 
-
                     List list = snapshot.data;
 
                     final matches =
