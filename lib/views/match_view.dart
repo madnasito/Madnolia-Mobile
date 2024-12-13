@@ -5,7 +5,6 @@ import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
-// import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
@@ -107,7 +106,7 @@ class _MatchChatState extends State<MatchChat> {
     
     await LocalNotificationsService.displayMessage(decodedMessage);
 
-    await LocalNotificationsService.getActiveNotifications();
+    
 
     setState(() {
       _messages.insert(0, message);

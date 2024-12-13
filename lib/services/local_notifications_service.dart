@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:madnolia/models/match/match_ready_model.dart';
-import '../models/chat/message_model.dart' as ChatMessage;
+import '../models/chat/message_model.dart' as chat;
 
 class LocalNotificationsService {
    // Instance of Flutternotification plugin
@@ -30,18 +30,22 @@ class LocalNotificationsService {
 
   
 
-  static Future<void> displayMessage(ChatMessage.Message message) async {
+  static Future<void> displayMessage(chat.Message message) async {
     // To display the notification in device
     try {
 
-      const String groupKey = 'com.android.example.WORK_EMAIL';
-      const String groupChannelId = 'grouped channel id';
+      const String groupKey = 'com.android.example.MATCH_MESSAGES';
+      const String groupChannelId = 'messages';
       const String groupChannelName = 'grouped channel name';
       const String groupChannelDescription = 'grouped channel description';
+      
+      await LocalNotificationsService.getActiveNotifications(groupChannelId);
 
       Bitmap bitmapImage = await Bitmap.fromProvider(CachedNetworkImageProvider(message.user.thumb));
-
-      final Uint8List imageBytes = bitmapImage.content;
+      
+      final List<ActiveNotification> activeNotifications = await getActiveNotifications(groupChannelId);
+      
+      final Uint8List imageBytes = bitmapImage.content.buffer.asUint8List();
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails =  NotificationDetails(
         android: AndroidNotificationDetails(
@@ -49,19 +53,18 @@ class LocalNotificationsService {
           groupChannelName,
           groupKey: groupKey,
           setAsGroupSummary: true,
-          color: Colors.green,             
           playSound: true,
-          priority: Priority.high,
-          colorized: true,
-          
-          styleInformation: MessagingStyleInformation(Person(
-            bot: false,
-            name: message.user.name,
-            important: true,
-            uri: message.user.username,
-
-          ), groupConversation: true, conversationTitle: "TEst conversation", messages: [Message(message.text, DateTime.now(), Person(name: message.user.name, bot: false, )), Message(message.text, DateTime.now(), Person(name: message.user.name, bot: false, )), Message(message.text, DateTime.now(), Person(name: message.user.name, bot: false, ))]),
-            category: AndroidNotificationCategory.message,
+          priority: Priority.max,
+          showWhen: false,
+          importance: Importance.max,
+          // styleInformation: MessagingStyleInformation(Person(
+          //   bot: false,
+          //   name: message.user.name,
+          //   important: true,
+          //   uri: message.user.username,
+          //   icon: ByteArrayAndroidIcon(imageBytes)
+          // ), groupConversation: true, conversationTitle: "TEst conversation", messages: [Message(message.text, DateTime.now(), Person(name: message.user.name, bot: false, )), Message(message.text, DateTime.now(), Person(name: message.user.name, bot: false, )), Message(message.text, DateTime.now(), Person(name: message.user.name, bot: false, icon: ByteArrayAndroidIcon(imageBytes)))]),
+          //   category: AndroidNotificationCategory.message,
             
             
           // styleInformation: BigPictureStyleInformation(
@@ -77,6 +80,23 @@ class LocalNotificationsService {
 
       await _notificationsPlugin.show(id, message.user.name,message.text, notificationDetails);
 
+       // Create a summary notification for the group
+      await _notificationsPlugin.show(
+        999, // Summary notification ID
+        '${message.user.name} sent you a message', // Summary title
+        'You have ${activeNotifications.length} new messages', // Summary body
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            groupChannelId,
+            groupChannelName,
+            channelDescription: 'Your Channel Description',
+            groupKey: groupKey,
+            setAsGroupSummary: true, // Important for grouping
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+        ),
+  );
       
       
       
@@ -86,7 +106,7 @@ class LocalNotificationsService {
 
   }
 
-  static Future<void> displayInvitation(ChatMessage.Message message) async {
+  static Future<void> displayInvitation(chat.Message message) async {
     // To display the notification in device
     try {
       
@@ -139,16 +159,21 @@ class LocalNotificationsService {
   
   }
 
-  static Future<void> getActiveNotifications() async {
+  static Future<List<ActiveNotification>> getActiveNotifications(String channelId) async {
     final List<ActiveNotification> activeNotifications =
         await _notificationsPlugin.getActiveNotifications();
 
     if (activeNotifications.isNotEmpty) {
       for (var notification in activeNotifications) {
-        print('ID: ${notification.id}, Title: ${notification.title}, Payload: ${notification.payload}');
+        print('ID: ${notification.id}, Title: ${notification.title}, Payload: ${notification.payload}, channel: ${notification.channelId}');
       }
+
+      
+      return activeNotifications.where((notification) => notification.channelId == channelId).toList();
     } else {
       print('No hay notificaciones activas.');
+      return [];
     }
   }
+
 }
