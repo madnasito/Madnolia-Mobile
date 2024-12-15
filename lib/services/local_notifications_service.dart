@@ -34,8 +34,6 @@ class LocalNotificationsService {
       const String groupChannelName = 'Messages';
       const String groupChannelDescription = 'Canal de mensajes';
       const String groupKey = 'com.example.yourapp.GROUP_KEY';
-      
-      final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       // Agregar el nuevo mensaje a la lista
 
       if(_messages.isEmpty){
@@ -163,7 +161,24 @@ class LocalNotificationsService {
     }
 }
 
-  
+  static Future<void> deleteRoomMessages(String room) async {
+    if (_messages.isEmpty) return;
+
+    for (int i = 0; i <= _messages.length; i++) {
+      if(_messages[i][0].to == room){
+        // _notificationsPlugin.cancel(id)
+        final activeMessages = await getActiveNotifications("messages");
+
+        for (var message in activeMessages) {
+          _notificationsPlugin.cancel(message.id!);
+        }
+        _messages.removeAt(i);
+        break;
+      }
+      i++;
+    }
+  }
+
   static void notificationTapBackground(NotificationResponse notificationResponse) {
       print(notificationResponse);
   }

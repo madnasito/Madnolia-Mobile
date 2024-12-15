@@ -123,6 +123,8 @@ class _MatchChatState extends State<MatchChat> {
     
     widget.service.invoke("start");
 
+    LocalNotificationsService.deleteRoomMessages(widget.match.id);
+
     if (mounted) {
       widget.service.invoke("init");
       widget.service.on("watch_socket").listen((event)  {
