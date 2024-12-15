@@ -14,3 +14,13 @@ const TextStyle yellowTextStyle = TextStyle(
 const TextStyle blueTextStyle = TextStyle(
   color: Colors.blue
 );
+
+const TextStyle presentationTitle = TextStyle(
+  color: Colors.white,
+  decoration: TextDecoration.none,
+  fontSize: 20);
+
+const TextStyle presentationSubtitle = TextStyle(
+  color: Colors.white70,
+  decoration: TextDecoration.none,
+  fontSize: 15);

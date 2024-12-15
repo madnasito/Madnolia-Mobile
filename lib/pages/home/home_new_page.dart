@@ -8,8 +8,6 @@ import 'package:madnolia/widgets/atoms/animated_logo_atom.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/styled_text_atom.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/molecules/buttons/text_button_molecule.dart';
-import 'package:madnolia/widgets/super_cube.dart';
-
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -50,8 +48,6 @@ class HomePage extends StatelessWidget {
                               textStye: yellowTextStyle,
                               buttonStyle: borderedYellowStyle
                             ),
-   //                         context.go("/register")
-// translate("HEADER.REGISTER")
                             TextButtonMolecule(
                               onPressed: () => context.go("/register"),
                               text: translate("HEADER.REGISTER"),
@@ -61,24 +57,15 @@ class HomePage extends StatelessWidget {
                           ],
                         )
                       ])),
-                  Text(
-                    translate("PRESENTATION.TITLE"),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      decoration: TextDecoration.none,
-                      fontSize: 20,
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
+                  StyledTextAtom(
+                    text: translate("PRESENTATION.TITLE"),
+                    style: presentationTitle,
+                    textAlign: TextAlign.right),
                   const SizedBox(height: 30),
-                  Text(
-                    translate("PRESENTATION.SUBTITLE"),
-                    style: const TextStyle(
-                        color: Colors.white70,
-                        decoration: TextDecoration.none,
-                        fontSize: 15),
-                    textAlign: TextAlign.right,
-                  )
+                  StyledTextAtom(
+                    text: translate("PRESENTATION.SUBTITLE"),
+                    style: presentationSubtitle,
+                    textAlign: TextAlign.right),
                 ],
               ),
             ),

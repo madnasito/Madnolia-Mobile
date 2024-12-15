@@ -70,7 +70,18 @@ class SearchGamePage extends StatelessWidget {
                     return Container();
                   }
                 }
-              ) : Container()
+              ) : FutureBuilder(
+                  future: getGames(title: controller.text, platform: "$platformId")
+                  , builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) { 
+                    if(!snapshot.hasData){
+                      return const Center(child: CircularProgressIndicator(),);
+                    }else{
+                      List<MinimalGame> games = snapshot.data().map((e) => MinimalGame.fromJson(e)).toList();
+                      return GamesListMolecule(games: games);
+                    }
+                  },
+                  
+                )
           ],
         ),
       ),
