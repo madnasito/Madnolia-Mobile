@@ -120,10 +120,6 @@ class _MatchChatState extends State<MatchChat> {
     messageKey = GlobalKey<FlutterMentionsState>();
     userBloc = context.read<UserBloc>();
     
-    
-    widget.service.invoke("start");
-
-    LocalNotificationsService.deleteRoomMessages(widget.match.id);
 
     if (mounted) {
       widget.service.invoke("init");

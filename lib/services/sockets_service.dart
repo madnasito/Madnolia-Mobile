@@ -5,6 +5,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/global/environment.dart';
 import 'package:madnolia/models/invitation_model.dart';
+import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../models/chat/message_model.dart';
@@ -43,9 +44,10 @@ onStart(ServiceInstance service) async {
       service.invoke("message", payload);
       
 
-      print(message);
+      print(message.to);
 
-      // if(currentRoom != message.to && message.text.contains("@$username")){
+      // if(currentRoom != message.to){
+        LocalNotificationsService.displayMessage(message);
       // }
       // Send message to UI (if app is in foreground)
       // if (window.isActive) {
@@ -110,6 +112,7 @@ onStart(ServiceInstance service) async {
   service.on("init_chat").listen((onData) {
       socket.emit("init_chat", {onData?["room"]});
       currentRoom = onData?["room"];
+      LocalNotificationsService.deleteRoomMessages(onData?["room"]);
     }
   );
 
@@ -126,6 +129,9 @@ onStart(ServiceInstance service) async {
   service.on("off_new_player_to_match").listen((onData) => socket.emit("off_new_player_to_match"));
 
   service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));
+
+  service.on("delete_chat_notifications").listen((onData) => LocalNotificationsService.deleteRoomMessages(onData?["room"]));
+
 }
 
 void startBackgroundService() {

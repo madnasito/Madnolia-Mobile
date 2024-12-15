@@ -167,12 +167,13 @@ class LocalNotificationsService {
     for (int i = 0; i <= _messages.length; i++) {
       if(_messages[i][0].to == room){
         // _notificationsPlugin.cancel(id)
+        _messages.removeAt(i);
+        
         final activeMessages = await getActiveNotifications("messages");
 
         for (var message in activeMessages) {
           _notificationsPlugin.cancel(message.id!);
         }
-        _messages.removeAt(i);
         break;
       }
       i++;
