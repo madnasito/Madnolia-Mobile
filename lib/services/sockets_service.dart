@@ -112,6 +112,7 @@ onStart(ServiceInstance service) async {
   service.on("init_chat").listen((onData) {
       socket.emit("init_chat", {onData?["room"]});
       currentRoom = onData?["room"];
+      print("INIT CHAT: ${onData?["room"]}");
       LocalNotificationsService.deleteRoomMessages(onData?["room"]);
     }
   );

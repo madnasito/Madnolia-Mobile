@@ -104,7 +104,7 @@ class _MatchChatState extends State<MatchChat> {
         text: decodedMessage.text,
         user: decodedMessage.user);
     
-    await LocalNotificationsService.displayMessage(decodedMessage);
+    // await LocalNotificationsService.displayMessage(decodedMessage);
 
     
 
