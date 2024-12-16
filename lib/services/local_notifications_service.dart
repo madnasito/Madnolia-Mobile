@@ -124,6 +124,7 @@ class LocalNotificationsService {
             groupKey: "gfg",
             color: Colors.green,             
             playSound: true,
+            timeoutAfter: 1000 * 60 * 1,  
             priority: Priority.high),
       );
       await _notificationsPlugin.show(id, message.user.name,message.text, notificationDetails);
