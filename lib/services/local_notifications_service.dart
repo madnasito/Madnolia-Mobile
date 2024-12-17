@@ -1,7 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:madnolia/models/match/match_ready_model.dart';
+import 'package:madnolia/routes/routes.dart';
 import '../models/chat/message_model.dart' as chat;
 
 class LocalNotificationsService {
@@ -21,7 +24,10 @@ class LocalNotificationsService {
         // to handle event when we receive notification 
         onDidReceiveNotificationResponse: (details) {
           print(details);
-          if (details.input != null) {}
+          if (details.payload != null) {
+            final context = navigatorKey.currentContext;
+            GoRouter.of(context!).pushNamed("match", extra: details.payload);
+          }
         },
       );
   }
@@ -68,6 +74,20 @@ class LocalNotificationsService {
             channelDescription: groupChannelDescription,
             importance: Importance.high,
             priority: Priority.high,
+            actions: [
+              AndroidNotificationAction(
+                message.id,
+                "Respond",
+                allowGeneratedReplies: true,
+                inputs: [
+                   AndroidNotificationActionInput(
+                    label: "Message",
+                    allowFreeFormInput: true
+                  ),
+                  
+                ],
+              )
+            ],
             styleInformation: MessagingStyleInformation(
               Person(name: message.user.name, bot: false),
               groupConversation: true,
@@ -81,7 +101,8 @@ class LocalNotificationsService {
         await _notificationsPlugin.show(
           i,
           null,
-          null, notificationDetails, );
+          null, notificationDetails,
+          payload: message.to,);
       }
 
       
@@ -123,8 +144,7 @@ class LocalNotificationsService {
             "Main Channel",
             groupKey: "gfg",
             color: Colors.green,             
-            playSound: true,
-            timeoutAfter: 1000 * 60 * 1,  
+            playSound: true, 
             priority: Priority.high),
       );
       await _notificationsPlugin.show(id, message.user.name,message.text, notificationDetails);
@@ -146,9 +166,14 @@ class LocalNotificationsService {
             groupKey: "gfg",
             color: Colors.green,             
             playSound: true,
+            timeoutAfter: 1000 * 60 * 5,
             priority: Priority.high),
       );
-      await _notificationsPlugin.show(id, "Match ready","${payload.title} has started", notificationDetails);
+      await _notificationsPlugin.show(
+        id, "Match ready",
+        "${payload.title} has started",
+        notificationDetails,
+        payload: payload.match);
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -183,6 +208,7 @@ class LocalNotificationsService {
 
   static void notificationTapBackground(NotificationResponse notificationResponse) {
       print(notificationResponse);
+      
   }
   static Future<List<ActiveNotification>> getActiveNotifications(String channelId) async {
     final List<ActiveNotification> activeNotifications =
