@@ -66,6 +66,7 @@ class _SearchGameViewState extends State<SearchGameView> {
               placeholder:
                   translate("CREATE_MATCH.SEARCH_GAME"),
               onChanged: (value) async {
+                print(controller.text);
                 counter++;
                 Timer(
                   const Duration(seconds: 1),

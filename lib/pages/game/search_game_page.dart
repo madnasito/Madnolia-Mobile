@@ -12,43 +12,67 @@ import 'package:madnolia/widgets/molecules/games_list_molecule.dart';
 import '../../models/game/minimal_game_model.dart';
 import '../../services/match_service.dart';
 import '../../services/rawg_service.dart';
+import '../../widgets/match_card_widget.dart';
 
-class SearchGamePage extends StatelessWidget {
+class SearchGamePage extends StatefulWidget {
   const SearchGamePage({super.key});
 
   @override
+  State<SearchGamePage> createState() => _SearchGamePageState();
+}
+
+
+class _SearchGamePageState extends State<SearchGamePage> {
+  late int counter;
+  late TextEditingController controller;
+  @override
+  void initState() {
+    counter = 0;
+    controller = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    counter = 0;
+    // game = null;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if(GoRouterState.of(context).extra == null) context.go("/new");
+    
+  if(GoRouterState.of(context).extra == null) context.go("/new");
 
     int platformId = GoRouterState.of(context).extra as int;
-
-    TextEditingController controller = TextEditingController();
-    int counter = 0;
     return CustomScaffold(
       body: Background(
         child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SimpleCustomInput(
-                placeholder: translate("CREATE_MATCH.SEARCH_GAME"),
-                controller: controller,
-                iconData: CupertinoIcons.search,
-                onChanged: (value) async {
-                  counter++;
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SimpleCustomInput(
+                  iconData: CupertinoIcons.search,
+                  controller: controller,
+                  placeholder:
+                      translate("CREATE_MATCH.SEARCH_GAME"),
+                  onChanged: (value) async {
+                    print(controller.text);
+                    counter++;
                     Timer(
                       const Duration(seconds: 1),
                       () {
                         counter--;
+                        setState(() {});
                       },
                     );
-                },
+                  },
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            (controller.text.isEmpty) ? FutureBuilder(
+              const SizedBox(
+                height: 20,
+              ),
+              (controller.text.isEmpty) ? FutureBuilder(
                 future: getRecomendations(platformId),
                 builder: (BuildContext context, AsyncSnapshot<List<MinimalGame>> snapshot) {
                   if(!snapshot.hasData){
@@ -70,20 +94,42 @@ class SearchGamePage extends StatelessWidget {
                     return Container();
                   }
                 }
-              ) : FutureBuilder(
-                  future: getGames(title: controller.text, platform: "$platformId")
-                  , builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) { 
-                    if(!snapshot.hasData){
-                      return const Center(child: CircularProgressIndicator(),);
-                    }else{
-                      List<MinimalGame> games = snapshot.data().map((e) => MinimalGame.fromJson(e)).toList();
-                      return GamesListMolecule(games: games);
-                    }
-                  },
-                  
-                )
-          ],
-        ),
+              ) : Container(),
+              (counter == 0 && controller.text.isNotEmpty)
+                  ? FutureBuilder(
+                      future: getGames(
+                          title: controller.text.toString(),
+                          platform: "$platformId"),
+                      builder:
+                          (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.hasData) {
+                          return Flexible(
+                              child: snapshot.data.isNotEmpty
+                                  ? ListView.builder(
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          onTap: () => setState(() {
+                                            context.go("/new/match", extra: {
+                                              "game": snapshot.data[index],
+                                              "platformId": platformId
+                                            });
+                                          }),
+                                          child:  GameCard(
+                                              background: snapshot.data[index].backgroundImage,
+                                              name: snapshot.data[index].name,
+                                              bottom: const Text("")),
+                                        );
+                                      })
+                              : Text(translate("CREATE_MATCH.EMPTY_SEARCH")));
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      },
+                    )
+                  : const Text(""),
+            ],
+          ),
       ),
     );
   }
