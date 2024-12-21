@@ -80,7 +80,7 @@ class MatchChatInputMolecule extends StatelessWidget {
             try {
               socketClient.emit("join_to_match", match.id);
             } catch (e) {
-              print(e);
+              debugPrint(e.toString());
             }
           });
     }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/global/environment.dart';
-import 'package:madnolia/models/invitation_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -32,20 +31,20 @@ onStart(ServiceInstance service) async {
 
   socket.onConnect((_) async {
 
-    print('Connected. Socket ID: ${socket.id}');
+    debugPrint('Connected. Socket ID: ${socket.id}');
 
   });
 
   socket.on("message", (payload) async {
-      print("MESSAGE!!!");
-      print(username);
-      print(currentRoom);
+      debugPrint("MESSAGE!!!");
+      debugPrint(username);
+      debugPrint(currentRoom);
       Message message = Message.fromJson(payload);
 
       service.invoke("message", payload);
       
 
-      print(message.to);
+      debugPrint(message.to);
 
       // if(currentRoom != message.to){
         LocalNotificationsService.displayMessage(message);
@@ -63,7 +62,7 @@ onStart(ServiceInstance service) async {
 
   socket.on("invitation", (data) async {
       try {
-        Invitation invitation = Invitation.fromJson(data);
+        // Invitation invitation = Invitation.fromJson(data);
 
         // Send invitation to UI (if app is in foreground)
         // if (window.isActive) {
@@ -75,13 +74,13 @@ onStart(ServiceInstance service) async {
         //   // (e.g., using a notification plugin like flutter_local_notifications) 
         // }
       } catch (e) {
-        print(e);
+        debugPrint(e.toString());
       }
     });
 
   socket.on("match_ready", (data) async {
-      print("NOW ON BACKGROUND");
-      print(data);
+      debugPrint("NOW ON BACKGROUND");
+      debugPrint(data);
 
       final MatchReady payload = MatchReady.fromJson(data);
       LocalNotificationsService.matchReady(payload);
@@ -101,8 +100,8 @@ onStart(ServiceInstance service) async {
   });
 
   service.on("update_socket").listen((event) {
-    print("Update socket");
-    print(event);
+    debugPrint("Update socket");
+    debugPrint(event.toString());
   });
   
   service.on("update_username").listen((onData) => username = onData?["username"]);
@@ -110,20 +109,20 @@ onStart(ServiceInstance service) async {
   service.on("stop").listen((event) {
       socket.disconnect(); // Disconnect when the service stops
       service.stopSelf();
-      print("background process is now stopped");
+      debugPrint("background process is now stopped");
     });
 
   service.on("init_chat").listen((onData) {
       socket.emit("init_chat", {onData?["room"]});
       currentRoom = onData?["room"];
-      print("INIT CHAT: ${onData?["room"]}");
+      debugPrint("INIT CHAT: ${onData?["room"]}");
       LocalNotificationsService.deleteRoomMessages(onData?["room"]);
     }
   );
 
   service.on("new_message").listen((onData) {
       socket.emit("message", onData);
-      print("Enviando mensaje");}
+      debugPrint("Enviando mensaje");}
     );
 
   service.on("disconnect_chat").listen((onData) {

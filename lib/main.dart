@@ -24,21 +24,25 @@ void main() async {
   DartPluginRegistrant.ensureInitialized();
   serviceLocatorInit();
   cubitServiceLocatorInit();
-  Locale deviceLocale = window.locale;// or html.window.locale
+
+  // Use PlatformDispatcher to get the device locale
+  Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
+      ? const Locale('en') // Fallback if needed
+      : const Locale('en'); // Replace with actual logic to get locale
+
   String langCode = deviceLocale.languageCode;
 
   List<String> supportedLangs = ['en', 'es'];
 
-   var delegate = await LocalizationDelegate.create(
-          fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
-          supportedLocales: supportedLangs);
-    
-  
+  var delegate = await LocalizationDelegate.create(
+    fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
+    supportedLocales: supportedLangs,
+  );
+
   unawaited(MobileAds.instance.initialize());
   MobileAds.instance.initialize();
 
-
-  runApp(LocalizedApp(delegate, const MyApp()) );
+  runApp(LocalizedApp(delegate, const MyApp()));
 }
 
  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

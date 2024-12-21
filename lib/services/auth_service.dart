@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +32,7 @@ class AuthService {
         return respBody;
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return {"error": true, "message": "NETWORK_ERROR"};
     }
   }

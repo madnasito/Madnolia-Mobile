@@ -31,7 +31,7 @@ class GamesService {
 
       return jsonDecode(resp.body);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 }

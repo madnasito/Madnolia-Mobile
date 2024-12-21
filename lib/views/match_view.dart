@@ -4,7 +4,6 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
-import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
@@ -58,27 +57,31 @@ class _MatchChatState extends State<MatchChat> {
 
   late GlobalKey<FlutterMentionsState> messageKey;
   void _loadHistory(String id) async {
-    final resp = await matchService.getMatch(id);
+  final resp = await matchService.getMatch(id);
 
-    if (resp.containsKey("error")) {
-      return showErrorServerAlert(context, resp);
-    }
+  // Check if the widget is still mounted before proceeding
+  if (!mounted) return;
 
-    List<Message> history =
-        widget.matchMessages.map((e) => Message.fromJson(e)).toList();
-
-    String lastUser = "";
-    List<ChatMessageOrganism> messages = history.map((e) {
-      final isTheSame = e.user.id == lastUser ? false : true;
-      lastUser = e.user.id;
-      return ChatMessageOrganism(
-          text: e.text, user: e.user, mainMessage: isTheSame);
-    }).toList();
-
-    setState(() {
-      _messages.addAll(messages);
-    });
+  if (resp.containsKey("error")) {
+    return showErrorServerAlert(context, resp);
   }
+
+  List<Message> history =
+      widget.matchMessages.map((e) => Message.fromJson(e)).toList();
+
+  String lastUser = "";
+  List<ChatMessageOrganism> messages = history.map((e) {
+    final isTheSame = e.user.id == lastUser ? false : true;
+    lastUser = e.user.id;
+    return ChatMessageOrganism(
+        text: e.text, user: e.user, mainMessage: isTheSame);
+  }).toList();
+
+  setState(() {
+    _messages.addAll(messages);
+  });
+}
+
 
   void _listenMessage(Map<String, dynamic> payload) async{
     if (!mounted) {
@@ -124,12 +127,12 @@ class _MatchChatState extends State<MatchChat> {
     if (mounted) {
       widget.service.invoke("init");
       widget.service.on("watch_socket").listen((event)  {
-        print("WATCH socket");
-        print(event);
+        debugPrint("WATCH socket");
+        debugPrint(event.toString());
       });
       widget.service.on("test").listen((onData){
-        print("TEST");
-        print(onData);
+        debugPrint("TEST");
+        debugPrint(onData.toString());
       });
       widget.service.on("message").listen((data) => _listenMessage(data!));
       widget.service.on("new_player_to_match").listen((data) {
@@ -282,7 +285,7 @@ class _MatchChatState extends State<MatchChat> {
             try {
               widget.service.invoke("join_to_match", {"match": match.id});
             } catch (e) {
-              print(e);
+              debugPrint(e.toString());
             }
           });
     }
@@ -290,7 +293,7 @@ class _MatchChatState extends State<MatchChat> {
 
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
-    print("¡Invoking new message from view!");
+    debugPrint("¡Invoking new message from view!");
     widget.service.invoke("new_message", {"text": text, "to": widget.match.id});
   }
 }

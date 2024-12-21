@@ -69,7 +69,7 @@ class PlatformInfo {
 }
 
 
-List<Widget> UserPlatforms(BuildContext context, void Function()? onTap) {
+List<Widget> usserPlatforms(BuildContext context, void Function()? onTap) {
     final userBloc = context.watch<UserBloc>();
     List<Platform> platforms = [
       Platform(

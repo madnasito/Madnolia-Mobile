@@ -84,14 +84,19 @@ bool logging = false;
 
   _login(BuildContext context, LoginBloc bloc, bool logging) async {
     logging = true;
+
     final Map resp = await AuthService().login(bloc.username, bloc.password);
 
     logging = false;
+
+    // Check if the widget is still mounted before using the context
+    if (!context.mounted) return;
+
     if (resp.containsKey("error")) {
       return showErrorServerAlert(context, resp);
     } else {
-      // ignore: use_build_context_synchronously
       context.go("/");
     }
   }
+
 }

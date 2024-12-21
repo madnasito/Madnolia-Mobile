@@ -149,6 +149,7 @@ class _EditUserViewState extends State<EditUserView> {
                               
                             });
                           }else{
+                            if (!context.mounted) return;
                             showErrorServerAlert(context, {"message": "NETWORK_ERROR"});
                           }
                         }
@@ -267,6 +268,7 @@ class _EditUserViewState extends State<EditUserView> {
 _loadInfo(BuildContext context) async {
   final userInfo = await UserService().getUserInfo();
 
+  if (!context.mounted) return;
   final userBloc = context.read<UserBloc>();
 
   userBloc.loadInfo(userFromJson(jsonEncode(userInfo)));

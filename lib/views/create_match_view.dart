@@ -66,7 +66,6 @@ class _SearchGameViewState extends State<SearchGameView> {
               placeholder:
                   translate("CREATE_MATCH.SEARCH_GAME"),
               onChanged: (value) async {
-                print(controller.text);
                 counter++;
                 Timer(
                   const Duration(seconds: 1),
@@ -163,17 +162,6 @@ class MatchFormView extends StatelessWidget {
   const MatchFormView(
       {super.key, required this.game, required this.platformId});
 
-  void _onReceiveTaskData(Object data) {
-  if (data is Map<String, dynamic>) {
-    print("Onreceived data");
-    final dynamic timestampMillis = data["timestampMillis"];
-    if (timestampMillis != null) {
-      final DateTime timestamp =
-          DateTime.fromMillisecondsSinceEpoch(timestampMillis, isUtc: true);
-      print('timestamp: ${timestamp.toString()}');
-    }
-  }
-}
  
 
 
@@ -331,6 +319,7 @@ class MatchFormView extends StatelessWidget {
                   final Map<String, dynamic> resp = await MatchService().createMatch(match.toJson());
                   uploading = false;
                   if (resp.containsKey("message")) {
+                    if (!context.mounted) return;
                     return showErrorServerAlert(context, resp);
                   } else {
                     Toast.show(
@@ -343,6 +332,7 @@ class MatchFormView extends StatelessWidget {
                     dateController.clear();
                     nameController.clear();
                     matchMinutesCubit.restoreMinutes();
+                    if (!context.mounted) return;
                     context.goNamed("user-matches");
                   }
                   // ignore: use_build_context_synchronously

@@ -13,7 +13,6 @@ import 'package:madnolia/services/local_notifications_service.dart';
 
 import 'package:socket_io_client/socket_io_client.dart';
 
-import '../models/invitation_model.dart';
 
 class SocketHandler {
   String token = "";
@@ -78,7 +77,6 @@ Future<Socket> socketConnection() async {
       if(userBloc == null) return;
 
       if (mentions.isNotEmpty && message.to != userBloc.state.chatRoom) {
-          // TODO Show notification
         }
 
         
@@ -90,12 +88,11 @@ Future<Socket> socketConnection() async {
 
       try {
         // Match match = Match.fromJson(data["match"]);
-        Invitation match = Invitation.fromJson(data);
+        // Invitation match = Invitation.fromJson(data);
 
-        // TODO: Show notification
 
       } catch (e) {
-        print(e);
+        debugPrint(e.toString());
       }
         
       });

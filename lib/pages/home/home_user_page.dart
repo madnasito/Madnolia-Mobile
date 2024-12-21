@@ -1,6 +1,5 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
-import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/molecules/platform_matches_molecule.dart';
@@ -71,9 +70,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
                                 child: SvgPicture.asset(
                                 getPlatformInfo(userBloc.platforms[platformIndex]).path,
                                 width: 90,
-                                color: Colors.white,
-                                                            ),
-                              )],
+                                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                              ))],
                           ),
                         ),
                         PlatformMatchesMolecule(platform: userBloc.platforms[platformIndex])
@@ -96,36 +94,39 @@ class _HomeUserPageState extends State<HomeUserPage> {
   _loadInfo(BuildContext context) async {
     try {
       final userBloc = context.read<UserBloc>();
-      
+
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
 
-      if(userInfo.containsKey("error")){
-        return showErrorServerAlert(context, userInfo);
+      if (userInfo.containsKey("error")) {
+        // Check if the widget is still mounted before using context
+        if (!context.mounted) return;
+        if(mounted) return showErrorServerAlert(context, userInfo);
       }
 
-      final socketBloc = context.read<SocketsBloc>();
       const storage = FlutterSecureStorage();
-      final token = await storage.read(key: "token");
-      // socketBloc.updateToken(token.toString());    
       await initializeService();
+      
       if (userInfo.isEmpty) {
-
         await storage.delete(key: "token");
-
         userBloc.logOutUser();
-        return context.go("/home");
+        
+        // Check if the widget is still mounted before using context
+        if (!mounted) {return;}
+        else{
+          if (!context.mounted) return;
+          return context.go("/home");
+        }
       }
+
       final User user = User.fromJson(userInfo);
       userBloc.loadInfo(user);
       
-
       return userInfo;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return {};
     }
-    
-  }
+}
 
 }
 

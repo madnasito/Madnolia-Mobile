@@ -23,7 +23,6 @@ class LocalNotificationsService {
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
         // to handle event when we receive notification 
         onDidReceiveNotificationResponse: (details) {
-          print(details);
           if (details.payload != null) {
             final context = navigatorKey.currentContext;
             GoRouter.of(context!).pushNamed("match", extra: details.payload);
@@ -59,7 +58,6 @@ class LocalNotificationsService {
 
         if(!existsGroup) _messages.add([message]);
 
-        print(existsGroup);
       }
      
       for (var i = 0; i < _messages.length; i++) {
@@ -80,7 +78,7 @@ class LocalNotificationsService {
                 "Respond",
                 allowGeneratedReplies: true,
                 inputs: [
-                   AndroidNotificationActionInput(
+                   const AndroidNotificationActionInput(
                     label: "Message",
                     allowFreeFormInput: true
                   ),
@@ -128,7 +126,7 @@ class LocalNotificationsService {
           -1, '${_messages.length} messages',null , notificationSummaryDetails);
 
     } catch (e) {
-      print("Error al mostrar la notificación: $e");
+      debugPrint(e.toString());
     }
   }
 
@@ -180,7 +178,6 @@ class LocalNotificationsService {
 
   }
   void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
-    print(notificationResponse);
     final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {
       debugPrint('notification payload: $payload');
@@ -206,8 +203,11 @@ class LocalNotificationsService {
     }
   }
 
-  static void notificationTapBackground(NotificationResponse notificationResponse) {
-      print(notificationResponse);
+  static void notificationTapBackground(NotificationResponse notificationResponse) {      
+      if (notificationResponse.payload != null) {
+        final context = navigatorKey.currentContext;
+        GoRouter.of(context!).pushNamed("match", extra: notificationResponse.payload);
+      }
       
   }
   static Future<List<ActiveNotification>> getActiveNotifications(String channelId) async {
@@ -215,14 +215,10 @@ class LocalNotificationsService {
         await _notificationsPlugin.getActiveNotifications();
 
     if (activeNotifications.isNotEmpty) {
-      for (var notification in activeNotifications) {
-        print('ID: ${notification.id}, Title: ${notification.title}, Payload: ${notification.payload}, channel: ${notification.channelId}');
-      }
-
       
       return activeNotifications.where((notification) => notification.channelId == channelId).toList();
     } else {
-      print('No hay notificaciones activas.');
+      debugPrint('There are not active notifications');
       return [];
     }
   }
