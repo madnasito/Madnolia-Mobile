@@ -3,7 +3,6 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/services/match_service.dart';
-import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/match_card_widget.dart';
 
@@ -13,9 +12,7 @@ class JoinedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      body: Background(
-        child: SafeArea(
-          child: SingleChildScrollView(
+      body: SingleChildScrollView(
             child: Column(
               children: [
                 Container(
@@ -69,8 +66,6 @@ class JoinedPage extends StatelessWidget {
                 ),
               ],
             ),
-          )
-        ),
       )
     );
   }

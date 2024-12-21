@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/views/match_view.dart';
-import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
 class MatchPage extends StatelessWidget {
@@ -18,9 +17,7 @@ class MatchPage extends StatelessWidget {
     final service = FlutterBackgroundService();
     service.invoke("look");
     return CustomScaffold(
-      body: Background(
-        child: SafeArea(
-            child: FutureBuilder(
+      body: FutureBuilder(
           future: MatchService().getFullMatch(extraInfo.toString()),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
 
@@ -46,7 +43,7 @@ class MatchPage extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
           },
-        )),
+        
       ),
     );
   }

@@ -9,7 +9,6 @@ import 'package:animate_do/animate_do.dart';
 
 
 
-import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../widgets/platform_icon_widget.dart';
@@ -34,8 +33,7 @@ class _NewPageState extends State<NewPage> {
     }
 
   return CustomScaffold(
-      body: Background(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
           child: Column(
             children: [
               const SizedBox(height: 20),
@@ -65,7 +63,7 @@ class _NewPageState extends State<NewPage> {
             ],
           ),
         )
-      )
+      
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/login_provider.dart';
 import 'package:madnolia/services/auth_service.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
+import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
@@ -26,19 +27,9 @@ bool logging = false;
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    translate('LOGIN.WELCOME'),
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                ),
+                CenterTitleAtom(text: translate("LOGIN.WELCOME"), textStyle: const TextStyle(fontSize: 20),),
                 const SizedBox(height: 100),
-                Center(
-                  child: Text(
-                    translate("LOGIN.BUTTON"),
-                    style: const TextStyle(fontSize: 40),
-                  ),
-                ),
+                CenterTitleAtom(text: translate("LOGIN.BUTTON"),),
                 const SizedBox(height: 50),
                 Column(
                   key: formKey,
@@ -61,7 +52,6 @@ bool logging = false;
                     StreamBuilder(
                       stream: bloc.formValidStream,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        
                         return FormButton(
                             text: translate("LOGIN.BUTTON"),
                             color: const Color.fromARGB(0, 33, 149, 243),

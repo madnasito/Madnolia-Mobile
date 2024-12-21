@@ -11,7 +11,6 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/user/user_model.dart';
 import 'package:madnolia/services/user_service.dart';
 // import 'package:madnolia/widgets/alert_widget.dart';
-import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../services/sockets_service.dart';
@@ -39,14 +38,10 @@ class _HomeUserPageState extends State<HomeUserPage> {
         future: _loadInfo(context),
         builder: (context, snapshot) {
           final userBloc = context.read<UserBloc>().state;
-          // socketBloc.state.clientSocket.onConnect((_) async {
-          //   socketBloc.updateServerStatus(ServerStatus.online);
-          // });
+          
           if (snapshot.hasData) {
             return CustomScaffold(
-                body: Background(
-                child: SafeArea(
-                  child: ListView.builder(
+                body: ListView.builder(
                   cacheExtent: 9999999,
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.vertical,
@@ -77,8 +72,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                         PlatformMatchesMolecule(platform: userBloc.platforms[platformIndex])
                       ]
                     );
-                  })
-                  )
+                  }
                 ),
             );
           } else {

@@ -4,7 +4,6 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../services/user_service.dart';
-import '../widgets/background.dart';
 import '../widgets/custom_scaffold.dart';
 import '../widgets/match_card_widget.dart';
 
@@ -14,9 +13,7 @@ class InvitationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-        body: Background(
-      child: SafeArea(
-        child: SingleChildScrollView(
+        body:SingleChildScrollView(
           child: Column(
             children: [
               Container(
@@ -71,7 +68,6 @@ class InvitationsPage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    ));
+    );
   }
 }

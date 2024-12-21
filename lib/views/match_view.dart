@@ -1,7 +1,6 @@
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
-import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
@@ -50,6 +49,7 @@ class MatchChat extends StatefulWidget {
 
 class _MatchChatState extends State<MatchChat> {
   bool isInMatch = false;
+  bool socketConnected = true;
   final List<ChatMessageOrganism> _messages = [];
   final matchService = MatchService();
   late UserBloc userBloc;
@@ -166,6 +166,13 @@ class _MatchChatState extends State<MatchChat> {
 
   @override
   Widget build(BuildContext context) {
+    widget.service.on("disconnected_socket").listen((payload) => setState(() {
+      socketConnected = false;
+    }));
+    
+    widget.service.on("connected_socket").listen((payload) => setState(() {
+      socketConnected = true;
+    }));
     return Column(
       children: [
         Container(
@@ -212,12 +219,12 @@ class _MatchChatState extends State<MatchChat> {
         Container(
             color: Colors.black54,
             padding: const EdgeInsets.only(top: 10),
-            child: _bottomRow(widget.match, userBloc.state, isInMatch))
+            child: _bottomRow(widget.match, userBloc.state, isInMatch, socketConnected))
       ],
     );
   }
 
-  Widget _bottomRow(FullMatch match, UserState userState, bool isInMatch) {
+  Widget _bottomRow(FullMatch match, UserState userState, bool isInMatch, bool socketConnected) {
     if (!mounted) {
       return const CircularProgressIndicator();
     }
@@ -230,10 +237,8 @@ class _MatchChatState extends State<MatchChat> {
       Size screenSize = MediaQuery.of(context).size;
 
       double screenWidth = screenSize.width;
-
-      return BlocBuilder<SocketsBloc, SocketsState>(
-        builder: (context, state) {
-          if(state.serverStatus == ServerStatus.offline){
+      
+          if(!socketConnected){
             return Center(child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 7),
               child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION")),
@@ -275,8 +280,7 @@ class _MatchChatState extends State<MatchChat> {
               //     onPressed: () {}, icon: Icon(Icons.abc), label: Text(""))
             ],
           );
-        },
-      );
+      
     } else {
       return FormButton(
           text: "Join to match",

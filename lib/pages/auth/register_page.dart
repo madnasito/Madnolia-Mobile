@@ -10,6 +10,7 @@ import 'package:madnolia/blocs/register_provider.dart';
 import 'package:madnolia/services/auth_service.dart';
 import 'package:madnolia/views/platforms_view.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
+import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
@@ -39,76 +40,76 @@ class _RegisterPageState extends State<RegisterPage> {
     return RegisterProvider(
       child: Scaffold(
         body: Background(
-            child: SafeArea(
-                child: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SizedBox(height: verifiedUser ? 120 : 50),
-            !verifiedUser
-                ? Center(
-                    child: FadeIn(
-                        child: Text(
-                            translate("REGISTER.TITLE"),
-                            style: const TextStyle(fontSize: 40))),
-                  )
-                : Container(),
-            const SizedBox(height: 40),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: !verifiedUser
-                  ? FadeIn(
-                      delay: const Duration(milliseconds: 500),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          CustomInput(
-                            icon: Icons.abc,
-                            stream: widget.bloc.nameStream,
-                            placeholder: translate("REGISTER.NAME"),
-                            onChanged: widget.bloc.changeName,
-                          ),
-                          CustomInput(
-                              icon: Icons.account_circle_outlined,
-                              placeholder: translate("REGISTER.USERNAME" ),
-                              stream: widget.bloc.usernameStream,
-                              onChanged: widget.bloc.changeUsername),
-                          CustomInput(
-                              icon: Icons.mail_outline,
-                              keyboardType: TextInputType.emailAddress,
-                              placeholder: translate("REGISTER.EMAIL") ,
-                              stream: widget.bloc.emailStream,
-                              onChanged: widget.bloc.changeEmail),
-                          CustomInput(
-                              icon: Icons.lock_outlined,
-                              placeholder: translate("REGISTER.PASSWORD") ,
-                              isPassword: true,
-                              stream: widget.bloc.passwordStream,
-                              onChanged: widget.bloc.changePassword),
-                        ],
-                      ),
-                    )
-                  : Container(),
-            ),
-            verifiedUser
-                ? PlatformsView(
-                    platforms: widget.registerModel.platforms,
-                  )
-                : Container(),
-            FadeIn(
-              delay: const Duration(seconds: 1),
-              child: StreamBuilder(
-                stream: widget.bloc.userValidStream,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  return FormButton(
-                      text: translate("REGISTER.NEXT"),
-                      color: Colors.transparent,
-                      onPressed: (snapshot.hasData)
-                          ? () => register(context, widget.bloc)
-                          : null);
-                },
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: verifiedUser ? 120 : 50),
+                  !verifiedUser
+                      ? CenterTitleAtom(text: translate("REGISTER.TITLE"))
+                      : Container(),
+                  const SizedBox(height: 40),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: !verifiedUser
+                        ? FadeIn(
+                            delay: const Duration(milliseconds: 500),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <CustomInput> [
+                                CustomInput(
+                                  icon: Icons.abc,
+                                  stream: widget.bloc.nameStream,
+                                  placeholder: translate("REGISTER.NAME"),
+                                  onChanged: widget.bloc.changeName,
+                                ),
+                                CustomInput(
+                                    icon: Icons.account_circle_outlined,
+                                    placeholder: translate("REGISTER.USERNAME" ),
+                                    stream: widget.bloc.usernameStream,
+                                    onChanged: widget.bloc.changeUsername),
+                                CustomInput(
+                                    icon: Icons.mail_outline,
+                                    keyboardType: TextInputType.emailAddress,
+                                    placeholder: translate("REGISTER.EMAIL") ,
+                                    stream: widget.bloc.emailStream,
+                                    onChanged: widget.bloc.changeEmail),
+                                CustomInput(
+                                    icon: Icons.lock_outlined,
+                                    placeholder: translate("REGISTER.PASSWORD") ,
+                                    isPassword: true,
+                                    stream: widget.bloc.passwordStream,
+                                    onChanged: widget.bloc.changePassword),
+                              ],
+                            ),
+                          )
+                        : Container(),
+                  ),
+                  verifiedUser
+                      ? PlatformsView(
+                          platforms: widget.registerModel.platforms,
+                        )
+                      : Container(),
+                  FadeIn(
+                    delay: const Duration(seconds: 1),
+                    child: StreamBuilder(
+                      stream: widget.bloc.userValidStream,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        return FormButton(
+                            text: translate("REGISTER.NEXT"),
+                            color: Colors.transparent,
+                            onPressed: (snapshot.hasData)
+                                ? () => register(context, widget.bloc)
+                                : null);
+                      },
+                    ),
+                  ),
+                ]
               ),
-            ),
-          ]),
-        ))),
+            )
+          )
+        ),
       ),
     );
   }

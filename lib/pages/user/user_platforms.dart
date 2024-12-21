@@ -7,7 +7,6 @@ import 'package:toast/toast.dart';
 
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/views/platforms_view.dart';
-import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/form_button.dart';
 
@@ -24,8 +23,7 @@ class UserPlatformsPage extends StatelessWidget {
 
     bool updating = false;
     return CustomScaffold(
-        body: Background(
-      child: SingleChildScrollView(
+        body: SingleChildScrollView(
         child: Column(
           children: [
             PlatformsView(
@@ -78,6 +76,6 @@ class UserPlatformsPage extends StatelessWidget {
           ],
         ),
       ),
-    ));
+    );
   }
 }

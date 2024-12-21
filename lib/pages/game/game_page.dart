@@ -8,7 +8,6 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:madnolia/widgets/custom_scaffold.dart';
-import 'package:madnolia/widgets/background.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -30,9 +29,7 @@ class GamePage extends StatelessWidget {
     final gameDataBloc = context.watch<GameDataBloc>();
 
     return CustomScaffold(
-        body: Background(
-      child: SafeArea(
-        child: 
+        body:  
             SingleChildScrollView(
               child: Column(
                   children:[ 
@@ -93,8 +90,7 @@ class GamePage extends StatelessWidget {
                   ],
                 ),
             ),
-            ),
-      ),
+            
     );
 
     

@@ -70,12 +70,6 @@ class MyApp extends StatelessWidget {
         child:  MessageProvider(
               child: Portal(
                 child: MaterialApp.router(
-                  // debugShowCheckedModeBanner: false,
-                  // builder: (context, child) => Overlay(
-                  //   initialEntries: [
-                  //     OverlayEntry(builder: (BuildContext context) => AppBarOrganism(child: child!,))
-                  //   ],
-                  // ), 
                   theme: ThemeData(
                     brightness: Brightness.dark,
                   ),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
-import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/match_card_widget.dart';
 
@@ -17,8 +16,7 @@ class UserMatchesPage extends StatelessWidget {
 
     
     return CustomScaffold(
-        body: Background(
-      child: SafeArea(
+        body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -80,6 +78,6 @@ class UserMatchesPage extends StatelessWidget {
           ),
         ),
       ),
-    ));
+    );
   }
 }

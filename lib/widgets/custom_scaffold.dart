@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
+import 'package:madnolia/widgets/background.dart';
 
 // import 'package:madnolia/widgets/form_button.dart';
 
@@ -131,7 +132,11 @@ class CustomScaffold extends StatelessWidget {
             width: MediaQuery.of(context).size.width / 11,),
             onPressed: () => GoRouter.of(context).push("/")),
       ),
-      body: body,
+      body: Background(
+        child: SafeArea(
+          child: body
+        )
+      ),
     );
   }
 }

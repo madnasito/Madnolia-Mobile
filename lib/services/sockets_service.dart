@@ -33,6 +33,8 @@ onStart(ServiceInstance service) async {
 
     debugPrint('Connected. Socket ID: ${socket.id}');
 
+    service.invoke("connected_socket");
+
   });
 
   socket.on("message", (payload) async {
@@ -96,7 +98,7 @@ onStart(ServiceInstance service) async {
     });
 
   socket.onDisconnect((_) => {
-
+   service.invoke("disconnected_socket")
   });
 
   service.on("update_socket").listen((event) {

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/games_list_molecule.dart';
@@ -46,8 +45,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
 
     int platformId = GoRouterState.of(context).extra as int;
     return CustomScaffold(
-      body: Background(
-        child: Column(
+      body: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -130,7 +128,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
                   : const Text(""),
             ],
           ),
-      ),
+      
     );
   }
 

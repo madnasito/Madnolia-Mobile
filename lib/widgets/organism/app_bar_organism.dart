@@ -18,94 +18,95 @@ class AppBarOrganism extends StatelessWidget {
         builder: (BuildContext context, state) { 
           if(userBloc.state.loadedUser){
             return Drawer(
-        surfaceTintColor: Colors.pink,
-        backgroundColor: const Color.fromARGB(96, 9, 4, 24),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              GestureDetector(
-                onTap: () => GoRouter.of(context).push("/user/edit"),
-                child: Wrap(
-                  spacing: 10,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    const SizedBox(width: 0),
-                    CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(userBloc.state.thumb),
-                      minRadius: 40,
-                      maxRadius: 50,
-                      backgroundColor: Colors.white,
-                    ),
-                    Text(
-                      userBloc.state.name,
-                      style: const TextStyle(fontSize: 20),
-                    )
-                  ],
-                ),
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            surfaceTintColor: Colors.pink,
+            backgroundColor: const Color.fromARGB(96, 9, 4, 24),
+            child: SafeArea(
+              child: Stack(
                 children: [
-                  const SizedBox(height: 230),
-                  // _MenuButton(
-                  //   icon: Icons.gamepad_outlined,
-                  //   title: "Platforms",
-                  //   route: "/platforms",
-                  // ),
-                  _MenuButton(
-                    icon: Icons.bolt_outlined,
-                    title: translate("HEADER.MATCH"),
-                    route: "/new",
-                  ),
-                  _MenuButton(
-                    icon: Icons.notifications_outlined,
-                    title:
-                        translate("HEADER.NOTIFICATIONS"),
-                    route: "/notifications",
-                  ),
-                  _MenuButton(
-                      icon: Icons.person_outline_outlined,
-                      title: translate("HEADER.PROFILE"),
-                      route: "/user"),
-                  const SizedBox(height: 230),
-                ],
-              ),
-              Positioned(
-                  bottom: 30,
-                  left: 20,
-                  child: GestureDetector(
-                    onTap: () async {
-                      const storage = FlutterSecureStorage();
-                      await storage.delete(key: "token");
-                      // ignore: use_build_context_synchronously
-                      GoRouter.of(context).push("/home");
-                    },
-                    child: const Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
+                  GestureDetector(
+                    onTap: () => GoRouter.of(context).push("/user/edit"),
+                    child: Wrap(
                       spacing: 10,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Icon(
-                          Icons.power_settings_new,
-                          color: Colors.red,
-                          size: 30,
+                        const SizedBox(width: 0),
+                        CircleAvatar(
+                          backgroundImage:
+                              NetworkImage(userBloc.state.thumb),
+                          minRadius: 40,
+                          maxRadius: 50,
+                          backgroundColor: Colors.white,
                         ),
                         Text(
-                          "Logout",
-                          style: TextStyle(fontSize: 15),
+                          userBloc.state.name,
+                          style: const TextStyle(fontSize: 20),
                         )
                       ],
                     ),
-                  ))
-            ],
-          ),
-        ),
-      );
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const SizedBox(height: 230),
+                      // _MenuButton(
+                      //   icon: Icons.gamepad_outlined,
+                      //   title: "Platforms",
+                      //   route: "/platforms",
+                      // ),
+                      _MenuButton(
+                        icon: Icons.bolt_outlined,
+                        title: translate("HEADER.MATCH"),
+                        route: "/new",
+                      ),
+                      _MenuButton(
+                        icon: Icons.notifications_outlined,
+                        title:
+                            translate("HEADER.NOTIFICATIONS"),
+                        route: "/notifications",
+                      ),
+                      _MenuButton(
+                          icon: Icons.person_outline_outlined,
+                          title: translate("HEADER.PROFILE"),
+                          route: "/user"),
+                      const SizedBox(height: 230),
+                    ],
+                  ),
+                  Positioned(
+                      bottom: 30,
+                      left: 20,
+                      child: GestureDetector(
+                        onTap: () async {
+                          const storage = FlutterSecureStorage();
+                          await storage.delete(key: "token");
+                          // ignore: use_build_context_synchronously
+                          GoRouter.of(context).push("/home");
+                        },
+                        child: const Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 10,
+                          children: [
+                            Icon(
+                              Icons.power_settings_new,
+                              color: Colors.red,
+                              size: 30,
+                            ),
+                            Text(
+                              "Logout",
+                              style: TextStyle(fontSize: 15),
+                            )
+                          ],
+                        ),
+                      ))
+                ],
+              ),
+            ),
+          );
           }else {
             return Container();
           }
-         },),
+         }
+        ),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:madnolia/services/rawg_service.dart';
-import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
 class PlatformGames extends StatelessWidget {
@@ -11,9 +10,7 @@ class PlatformGames extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-        body: Background(
-      child: SafeArea(
-        child: Center(
+        body: Center(
           child: FutureBuilder(
             future: RawgService().getPlatformGames(id: id),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -32,7 +29,7 @@ class PlatformGames extends StatelessWidget {
             },
           ),
         ),
-      ),
-    ));
+      )
+    ;
   }
 }
