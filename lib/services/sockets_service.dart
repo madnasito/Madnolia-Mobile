@@ -136,6 +136,7 @@ onStart(ServiceInstance service) async {
 
   service.on("delete_chat_notifications").listen((onData) => LocalNotificationsService.deleteRoomMessages(onData?["room"]));
 
+  service.on("delete_all_notifications").listen((onData)=> LocalNotificationsService.deleteAllNotifications());
 }
 
 void startBackgroundService() {

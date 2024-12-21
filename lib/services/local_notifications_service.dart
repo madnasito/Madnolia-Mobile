@@ -223,4 +223,12 @@ class LocalNotificationsService {
     }
   }
 
+  static Future<void> deleteAllNotifications() async {
+    final List<ActiveNotification> activeNotifications =
+        await _notificationsPlugin.getActiveNotifications();
+    
+    for (var notification in activeNotifications) {
+      await _notificationsPlugin.cancel(notification.id!);
+    }
+  }
 }

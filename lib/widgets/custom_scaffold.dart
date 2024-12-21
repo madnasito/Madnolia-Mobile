@@ -99,6 +99,7 @@ class CustomScaffold extends StatelessWidget {
                       userBloc.logOutUser();
                       socketBloc.disconnect();
                       final service = FlutterBackgroundService();
+                      service.invoke("delete_all_notifications");
                       service.invoke("stop");
                     },
                     child: const Wrap(
