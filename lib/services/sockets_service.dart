@@ -48,9 +48,9 @@ onStart(ServiceInstance service) async {
 
       debugPrint(message.to);
 
-      // if(currentRoom != message.to){
+      if(currentRoom != message.to && message.user.id != username){
         LocalNotificationsService.displayMessage(message);
-      // }
+      }
       // Send message to UI (if app is in foreground)
       // if (window.isActive) {
       //   // Create a method to send data to the UI (e.g., using a Stream or Provider)
