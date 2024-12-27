@@ -1,25 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/blocs/login_provider.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/organism/form/organism_form_builder.dart';
+
+import '../../widgets/atoms/text_atoms/center_title_atom.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    LoginProvider.of(context);
 
-
-    return const Scaffold(
+    return Scaffold(
       body: Background(
         child: SafeArea(
           child: SingleChildScrollView(
-            child: OrganismFormBuilder(),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                   const SizedBox(height: 20),
+                  CenterTitleAtom(text: translate("LOGIN.WELCOME"), textStyle: const TextStyle(fontSize: 20),),
+                  const SizedBox(height: 50),
+                  CenterTitleAtom(text: translate("LOGIN.BUTTON"),),
+                  const SizedBox(height: 50),
+
+                  const OrganismFormBuilder(),
+
+                  const SizedBox(height: 30),
+                  const Text("Forgot password?")
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
-
 }
