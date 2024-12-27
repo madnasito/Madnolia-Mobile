@@ -8,7 +8,6 @@ import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:flutter/material.dart';
-import 'package:madnolia/blocs/login_provider.dart';
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,8 +66,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => ChatMessagesBloc()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
       ],
-      child: LoginProvider(
-        child:  MessageProvider(
+      child:MessageProvider(
               child: Portal(
                 child: MaterialApp.router(
                   theme: ThemeData(
@@ -87,7 +85,7 @@ class MyApp extends StatelessWidget {
               ),
           ),
         ),
-      ),
+      
     );
     }
 }
