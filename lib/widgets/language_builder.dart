@@ -8,7 +8,7 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-//     // ignore: deprecated_member_use
+
 //     final locale = WidgetsFlutterBinding.ensureInitialized().window.locale;
 
 //     MultiLanguageBloc language = MultiLanguageBloc(

@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter/material.dart';
 
@@ -117,8 +115,8 @@ class _RegisterPageState extends State<RegisterPage> {
   void register(
       BuildContext context, RegisterBloc bloc, ) async {
     final Map resp = await AuthService().verifyUser(bloc.username!, bloc.email!);
-
-    if (resp.containsKey("error")) {
+    if(!context.mounted) return;
+    if (resp.containsKey("error") && context.mounted) {
       return showErrorServerAlert(context, resp);
     }
 
@@ -139,11 +137,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (verifiedUser && widget.registerModel.platforms.isNotEmpty) {
       final Map<String, dynamic> register = await AuthService().register(widget.registerModel);
-
+      if(!context.mounted) return;
       if (register.containsKey("user")) {
         context.go("/");
       } else {
-        
         showErrorServerAlert(context, register);
       }
     }

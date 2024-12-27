@@ -13,22 +13,22 @@ import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../widgets/platform_icon_widget.dart';
 
-// ignore: must_be_immutable
 class NewPage extends StatefulWidget {
-  NewPage({super.key});
+  const NewPage({super.key});
 
   @override
   State<NewPage> createState() => _NewPageState();
-  int selectedPlatform = 0;
+  
 }
 
 class _NewPageState extends State<NewPage> {
+  int selectedPlatform = 0;
   @override
   Widget build(BuildContext context) {
 
     if (GoRouterState.of(context).extra != null) {
       if (GoRouterState.of(context).extra is int) {
-        widget.selectedPlatform = GoRouterState.of(context).extra as int;
+        selectedPlatform = GoRouterState.of(context).extra as int;
       }
     }
 

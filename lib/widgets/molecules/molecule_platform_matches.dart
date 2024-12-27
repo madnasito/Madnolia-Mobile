@@ -7,11 +7,11 @@ import '../../models/game/home_game_model.dart';
 import '../../services/match_service.dart';
 import '../match_card_widget.dart';
 
-class PlatformMatchesMolecule extends StatelessWidget {
+class MoleculePlatformMatches extends StatelessWidget {
 
   final int platform;
 
-  const PlatformMatchesMolecule({required this.platform, super.key});
+  const MoleculePlatformMatches({required this.platform, super.key});
 
 
   @override

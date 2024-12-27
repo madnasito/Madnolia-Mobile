@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-// ignore: unused_import, depend_on_referenced_packages
-import 'package:http_parser/http_parser.dart';
 
 import '../models/game_model.dart';
 

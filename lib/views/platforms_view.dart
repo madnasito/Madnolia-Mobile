@@ -8,16 +8,19 @@ import 'package:go_router/go_router.dart';
 
 import 'package:madnolia/widgets/platform_icon_widget.dart';
 
-int currentFather = 0;
 
-// ignore: must_be_immutable
 class PlatformsView extends StatefulWidget {
   final List platforms;
-  PlatformsView({super.key, required this.platforms});
+  const PlatformsView({super.key, required this.platforms});
 
   @override
   State<PlatformsView> createState() => _PlatformsViewState();
+  
 
+}
+
+class _PlatformsViewState extends State<PlatformsView> {
+  int currentFather = 0;
   List<Platform> fatherPlatforms = [
     Platform(
         id: 1,
@@ -39,19 +42,16 @@ class PlatformsView extends StatefulWidget {
         background: Colors.green),
   ];
 
-  List<Platform> playstationItems = [];
+  late List<Platform> playstationItems;
 
-  List<Platform> nintendoItems = [];
+  late List<Platform> nintendoItems;
 
-  List<Platform> xboxItems = [];
+  late List<Platform> xboxItems;
 
-  List<Platform> otherItems = [];
-}
-
-class _PlatformsViewState extends State<PlatformsView> {
+  late List<Platform> otherItems;
   @override
   void initState() {
-    widget.playstationItems = [
+    playstationItems = [
       Platform(
           id: 17,
           path: "assets/platforms/playstation_portable.svg",
@@ -84,7 +84,7 @@ class _PlatformsViewState extends State<PlatformsView> {
           size: 20, padding: 20),
     ];
 
-    widget.nintendoItems = [
+    nintendoItems = [
       Platform(
           id: 9,
           active: widget.platforms.contains(9) ? true : false,
@@ -117,7 +117,7 @@ class _PlatformsViewState extends State<PlatformsView> {
           padding:20)
     ];
 
-    widget.xboxItems = [
+    xboxItems = [
       // Platform(active: false, path: "assets/platforms/xbox_360.svg", size: 70),
       Platform(
           id: 1,
@@ -131,7 +131,7 @@ class _PlatformsViewState extends State<PlatformsView> {
           size: 20)
     ];
 
-    widget.xboxItems = [
+    xboxItems = [
       Platform(
           id: 14,
           active: widget.platforms.contains(186) ? true : false,
@@ -148,7 +148,7 @@ class _PlatformsViewState extends State<PlatformsView> {
           path: "assets/platforms/xbox_series.svg",
           size: 20, padding: 15)
     ];
-    widget.otherItems = [
+    otherItems = [
       Platform(
           id: 4,
           path: "assets/platforms/pc.svg",
@@ -191,8 +191,8 @@ class _PlatformsViewState extends State<PlatformsView> {
           alignment: WrapAlignment.spaceAround,
           direction: Axis.horizontal,
           children: [
-            ..._fatherToMap(widget.fatherPlatforms),
-            ..._toMap(widget.otherItems),
+            ..._fatherToMap(fatherPlatforms),
+            ..._toMap(otherItems),
           ],
         ),
         SingleChildScrollView(
@@ -215,13 +215,13 @@ class _PlatformsViewState extends State<PlatformsView> {
   List<Widget> loadPlatforms(value) {
     switch (value) {
       case 1:
-        return _toMap(widget.nintendoItems);
+        return _toMap(nintendoItems);
 
       case 2:
-        return _toMap(widget.playstationItems);
+        return _toMap(playstationItems);
 
       case 3:
-        return _toMap(widget.xboxItems);
+        return _toMap(xboxItems);
 
       default:
         return [];
@@ -243,7 +243,7 @@ class _PlatformsViewState extends State<PlatformsView> {
                   currentFather = 0;
                 }
 
-                for (var element in widget.fatherPlatforms) {
+                for (var element in fatherPlatforms) {
                   if (element.active && element.id != item.id) {
                     element.active = false;
                   }
@@ -323,10 +323,7 @@ class _FatherPlatformIcon extends State<FatherPlatformIcon> {
         widget.platform.path,
         height: iconSize,
         width: iconSize,
-        // ignore: deprecated_member_use
-        color: (widget.platform.active)
-            ? Colors.white
-            : const Color.fromARGB(172, 109, 109, 109),
+        colorFilter: (widget.platform.active) ? const ColorFilter.mode(Colors.white, BlendMode.srcIn): const ColorFilter.mode(Color.fromARGB(172, 109, 109, 109), BlendMode.srcIn),
       ),
     );
   }

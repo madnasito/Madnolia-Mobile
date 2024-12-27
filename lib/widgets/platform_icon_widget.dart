@@ -23,10 +23,10 @@ class _PlatformIconState extends State<PlatformIcon> {
           widget.platform.path,
           height: iconSize,
           width: iconSize,
-          // ignore: deprecated_member_use
-          color: (widget.platform.active)
-              ? Colors.white
-              : const Color.fromARGB(172, 109, 109, 109),
+          colorFilter:
+            (widget.platform.active) 
+              ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+              : const ColorFilter.mode(Color.fromARGB(172, 109, 109, 109), BlendMode.srcIn)
         ),
     );
   }

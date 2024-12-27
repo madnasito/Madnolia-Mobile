@@ -2,7 +2,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
-import 'package:madnolia/widgets/molecules/platform_matches_molecule.dart';
+import 'package:madnolia/widgets/molecules/molecule_platform_matches.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -69,7 +69,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                               ))],
                           ),
                         ),
-                        PlatformMatchesMolecule(platform: userBloc.platforms[platformIndex])
+                        MoleculePlatformMatches(platform: userBloc.platforms[platformIndex])
                       ]
                     );
                   }

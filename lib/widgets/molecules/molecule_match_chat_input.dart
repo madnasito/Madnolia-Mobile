@@ -8,7 +8,7 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 import '../chat/input_widget.dart';
 
-class MatchChatInputMolecule extends StatelessWidget {
+class MoleculeMatchChatInput extends StatelessWidget {
   final String matchOwner;
   final String userId;
   final FullMatch match;
@@ -16,7 +16,7 @@ class MatchChatInputMolecule extends StatelessWidget {
   final Socket socketClient;
   final GlobalKey<FlutterMentionsState> messageKey;
   final MessageBloc bloc;
-  const MatchChatInputMolecule({
+  const MoleculeMatchChatInput({
     super.key,
     required this.matchOwner,
     required this.userId,

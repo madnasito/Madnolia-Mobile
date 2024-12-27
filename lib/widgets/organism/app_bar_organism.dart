@@ -79,7 +79,7 @@ class AppBarOrganism extends StatelessWidget {
                         onTap: () async {
                           const storage = FlutterSecureStorage();
                           await storage.delete(key: "token");
-                          // ignore: use_build_context_synchronously
+                          if(!context.mounted) return;
                           GoRouter.of(context).push("/home");
                         },
                         child: const Wrap(

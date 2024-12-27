@@ -7,8 +7,8 @@ class PlatformsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: SingleChildScrollView(child: PlatformsView(platforms: const [])),
+    return const CustomScaffold(
+      body: SingleChildScrollView(child: PlatformsView(platforms: [])),
     );
   }
 }

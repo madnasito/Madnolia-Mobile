@@ -27,7 +27,6 @@ import '../models/game_model.dart';
 import '../services/rawg_service.dart';
 import '../widgets/custom_input_widget.dart';
 
-// ignore: must_be_immutable
 class SearchGameView extends StatefulWidget {
   final int platformId;
   const SearchGameView({super.key, required this.platformId});
@@ -271,8 +270,7 @@ class MatchFormView extends StatelessWidget {
                   // Icon(Icons.gamepad_outlined),
                   SvgPicture.asset(
                     platformInfo.path,
-                    // ignore: deprecated_member_use
-                    color: Colors.white,
+                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                     width: 110,
                   ),
                 ]),
@@ -335,7 +333,6 @@ class MatchFormView extends StatelessWidget {
                     if (!context.mounted) return;
                     context.goNamed("user-matches");
                   }
-                  // ignore: use_build_context_synchronously
                 })
                 ],
               ),

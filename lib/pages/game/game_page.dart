@@ -120,8 +120,7 @@ class GamePage extends StatelessWidget {
                             Text(matches[index].title, style: const TextStyle(fontSize: 20, overflow: TextOverflow.fade),),
                             SvgPicture.asset(
                               getPlatformInfo(platform).path,
-                              // ignore: deprecated_member_use
-                              color: Colors.white,
+                              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                               width: 60,
                             )
                           ],

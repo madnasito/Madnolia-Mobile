@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chat_messages/chat_messages_bloc.dart';
@@ -76,7 +77,8 @@ class MyApp extends StatelessWidget {
                   title: 'madnolia',
                   routerConfig: router,
                   localizationsDelegates: [
-                    localizationDelegate
+                    localizationDelegate,
+                    FormBuilderLocalizations.delegate
                   ],
                   supportedLocales: localizationDelegate.supportedLocales,
                   locale: localizationDelegate.currentLocale,

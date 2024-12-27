@@ -125,7 +125,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           name: "new",
           path: 'new',
-          builder: (BuildContext context, GoRouterState state) => NewPage(),
+          builder: (BuildContext context, GoRouterState state) => const NewPage(),
           routes: [
             GoRoute(
               path: "match",
