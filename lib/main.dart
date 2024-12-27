@@ -17,8 +17,6 @@ import 'dart:ui';
 
 import 'package:madnolia/services/local_notifications_service.dart';
 
-//for mobile
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();

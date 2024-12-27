@@ -27,7 +27,7 @@ class MoleculeTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FadeIn(
-      duration: const Duration(milliseconds: 300),
+      delay: const Duration(milliseconds: 300),
       child: FormBuilderTextField(
         autofocus: false,
         name: name,

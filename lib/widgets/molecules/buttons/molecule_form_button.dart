@@ -10,7 +10,7 @@ class MoleculeFormButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FadeIn(
-      duration: const Duration(milliseconds: 400),
+      delay: const Duration(milliseconds: 400),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
               side: onPressed != null
