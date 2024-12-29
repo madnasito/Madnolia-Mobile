@@ -7,10 +7,10 @@ void showAlert(BuildContext context, String message) {
       barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.black12,
           icon: const Icon(Icons.warning),
           titleTextStyle: const TextStyle(color: Colors.white),
-          shape: Border.all(color: Colors.red, width: 1, strokeAlign: 2),
+          shape: RoundedRectangleBorder(side: const BorderSide(color: Colors.red, width: 2), borderRadius: BorderRadius.circular(20)),
           iconColor: Colors.yellow,
           title: Text(
             message,
