@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/organism/form/organism_form_builder.dart';
+import 'package:madnolia/widgets/organism/form/organism_login_form.dart';
 
 import '../../widgets/atoms/text_atoms/center_title_atom.dart';
 
@@ -25,7 +25,7 @@ class LoginPage extends StatelessWidget {
                   CenterTitleAtom(text: translate("LOGIN.BUTTON"),),
                   const SizedBox(height: 50),
 
-                  const OrganismFormBuilder(),
+                  const OrganismLoginForm(),
 
                   const SizedBox(height: 30),
                   const Text("Forgot password?")

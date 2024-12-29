@@ -15,7 +15,7 @@ class MatchCreated {
     String user;
     List<dynamic> inviteds;
     String title;
-    List<dynamic> likes;
+    List<dynamic> joined;
     bool private;
     bool active;
     bool tournament;
@@ -28,7 +28,7 @@ class MatchCreated {
         required this.user,
         required this.inviteds,
         required this.title,
-        required this.likes,
+        required this.joined,
         required this.private,
         required this.active,
         required this.tournament,
@@ -42,7 +42,7 @@ class MatchCreated {
         user: json["user"],
         inviteds: List<dynamic>.from(json["inviteds"].map((x) => x)),
         title: json["title"],
-        likes: List<dynamic>.from(json["likes"].map((x) => x)),
+        joined: List<dynamic>.from(json["joined"].map((x) => x)),
         private: json["private"],
         active: json["active"],
         tournament: json["tournament"],
@@ -56,7 +56,7 @@ class MatchCreated {
         "user": user,
         "inviteds": List<dynamic>.from(inviteds.map((x) => x)),
         "title": title,
-        "likes": List<dynamic>.from(likes.map((x) => x)),
+        "joined": List<dynamic>.from(joined.map((x) => x)),
         "private": private,
         "active": active,
         "tournament": tournament,

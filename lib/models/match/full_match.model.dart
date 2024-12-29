@@ -19,7 +19,7 @@ class FullMatch {
     String user;
     List<String> inviteds;
     String title;
-    List<ChatUser> likes;
+    List<ChatUser> joined;
     bool private;
     bool tournament;
     int status;
@@ -32,7 +32,7 @@ class FullMatch {
         required this.user,
         required this.inviteds,
         required this.title,
-        required this.likes,
+        required this.joined,
         required this.private,
         required this.status,
         required this.tournament,
@@ -46,7 +46,7 @@ class FullMatch {
         user: json["user"],
         inviteds: List<String>.from(json["inviteds"].map((x) => x)),
         title: json["title"],
-        likes: List<ChatUser>.from(json["likes"].map((x) => ChatUser.fromJson(x))),
+        joined: List<ChatUser>.from(json["joined"].map((x) => ChatUser.fromJson(x))),
         private: json["private"],
         status: json["status"],
         tournament: json["tournament"]
@@ -60,7 +60,7 @@ class FullMatch {
         "user": user,
         "inviteds": List<dynamic>.from(inviteds.map((x) => x)),
         "title": title,
-        "likes": List<dynamic>.from(likes.map((x) => x.toJson())),
+        "joined": List<dynamic>.from(joined.map((x) => x.toJson())),
         "private": private,
         "status": status,
         "tournament": tournament,

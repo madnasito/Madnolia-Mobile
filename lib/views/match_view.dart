@@ -230,7 +230,7 @@ class _MatchChatState extends State<MatchChat> {
     }
     bool owner = userState.id == match.user ? true : false;
     List<ChatUser> founded =
-        match.likes.where((e) => userState.id == e.id).toList();
+        match.joined.where((e) => userState.id == e.id).toList();
 
     if (owner || founded.isNotEmpty || isInMatch) {
       isInMatch = true;
@@ -251,7 +251,7 @@ class _MatchChatState extends State<MatchChat> {
                 margin: const EdgeInsets.only(right: 8),
                 child: InputGroupMessage(
                   inputKey: messageKey,
-                  usersList: widget.match.likes,
+                  usersList: widget.match.joined,
                   stream: widget.bloc.messageStream,
                   placeholder: "Message",
                   onChanged: widget.bloc.changeMessage,

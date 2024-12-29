@@ -29,7 +29,7 @@ class MoleculeMatchChatInput extends StatelessWidget {
     bool owner = userId == matchOwner ? true : false;
 
     List<ChatUser> founded =
-        match.likes.where((e) => userId == e.id).toList();
+        match.joined.where((e) => userId == e.id).toList();
     
     if(owner || founded.isNotEmpty || isInMatch){
       Size screenSize = MediaQuery.of(context).size;
@@ -43,7 +43,7 @@ class MoleculeMatchChatInput extends StatelessWidget {
             margin: const EdgeInsets.only(right: 8),
             child: InputGroupMessage(
               inputKey: messageKey,
-              usersList: match.likes,
+              usersList: match.joined,
               stream: bloc.messageStream,
               placeholder: "Message",
               onChanged: bloc.changeMessage,

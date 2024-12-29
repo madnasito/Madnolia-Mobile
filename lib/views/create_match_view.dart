@@ -23,6 +23,7 @@ import 'package:madnolia/widgets/match_card_widget.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:toast/toast.dart';
 
+import '../main.dart';
 import '../models/game_model.dart';
 import '../services/rawg_service.dart';
 import '../widgets/custom_input_widget.dart';
@@ -49,6 +50,9 @@ class _SearchGameViewState extends State<SearchGameView> {
   void dispose() {
     counter = 0;
     // game = null;
+    final context = navigatorKey.currentContext;
+    final matchUsersCubit = context?.watch<MatchUsersCubit>();
+    matchUsersCubit?.restore();
     super.dispose();
   }
 
@@ -173,7 +177,7 @@ class MatchFormView extends StatelessWidget {
     final userState = context.read<UserBloc>().state;
     
     final platformInfo = getPlatformInfo(platformId);
-    List<String> users = [];
+    final matchUsersCubit = context.watch<MatchUsersCubit>();
     const List<int> minutes =  [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
     return Container(
       height: double.infinity,
@@ -253,7 +257,7 @@ class MatchFormView extends StatelessWidget {
             const SizedBox(height: 20),
             const MinutesPicker(items: minutes),
             const SizedBox(height: 20),
-            SeatchUser(users: users),
+            const SeatchUser(),
             const SizedBox(height: 20),
             Text(
               game.name,
@@ -307,7 +311,7 @@ class MatchFormView extends StatelessWidget {
                   CreateMatch match = CreateMatch(
                     title: nameController.text,
                     date: formDate,
-                    inviteds: users,
+                    inviteds: matchUsersCubit.getUsersId(),
                     game: game.id,
                     platform: platformId,
                     duration: matchMinutesCubit.state.minutes
@@ -330,6 +334,7 @@ class MatchFormView extends StatelessWidget {
                     dateController.clear();
                     nameController.clear();
                     matchMinutesCubit.restoreMinutes();
+                    matchUsersCubit.restore();
                     if (!context.mounted) return;
                     context.goNamed("user-matches");
                   }
@@ -337,6 +342,7 @@ class MatchFormView extends StatelessWidget {
                 ],
               ),
             ),
+            const SizedBox(height: 15),
             
           ],
         ),

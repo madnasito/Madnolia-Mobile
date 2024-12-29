@@ -18,7 +18,7 @@ class MatchWithGame {
     String user;
     List<dynamic> inviteds;
     String title;
-    List<dynamic> likes;
+    List<dynamic> joined;
     bool private;
     bool tournament;
     int status;
@@ -31,7 +31,7 @@ class MatchWithGame {
         required this.user,
         required this.inviteds,
         required this.title,
-        required this.likes,
+        required this.joined,
         required this.private,
         required this.status,
         required this.tournament,
@@ -45,7 +45,7 @@ class MatchWithGame {
         user: json["user"],
         inviteds: List<dynamic>.from(json["inviteds"].map((x) => x)),
         title: json["title"],
-        likes: List<dynamic>.from(json["likes"].map((x) => x)),
+        joined: List<dynamic>.from(json["joined"].map((x) => x)),
         private: json["private"],
         status: json["status"],
         tournament: json["tournament"],
@@ -59,7 +59,7 @@ class MatchWithGame {
         "user": user,
         "inviteds": List<dynamic>.from(inviteds.map((x) => x)),
         "title": title,
-        "likes": List<dynamic>.from(likes.map((x) => x)),
+        "joined": List<dynamic>.from(joined.map((x) => x)),
         "private": private,
         "status": status,
         "tournament": tournament,

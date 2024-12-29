@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/cubits/match_users/match_users_cubit.dart';
+import 'package:madnolia/main.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,8 +13,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'custom_input_widget.dart';
 
 class SeatchUser extends StatefulWidget {
-  final List<String> users;
-  const SeatchUser({super.key, required this.users});
+  const SeatchUser({super.key});
 
   @override
   State<SeatchUser> createState() => _SeatchUserState();
@@ -20,26 +22,28 @@ class SeatchUser extends StatefulWidget {
 class _SeatchUserState extends State<SeatchUser> {
   late int counter;
   late TextEditingController controller;
-  late List usersList;
   @override
   void initState() {
     counter = 0;
     controller = TextEditingController();
-    usersList = [];
     super.initState();
   }
 
   @override
   void dispose() {
     counter = 0;
+    final context = navigatorKey.currentContext;
+    final matchUsersCubit = context?.watch<MatchUsersCubit>();
+    matchUsersCubit?.restore();
     // game = null;
-    usersList = [];
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     // var localizationDelegate = LocalizedApp.of(context).delegate;
+    final matchUsersCubit = context.watch<MatchUsersCubit>();
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,20 +98,17 @@ class _SeatchUserState extends State<SeatchUser> {
                                 hoverColor: Colors.black,
                                 shape: Border.all(color: Colors.blue, width: 1),
                                 onTap: () {
-                                  controller.text = "";
+                                  setState(() {
+                                    controller.text = "";
 
-                                  var foundedUser = usersList.where(
-                                      (user) => user["id"] == users[index].id);
+                                    var foundedUser = matchUsersCubit.state.users.where(
+                                        (user) => user.id == users[index].id);
 
-                                  if (foundedUser.isEmpty) {
-                                    usersList.add({
-                                      "id": users[index].id,
-                                      "name": users[index].name,
-                                      "img": users[index].thumb
-                                    });
-                                    widget.users.add(users[index].id);
-                                  }
-                                  setState(() {});
+                                    if (foundedUser.isEmpty) {
+                                      matchUsersCubit.addUser(users[index]);
+                                      // widget.users.add(users[index].id);
+                                    }
+                                  });
                                 },
                                 title: Wrap(
                                   spacing: 10,
@@ -129,7 +130,7 @@ class _SeatchUserState extends State<SeatchUser> {
                 },
               )
             : Visibility(
-              visible: usersList.isNotEmpty,
+              visible: matchUsersCubit.state.users.isNotEmpty,
               child: Column(
                   children: [
                     const Text(
@@ -143,9 +144,16 @@ class _SeatchUserState extends State<SeatchUser> {
                         shrinkWrap: true,
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.vertical,
-                        itemCount: usersList.length,
+                        itemCount: matchUsersCubit.state.users.length,
                         itemBuilder: (BuildContext context, int index) {
                           return ListTile(
+                            trailing: IconButton(
+                              onPressed: () => setState(() {
+                                matchUsersCubit.deleteUser(index);
+                              }),
+                              icon: const Icon(CupertinoIcons.xmark_circle),
+                              color: Colors.redAccent,
+                            ),
                             title: Wrap(
                               spacing: 10,
                               crossAxisAlignment: WrapCrossAlignment.center,
@@ -157,13 +165,13 @@ class _SeatchUserState extends State<SeatchUser> {
                                           Border.all(color: Colors.greenAccent)),
                                   child: CircleAvatar(
                                     backgroundImage: NetworkImage(
-                                        usersList[index]["img"],
+                                        matchUsersCubit.state.users[index].thumb,
                                         scale: 0.1),
                                     minRadius: 25,
                                     maxRadius: 35,
                                   ),
                                 ),
-                                Text(usersList[index]["name"])
+                                Text(matchUsersCubit.state.users[index].name)
                               ],
                             ),
                           );

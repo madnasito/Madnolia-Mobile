@@ -152,10 +152,11 @@ class LocalNotificationsService {
 
   }
 
-  static Future<void> matchReady(MatchReady payload) async {
+  static Future<void> matchReady(dynamic data) async {
     // To display the notification in device
     try {
-      
+      final MatchReady payload = MatchReady.fromJson(data);
+      print(payload.title);
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails = const NotificationDetails(
         android: AndroidNotificationDetails(

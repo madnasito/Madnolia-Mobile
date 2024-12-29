@@ -11,7 +11,7 @@ String createMatchToJson(CreateMatch data) => json.encode(data.toJson());
 class CreateMatch {
     String title;
     int date;
-    List<dynamic> inviteds;
+    List<String> inviteds;
     int game;
     int platform;
     int duration;
@@ -28,7 +28,7 @@ class CreateMatch {
     factory CreateMatch.fromJson(Map<String, dynamic> json) => CreateMatch(
         title: json["title"],
         date: json["date"],
-        inviteds: List<dynamic>.from(json["inviteds"].map((x) => x)),
+        inviteds: List<String>.from(json["inviteds"].map((x) => x)),
         game: json["game"],
         platform: json["platform"],
         duration: json["duration"]

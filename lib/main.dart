@@ -5,7 +5,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chat_messages/chat_messages_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
-import 'package:madnolia/blocs/sockets/sockets_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/message_provider.dart';
@@ -60,9 +59,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (BuildContext context) => getIt<UserBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>()),
-        BlocProvider(create: (BuildContext context) => getIt<SocketsBloc>()),
         BlocProvider(create: (BuildContext context) => ChatMessagesBloc()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
+        BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
       ],
       child:MessageProvider(
               child: Portal(
