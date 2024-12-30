@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
+import 'package:madnolia/widgets/organism/form/organism_edit_match_form.dart';
 
 // import 'package:socket_io_client/socket_io_client.dart';
 
@@ -202,6 +203,26 @@ class _MatchChatState extends State<MatchChat> {
                         imageUrl: widget.match.game.background!, width: 80)
                     : Image.asset("assets/no image.jpg", width: 80),
               ),
+              IconButton(onPressed: (){
+                final Size screenSize = MediaQuery.of(context).size;
+                showModalBottomSheet(
+                  enableDrag: true,
+                  barrierLabel: "HELLO",
+                  isDismissible: false,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SizedBox(
+                      height: screenSize.height * 0.7,
+                      width: screenSize.width,
+                      child: Center(
+                        heightFactor: 5,
+                        widthFactor: 2,
+                        child: OrganismEditMatchForm(match: widget.match,),
+                      ),
+                    );
+                  }
+                );
+              }, icon: const Icon(Icons.mode_edit_sharp))
             ],
           ),
         ),

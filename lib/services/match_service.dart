@@ -37,7 +37,7 @@ class MatchService {
 
   Future createMatch(Map match) => matchPostRequest("create", match);
 
-  Future editMatch(Map match) => matchPutRequest("update", match);
+  Future editMatch(String id, Map body) => matchPatchRequest("update/$id", body);
 
   Future deleteMatch(String id) => matchDeleteRequest("delete/$id");
 
@@ -103,13 +103,13 @@ class MatchService {
     }
   }
 
-  Future<Map> matchPutRequest(String apiUrl, Map body) async {
+  Future<Map> matchPatchRequest(String apiUrl, Map body) async {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
       final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
 
-      final resp = await http.put(url,
+      final resp = await http.patch(url,
           headers: {
             "Authorization": "Bearer $token"
           }, body: body);

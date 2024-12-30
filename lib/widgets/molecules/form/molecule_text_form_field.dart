@@ -10,6 +10,7 @@ class MoleculeTextField extends StatelessWidget {
   final String label;
   final TextInputType keyboardType;
   final GlobalKey<FormBuilderState> formKey;
+  final String? initialValue;
   final bool isPassword;
   final IconData? icon;
   final String? Function(String?)? validator;
@@ -21,7 +22,7 @@ class MoleculeTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.icon,
     this.validator,
-    this.isPassword = false,
+    this.isPassword = false, this.initialValue,
   });
 
   @override
@@ -29,6 +30,7 @@ class MoleculeTextField extends StatelessWidget {
     return FadeIn(
       delay: const Duration(milliseconds: 300),
       child: FormBuilderTextField(
+        initialValue: initialValue,
         autofocus: false,
         name: name,
         keyboardType: keyboardType,
