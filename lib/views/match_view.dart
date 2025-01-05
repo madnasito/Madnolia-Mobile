@@ -222,7 +222,7 @@ class _MatchChatState extends State<MatchChat> {
                     );
                   }
                 );
-              }, icon: const Icon(Icons.mode_edit_sharp))
+              }, icon: const Icon(Icons.info_outline_rounded, color: Colors.white))
             ],
           ),
         ),

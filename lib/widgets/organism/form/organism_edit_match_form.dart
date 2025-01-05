@@ -22,7 +22,7 @@ class OrganismEditMatchForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final dateController = TextEditingController();
 
-    dateController.text = DateTime.fromMillisecondsSinceEpoch(match.date).toLocal().toString();
+    dateController.text = DateTime.fromMillisecondsSinceEpoch(match.date).toLocal().toString().substring(0, 16);
     return FormBuilder(
         key: formKey,
         child: Column(
