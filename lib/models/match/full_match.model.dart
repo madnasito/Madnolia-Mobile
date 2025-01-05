@@ -16,7 +16,7 @@ class FullMatch {
     MinimalGame game;
     int platform;
     int date;
-    String user;
+    ChatUser user;
     List<String> inviteds;
     String title;
     List<ChatUser> joined;
@@ -43,7 +43,7 @@ class FullMatch {
         game: MinimalGame.fromJson(json["game"]),
         platform: json["platform"],
         date: json["date"],
-        user: json["user"],
+        user: ChatUser.fromJson(json["user"]),
         inviteds: List<String>.from(json["inviteds"].map((x) => x)),
         title: json["title"],
         joined: List<ChatUser>.from(json["joined"].map((x) => ChatUser.fromJson(x))),
@@ -57,7 +57,7 @@ class FullMatch {
         "game": game.toJson(),
         "platform": platform,
         "date": date,
-        "user": user,
+        "user": user.toJson(),
         "inviteds": List<dynamic>.from(inviteds.map((x) => x)),
         "title": title,
         "joined": List<dynamic>.from(joined.map((x) => x.toJson())),

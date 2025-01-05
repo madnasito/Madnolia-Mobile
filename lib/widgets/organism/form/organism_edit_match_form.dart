@@ -4,7 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/services/match_service.dart';
-import 'package:madnolia/widgets/atoms/text_atoms/styled_text_atom.dart';
+import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
@@ -28,7 +28,7 @@ class OrganismEditMatchForm extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 10,),
-            const StyledTextAtom(text: "Edit match", style: presentationTitle),
+            const AtomStyledText(text: "Edit match", style: presentationTitle),
             const SizedBox(height: 30),
             MoleculeTextField(
               formKey: formKey,

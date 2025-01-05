@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/style/button_style.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/animated_logo_atom.dart';
-import 'package:madnolia/widgets/atoms/text_atoms/styled_text_atom.dart';
+import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/molecules/buttons/text_button_molecule.dart';
 class HomePage extends StatelessWidget {
@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget {
                   Center(
                       heightFactor: 3,
                       child: Column(children: [
-                        const StyledTextAtom(
+                        const AtomStyledText(
                           text: "madnolia",
                           style: mainTitleStyle,
                         ),
@@ -57,12 +57,12 @@ class HomePage extends StatelessWidget {
                           ],
                         )
                       ])),
-                  StyledTextAtom(
+                  AtomStyledText(
                     text: translate("PRESENTATION.TITLE"),
                     style: presentationTitle,
                     textAlign: TextAlign.right),
                   const SizedBox(height: 30),
-                  StyledTextAtom(
+                  AtomStyledText(
                     text: translate("PRESENTATION.SUBTITLE"),
                     style: presentationSubtitle,
                     textAlign: TextAlign.right),

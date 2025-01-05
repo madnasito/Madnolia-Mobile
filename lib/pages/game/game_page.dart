@@ -68,6 +68,7 @@ class GamePage extends StatelessWidget {
                                       color: Color.fromARGB(255, 169, 145, 255)
                                     ),
                                     ),
+                                    
                                 ),
                                 Text(getPlatformInfo(platform).name),
                               ],
