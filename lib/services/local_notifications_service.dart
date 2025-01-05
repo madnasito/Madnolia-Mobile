@@ -156,7 +156,7 @@ class LocalNotificationsService {
     // To display the notification in device
     try {
       final MatchReady payload = MatchReady.fromJson(data);
-      print(payload.title);
+      debugPrint(payload.title);
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails = const NotificationDetails(
         android: AndroidNotificationDetails(

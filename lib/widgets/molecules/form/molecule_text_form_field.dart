@@ -14,6 +14,7 @@ class MoleculeTextField extends StatelessWidget {
   final bool isPassword;
   final IconData? icon;
   final String? Function(String?)? validator;
+  final int delay;
   const MoleculeTextField( {
     super.key,
     required this.formKey,
@@ -23,12 +24,13 @@ class MoleculeTextField extends StatelessWidget {
     this.icon,
     this.validator,
     this.isPassword = false, this.initialValue,
+    this.delay = 300
   });
 
   @override
   Widget build(BuildContext context) {
     return FadeIn(
-      delay: const Duration(milliseconds: 300),
+      delay: Duration(milliseconds: delay),
       child: FormBuilderTextField(
         initialValue: initialValue,
         autofocus: false,

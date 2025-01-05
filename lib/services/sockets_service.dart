@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/global/environment.dart';
-import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -82,7 +81,7 @@ onStart(ServiceInstance service) async {
 
   socket.on("match_ready", (data) async {
       debugPrint("NOW ON BACKGROUND");
-      print(data);
+      debugPrint(data);
       
       LocalNotificationsService.matchReady(data);
       // Send match ready event to UI (if app is in foreground)

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/widgets/background.dart';
@@ -28,7 +29,7 @@ class LoginPage extends StatelessWidget {
                   const OrganismLoginForm(),
 
                   const SizedBox(height: 30),
-                  const Text("Forgot password?")
+                  FadeIn(delay: const Duration(milliseconds: 350),child: const Text("Forgot password?"),)
                 ],
               ),
             ),
