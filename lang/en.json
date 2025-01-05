@@ -70,6 +70,10 @@
       "UPLOADING_MESSAGE": "The match is creating",
       "ERROR": "Error creating the match"
   },
+  "MATCH": {
+    "ADMIN": "Admin",
+    "DETAILS": "Details"
+  },
   "GAME":{
       "GAME": "Game",
       "MATCH": "Match",

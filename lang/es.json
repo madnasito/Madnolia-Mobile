@@ -68,6 +68,10 @@
         "MATCH_CREATED": "¡Partida creada!",
         "DATE_ERROR": "Cree una fecha y hora correctas"
     },
+    "MATCH": {
+        "ADMIN": "Admin",
+        "DETAILS": "Detalles"
+    },
     "GAME":{
         "GAME": "Juego",
         "MATCH": "Partida",
