@@ -119,7 +119,9 @@
     },
     "UTILS":{
       "SHOW_MORE": "Mostrar más",
-      "SHOW_LESS": "Mostrar menos"
+      "SHOW_LESS": "Mostrar menos",
+      "DETAILS": "Detalles",
+      "ADMIN": "Admin"
   },
   "ERRORS": {
     "SERVER": {

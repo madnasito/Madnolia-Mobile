@@ -23,7 +23,7 @@ class OrganismLoginForm extends StatelessWidget {
           formKey: formKey,
           label: "Username",
           name: "username",
-          icon: Icons.usb_rounded,
+          icon: Icons.person_2_outlined,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(),
           ]),

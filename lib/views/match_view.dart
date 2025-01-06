@@ -194,16 +194,21 @@ class _MatchChatState extends State<MatchChat> {
                   ),
                 ],
               ),
-              Container(
-                clipBehavior: Clip.antiAlias,
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                child: widget.match.game.background != null
-                    ? CachedNetworkImage(
-                        imageUrl: widget.match.game.background!, width: 80)
-                    : Image.asset("assets/no image.jpg", width: 80),
-              ),
-              OrganismMatchInfo(match: widget.match)
+              Row(
+                children: [
+                  Container(
+                    clipBehavior: Clip.antiAlias,
+                    margin: const EdgeInsets.only(right: 10),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    child: widget.match.game.background != null
+                        ? CachedNetworkImage(
+                            imageUrl: widget.match.game.background!, width: 80)
+                        : Image.asset("assets/no image.jpg", width: 80),
+                  ),
+                  OrganismMatchInfo(match: widget.match)
+                ],
+              )
             ],
           ),
         ),
