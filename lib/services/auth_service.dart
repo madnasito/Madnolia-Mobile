@@ -1,19 +1,20 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:madnolia/global/environment.dart';
 
 class AuthService {
   bool authenticating = false;
 
   final _storage = const FlutterSecureStorage();
+  final String apiUrl = dotenv.get("API_URL");
 
   Future login(String username, String password) async {
     try {
-      final url = Uri.parse("${Environment.apiUrl}/auth/sign-in");
+      final url = Uri.parse("$apiUrl/auth/sign-in");
 
       authenticating = true;
       final resp = await http.post(url,
@@ -41,7 +42,7 @@ class AuthService {
     try {
       authenticating = true;
 
-      final url = Uri.parse("${Environment.apiUrl}/auth/sign-up");
+      final url = Uri.parse("$apiUrl/auth/sign-up");
 
       final userJson = {
         'name': user.name,
@@ -76,7 +77,7 @@ class AuthService {
   Future verifyUser(String username, String email) async {
     try {
       final url =
-        Uri.parse("${Environment.apiUrl}/user/user-exists/$username/$email");
+        Uri.parse("$apiUrl/user/user-exists/$username/$email");
         authenticating = true;
 
       final resp = await http.get(url);

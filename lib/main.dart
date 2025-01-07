@@ -1,18 +1,20 @@
 
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chat_messages/chat_messages_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart' show GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
+import 'package:flutter_localizations/flutter_localizations.dart' show GlobalCupertinoLocalizations, GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 import 'package:madnolia/services/local_notifications_service.dart';
@@ -22,6 +24,8 @@ void main() async {
   DartPluginRegistrant.ensureInitialized();
   serviceLocatorInit();
   cubitServiceLocatorInit();
+
+  (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
 
   // Use PlatformDispatcher to get the device locale
   Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
@@ -74,6 +78,7 @@ class MyApp extends StatelessWidget {
                   title: 'madnolia',
                   routerConfig: router,
                   localizationsDelegates: [
+                    GlobalCupertinoLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
                     localizationDelegate

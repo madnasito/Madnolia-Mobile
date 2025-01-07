@@ -1,14 +1,16 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-import '../global/environment.dart';
 
 class MatchService {
   bool authenticating = false;
 
   final _storage = const FlutterSecureStorage();
+
+  final String baseUrl = dotenv.get("API_URL");
 
   // Getting the match
   Future getMatch(String id) => matchGetRequest("info/$id");
@@ -45,7 +47,7 @@ class MatchService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
+      final url = Uri.parse("$baseUrl/match/$apiUrl");
 
       final resp =
           await http.get(url, headers: {"Authorization": "Bearer $token"});
@@ -64,7 +66,7 @@ class MatchService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
+      final url = Uri.parse("$baseUrl/match/$apiUrl");
 
       final resp =
           await http.get(url, headers: {"Authorization": "Bearer $token"});
@@ -83,7 +85,7 @@ class MatchService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
+      final url = Uri.parse("$baseUrl/match/$apiUrl");
 
       final resp = await http.post(url,
           headers: {
@@ -107,7 +109,7 @@ class MatchService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
+      final url = Uri.parse("$baseUrl/match/$apiUrl");
 
       final resp = await http.patch(url,
           headers: {
@@ -128,7 +130,7 @@ class MatchService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/match/$apiUrl");
+      final url = Uri.parse("$baseUrl/match/$apiUrl");
 
       final resp = await http
           .delete(url, headers: {"Authorization": "Bearer $token"});

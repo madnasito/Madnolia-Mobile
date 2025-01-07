@@ -1,15 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:madnolia/global/environment.dart';
 
 class GamesService {
   final _storage = const FlutterSecureStorage();
 
+  final String apiUrl = dotenv.get("API_URL");
   Future getGameInfo(String game) async {
     try {
-      final url = Uri.parse("${Environment.apiUrl}/games/$game");
+      final url = Uri.parse("$apiUrl/games/$game");
 
       final token = await _storage.read(key: "token");
       final resp = await http.get(url, headers: {"token": token!});
@@ -25,7 +26,7 @@ class GamesService {
   Future getPlatformGameMatches(int platformId, int gameId) async {
     try {
       final url = Uri.parse(
-          "${Environment.apiUrl}/matches_of_game/$platformId/$gameId");
+          "$apiUrl/matches_of_game/$platformId/$gameId");
 
       final resp = await http.get(url);
 

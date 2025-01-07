@@ -1,16 +1,16 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import 'package:madnolia/global/environment.dart';
 
 
 class UserService {
   bool authenticating = false;
 
   final _storage = const FlutterSecureStorage();
+  final String baseUrl = dotenv.get("API_URL");
 
   Future getUserInfo() => userGetRequest("user/info");
 
@@ -35,7 +35,7 @@ class UserService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
+      final url = Uri.parse("$baseUrl/$apiUrl");
 
       final resp = await http.get(url, headers: {"Authorization": "Bearer $token"});
 
@@ -53,7 +53,7 @@ class UserService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
+      final url = Uri.parse("$baseUrl/$apiUrl");
 
       final resp = await http.post(url, headers: {"Authorization": "Bearer $token"}, body: body);
 
@@ -71,7 +71,7 @@ class UserService {
     try {
       authenticating = true;
       final String? token = await _storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/$apiUrl");
+      final url = Uri.parse("$baseUrl/$apiUrl");
 
       
       body = jsonEncode(body);

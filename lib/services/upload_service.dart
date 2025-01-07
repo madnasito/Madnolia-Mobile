@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http_parser/http_parser.dart' as http;
 import 'package:http/http.dart' as http;
 
@@ -8,16 +9,16 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:mime_type/mime_type.dart';
 
-import '../global/environment.dart';
-
 class UploadFileService {
   final storage = const FlutterSecureStorage();
 
   Future uploadImage(XFile image) async {
     try {
-
+      
+      final String apiUrl = dotenv.get("API_URL");
+      
       final String? token = await storage.read(key: "token");
-      final url = Uri.parse("${Environment.apiUrl}/user/update-img");
+      final url = Uri.parse("$apiUrl/user/update-img");
 
       final mimeType = mime(image.path)?.split('/'); // image/jpeg
 

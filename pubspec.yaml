@@ -78,6 +78,7 @@ dependencies:
   flutter_form_builder: ^9.5.0
   hmssdk_flutter: ^1.10.6
   permission_handler: ^11.3.1
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
