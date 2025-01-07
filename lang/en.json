@@ -43,11 +43,12 @@
   },
   "LOGIN":{
         "WELCOME": "Welcome, Player",
-      "BUTTON": "Login",
-      "ERRORS":{
-          "USER": "No founded user",
-          "PASSWORD": "No valid password"
-      }
+        "FORGOT_PASSWORD": "Forgot password?",
+        "BUTTON": "Login",
+        "ERRORS":{
+            "USER": "No founded user",
+            "PASSWORD": "No valid password"
+        }
   },
   "CREATE_MATCH":{
       "TITLE": "Select the platform",

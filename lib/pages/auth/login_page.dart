@@ -29,7 +29,7 @@ class LoginPage extends StatelessWidget {
                   const OrganismLoginForm(),
 
                   const SizedBox(height: 30),
-                  FadeIn(delay: const Duration(milliseconds: 350),child: const Text("Forgot password?"),)
+                  FadeIn(delay: const Duration(milliseconds: 350),child: Text(translate("LOGIN.FORGOT_PASSWORD")),)
                 ],
               ),
             ),

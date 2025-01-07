@@ -1,18 +1,19 @@
 
 import 'dart:async';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chat_messages/chat_messages_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart' show GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
+
 
 import 'package:madnolia/services/local_notifications_service.dart';
 
@@ -45,6 +46,7 @@ void main() async {
  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -72,8 +74,9 @@ class MyApp extends StatelessWidget {
                   title: 'madnolia',
                   routerConfig: router,
                   localizationsDelegates: [
-                    localizationDelegate,
-                    FormBuilderLocalizations.delegate
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    localizationDelegate
                   ],
                   supportedLocales: localizationDelegate.supportedLocales,
                   locale: localizationDelegate.currentLocale,

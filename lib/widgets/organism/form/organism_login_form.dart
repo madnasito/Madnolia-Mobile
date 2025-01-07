@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
@@ -21,7 +22,7 @@ class OrganismLoginForm extends StatelessWidget {
         children: [
         MoleculeTextField(
           formKey: formKey,
-          label: "Username",
+          label: translate("REGISTER.USERNAME"),
           name: "username",
           icon: Icons.person_2_outlined,
           validator: FormBuilderValidators.compose([
@@ -31,7 +32,7 @@ class OrganismLoginForm extends StatelessWidget {
         const SizedBox(height: 15),
         MoleculeTextField(
           formKey: formKey,
-          label: "Password",
+          label: translate("REGISTER.PASSWORD"),
           name: "password",
           isPassword: true,
           icon: Icons.lock_outline_rounded,

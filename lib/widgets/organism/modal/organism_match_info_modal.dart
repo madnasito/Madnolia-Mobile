@@ -5,6 +5,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
+import 'package:madnolia/widgets/molecules/modal/molecule_modal_icon_button.dart';
 
 
 class OrganismMatchInfoModal extends StatelessWidget {
@@ -15,18 +16,7 @@ class OrganismMatchInfoModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(onPressed: (){
-      final Size screenSize = MediaQuery.of(context).size;
-
-      showModalBottomSheet(
-        context: context,
-        enableDrag: true,
-        builder: (BuildContext context) { 
-        return SizedBox(
-          height: screenSize.height * 0.5,
-          width: screenSize.width,
-          child: Center(
-            child:ListView(
+    return MoleculeModalIconButton(content: ListView(
 
               children: [
                 const SizedBox(height: 5),
@@ -75,10 +65,6 @@ class OrganismMatchInfoModal extends StatelessWidget {
                   subtitle: Text(match.user.username),
                 )
               ],
-            ),
-          ),
-        );
-       } );
-    }, icon: const Icon(Icons.info_outline_rounded));
+            ), icon: Icons.info_outline);
   }
 }
