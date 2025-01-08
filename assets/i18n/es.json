@@ -73,6 +73,9 @@
         "TITLE_EMPTY": "Escriba el titulo",
         "DURATION": "Duración"
     },
+    "MATCH": {
+        "MATCH_UPDATED": "Partida actualizada"
+    },
     "GAME":{
         "GAME": "Juego",
         "MATCH": "Partida",

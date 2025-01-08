@@ -142,7 +142,7 @@ class OrganismEditMatchForm extends StatelessWidget {
                       debugPrint(resp.toString());
 
                       context.pop();
-                      Toast.show("Match updated", border: Border.all(color: Colors.greenAccent), duration: 4,gravity: 5 );
+                      Toast.show(translate("MATCH.MATCH_UPDATED"), border: Border.all(color: Colors.greenAccent), duration: 4,gravity: 5 );
                     } catch (e) {
                       isLoading = false;
                     }
