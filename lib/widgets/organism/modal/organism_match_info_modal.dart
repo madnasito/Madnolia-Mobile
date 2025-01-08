@@ -16,7 +16,7 @@ class OrganismMatchInfoModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MoleculeModalIconButton(content: ListView(
+    return MoleculeModalIconButton(content: Column(
 
               children: [
                 const SizedBox(height: 5),
@@ -31,9 +31,9 @@ class OrganismMatchInfoModal extends StatelessWidget {
                   leading: const Icon(Icons.date_range_outlined),
                   style: ListTileStyle.drawer,
                 ),
-                ListTile(
+                match.description.isNotEmpty ? ListTile(
                   title:ExpandableText(
-                    'Lorem ipsim dnaeiod anwd awdioaw \n dieaudn \nead a iudai Lorem ipsim dnaeiod anwd awdioaw \n dieaudn \nead a iudai Lorem ipsim dnaeiod anwd awdioaw \n dieaudn \nead a iudai',
+                    match.description,
                     expandText: translate("UTILS.SHOW_MORE"),
                     collapseText: translate("UTILS.SHOW_LESS"),
                     maxLines: 5,
@@ -45,7 +45,7 @@ class OrganismMatchInfoModal extends StatelessWidget {
                   )),
                   leading: const Icon(Icons.description_outlined),
                   style: ListTileStyle.drawer,
-                ),
+                ) : Container(),
                 const SizedBox(height: 10),
                 const Divider(
                   color: Colors.grey, // Customize the color
@@ -63,7 +63,8 @@ class OrganismMatchInfoModal extends StatelessWidget {
                   leading: CircleAvatar(backgroundImage: CachedNetworkImageProvider(match.user.thumb), radius: 50, backgroundColor: Colors.grey,),
                   title: Text(match.user.name),
                   subtitle: Text(match.user.username),
-                )
+                ),
+                const SizedBox(height: 20),
               ],
             ), icon: Icons.info_outline);
   }

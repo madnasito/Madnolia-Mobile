@@ -157,6 +157,7 @@ class _SearchGameViewState extends State<SearchGameView> {
 }
 final dateController = TextEditingController();
 final nameController = TextEditingController();
+final descriptionController = TextEditingController();
 
 class MatchFormView extends StatelessWidget {
   final Game game;
@@ -202,6 +203,7 @@ class MatchFormView extends StatelessWidget {
                     translate("CREATE_MATCH.MATCH_NAME"),
                 controller: nameController),
             const SizedBox(height: 20),
+            
             SimpleCustomInput(
               iconData: CupertinoIcons.calendar_today,
               keyboardType: TextInputType.none,
@@ -257,6 +259,12 @@ class MatchFormView extends StatelessWidget {
             const SizedBox(height: 20),
             const MinutesPicker(items: minutes),
             const SizedBox(height: 20),
+            SimpleCustomInput(
+              iconData: Icons.description_outlined,
+                placeholder:
+                    translate("CREATE_MATCH.DESCRIPTION"),
+                controller: descriptionController),
+            const SizedBox(height: 20),
             const SeatchUser(),
             const SizedBox(height: 20),
             Text(
@@ -310,6 +318,7 @@ class MatchFormView extends StatelessWidget {
                   final matchMinutesCubit = context.read<MatchMinutesCubit>();
                   CreateMatch match = CreateMatch(
                     title: nameController.text,
+                    description: descriptionController.text,
                     date: formDate,
                     inviteds: matchUsersCubit.getUsersId(),
                     game: game.id,
@@ -330,7 +339,6 @@ class MatchFormView extends StatelessWidget {
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
                         duration: 3);
-                      // MatchCreated matchCreated = MatchCreated.fromJson(resp);
                     dateController.clear();
                     nameController.clear();
                     matchMinutesCubit.restoreMinutes();

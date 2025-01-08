@@ -113,8 +113,11 @@ class MatchService {
 
       final resp = await http.patch(url,
           headers: {
+            'Content-type': 'application/json',
+            'Accept': 'application/json',
             "Authorization": "Bearer $token"
-          }, body: body);
+          },
+          body: jsonEncode(body));
 
       authenticating = false;
 

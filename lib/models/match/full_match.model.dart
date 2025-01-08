@@ -13,6 +13,7 @@ String fullMatchToJson(FullMatch data) => json.encode(data.toJson());
 
 class FullMatch {
     String id;
+    String description;
     MinimalGame game;
     int platform;
     int date;
@@ -32,6 +33,7 @@ class FullMatch {
         required this.user,
         required this.inviteds,
         required this.title,
+        required this.description,
         required this.joined,
         required this.private,
         required this.status,
@@ -40,6 +42,7 @@ class FullMatch {
 
     factory FullMatch.fromJson(Map<String, dynamic> json) => FullMatch(
         id: json["_id"],
+        description: json["description"],
         game: MinimalGame.fromJson(json["game"]),
         platform: json["platform"],
         date: json["date"],
@@ -56,6 +59,7 @@ class FullMatch {
         "_id": id,
         "game": game.toJson(),
         "platform": platform,
+        "description": description,
         "date": date,
         "user": user.toJson(),
         "inviteds": List<dynamic>.from(inviteds.map((x) => x)),

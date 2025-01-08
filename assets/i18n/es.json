@@ -19,7 +19,7 @@
         "MATCH": "Partida creada",
         "MATCHES": "Partidas creadas",
         "CREATE": "Crea una aquí",
-        "NO_MATCHES": "No partidas para "
+        "NO_MATCHES": "Sin partidas"
     },
     "REGISTER":{
         "TITLE": "Crear cuenta",
@@ -61,6 +61,7 @@
         "SEARCHING": "Buscando",
         "SEARCH_USER": "Invitar compañeros a tu partida",
         "MATCH_NAME": "Nombre de la partida",
+        "DESCRIPTION": "Descripción",
         "INVITEDS": "Invitados",
         "DATE": "Fecha",
         "TIME": "Hora",

@@ -53,6 +53,7 @@
   },
   "CREATE_MATCH":{
       "TITLE": "Select the platform",
+      "DESCRIPTION": "Description",
       "SEARCH_GAME": "Search game",
       "SEARCH_RESULTS": "Search's results",
       "EMPTY_SEARCH": "No founded games, please try another name",

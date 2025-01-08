@@ -12,6 +12,7 @@ String matchWithGameToJson(MatchWithGame data) => json.encode(data.toJson());
 
 class MatchWithGame {
     String id;
+    String description;
     Game game;
     int platform;
     int date;
@@ -25,6 +26,7 @@ class MatchWithGame {
 
     MatchWithGame({
         required this.id,
+        required this.description,
         required this.game,
         required this.platform,
         required this.date,
@@ -45,6 +47,7 @@ class MatchWithGame {
         user: json["user"],
         inviteds: List<dynamic>.from(json["inviteds"].map((x) => x)),
         title: json["title"],
+        description: json["description"],
         joined: List<dynamic>.from(json["joined"].map((x) => x)),
         private: json["private"],
         status: json["status"],
@@ -57,6 +60,7 @@ class MatchWithGame {
         "platform": platform,
         "date": date,
         "user": user,
+        "description": description,
         "inviteds": List<dynamic>.from(inviteds.map((x) => x)),
         "title": title,
         "joined": List<dynamic>.from(joined.map((x) => x)),

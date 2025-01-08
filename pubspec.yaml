@@ -106,7 +106,6 @@ flutter:
   assets:
    - assets/
    - assets/platforms/
-   - lang/
    - assets/i18n/
    - assets/madnolia-logo.svg
    - assets/icon.png

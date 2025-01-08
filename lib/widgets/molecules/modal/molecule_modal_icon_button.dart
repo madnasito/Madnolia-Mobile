@@ -9,18 +9,18 @@ class MoleculeModalIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(onPressed: (){
-      final Size screenSize = MediaQuery.of(context).size;
 
       showModalBottomSheet(
         context: context,
-        enableDrag: true,
         isDismissible: isDismissible,
+        isScrollControlled: true,
         builder: (BuildContext context) {
-          return SizedBox(
-            height: screenSize.height * 0.5,
-            width: screenSize.width,
-            child: Center(
-              child: content,
+          return SingleChildScrollView(
+            child: Container(
+              padding:EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),   
+              child: Center(
+                child: content,
+              ),
             ),
           );
         });

@@ -10,6 +10,7 @@ String createMatchToJson(CreateMatch data) => json.encode(data.toJson());
 
 class CreateMatch {
     String title;
+    String description;
     int date;
     List<String> inviteds;
     int game;
@@ -18,6 +19,7 @@ class CreateMatch {
 
     CreateMatch({
         required this.title,
+        required this.description,
         required this.date,
         required this.inviteds,
         required this.game,
@@ -27,6 +29,7 @@ class CreateMatch {
 
     factory CreateMatch.fromJson(Map<String, dynamic> json) => CreateMatch(
         title: json["title"],
+        description: json["description"],
         date: json["date"],
         inviteds: List<String>.from(json["inviteds"].map((x) => x)),
         game: json["game"],
@@ -36,6 +39,7 @@ class CreateMatch {
 
     Map<String, dynamic> toJson() => {
         "title": title,
+        "description": description,
         "date": date,
         "inviteds": List<dynamic>.from(inviteds.map((x) => x)),
         "game": game,
