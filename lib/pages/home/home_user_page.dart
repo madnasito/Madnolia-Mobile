@@ -26,63 +26,72 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
   @override
   void initState() {
-
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     
-    return  FutureBuilder(
-        future: _loadInfo(context),
-        builder: (context, snapshot) {
-          final userBloc = context.read<UserBloc>().state;
-          
-          if (snapshot.hasData) {
-            return CustomScaffold(
-                body: ListView.builder(
-                  cacheExtent: 9999999,
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemCount: userBloc.platforms.length,
-                  itemBuilder: (BuildContext context, int platformIndex) {
-                    return Column(
-                      children:[ 
-                        const MyBannerAdWidget(),
-                        Container(
-                          width: double.infinity,
-                          color: Colors.black45,
-                          child: Wrap(
-                            alignment: WrapAlignment.center,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            runAlignment: WrapAlignment.center,
-                            spacing: 20,
-                            children: [
-                              Text(getPlatformInfo(userBloc.platforms[platformIndex]).name),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SvgPicture.asset(
-                                getPlatformInfo(userBloc.platforms[platformIndex]).path,
-                                width: 90,
-                                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                              ))],
-                          ),
-                        ),
-                        MoleculePlatformMatches(platform: userBloc.platforms[platformIndex])
-                      ]
-                    );
+    return  CustomScaffold(
+              body: FutureBuilder(
+                future: _loadInfo(context),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData){
+                    final userBloc = context.watch<UserBloc>().state;
+                    return ListView.builder(
+                      cacheExtent: 9999999,
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: userBloc.platforms.length,
+                      itemBuilder: (BuildContext context, int platformIndex) {
+                        return Column(
+                          children:[ 
+                            const MyBannerAdWidget(),
+                            Container(
+                              width: double.infinity,
+                              color: Colors.black45,
+                              child: Wrap(
+                                alignment: WrapAlignment.center,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                runAlignment: WrapAlignment.center,
+                                spacing: 20,
+                                children: [
+                                  Text(getPlatformInfo(userBloc.platforms[platformIndex]).name),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: SvgPicture.asset(
+                                    getPlatformInfo(userBloc.platforms[platformIndex]).path,
+                                    width: 90,
+                                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                                  ))],
+                              ),
+                            ),
+                            MoleculePlatformMatches(platform: userBloc.platforms[platformIndex])
+                          ]
+                        );
+                      }
+                      );
+                  } else if(!snapshot.hasData){
+                    return const Center(child: CircularProgressIndicator());
+                  }else if(snapshot.hasError){
+                    return const Center(child: Text("Check your connection"));
+                  }else{
+                    return const Placeholder();
                   }
-                ),
+                },
+              ),
             );
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
+    // FutureBuilder(
+    //     future: _loadInfo(context),
+    //     builder: (context, snapshot) {
+    //       final userBloc = context.read<UserBloc>().state;
+          
+    //       if (snapshot.hasData) {
+    //         return 
+    //       } 
+    //     },
       
-    );
+    // );
   }
   
   _loadInfo(BuildContext context) async {
@@ -118,7 +127,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       return userInfo;
     } catch (e) {
       debugPrint(e.toString());
-      return {};
+      return null;
     }
 }
 
