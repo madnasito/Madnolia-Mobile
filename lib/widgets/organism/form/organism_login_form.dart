@@ -58,9 +58,12 @@ class OrganismLoginForm extends StatelessWidget {
             
             logging = true;
             final Map<String, dynamic> resp = await AuthService().login(values?[0], values?[1]);
-            logging = false;
+            
             if(!context.mounted) return;
-             if (resp.containsKey("error")) {
+
+            logging = false;
+            
+            if (resp.containsKey("error")) {
               return showErrorServerAlert(context, resp);
             } else {
               context.go("/");

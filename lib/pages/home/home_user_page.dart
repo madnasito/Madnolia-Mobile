@@ -1,5 +1,7 @@
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/molecules/molecule_platform_matches.dart';
@@ -15,70 +17,69 @@ import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../services/sockets_service.dart';
 
-class HomeUserPage extends StatefulWidget {
+class HomeUserPage extends StatelessWidget {
   const HomeUserPage({super.key});
-
-  @override
-  State<HomeUserPage> createState() => _HomeUserPageState();
-}
-
-class _HomeUserPageState extends State<HomeUserPage> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     
+    final platformGamesCubit = context.watch<PlatformGamesCubit>();
     return  CustomScaffold(
-              body: FutureBuilder(
-                future: _loadInfo(context),
-                builder: (context, snapshot) {
-                  if(snapshot.hasData){
-                    final userBloc = context.watch<UserBloc>().state;
-                    return ListView.builder(
-                      cacheExtent: 9999999,
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemCount: userBloc.platforms.length,
-                      itemBuilder: (BuildContext context, int platformIndex) {
-                        return Column(
-                          children:[ 
-                            const MyBannerAdWidget(),
-                            Container(
-                              width: double.infinity,
-                              color: Colors.black45,
-                              child: Wrap(
-                                alignment: WrapAlignment.center,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                runAlignment: WrapAlignment.center,
-                                spacing: 20,
-                                children: [
-                                  Text(getPlatformInfo(userBloc.platforms[platformIndex]).name),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SvgPicture.asset(
-                                    getPlatformInfo(userBloc.platforms[platformIndex]).path,
-                                    width: 90,
-                                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                                  ))],
+              body: CustomMaterialIndicator(
+                autoRebuild: false,
+                onRefresh: () async{ 
+                  // setState(() { 
+                    platformGamesCubit.cleanData();
+                    // print(platformGamesCubit.state.data);
+                  // });
+                 },
+                child: FutureBuilder(
+                  future: _loadInfo(context),
+                  builder: (context, snapshot) {
+                    if(snapshot.hasData){
+                      final userBloc = context.watch<UserBloc>().state;
+                      return ListView.builder(
+                        cacheExtent: 9999999,
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: userBloc.platforms.length,
+                        itemBuilder: (BuildContext context, int platformIndex) {
+                          return Column(
+                            children:[ 
+                              const MyBannerAdWidget(),
+                              Container(
+                                width: double.infinity,
+                                color: Colors.black45,
+                                child: Wrap(
+                                  alignment: WrapAlignment.center,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  runAlignment: WrapAlignment.center,
+                                  spacing: 20,
+                                  children: [
+                                    Text(getPlatformInfo(userBloc.platforms[platformIndex]).name),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SvgPicture.asset(
+                                      getPlatformInfo(userBloc.platforms[platformIndex]).path,
+                                      width: 90,
+                                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                                    ))],
+                                ),
                               ),
-                            ),
-                            MoleculePlatformMatches(platform: userBloc.platforms[platformIndex])
-                          ]
+                              MoleculePlatformMatches(platform: userBloc.platforms[platformIndex])
+                            ]
+                          );
+                        }
                         );
-                      }
-                      );
-                  } else if(!snapshot.hasData){
-                    return const Center(child: CircularProgressIndicator());
-                  }else if(snapshot.hasError){
-                    return const Center(child: Text("Check your connection"));
-                  }else{
-                    return const Placeholder();
-                  }
-                },
+                    } else if(!snapshot.hasData){
+                      return const Center(child: CircularProgressIndicator());
+                    }else if(snapshot.hasError){
+                      return const Center(child: Text("Check your connection"));
+                    }else{
+                      return const Placeholder();
+                    }
+                  },
+                ),
               ),
             );
     // FutureBuilder(
@@ -103,7 +104,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       if (userInfo.containsKey("error")) {
         // Check if the widget is still mounted before using context
         if (!context.mounted) return;
-        if(mounted) return showErrorServerAlert(context, userInfo);
+        return showErrorServerAlert(context, userInfo);
       }
 
       const storage = FlutterSecureStorage();
@@ -114,11 +115,9 @@ class _HomeUserPageState extends State<HomeUserPage> {
         userBloc.logOutUser();
         
         // Check if the widget is still mounted before using context
-        if (!mounted) {return;}
-        else{
           if (!context.mounted) return;
           return context.go("/home");
-        }
+        
       }
 
       final User user = User.fromJson(userInfo);
@@ -129,9 +128,10 @@ class _HomeUserPageState extends State<HomeUserPage> {
       debugPrint(e.toString());
       return null;
     }
+  }
 }
 
-}
+
 
 class MyBannerAdWidget extends StatefulWidget {
   final AdSize adSize;

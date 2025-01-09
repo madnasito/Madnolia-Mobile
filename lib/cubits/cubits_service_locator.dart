@@ -6,4 +6,5 @@ GetIt getItCubit = GetIt.instance;
 Future<void> cubitServiceLocatorInit() async {
   getItCubit.registerSingleton(MatchMinutesCubit());
   getItCubit.registerSingleton(MatchUsersCubit());
+  getItCubit.registerSingleton(PlatformGamesCubit());
 }

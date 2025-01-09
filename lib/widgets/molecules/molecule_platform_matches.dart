@@ -1,7 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/cubits/cubits.dart';
+import 'package:madnolia/models/platform/platform_games_model.dart';
 
 import '../../models/game/home_game_model.dart';
 import '../../services/match_service.dart';
@@ -17,7 +20,7 @@ class MoleculePlatformMatches extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  FutureBuilder(
-      future: _loadGames(platform),
+      future: _loadGames(platform, context),
       builder: (BuildContext context, AsyncSnapshot<List<HomeGame>> snapshot) { 
         if(snapshot.hasData){
 
@@ -104,13 +107,24 @@ class MoleculePlatformMatches extends StatelessWidget {
     }
 }
 
-Future<List<HomeGame>> _loadGames(int platformId) async {
+Future<List<HomeGame>> _loadGames(int platformId, BuildContext context) async {
     try {
-      
-      final resp = await MatchService().getMatchesByPlatform(platformId);
-      final values =
-          resp.map((e) => HomeGame.fromJson(e)).toList();
-      return values;
+      final platformGamesCubit = context.watch<PlatformGamesCubit>();
+
+      final loadedGames = platformGamesCubit.getPlatformGames(platformId);
+
+      DateTime checkUpdateTime = DateTime.fromMillisecondsSinceEpoch(platformGamesCubit.state.lastUpdate).add(const Duration(minutes: 4));
+
+      if(loadedGames.platform == 0 || (checkUpdateTime.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch)){
+        final resp = await MatchService().getMatchesByPlatform(platformId);
+        final values =
+            resp.map((e) => HomeGame.fromJson(e)).toList();
+        platformGamesCubit.addPlatformAndGames(PlatformGamesModel(platform: platformId, games: values));
+        return values;
+      }else{
+        return loadedGames.games;
+      }
+
     } catch (e) {
       return [];
     }
