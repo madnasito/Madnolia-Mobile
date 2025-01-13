@@ -75,6 +75,11 @@ class CustomScaffold extends StatelessWidget {
                         translate("HEADER.NOTIFICATIONS"),
                     route: "/notifications",
                   ),
+                  const _MenuButton(
+                    icon: Icons.chat_bubble_outline_rounded,
+                    title: "Chat",
+                    route: "/chat",
+                  ),
                   // _MenuButton(
                   //     icon: Icons.groups_2_outlined,
                   //     title: translate("HEADER.PROFILE"),

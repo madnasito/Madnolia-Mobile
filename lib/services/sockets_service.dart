@@ -102,6 +102,14 @@ onStart(ServiceInstance service) async {
       // }
     });
 
+  socket.on("newCall", (data){});
+
+  socket.on("IceCandidate", (data){
+
+  });
+
+  socket.on("callAnswered", (data) {});
+
   socket.onDisconnect((_) => {
    service.invoke("disconnected_socket")
   });
@@ -140,6 +148,8 @@ onStart(ServiceInstance service) async {
   service.on("off_new_player_to_match").listen((onData) => socket.emit("off_new_player_to_match"));
 
   service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));
+
+  service.on("make_call").listen((onData) => socket.emit("make_call", onData));
 
   service.on("delete_chat_notifications").listen((onData) => LocalNotificationsService.deleteRoomMessages(onData?["room"]));
 

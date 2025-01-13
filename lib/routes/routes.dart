@@ -1,3 +1,6 @@
+
+import 'package:madnolia/main.dart';
+import 'package:madnolia/pages/chat/join_screen.dart';
 import 'package:madnolia/pages/game/game_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -50,6 +53,12 @@ final GoRouter router = GoRouter(
             path: "home",
             name: "home",
             builder: (context, state) => const HomePage()),
+        GoRoute(
+          path: "chat",
+          name: "chat",
+
+          builder: (context, state) => JoinScreen(selfCallerId: MyApp.selfCallerID)
+        ),
         GoRoute(
             path: "home-user",
             name: "home-user",

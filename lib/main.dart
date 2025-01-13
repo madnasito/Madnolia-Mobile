@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 
 import 'package:madnolia/services/local_notifications_service.dart';
+import 'package:madnolia/services/signalling_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,6 +52,8 @@ void main() async {
  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  static String selfCallerID = Random().nextInt(999999).toString().padLeft(6, '0');
   
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -58,6 +62,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     LocalNotificationsService.initialize();
     var localizationDelegate = LocalizedApp.of(context).delegate;
+    // init signalling service
+    SignallingService.instance.init(
+      websocketUrl: "http://192.168.1.4:5000",
+      selfCallerID: selfCallerID,
+    );
     return LocalizationProvider(
       state: LocalizationProvider.of(context).state,
       

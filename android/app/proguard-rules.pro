@@ -27,3 +27,7 @@
 -dontwarn com.google.**
 -dontwarn javax.annotation.Nullable
 -dontwarn javax.annotation.concurrent.GuardedBy
+
+# Flutter WebRTC
+-keep class com.cloudwebrtc.webrtc.** { *; }
+-keep class org.webrtc.** { *; }
