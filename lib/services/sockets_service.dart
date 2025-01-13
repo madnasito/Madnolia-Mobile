@@ -41,6 +41,8 @@ onStart(ServiceInstance service) async {
 
   });
 
+  socket.on("added_to_match", (payload) => service.invoke("added_to_match", {"resp" : payload}));
+
   socket.on("message", (payload) async {
       debugPrint("MESSAGE!!!");
       debugPrint(username);
