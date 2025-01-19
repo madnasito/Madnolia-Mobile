@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/pages/chat/call_screen.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../services/signalling_service.dart';
 
 class JoinScreen extends StatefulWidget {
   final String selfCallerId;
+
   const JoinScreen({super.key, required this.selfCallerId});
 
   @override
@@ -15,10 +16,19 @@ class JoinScreen extends StatefulWidget {
 class _JoinScreenState extends State<JoinScreen> {
   dynamic incomingSDPOffer;
   final remoteCallerIdTextEditingController = TextEditingController();
+  final backgroundService = FlutterBackgroundService();
 
   @override
   void initState() {
     super.initState();
+
+    backgroundService.on("new_call").listen((data) {
+      if(mounted){
+        // setState(() => incomingSDPOffer = data);
+        debugPrint("Load new state of call");
+      }
+    });
+    
     // listen for incoming video call
     SignallingService.instance.socket!.on("newCall", (data) {
       if (mounted) {
@@ -27,6 +37,7 @@ class _JoinScreenState extends State<JoinScreen> {
       }
     });
   }
+
   // join Call
   _joinCall({
     required String callerId,
@@ -44,9 +55,17 @@ class _JoinScreenState extends State<JoinScreen> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(body: Stack(
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text("P2P Call App"),
+      ),
+      body: SafeArea(
+        child: Stack(
           children: [
             Center(
               child: SizedBox(
@@ -135,7 +154,8 @@ class _JoinScreenState extends State<JoinScreen> {
                 ),
               ),
           ],
-        )
-      );
+        ),
+      ),
+    );
   }
 }

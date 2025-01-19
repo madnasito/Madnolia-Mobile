@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
     var localizationDelegate = LocalizedApp.of(context).delegate;
     // init signalling service
     SignallingService.instance.init(
-      websocketUrl: "http://192.168.1.4:5000",
+      websocketUrl: "http://192.168.1.2:5000",
       selfCallerID: selfCallerID,
     );
     return LocalizationProvider(
