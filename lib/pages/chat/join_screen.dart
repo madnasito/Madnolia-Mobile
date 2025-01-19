@@ -16,18 +16,18 @@ class JoinScreen extends StatefulWidget {
 class _JoinScreenState extends State<JoinScreen> {
   dynamic incomingSDPOffer;
   final remoteCallerIdTextEditingController = TextEditingController();
-  final backgroundService = FlutterBackgroundService();
+  // final backgroundService = FlutterBackgroundService();
 
   @override
   void initState() {
     super.initState();
 
-    backgroundService.on("new_call").listen((data) {
-      if(mounted){
-        // setState(() => incomingSDPOffer = data);
-        debugPrint("Load new state of call");
-      }
-    });
+    // backgroundService.on("new_call").listen((data) {
+    //   if(mounted){
+    //     // setState(() => incomingSDPOffer = data);
+    //     debugPrint("Load new state of call");
+    //   }
+    // });
     
     // listen for incoming video call
     SignallingService.instance.socket!.on("newCall", (data) {

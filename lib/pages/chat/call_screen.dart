@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
 import '../../services/signalling_service.dart';
+
 
 class CallScreen extends StatefulWidget {
   final String callerId, calleeId;
@@ -19,8 +19,6 @@ class CallScreen extends StatefulWidget {
 }
 
 class _CallScreenState extends State<CallScreen> {
-
-  final backgroundService = FlutterBackgroundService();
   // socket instance
   final socket = SignallingService.instance.socket;
 
@@ -98,21 +96,6 @@ class _CallScreenState extends State<CallScreen> {
 
     // for Incoming call
     if (widget.offer != null) {
-
-      backgroundService.on("ice_candidate").listen((data) {
-        debugPrint("ICE CANDIDATE EVENT");
-        // String candidate = data?["iceCandidate"]["candidate"];
-        // String sdpMid = data?["iceCandidate"]["id"];
-        // int sdpMLineIndex = data?["iceCandidate"]["label"];
-
-        // // add iceCandidater
-        // _rtcPeerConnection!.addCandidate(RTCIceCandidate(
-        //   candidate,
-        //   sdpMid,
-        //   sdpMLineIndex,
-        // ));
-      });
-
       // listen for Remote IceCandidate
       socket!.on("IceCandidate", (data) {
         String candidate = data["iceCandidate"]["candidate"];
@@ -139,12 +122,6 @@ class _CallScreenState extends State<CallScreen> {
       _rtcPeerConnection!.setLocalDescription(answer);
 
       // send SDP answer to remote peer over signalling
-      backgroundService.invoke("answer_call", {
-        "callerId": widget.callerId,
-        "sdpAnswer": answer.toMap(),
-      });
-
-      // send SDP answer to remote peer over signalling
       socket!.emit("answerCall", {
         "callerId": widget.callerId,
         "sdpAnswer": answer.toMap(),
@@ -155,32 +132,6 @@ class _CallScreenState extends State<CallScreen> {
       // listen for local iceCandidate and add it to the list of IceCandidate
       _rtcPeerConnection!.onIceCandidate =
           (RTCIceCandidate candidate) => rtcIceCadidates.add(candidate);
-      
-      // when call is accepted by remote peer
-      backgroundService.on("call_answered").listen((data) async {
-
-        debugPrint("CALL ANSWRED EVENT");
-
-         // set SDP answer as remoteDescription for peerConnection
-        // await _rtcPeerConnection!.setRemoteDescription(
-        //   RTCSessionDescription(
-        //     data?["sdpAnswer"]["sdp"],
-        //     data?["sdpAnswer"]["type"],
-        //   ),
-        // );
-
-        // // send iceCandidate generated to remote peer over signalling
-        // for (RTCIceCandidate candidate in rtcIceCadidates) {
-        //   backgroundService.invoke("ice_candidate", {
-        //     "calleeId": widget.calleeId,
-        //     "iceCandidate": {
-        //       "id": candidate.sdpMid,
-        //       "label": candidate.sdpMLineIndex,
-        //       "candidate": candidate.candidate
-        //     }
-        //   });
-        // }
-      });
 
       // when call is accepted by remote peer
       socket!.on("callAnswered", (data) async {
@@ -210,12 +161,6 @@ class _CallScreenState extends State<CallScreen> {
 
       // set SDP offer as localDescription for peerConnection
       await _rtcPeerConnection!.setLocalDescription(offer);
-
-      // make a call to remote peer over signalling
-      backgroundService.invoke("make_call", {
-        "calleeId": widget.calleeId,
-        "sdpOffer": offer.toMap(),
-      });
 
       // make a call to remote peer over signalling
       socket!.emit('makeCall', {
@@ -265,7 +210,7 @@ class _CallScreenState extends State<CallScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: const Text("P2P Call App"),
       ),
