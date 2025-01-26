@@ -1,5 +1,4 @@
 
-import 'package:madnolia/main.dart';
 import 'package:madnolia/pages/chat/join_screen.dart';
 import 'package:madnolia/pages/game/game_page.dart';
 import 'package:flutter/widgets.dart';
@@ -57,7 +56,7 @@ final GoRouter router = GoRouter(
           path: "chat",
           name: "chat",
 
-          builder: (context, state) => JoinScreen(selfCallerId: MyApp.selfCallerID)
+          builder: (context, state) => const JoinScreen()
         ),
         GoRoute(
             path: "home-user",

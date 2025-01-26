@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/pages/chat/call_screen.dart';
 
-import '../../services/signalling_service.dart';
+// import '../../services/signalling_service.dart';
 
 class JoinScreen extends StatefulWidget {
-  final String selfCallerId;
 
-  const JoinScreen({super.key, required this.selfCallerId});
+  const JoinScreen({super.key});
 
   @override
   State<JoinScreen> createState() => _JoinScreenState();
@@ -16,26 +17,27 @@ class JoinScreen extends StatefulWidget {
 class _JoinScreenState extends State<JoinScreen> {
   dynamic incomingSDPOffer;
   final remoteCallerIdTextEditingController = TextEditingController();
-  // final backgroundService = FlutterBackgroundService();
+  final backgroundService = FlutterBackgroundService();
 
   @override
   void initState() {
     super.initState();
 
-    // backgroundService.on("new_call").listen((data) {
-    //   if(mounted){
-    //     // setState(() => incomingSDPOffer = data);
-    //     debugPrint("Load new state of call");
-    //   }
-    // });
-    
-    // listen for incoming video call
-    SignallingService.instance.socket!.on("newCall", (data) {
+    backgroundService.on("newCall").listen((data) {
+      print("FROM newCall");
+      print(data);
       if (mounted) {
         // set SDP Offer of incoming call
         setState(() => incomingSDPOffer = data);
       }
     });
+    // listen for incoming video call
+    // SignallingService.instance.socket!.on("newCall", (data) {
+    //   if (mounted) {
+    //     // set SDP Offer of incoming call
+    //     setState(() => incomingSDPOffer = data);
+    //   }
+    // });
   }
 
   // join Call
@@ -58,6 +60,7 @@ class _JoinScreenState extends State<JoinScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userBloc = context.read<UserBloc>();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
@@ -75,7 +78,7 @@ class _JoinScreenState extends State<JoinScreen> {
                   children: [
                     TextField(
                       controller: TextEditingController(
-                        text: widget.selfCallerId,
+                        text: userBloc.state.username,
                       ),
                       readOnly: true,
                       textAlign: TextAlign.center,
@@ -113,7 +116,7 @@ class _JoinScreenState extends State<JoinScreen> {
                       ),
                       onPressed: () {
                         _joinCall(
-                          callerId: widget.selfCallerId,
+                          callerId: userBloc.state.username,
                           calleeId: remoteCallerIdTextEditingController.text,
                         );
                       },
@@ -144,7 +147,7 @@ class _JoinScreenState extends State<JoinScreen> {
                         onPressed: () {
                           _joinCall(
                             callerId: incomingSDPOffer["callerId"]!,
-                            calleeId: widget.selfCallerId,
+                            calleeId: userBloc.state.username,
                             offer: incomingSDPOffer["sdpOffer"],
                           );
                         },
