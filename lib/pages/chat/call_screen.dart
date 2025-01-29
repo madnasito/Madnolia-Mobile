@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 
-// import '../../services/signalling_service.dart';
-
 class CallScreen extends StatefulWidget {
   final String callerId, calleeId;
   final dynamic offer;
@@ -21,8 +19,6 @@ class CallScreen extends StatefulWidget {
 class _CallScreenState extends State<CallScreen> {
 
   final backgroundService = FlutterBackgroundService();
-  // socket instance
-  // final socket = SignallingService.instance.socket;
 
   // videoRenderer for localPeer
   final _localRTCVideoRenderer = RTCVideoRenderer();
@@ -99,7 +95,7 @@ class _CallScreenState extends State<CallScreen> {
     // for Incoming call
     if (widget.offer != null) {
 
-      backgroundService.on("IceCandidate").listen((data) {
+      backgroundService.on("ice_candidate").listen((data) {
         debugPrint("ICE CANDIDATE EVENT");
         String candidate = data!["iceCandidate"]["candidate"];
         String sdpMid = data["iceCandidate"]["id"];
@@ -113,22 +109,8 @@ class _CallScreenState extends State<CallScreen> {
         ));
       });
 
-      // listen for Remote IceCandidate
-      // socket!.on("IceCandidate", (data) {
-      //   String candidate = data["iceCandidate"]["candidate"];
-      //   String sdpMid = data["iceCandidate"]["id"];
-      //   int sdpMLineIndex = data["iceCandidate"]["label"];
-
-      //   // add iceCandidate
-      //   _rtcPeerConnection!.addCandidate(RTCIceCandidate(
-      //     candidate,
-      //     sdpMid,
-      //     sdpMLineIndex,
-      //   ));
-      // });
-
       // set SDP offer as remoteDescription for peerConnection
-      await _rtcPeerConnection!.setRemoteDescription(
+      await  _rtcPeerConnection!.setRemoteDescription(
         RTCSessionDescription(widget.offer["sdp"], widget.offer["type"]),
       );
 
@@ -139,16 +121,11 @@ class _CallScreenState extends State<CallScreen> {
       _rtcPeerConnection!.setLocalDescription(answer);
 
       // send SDP answer to remote peer over signalling
-      backgroundService.invoke("answerCall", {
-        "callerId": widget.callerId,
-        "sdpAnswer": answer.toMap(),
+      backgroundService.invoke("answer_call", {
+        "caller_id": widget.callerId,
+        "sdp_answer": answer.toMap(),
       });
 
-      // send SDP answer to remote peer over signalling
-      // socket!.emit("answerCall", {
-      //   "callerId": widget.callerId,
-      //   "sdpAnswer": answer.toMap(),
-      // });
     }
     // for Outgoing Call
     else {
@@ -157,7 +134,7 @@ class _CallScreenState extends State<CallScreen> {
           (RTCIceCandidate candidate) => rtcIceCadidates.add(candidate);
       
       // when call is accepted by remote peer
-      backgroundService.on("callAnswered").listen((data) async {
+      backgroundService.on("call_answered").listen((data) async {
 
         debugPrint("CALL ANSWRED EVENT");
 
@@ -171,7 +148,7 @@ class _CallScreenState extends State<CallScreen> {
 
         // send iceCandidate generated to remote peer over signalling
         for (RTCIceCandidate candidate in rtcIceCadidates) {
-          backgroundService.invoke("IceCandidate", {
+          backgroundService.invoke("ice_candidate", {
             "calleeId": widget.calleeId,
             "iceCandidate": {
               "id": candidate.sdpMid,
@@ -182,29 +159,6 @@ class _CallScreenState extends State<CallScreen> {
         }
       });
 
-      // when call is accepted by remote peer
-      // socket!.on("callAnswered", (data) async {
-      //   // set SDP answer as remoteDescription for peerConnection
-      //   await _rtcPeerConnection!.setRemoteDescription(
-      //     RTCSessionDescription(
-      //       data["sdpAnswer"]["sdp"],
-      //       data["sdpAnswer"]["type"],
-      //     ),
-      //   );
-
-      //   // send iceCandidate generated to remote peer over signalling
-      //   for (RTCIceCandidate candidate in rtcIceCadidates) {
-      //     socket!.emit("IceCandidate", {
-      //       "calleeId": widget.calleeId,
-      //       "iceCandidate": {
-      //         "id": candidate.sdpMid,
-      //         "label": candidate.sdpMLineIndex,
-      //         "candidate": candidate.candidate
-      //       }
-      //     });
-      //   }
-      // });
-
       // create SDP Offer
       RTCSessionDescription offer = await _rtcPeerConnection!.createOffer();
 
@@ -212,16 +166,10 @@ class _CallScreenState extends State<CallScreen> {
       await _rtcPeerConnection!.setLocalDescription(offer);
 
       // make a call to remote peer over signalling
-      backgroundService.invoke("makeCall", {
-        "calleeId": widget.calleeId,
-        "sdpOffer": offer.toMap(),
+      backgroundService.invoke("make_call", {
+        "callee_id": widget.calleeId,
+        "sdp_offer": offer.toMap(),
       });
-
-      // make a call to remote peer over signalling
-      // socket!.emit('makeCall', {
-      //   "calleeId": widget.calleeId,
-      //   "sdpOffer": offer.toMap(),
-      // });
     }
   }
 

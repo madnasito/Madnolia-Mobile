@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/pages/chat/call_screen.dart';
 
-// import '../../services/signalling_service.dart';
-
 class JoinScreen extends StatefulWidget {
 
   const JoinScreen({super.key});
@@ -23,21 +21,14 @@ class _JoinScreenState extends State<JoinScreen> {
   void initState() {
     super.initState();
 
-    backgroundService.on("newCall").listen((data) {
-      print("FROM newCall");
+    backgroundService.on("new_call").listen((data) {
+      print("FROM new_call");
       print(data);
       if (mounted) {
         // set SDP Offer of incoming call
         setState(() => incomingSDPOffer = data);
       }
     });
-    // listen for incoming video call
-    // SignallingService.instance.socket!.on("newCall", (data) {
-    //   if (mounted) {
-    //     // set SDP Offer of incoming call
-    //     setState(() => incomingSDPOffer = data);
-    //   }
-    // });
   }
 
   // join Call
@@ -129,7 +120,7 @@ class _JoinScreenState extends State<JoinScreen> {
               Positioned(
                 child: ListTile(
                   title: Text(
-                    "Incoming Call from ${incomingSDPOffer["callerId"]}",
+                    "Incoming Call from ${incomingSDPOffer["caller_id"]}",
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -146,9 +137,9 @@ class _JoinScreenState extends State<JoinScreen> {
                         color: Colors.greenAccent,
                         onPressed: () {
                           _joinCall(
-                            callerId: incomingSDPOffer["callerId"]!,
+                            callerId: incomingSDPOffer["caller_id"]!,
                             calleeId: userBloc.state.username,
-                            offer: incomingSDPOffer["sdpOffer"],
+                            offer: incomingSDPOffer["sdp_offer"],
                           );
                         },
                       )

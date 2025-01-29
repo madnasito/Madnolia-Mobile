@@ -102,11 +102,11 @@ onStart(ServiceInstance service) async {
       // }
     });
 
-  socket.on("newCall", (data) => service.invoke("newCall", data));
+  socket.on("new_call", (data) => service.invoke("new_call", data));
 
-  socket.on("callAnswered", (data) => service.invoke("callAnswered", data));
+  socket.on("call_answered", (data) => service.invoke("call_answered", data));
 
-  socket.on("IceCandidate", (data) => service.invoke("IceCandidate", data));
+  socket.on("ice_candidate", (data) => service.invoke("ice_candidate", data));
 
   socket.onDisconnect((_) => {
    service.invoke("disconnected_socket")
@@ -147,9 +147,11 @@ onStart(ServiceInstance service) async {
 
   service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));
 
-  service.on("makeCall").listen((onData) => socket.emit("makeCall", onData));
+  service.on("make_call").listen((onData) => socket.emit("make_call", onData));
 
-  service.on("answerCall").listen((onData) => socket.emit("answerCall", onData));
+  service.on("answer_call").listen((onData) => socket.emit("answer_call", onData));
+
+  service.on("ice_candidate").listen((onData) => socket.emit("ice_candidate", onData));
 
   service.on("delete_chat_notifications").listen((onData) => LocalNotificationsService.deleteRoomMessages(onData?["room"]));
 
