@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/views/platforms_view.dart';
+import 'package:madnolia/widgets/views/platforms_view.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
 class PlatformsPage extends StatelessWidget {

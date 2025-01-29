@@ -22,8 +22,6 @@ class _JoinScreenState extends State<JoinScreen> {
     super.initState();
 
     backgroundService.on("new_call").listen((data) {
-      print("FROM new_call");
-      print(data);
       if (mounted) {
         // set SDP Offer of incoming call
         setState(() => incomingSDPOffer = data);

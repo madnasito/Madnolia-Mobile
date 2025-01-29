@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/views/create_match_view.dart';
+import 'package:madnolia/widgets/views/create_match_view.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../models/game_model.dart';

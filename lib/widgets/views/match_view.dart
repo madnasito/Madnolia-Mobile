@@ -15,12 +15,12 @@ import 'package:madnolia/widgets/organism/organism_match_info.dart';
 
 // import 'package:socket_io_client/socket_io_client.dart';
 
-import '../models/chat/message_model.dart';
+import '../../models/chat/message_model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
-import '../models/chat_user_model.dart';
+import '../../models/chat_user_model.dart';
 
 class MatchUserView extends StatelessWidget {
   final MatchWithGame match;
@@ -36,13 +36,12 @@ class MatchChat extends StatefulWidget {
   final FullMatch match;
   final List matchMessages;
   final MessageBloc bloc;
-  final FlutterBackgroundService service;
 
   const MatchChat(
       {super.key,
       required this.match,
       required this.bloc,
-      required this.matchMessages, required this.service});
+      required this.matchMessages});
 
   @override
   State<MatchChat> createState() => _MatchChatState();
@@ -54,6 +53,7 @@ class _MatchChatState extends State<MatchChat> {
   final List<ChatMessageOrganism> _messages = [];
   final matchService = MatchService();
   late UserBloc userBloc;
+  final backgroundService = FlutterBackgroundService();
   
 
   late GlobalKey<FlutterMentionsState> messageKey;
@@ -126,21 +126,21 @@ class _MatchChatState extends State<MatchChat> {
     
 
     if (mounted) {
-      widget.service.invoke("init");
-      widget.service.on("watch_socket").listen((event)  {
+      backgroundService.invoke("init");
+      backgroundService.on("watch_socket").listen((event)  {
         debugPrint("WATCH socket");
         debugPrint(event.toString());
       });
-      widget.service.on("test").listen((onData){
+      backgroundService.on("test").listen((onData){
         debugPrint("TEST");
         debugPrint(onData.toString());
       });
-      widget.service.on("message").listen((data) => _listenMessage(data!));
-      widget.service.on("new_player_to_match").listen((data) {
+      backgroundService.on("message").listen((data) => _listenMessage(data!));
+      backgroundService.on("new_player_to_match").listen((data) {
         ChatUser user = ChatUser.fromJson(data!);
         debugPrint(user.name);
       });
-      widget.service.on("added_to_match").listen((data) {
+      backgroundService.on("added_to_match").listen((data) {
         if (data?["resp"] == true) {
           isInMatch = true;
           if (mounted) {
@@ -149,7 +149,7 @@ class _MatchChatState extends State<MatchChat> {
         }
       });
 
-      widget.service.invoke("init_chat", {"room": widget.match.id});
+      backgroundService.invoke("init_chat", {"room": widget.match.id});
 
       userBloc.updateChatRoom(widget.match.id);
     }
@@ -158,8 +158,8 @@ class _MatchChatState extends State<MatchChat> {
   @override
   void dispose() {
     
-    widget.service.invoke("disconnect_chat");
-    widget.service.invoke("off_new_player_to_match");
+    backgroundService.invoke("disconnect_chat");
+    backgroundService.invoke("off_new_player_to_match");
 
     userBloc.updateChatRoom("");
     super.dispose();
@@ -167,11 +167,11 @@ class _MatchChatState extends State<MatchChat> {
 
   @override
   Widget build(BuildContext context) {
-    widget.service.on("disconnected_socket").listen((payload) => setState(() {
+    backgroundService.on("disconnected_socket").listen((payload) => setState(() {
       socketConnected = false;
     }));
     
-    widget.service.on("connected_socket").listen((payload) => setState(() {
+    backgroundService.on("connected_socket").listen((payload) => setState(() {
       socketConnected = true;
     }));
     return Column(
@@ -294,7 +294,7 @@ class _MatchChatState extends State<MatchChat> {
           color: Colors.transparent,
           onPressed: () {
             try {
-              widget.service.invoke("join_to_match", {"match": match.id});
+              backgroundService.invoke("join_to_match", {"match": match.id});
             } catch (e) {
               debugPrint(e.toString());
             }
@@ -305,6 +305,6 @@ class _MatchChatState extends State<MatchChat> {
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
     debugPrint("¡Invoking new message from view!");
-    widget.service.invoke("new_message", {"text": text, "to": widget.match.id});
+    backgroundService.invoke("new_message", {"text": text, "to": widget.match.id});
   }
 }

@@ -23,10 +23,10 @@ import 'package:madnolia/widgets/match_card_widget.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:toast/toast.dart';
 
-import '../main.dart';
-import '../models/game_model.dart';
-import '../services/rawg_service.dart';
-import '../widgets/custom_input_widget.dart';
+import '../../main.dart';
+import '../../models/game_model.dart';
+import '../../services/rawg_service.dart';
+import '../custom_input_widget.dart';
 
 class SearchGameView extends StatefulWidget {
   final int platformId;

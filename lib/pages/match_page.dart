@@ -4,7 +4,7 @@ import 'package:madnolia/services/match_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/message_provider.dart';
-import 'package:madnolia/views/match_view.dart';
+import 'package:madnolia/widgets/views/match_view.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
 class MatchPage extends StatelessWidget {
@@ -33,7 +33,6 @@ class MatchPage extends StatelessWidget {
                   match: match,
                   bloc: bloc,
                   matchMessages: respMessages,
-                  service: FlutterBackgroundService(),
                   // socketClient: socketBloc.state.socketHandler.socket
                 );
               } else {

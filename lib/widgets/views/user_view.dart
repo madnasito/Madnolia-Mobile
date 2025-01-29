@@ -15,8 +15,8 @@ import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:toast/toast.dart';
 
-import '../models/user/user_model.dart';
-import '../services/user_service.dart';
+import '../../models/user/user_model.dart';
+import '../../services/user_service.dart';
 
 class UserMainView extends StatelessWidget {
   const UserMainView({super.key});

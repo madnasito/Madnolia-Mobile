@@ -6,7 +6,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/register_provider.dart';
 import 'package:madnolia/services/auth_service.dart';
-import 'package:madnolia/views/platforms_view.dart';
+import 'package:madnolia/widgets/views/platforms_view.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/background.dart';
