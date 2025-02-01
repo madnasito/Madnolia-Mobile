@@ -108,6 +108,14 @@ onStart(ServiceInstance service) async {
 
   socket.on("ice_candidate", (data) => service.invoke("ice_candidate", data));
 
+  socket.on("new_room_call", (data) => service.invoke("new_room_call", data));
+
+  socket.on("new_call", (data) => service.invoke("new_call", data));
+
+  socket.on("room_call_answered", (data) => service.invoke("room_call_answered", data));
+
+  socket.on("room_ice_candidate", (data) => service.invoke("room_ice_candidate", data));
+
   socket.onDisconnect((_) => {
    service.invoke("disconnected_socket")
   });
@@ -133,10 +141,7 @@ onStart(ServiceInstance service) async {
     }
   );
 
-  service.on("new_message").listen((onData) {
-      socket.emit("message", onData);
-      debugPrint("Enviando mensaje");}
-    );
+  service.on("new_message").listen((onData) => socket.emit("message", onData));
 
   service.on("disconnect_chat").listen((onData) {
     socket.emit("disconnect_chat");
@@ -152,6 +157,16 @@ onStart(ServiceInstance service) async {
   service.on("answer_call").listen((onData) => socket.emit("answer_call", onData));
 
   service.on("ice_candidate").listen((onData) => socket.emit("ice_candidate", onData));
+
+  service.on("join_call_room").listen((onData) => socket.emit("join_call_room", onData));
+
+  service.on("leave_call_room").listen((onData) => socket.emit("leave_call_room", onData));
+
+  service.on("make_room_call").listen((onData) => socket.emit("make_room_call", onData));
+
+  service.on("answer_room_call").listen((onData) => socket.emit("answer_room_call", onData));
+
+  service.on("room_ice_candidate").listen((onData) => socket.emit("room_ice_candidate", onData));
 
   service.on("delete_chat_notifications").listen((onData) => LocalNotificationsService.deleteRoomMessages(onData?["room"]));
 
