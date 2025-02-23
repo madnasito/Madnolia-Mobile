@@ -99,17 +99,24 @@ class HomeUserPage extends StatelessWidget {
     try {
       final userBloc = context.read<UserBloc>();
 
+      const storage = FlutterSecureStorage();
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
 
       if (userInfo.containsKey("error")) {
         // Check if the widget is still mounted before using context
         if (!context.mounted) return;
         return showErrorServerAlert(context, userInfo);
+      }else if (userInfo.containsKey("message")){
+        await storage.delete(key: "token");
+        userBloc.logOutUser();
+        
+        // Check if the widget is still mounted before using context
+          if (!context.mounted) return;
+          return context.go("/home");
       }
 
-      const storage = FlutterSecureStorage();
-      await initializeService();
       
+      await initializeService();
       if (userInfo.isEmpty) {
         await storage.delete(key: "token");
         userBloc.logOutUser();
@@ -151,8 +158,6 @@ class _MyBannerAdWidgetState extends State<MyBannerAdWidget> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SizedBox(
-        width: widget.adSize.width.toDouble(),
-        height: widget.adSize.height.toDouble(),
         child: _bannerAd == null
             // Nothing to render yet.
             ? const SizedBox()
