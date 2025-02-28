@@ -1,5 +1,6 @@
 
 import 'package:madnolia/pages/chat/join_screen.dart';
+import 'package:madnolia/pages/chat/room_call_page.dart';
 import 'package:madnolia/pages/game/game_page.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -145,6 +146,13 @@ final GoRouter router = GoRouter(
           path: "match",
           name: "match",
           builder: (context, state) => const MatchPage(),
+          routes: [
+            GoRoute(
+              name: "match_call",
+              path: "call",
+              builder: (BuildContext context, GoRouterState state) => const RoomCallPage()
+              )
+          ]
         ),
         GoRoute(
             path: "game", name: "game", builder: (context, state) => const GamePage()),

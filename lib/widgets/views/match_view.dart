@@ -1,8 +1,8 @@
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
-import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
@@ -21,16 +21,6 @@ import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
 import '../../models/chat_user_model.dart';
-
-class MatchUserView extends StatelessWidget {
-  final MatchWithGame match;
-  const MatchUserView({super.key, required this.match});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}
 
 class MatchChat extends StatefulWidget {
   final FullMatch match;
@@ -54,6 +44,7 @@ class _MatchChatState extends State<MatchChat> {
   final matchService = MatchService();
   late UserBloc userBloc;
   final backgroundService = FlutterBackgroundService();
+  
   
 
   late GlobalKey<FlutterMentionsState> messageKey;
@@ -167,6 +158,7 @@ class _MatchChatState extends State<MatchChat> {
 
   @override
   Widget build(BuildContext context) {
+    
     backgroundService.on("disconnected_socket").listen((payload) => setState(() {
       socketConnected = false;
     }));
@@ -208,8 +200,30 @@ class _MatchChatState extends State<MatchChat> {
                   ),
                   OrganismMatchInfo(match: widget.match)
                 ],
-              )
+              ),
             ],
+          ),
+        ),
+        SizedBox(
+          height: 35,
+          child: MaterialButton(
+            
+            height: 25,
+            color: Colors.pink,
+            onPressed: () { 
+              context.pushNamed("match_call", extra: widget.match);
+             },
+            child: Stack(
+                alignment: AlignmentDirectional.centerStart,
+                
+                children: [
+                  const Positioned(
+                    left: 10,
+                    child: Text("Join to voice chat")
+                  ),
+                  ..._activeUsers(widget.match.joined)
+                ],
+              ),
           ),
         ),
         Flexible(
@@ -306,5 +320,24 @@ class _MatchChatState extends State<MatchChat> {
     if (text.isEmpty) return;
     debugPrint("¡Invoking new message from view!");
     backgroundService.invoke("new_message", {"text": text, "to": widget.match.id});
+  }
+
+  List<Positioned> _activeUsers(List<ChatUser> users){
+    List<Positioned> usersThumbs = [];
+    double separation = 10;
+    for (var i = 0; i < users.length; i++) {
+      usersThumbs.add(
+        Positioned(
+          right: separation,
+          child: CircleAvatar(
+            backgroundImage: CachedNetworkImageProvider(users[i].thumb),
+            radius: 12,
+            )
+          )
+        );
+      separation += 8;
+    }
+
+    return usersThumbs;
   }
 }
