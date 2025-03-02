@@ -32,6 +32,10 @@ class InvitationsPage extends StatelessWidget {
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
 
+                    if(snapshot.data is Map){
+                      return Center(child: Text(translate(snapshot.data["message"])));
+                    }
+
                     final matches =
                         snapshot.data.map((e) => MatchWithGame.fromJson(e)).toList();
                     if (matches.isEmpty) {
