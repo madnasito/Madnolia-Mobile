@@ -4,7 +4,7 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <application
-        android:label="madnolia">
+        android:label="Madnolia">
        
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
