@@ -24,7 +24,8 @@ class GameImageAtom extends StatelessWidget {
                     name,
                     style: const TextStyle(
                         backgroundColor: Colors.black54, fontSize: 15),
-                  ))
+                  )
+                )
             ],
           );
   }

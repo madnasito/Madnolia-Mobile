@@ -1,5 +1,5 @@
 
-import 'package:madnolia/pages/chat/join_screen.dart';
+import 'package:madnolia/pages/chat/chat_page.dart';
 import 'package:madnolia/pages/chat/room_call_page.dart';
 import 'package:madnolia/pages/game/game_page.dart';
 import 'package:flutter/widgets.dart';
@@ -57,7 +57,7 @@ final GoRouter router = GoRouter(
           path: "chat",
           name: "chat",
 
-          builder: (context, state) => const JoinScreen()
+          builder: (context, state) => const ChatPage()
         ),
         GoRoute(
             path: "home-user",
