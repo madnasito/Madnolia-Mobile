@@ -1,4 +1,5 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/cubits/cubits.dart';
@@ -46,7 +47,7 @@ class HomeUserPage extends StatelessWidget {
                         itemBuilder: (BuildContext context, int platformIndex) {
                           return Column(
                             children:[ 
-                              const MyBannerAdWidget(),
+                              kDebugMode ? Container() : const MyBannerAdWidget(),
                               Container(
                                 width: double.infinity,
                                 color: Colors.black45,
