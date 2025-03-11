@@ -133,6 +133,14 @@ class CustomScaffold extends StatelessWidget {
             icon: SvgPicture.asset("assets/madnolia-logo.svg",
             width: MediaQuery.of(context).size.width / 11,),
             onPressed: () => GoRouter.of(context).push("/")),
+        actions: [
+          IconButton(
+            onPressed: (){
+              changeRoute(context, '/search');
+            },
+            icon: const Icon(Icons.search_rounded)
+            )
+        ],
       ),
       body: Background(
         child: SafeArea(
@@ -152,13 +160,10 @@ class _MenuButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
     final fullPath = GoRouterState.of(context).fullPath;
     return ElevatedButton(
         onPressed: () {
-          if (route != "" && route != currentRouteName) {
-            GoRouter.of(context).push(route);
-          }
+          changeRoute(context, route);
         },
         style: ElevatedButton.styleFrom(
             shape: const StadiumBorder(),
@@ -214,5 +219,12 @@ class _MenuButton extends StatelessWidget {
 
     // Verifica si el input coincide con la expresión regular
     return regExp.hasMatch(input);
+  }
+
+}
+void changeRoute(BuildContext context, String route){
+  final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
+  if (route != "" && route != currentRouteName) {
+    GoRouter.of(context).push(route);
   }
 }

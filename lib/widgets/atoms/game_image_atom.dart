@@ -38,5 +38,4 @@ String _resizeImage(String url) {
     } else {
       return "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
     }
-  
 }

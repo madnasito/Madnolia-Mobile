@@ -125,17 +125,21 @@ class SimpleCustomInput extends StatelessWidget {
   final void Function()? onTap;
   final void Function(String)? onChanged;
   final IconData iconData;
+  final bool autofocus;
   const SimpleCustomInput(
       {super.key,
       required this.placeholder,
       required this.controller,
+      required this.iconData,
       this.onTap,
       this.onChanged,
-      this.keyboardType = TextInputType.text, required this.iconData});
+      this.keyboardType = TextInputType.text,
+      this.autofocus = false});
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      autofocus: autofocus,
       onTap: onTap,
       controller: controller,
       onChanged: onChanged,
