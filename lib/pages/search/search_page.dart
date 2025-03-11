@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
@@ -37,8 +39,7 @@ class _SearchPageState extends State<SearchPage> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Center(
-            child: SingleChildScrollView(
-              child: Column(
+            child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SimpleCustomInput(
@@ -61,26 +62,53 @@ class _SearchPageState extends State<SearchPage> {
                     const Text('Looking for user'),
                     const SizedBox(height: 20),
                     (counter == 0 && searchController.text.isNotEmpty)
-                    ? FutureBuilder(
-                      future: _searchUsers(searchController.text),
-                      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) { 
-                        if(snapshot.hasData){
-                          return const Text('Loaded users');
-                        }else{
-                          return const CircularProgressIndicator();
-                        }
-                       }
+                    ? Flexible(
+                      child: FutureBuilder(
+                        future: _searchUsers(searchController.text),
+                        builder: (BuildContext context, AsyncSnapshot<List> snapshot) { 
+                          if(snapshot.hasData){
+                            return ListView.builder(
+                              itemCount: snapshot.data?.length,
+                              itemBuilder: (BuildContext context, int index) { 
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    radius: 30,
+                                    backgroundImage: CachedNetworkImageProvider(snapshot.data![index].thumb),),
+                                  subtitle: Text(snapshot.data![index].username),
+                                  title: Text(snapshot.data![index].name),
+                                  trailing: IconButton.outlined(
+
+                                    onPressed: () {  },
+                                    icon: Icon(Icons.person_add_alt_outlined), ),
+                                );
+                               }
+                              );
+                          }else{
+                            return const CircularProgressIndicator();
+                          }
+                         }
+                      ),
                     )
                     : const Text("Waiting for you")
                   ],
                 ),
             ),
-          ),
+        
         ),
       );
   }
 
-  _searchUsers(String query){
-    return UserService().searchUser(query);
+  Future<List> _searchUsers(String query) async {
+    final resp = await UserService().searchUser(query);
+    if (resp is Map) return [];
+
+    try {
+      List users = resp.map((e) => ChatUser.fromJson(e)).toList();
+      return users;
+    } catch (e) {
+      debugPrint(e.toString());
+      return [];
+    }
+
   }
 }
