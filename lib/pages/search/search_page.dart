@@ -76,10 +76,9 @@ class _SearchPageState extends State<SearchPage> {
                                     backgroundImage: CachedNetworkImageProvider(snapshot.data![index].thumb),),
                                   subtitle: Text(snapshot.data![index].username),
                                   title: Text(snapshot.data![index].name),
-                                  trailing: IconButton.outlined(
-
+                                  trailing: IconButton(
                                     onPressed: () {  },
-                                    icon: Icon(Icons.person_add_alt_outlined), ),
+                                    icon: const Icon(Icons.person_add_alt_outlined), ),
                                 );
                                }
                               );
