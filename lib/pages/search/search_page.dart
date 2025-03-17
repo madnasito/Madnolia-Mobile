@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:madnolia/models/chat_user_model.dart';
+import 'package:madnolia/enums/connection-status.enum.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
+
+import '../../models/user/simple_user_model.dart' show SimpleUser;
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -98,11 +100,15 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<List> _searchUsers(String query) async {
+    print(ConnectionStatus.none);
+    print(ConnectionStatus.partner);
+    print(ConnectionStatus.requestReceived);
+    print(ConnectionStatus.requestSent);
     final resp = await UserService().searchUser(query);
     if (resp is Map) return [];
 
     try {
-      List users = resp.map((e) => ChatUser.fromJson(e)).toList();
+      List users = resp.map((e) => SimpleUser.fromJson(e)).toList();
       return users;
     } catch (e) {
       debugPrint(e.toString());

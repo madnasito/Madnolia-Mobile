@@ -88,7 +88,7 @@ onStart(ServiceInstance service) async {
 
   socket.on("match_ready", (data) async {
       debugPrint("NOW ON BACKGROUND");
-      debugPrint(data);
+      debugPrint(data.toString());
       
       LocalNotificationsService.matchReady(data);
       // Send match ready event to UI (if app is in foreground)
