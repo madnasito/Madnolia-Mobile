@@ -102,19 +102,25 @@ onStart(ServiceInstance service) async {
       // }
     });
 
+  // Events to handle P2P call
   socket.on("new_call", (data) => service.invoke("new_call", data));
-
   socket.on("call_answered", (data) => service.invoke("call_answered", data));
-
   socket.on("ice_candidate", (data) => service.invoke("ice_candidate", data));
-
   socket.on("new_room_call", (data) => service.invoke("new_room_call", data));
-
   socket.on("new_call", (data) => service.invoke("new_call", data));
-
   socket.on("room_call_answered", (data) => service.invoke("room_call_answered", data));
-
   socket.on("room_ice_candidate", (data) => service.invoke("room_ice_candidate", data));
+
+  // Events for handle user connections
+  socket.on("new_request_connection", (data) {
+    print("ASDQWYIDH QWIDHIQWAD !!!!!!!!");
+    print(data);
+    print(data.runtimeType);
+    service.invoke("new_request_connection", data);
+  });
+  socket.on("connection_accepted", (data) => service.invoke("connection_accepted"));
+  socket.on("removed_partner", (data) => service.invoke("removed_partner"));
+  socket.on("connection_rejected", (data) => service.invoke("connection_rejected"));
 
   socket.onDisconnect((_) => {
    service.invoke("disconnected_socket")
@@ -171,6 +177,9 @@ onStart(ServiceInstance service) async {
   service.on("delete_chat_notifications").listen((onData) => LocalNotificationsService.deleteRoomMessages(onData?["room"]));
 
   service.on("delete_all_notifications").listen((onData)=> LocalNotificationsService.deleteAllNotifications());
+
+  // Events for handle connections
+  service.on('request_connection').listen((onData) => socket.emit('request_connection', onData?['user']));
 }
 
 void startBackgroundService() {

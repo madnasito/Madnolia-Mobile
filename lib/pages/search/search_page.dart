@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/enums/connection-status.enum.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/molecules/buttons/molecule_connection_button.dart';
 
 import '../../models/user/simple_user_model.dart' show SimpleUser;
 
@@ -25,7 +27,9 @@ class _SearchPageState extends State<SearchPage> {
     counter = 0;
     searchController = TextEditingController();
     super.initState();
+    
   }
+
 
   @override
   void dispose() {
@@ -35,8 +39,6 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return CustomScaffold(
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -61,26 +63,31 @@ class _SearchPageState extends State<SearchPage> {
                         );
                       }),
                     const SizedBox(height: 20),
-                    const Text('Looking for user'),
-                    const SizedBox(height: 20),
                     (counter == 0 && searchController.text.isNotEmpty)
                     ? Flexible(
                       child: FutureBuilder(
                         future: _searchUsers(searchController.text),
-                        builder: (BuildContext context, AsyncSnapshot<List> snapshot) { 
+                        builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                           if(snapshot.hasData){
+                            final backgroundService = FlutterBackgroundService();
+
+                            backgroundService.on("new_request_connection").listen((event)  {
+                                setState(() {
+                                  
+                                });
+                              });
                             return ListView.builder(
+                              padding: const EdgeInsets.all(0),
+                              physics: const BouncingScrollPhysics(),
                               itemCount: snapshot.data?.length,
                               itemBuilder: (BuildContext context, int index) { 
                                 return ListTile(
                                   leading: CircleAvatar(
-                                    radius: 30,
-                                    backgroundImage: CachedNetworkImageProvider(snapshot.data![index].thumb),),
-                                  subtitle: Text(snapshot.data![index].username),
+                                  radius: 20,
+                                  backgroundImage: CachedNetworkImageProvider(snapshot.data![index].thumb),),
+                                  subtitle: Text(snapshot.data![index].username, style: const TextStyle(color: Colors.white54),),
                                   title: Text(snapshot.data![index].name),
-                                  trailing: IconButton(
-                                    onPressed: () {  },
-                                    icon: const Icon(Icons.person_add_alt_outlined), ),
+                                  trailing: MoleculeConnectionButton(simpleUser: snapshot.data?[index]),
                                 );
                                }
                               );
@@ -90,7 +97,7 @@ class _SearchPageState extends State<SearchPage> {
                          }
                       ),
                     )
-                    : const Text("Waiting for you")
+                    : const SizedBox()
                   ],
                 ),
             ),
@@ -100,10 +107,6 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<List> _searchUsers(String query) async {
-    print(ConnectionStatus.none);
-    print(ConnectionStatus.partner);
-    print(ConnectionStatus.requestReceived);
-    print(ConnectionStatus.requestSent);
     final resp = await UserService().searchUser(query);
     if (resp is Map) return [];
 
