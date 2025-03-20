@@ -28,26 +28,24 @@ class AtomRequestedButton extends StatelessWidget {
                 backgroundImage: CachedNetworkImageProvider(simpleUser.thumb),
               ),
               const SizedBox(height: 20),
-              Text('${simpleUser.name} wants to connect with you', textAlign: TextAlign.center,)
+              Text('You have requested a connection to ${simpleUser.name}', textAlign: TextAlign.center,)
             ],
           ),
-          content: const Text('Accept request?', textAlign: TextAlign.center,),
+          content: const Text('Do you want to cancell it?', textAlign: TextAlign.center,),
           actions: [
             TextButton(
               onPressed: () {
-                final backgroundService = FlutterBackgroundService();
-                backgroundService.invoke('reject_connection', {'user': simpleUser.id});
                 Navigator.pop(context);
               } ,
-              child: const Text('Reject'),
+              child: const Text('Dismiss'),
             ),
               TextButton(
                 onPressed: () {
                   final backgroundService = FlutterBackgroundService();
-                  backgroundService.invoke('accept_connection', {'user': simpleUser.id});
+                  backgroundService.invoke('cancel_connection', {'user': simpleUser.id});
                   Navigator.pop(context);
                   },
-                child: const Text('Accept'),
+                child: const Text('Cancel request'),
               ),
           ],
         );
