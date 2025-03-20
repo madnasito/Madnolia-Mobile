@@ -14,9 +14,9 @@ class MoleculeConnectionButton extends StatelessWidget {
       case ConnectionStatus.none:
         return AtomRequestButton(userId: simpleUser.id,);
       case ConnectionStatus.requestSent:
-        return const AtomRequestedButton();
+        return AtomRequestedButton(simpleUser: simpleUser,);
       case ConnectionStatus.requestReceived:
-        return const AtomPendingButton();
+        return AtomPendingButton(simpleUser: simpleUser);
       case ConnectionStatus.partner:
         return const AtomUserChatButton();
       case ConnectionStatus.blocked:

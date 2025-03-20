@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:madnolia/enums/connection-status.enum.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
@@ -71,11 +70,9 @@ class _SearchPageState extends State<SearchPage> {
                           if(snapshot.hasData){
                             final backgroundService = FlutterBackgroundService();
 
-                            backgroundService.on("new_request_connection").listen((event)  {
-                                setState(() {
-                                  
-                                });
-                              });
+                            backgroundService.on("new_request_connection").listen((event) => setState(() {}));
+                            backgroundService.on('connection_accepted').listen((onData) => setState(() {}));
+                            
                             return ListView.builder(
                               padding: const EdgeInsets.all(0),
                               physics: const BouncingScrollPhysics(),

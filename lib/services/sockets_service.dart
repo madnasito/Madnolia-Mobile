@@ -112,15 +112,11 @@ onStart(ServiceInstance service) async {
   socket.on("room_ice_candidate", (data) => service.invoke("room_ice_candidate", data));
 
   // Events for handle user connections
-  socket.on("new_request_connection", (data) {
-    print("ASDQWYIDH QWIDHIQWAD !!!!!!!!");
-    print(data);
-    print(data.runtimeType);
-    service.invoke("new_request_connection", data);
-  });
+  socket.on("new_request_connection", (data) => service.invoke("new_request_connection", data));
   socket.on("connection_accepted", (data) => service.invoke("connection_accepted"));
   socket.on("removed_partner", (data) => service.invoke("removed_partner"));
   socket.on("connection_rejected", (data) => service.invoke("connection_rejected"));
+  socket.on("canceled_connection", (data) => service.invoke("canceled_connection"));
 
   socket.onDisconnect((_) => {
    service.invoke("disconnected_socket")
@@ -180,6 +176,9 @@ onStart(ServiceInstance service) async {
 
   // Events for handle connections
   service.on('request_connection').listen((onData) => socket.emit('request_connection', onData?['user']));
+  service.on('accept_connection').listen((onData) => socket.emit('accept_connection', onData?['user']));
+  service.on('cancel_connection').listen((onData) => socket.emit('cancel_connection', onData?['user']));
+
 }
 
 void startBackgroundService() {
