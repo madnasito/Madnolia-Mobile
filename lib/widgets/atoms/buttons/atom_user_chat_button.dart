@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AtomUserChatButton extends StatelessWidget {
-  const AtomUserChatButton({super.key});
+    final String userId;
+  const AtomUserChatButton({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () => context.goNamed("chat"),
+      onPressed: () => context.goNamed("chat", extra: userId),
       icon: const Icon(Icons.messenger_outline_sharp));
   }
 }

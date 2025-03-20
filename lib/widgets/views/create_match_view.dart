@@ -166,9 +166,6 @@ class MatchFormView extends StatelessWidget {
   const MatchFormView(
       {super.key, required this.game, required this.platformId});
 
- 
-
-
   @override
   Widget build(BuildContext context) {
 
