@@ -319,7 +319,7 @@ class _MatchChatState extends State<MatchChat> {
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
     debugPrint("¡Invoking new message from view!");
-    backgroundService.invoke("new_message", {"text": text, "to": widget.match.id});
+    backgroundService.invoke("new_message", {"text": text, "to": widget.match.id, "type": 2});
   }
 
   List<Positioned> _activeUsers(List<ChatUser> users){
