@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-
-OutlineInputBorder focusedBorder = OutlineInputBorder(
-  borderRadius: BorderRadius.circular(15),
-    borderSide: const BorderSide(color: Colors.blue));
-
 class AtomChatInput extends StatelessWidget {
-  const AtomChatInput({super.key});
+
+  final TextEditingController controller;
+
+  const AtomChatInput({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    return TextField( 
-      decoration: InputDecoration(
+    return TextField(
+      controller: controller,
+        decoration: InputDecoration(
+        filled: true, // Enable the filling of the background
+        fillColor: Colors.black38, // Set the desired dark background color
+        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         hintText: "Message",
-        focusedBorder: focusedBorder,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-                borderSide: const BorderSide(color: Colors.blue, width: 3),
-              )
+        hintStyle: const TextStyle(color: Colors.white70), // Optional: Change hint text color
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
       ),
+      style: const TextStyle(color: Colors.white), // Optional: Change text color
     );
   }
 }

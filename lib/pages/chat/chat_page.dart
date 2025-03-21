@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:madnolia/widgets/atoms/input/atom_chat_input.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../widgets/organism/input/organism_chat_input.dart';
@@ -13,14 +11,14 @@ class ChatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    String userId; 
-    if (GoRouterState.of(context).extra != null) {
-      if (GoRouterState.of(context).extra is String) {
-        userId = GoRouterState.of(context).extra as String;
-      }
-    } else{
-      context.go('/');
-    }
+    // String userId; 
+    // if (GoRouterState.of(context).extra != null) {
+    //   if (GoRouterState.of(context).extra is String) {
+    //     userId = GoRouterState.of(context).extra as String;
+    //   }
+    // } else{
+    //   context.go('/');
+    // }
     return CustomScaffold(
       body: Column(
         children: [
@@ -51,8 +49,10 @@ class ChatPage extends StatelessWidget {
               ],
             ),
           ),
-          Flexible(child: Expanded(child: Container(color: Colors.amber))),
-          Flexible(child: const OrganismChatInput())
+          Flexible(child: ListView.builder(
+            itemCount: 0,
+            itemBuilder: (_, i) => Container())),
+          const OrganismChatInput()
         ],
       )
       );
