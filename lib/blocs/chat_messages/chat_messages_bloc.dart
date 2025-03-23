@@ -17,7 +17,7 @@ class ChatMessagesBloc extends Bloc<ChatMessagesEvent, ChatMessagesState> {
 
       if(event is PushNewMessages){
 
-        List<ChatMessageOrganism> newMessages = state.chatMessages.toList();
+        List<GroupChatMessageOrganism> newMessages = state.chatMessages.toList();
 
 
 
@@ -39,7 +39,7 @@ class ChatMessagesBloc extends Bloc<ChatMessagesEvent, ChatMessagesState> {
     add(RestoreMessages());
   }
 
-  void pushMessages(List<ChatMessageOrganism> messages) {
+  void pushMessages(List<GroupChatMessageOrganism> messages) {
     add(PushNewMessages(newMessages: messages));
   }
 

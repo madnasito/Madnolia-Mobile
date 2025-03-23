@@ -40,7 +40,7 @@ class MatchChat extends StatefulWidget {
 class _MatchChatState extends State<MatchChat> {
   bool isInMatch = false;
   bool socketConnected = true;
-  final List<ChatMessageOrganism> _messages = [];
+  final List<GroupChatMessageOrganism> _messages = [];
   final matchService = MatchService();
   late UserBloc userBloc;
   final backgroundService = FlutterBackgroundService();
@@ -62,10 +62,10 @@ class _MatchChatState extends State<MatchChat> {
       widget.matchMessages.map((e) => Message.fromJson(e)).toList();
 
   String lastUser = "";
-  List<ChatMessageOrganism> messages = history.map((e) {
+  List<GroupChatMessageOrganism> messages = history.map((e) {
     final isTheSame = e.user.id == lastUser ? false : true;
     lastUser = e.user.id;
-    return ChatMessageOrganism(
+    return GroupChatMessageOrganism(
         text: e.text, user: e.user, mainMessage: isTheSame);
   }).toList();
 
@@ -94,7 +94,7 @@ class _MatchChatState extends State<MatchChat> {
       mainMessage = true;
     }
 
-    ChatMessageOrganism message = ChatMessageOrganism(
+    GroupChatMessageOrganism message = GroupChatMessageOrganism(
         mainMessage: mainMessage,
         text: decodedMessage.text,
         user: decodedMessage.user);
@@ -118,14 +118,6 @@ class _MatchChatState extends State<MatchChat> {
 
     if (mounted) {
       backgroundService.invoke("init");
-      backgroundService.on("watch_socket").listen((event)  {
-        debugPrint("WATCH socket");
-        debugPrint(event.toString());
-      });
-      backgroundService.on("test").listen((onData){
-        debugPrint("TEST");
-        debugPrint(onData.toString());
-      });
       backgroundService.on("message").listen((data) => _listenMessage(data!));
       backgroundService.on("new_player_to_match").listen((data) {
         ChatUser user = ChatUser.fromJson(data!);

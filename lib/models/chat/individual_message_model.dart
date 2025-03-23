@@ -1,21 +1,19 @@
 import 'dart:convert';
 import 'package:madnolia/enums/message_type.enum.dart';
-import 'package:madnolia/models/chat_user_model.dart';
-// import 'package:madnolia/models/user/simple_user_model.dart';
 
-Message messageFromJson(String str) => Message.fromJson(json.decode(str));
+IndividualMessage messageFromJson(String str) => IndividualMessage.fromJson(json.decode(str));
 
-String messageToJson(Message data) => json.encode(data.toJson());
+String messageToJson(IndividualMessage data) => json.encode(data.toJson());
 
-class Message {
+class IndividualMessage {
   String id;
   String to;
-  ChatUser user;
+  String user;
   String text;
   DateTime date;
   MessageType type; // Use the enum directly
 
-  Message({
+  IndividualMessage({
     required this.id,
     required this.to,
     required this.user,
@@ -24,7 +22,7 @@ class Message {
     required this.type,
   });
 
-  factory Message.fromJson(Map<String, dynamic> json) {
+  factory IndividualMessage.fromJson(Map<String, dynamic> json) {
     MessageType messageType;
     switch (json["type"]){
       case 0:
@@ -40,10 +38,10 @@ class Message {
         messageType = MessageType.user;
         break;
     }
-    return Message(
+    return IndividualMessage(
         id: json["_id"],
         to: json["to"],
-        user: ChatUser.fromJson(json["user"]),
+        user: json["user"],
         text: json["text"],
         date: DateTime.parse(json["date"]),
         type: messageType, // Convert int to enum
@@ -53,7 +51,7 @@ class Message {
   Map<String, dynamic> toJson() => {
         "_id": id,
         "to": to,
-        "user": user.toJson(),
+        "user": user,
         "text": text,
         "date": date.toIso8601String(),
         "type": type.index, // Convert enum to int

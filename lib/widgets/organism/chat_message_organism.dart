@@ -1,26 +1,27 @@
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/models/chat_user_model.dart';
+// import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/widgets/molecules/chat_message_molecule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
-class ChatMessageOrganism extends StatefulWidget {
+class GroupChatMessageOrganism extends StatefulWidget {
   final String text;
   final ChatUser user;
   final bool mainMessage;
 
-  const ChatMessageOrganism(
+  const GroupChatMessageOrganism(
       {super.key,
       required this.text,
       required this.user,
       required this.mainMessage});
 
   @override
-  State<ChatMessageOrganism> createState() => _ChatMessageOrganismState();
+  State<GroupChatMessageOrganism> createState() => _GroupChatMessageOrganismState();
 }
 
-class _ChatMessageOrganismState extends State<ChatMessageOrganism> with SingleTickerProviderStateMixin {
+class _GroupChatMessageOrganismState extends State<GroupChatMessageOrganism> with SingleTickerProviderStateMixin {
   late AnimationController animationController;
 
   @override

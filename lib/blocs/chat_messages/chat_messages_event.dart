@@ -8,7 +8,7 @@ sealed class ChatMessagesEvent extends Equatable {
 }
 
 class PushNewMessages extends ChatMessagesEvent {
-  final List<ChatMessageOrganism> newMessages;
+  final List<GroupChatMessageOrganism> newMessages;
 
   const PushNewMessages({required this.newMessages});
 }

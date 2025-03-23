@@ -71,8 +71,6 @@ class NotMyMessageMolecule extends StatelessWidget {
                     text,
                     overflow: TextOverflow.clip,
                   ),
-                
-              
             ),
           ),
         ],
