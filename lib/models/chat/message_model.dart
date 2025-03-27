@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:equatable/equatable.dart';
 import 'package:madnolia/models/chat_user_model.dart';
-// import 'package:madnolia/models/user/simple_user_model.dart';
 
 Message messageFromJson(String str) => Message.fromJson(json.decode(str));
 
 String messageToJson(Message data) => json.encode(data.toJson());
 
-class Message {
-  String id;
-  String to;
-  ChatUser user;
-  String text;
-  DateTime date;
-  MessageType type; // Use the enum directly
+class Message extends Equatable {
+  final String id;
+  final String to;
+  final ChatUser user;
+  final String text;
+  final DateTime date;
+  final MessageType type;
 
-  Message({
+  const Message({
     required this.id,
     required this.to,
     required this.user,
@@ -26,7 +26,7 @@ class Message {
 
   factory Message.fromJson(Map<String, dynamic> json) {
     MessageType messageType;
-    switch (json["type"]){
+    switch (json["type"]) {
       case 0:
         messageType = MessageType.user;
         break;
@@ -41,14 +41,14 @@ class Message {
         break;
     }
     return Message(
-        id: json["_id"],
-        to: json["to"],
-        user: ChatUser.fromJson(json["user"]),
-        text: json["text"],
-        date: DateTime.parse(json["date"]),
-        type: messageType, // Convert int to enum
-      );
-    }
+      id: json["_id"],
+      to: json["to"],
+      user: ChatUser.fromJson(json["user"]),
+      text: json["text"],
+      date: DateTime.parse(json["date"]),
+      type: messageType,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         "_id": id,
@@ -56,6 +56,9 @@ class Message {
         "user": user.toJson(),
         "text": text,
         "date": date.toIso8601String(),
-        "type": type.index, // Convert enum to int
+        "type": type.index,
       };
+
+  @override
+  List<Object> get props => [id, to, user, text, date, type];
 }

@@ -29,12 +29,12 @@ class MessagesService {
     }
   }
 
-  Future getUserChatMessages(UserMessagesBody message) async {
+  Future getUserChatMessages(UserMessagesBody messagesBody) async {
     try {
       final url = "$baseUrl/messages/chat";
       final String? token = await _storage.read(key: "token");
 
-      final body = message.toJson();
+      final body = messagesBody.toJson();
 
       final resp = await Dio().post(url, data: body, options: Options(headers: {"Authorization": "Bearer $token"}));
 
@@ -44,5 +44,7 @@ class MessagesService {
       return e;
     }
   }
+
+
 
 }
