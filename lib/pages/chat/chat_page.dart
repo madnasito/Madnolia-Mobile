@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/services/messages_service.dart';
@@ -47,14 +48,59 @@ class ChatPage extends StatelessWidget {
                   icon: const Icon(Icons.call_outlined),
                   ),
                   IconButton(
-                  onPressed: () {  },
+                  onPressed: () {
+                    ///Set both animation and reverse animation,
+                    ///combination different animation and reverse animation to achieve amazing effect.
+                    showToastWidget(
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        color: Colors.black45,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: (){},
+                              icon: Row(
+                                children: [
+                                  const Text("Answer"),
+                                  IconButton(icon: const Icon(Icons.call), onPressed: () { ToastManager().dismissAll(); },)
+                                ],
+                              ), 
+                            ),
+                            IconButton(
+                              onPressed: (){},
+                              icon: Row(
+                                children: [
+                                  const Text("Refuse"),
+                                  IconButton(icon: const Icon(Icons.call_end_outlined), onPressed: () { ToastManager().dismissAll(); },)
+                                ],
+                              ),
+                              
+                            )
+                          ],
+                        ),
+                      ),
+                      isIgnoring: false,
+                      context: context,
+                      animation: StyledToastAnimation.slideFromTopFade,
+                      reverseAnimation: StyledToastAnimation.fade,
+                      position: StyledToastPosition.top,
+                      animDuration: const Duration(milliseconds: 500),
+                      duration: const Duration(seconds: 30),
+                      curve: Curves.decelerate,
+                      reverseCurve: Curves.linear,
+                    );
+                  },
                   icon: const Icon(CupertinoIcons.video_camera),
                   )
               ],
             ),
           ),
           Expanded(child: MoleculeChatMessages(user: userId)),
-          const OrganismChatInput()
+          const SizedBox(height: 3),
+          const OrganismChatInput(),
+          const SizedBox(height: 5),
         ],
       )
       );
@@ -75,7 +121,7 @@ class MoleculeChatMessages extends StatelessWidget {
           if(snapshot.data is List){
             return Flexible(
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                 color: Colors.black38,
                 child: ListView.builder(
                     reverse: true,
@@ -88,7 +134,7 @@ class MoleculeChatMessages extends StatelessWidget {
             return const Text('Error loading messages');
           }
         }else {
-          return const SizedBox(child: CircularProgressIndicator());
+          return const Flexible(child: CircularProgressIndicator());
         }
       },
     );

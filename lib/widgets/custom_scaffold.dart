@@ -20,6 +20,7 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     
     final userBloc = context.read<UserBloc>();
+    final backgroundService = FlutterBackgroundService();
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
@@ -101,9 +102,8 @@ class CustomScaffold extends StatelessWidget {
                       if(!context.mounted) return;
                       GoRouter.of(context).push("/home");
                       userBloc.logOutUser();
-                      final service = FlutterBackgroundService();
-                      service.invoke("delete_all_notifications");
-                      service.invoke("stop");
+                      backgroundService.invoke("delete_all_notifications");
+                      backgroundService.invoke("stop");
                     },
                     child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
