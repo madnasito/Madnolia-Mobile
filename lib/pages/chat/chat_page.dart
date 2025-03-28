@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
-import 'package:madnolia/services/messages_service.dart';
 import 'package:madnolia/widgets/atoms/messages/atom_individual_message.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_chat_input.dart';
@@ -163,6 +162,9 @@ class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
                 ),
               );
           case MessageStatus.initial:
+            if(state.hasReachedMax){
+              return Center(child: Text("No messages here"),);
+            }
             return const Center(child: CircularProgressIndicator());
             }
       },
