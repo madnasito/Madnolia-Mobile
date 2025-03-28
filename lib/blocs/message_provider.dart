@@ -12,7 +12,7 @@ class MessageProvider extends InheritedWidget {
     return _instance!;
   }
 
-  final messageBloc = MessageBloc();
+  final messageBloc = MessageInputBloc();
 
   MessageProvider._internal({super.key, required super.child});
 
@@ -22,7 +22,7 @@ class MessageProvider extends InheritedWidget {
   @override
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => true;
 
-  static MessageBloc of(BuildContext context) {
+  static MessageInputBloc of(BuildContext context) {
     return (context.getInheritedWidgetOfExactType<MessageProvider>()!)
         .messageBloc;
   }

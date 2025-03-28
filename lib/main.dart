@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
+import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart' show GlobalCupertinoLocalizations, GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
-import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (BuildContext context) => getIt<UserBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>()),
+        BlocProvider(create: (BuildContext context) => getIt<MessageBloc>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
         BlocProvider(create: (BuildContext context) => getItCubit<PlatformGamesCubit>()),

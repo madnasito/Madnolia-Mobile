@@ -15,7 +15,7 @@ class MoleculeMatchChatInput extends StatelessWidget {
   final bool isInMatch;
   final Socket socketClient;
   final GlobalKey<FlutterMentionsState> messageKey;
-  final MessageBloc bloc;
+  final MessageInputBloc bloc;
   const MoleculeMatchChatInput({
     super.key,
     required this.matchOwner,

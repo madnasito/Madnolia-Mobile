@@ -4,7 +4,6 @@ import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
 
 class AtomIndividualMessage extends StatefulWidget {
-
   final IndividualMessage message;
   const AtomIndividualMessage({super.key, required this.message});
 
@@ -12,14 +11,15 @@ class AtomIndividualMessage extends StatefulWidget {
   State<AtomIndividualMessage> createState() => _AtomIndividualMessageState();
 }
 
-class _AtomIndividualMessageState extends State<AtomIndividualMessage> with SingleTickerProviderStateMixin {
+class _AtomIndividualMessageState extends State<AtomIndividualMessage>
+    with SingleTickerProviderStateMixin {
   late AnimationController animationController;
 
   @override
   void initState() {
     animationController = AnimationController(
-                vsync: this, duration: const Duration(milliseconds: 300))
-              ..forward();
+        vsync: this, duration: const Duration(milliseconds: 300))
+      ..forward();
     super.initState();
   }
 
@@ -35,19 +35,18 @@ class _AtomIndividualMessageState extends State<AtomIndividualMessage> with Sing
     return FadeTransition(
       opacity: animationController,
       child: SizeTransition(
-        sizeFactor: CurvedAnimation(
-            parent: animationController, curve: Curves.easeInOut),
+        sizeFactor:
+            CurvedAnimation(parent: animationController, curve: Curves.easeInOut),
         child: Align(
-          alignment: widget.message.user == myId ? Alignment.centerRight : Alignment.centerLeft,
-          child: Flexible(
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.white38, width: 0.5),
-              ),
-              child: Text(widget.message.text, overflow: TextOverflow.clip),
-            )
+          alignment:
+              widget.message.user == myId ? Alignment.centerRight : Alignment.centerLeft,
+          child: Container( // Removed Flexible
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: Colors.white38, width: 0.5),
+            ),
+            child: Text(widget.message.text, overflow: TextOverflow.clip),
           ),
         ),
       ),

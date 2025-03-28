@@ -25,7 +25,7 @@ import '../../models/chat_user_model.dart';
 class MatchChat extends StatefulWidget {
   final FullMatch match;
   final List matchMessages;
-  final MessageBloc bloc;
+  final MessageInputBloc bloc;
 
   const MatchChat(
       {super.key,

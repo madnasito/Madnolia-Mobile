@@ -9,5 +9,6 @@ Future<void> serviceLocatorInit() async {
 
   getIt.registerSingleton(UserBloc());
   getIt.registerSingleton(GameDataBloc());
+  getIt.registerSingleton(MessageBloc());
 }
 

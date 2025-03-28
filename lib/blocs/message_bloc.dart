@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:madnolia/blocs/validators.dart';
 import 'package:rxdart/rxdart.dart';
 
-class MessageBloc with Validators {
+class MessageInputBloc with Validators {
   final _messageController = BehaviorSubject<String>();
   // Get STREAM data
   Stream<String> get messageStream => _messageController.stream;

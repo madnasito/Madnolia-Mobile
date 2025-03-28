@@ -1,14 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/services/messages_service.dart';
 import 'package:madnolia/widgets/atoms/messages/atom_individual_message.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/molecules/chat/molecule_chat_input.dart';
 
-import '../../widgets/organism/input/organism_chat_input.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
@@ -25,122 +28,164 @@ class ChatPage extends StatelessWidget {
       context.go('/');
     }
     return CustomScaffold(
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 5, top: 5, bottom: 5, right: 5),
-            color: Colors.black45,
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider("https://i.beeimg.com/images/thumb/z66297834451-xs.jpg"),
-                  radius: 30,
-                ),
-                const Column(
-                  children: [
-                    Text("NAME"),
-                    Text("@username", style: TextStyle(fontSize: 6),)
-                  ],
-                ),
-                Expanded(child: Container() ),
-                IconButton(
-                  onPressed: () {  },
-                  icon: const Icon(Icons.call_outlined),
+      body: BlocProvider(
+        create: (context) => MessageBloc()..add(UserMessageFetched(messagesBody: UserMessagesBody(user: userId, skip: 0))),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.only(left: 5, top: 5, bottom: 5, right: 5),
+              color: Colors.black45,
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    backgroundImage: CachedNetworkImageProvider("https://i.beeimg.com/images/thumb/z66297834451-xs.jpg"),
+                    radius: 30,
                   ),
+                  const Column(
+                    children: [
+                      Text("NAME"),
+                      Text("@username", style: TextStyle(fontSize: 6),)
+                    ],
+                  ),
+                  Expanded(child: Container() ),
                   IconButton(
-                  onPressed: () {
-                    ///Set both animation and reverse animation,
-                    ///combination different animation and reverse animation to achieve amazing effect.
-                    showToastWidget(
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        color: Colors.black45,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                              onPressed: (){},
-                              icon: Row(
-                                children: [
-                                  const Text("Answer"),
-                                  IconButton(icon: const Icon(Icons.call), onPressed: () { ToastManager().dismissAll(); },)
-                                ],
-                              ), 
-                            ),
-                            IconButton(
-                              onPressed: (){},
-                              icon: Row(
-                                children: [
-                                  const Text("Refuse"),
-                                  IconButton(icon: const Icon(Icons.call_end_outlined), onPressed: () { ToastManager().dismissAll(); },)
-                                ],
+                    onPressed: () {  },
+                    icon: const Icon(Icons.call_outlined),
+                    ),
+                    IconButton(
+                    onPressed: () {
+                      ///Set both animation and reverse animation,
+                      ///combination different animation and reverse animation to achieve amazing effect.
+                      showToastWidget(
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          color: Colors.black45,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                onPressed: (){},
+                                icon: Row(
+                                  children: [
+                                    const Text("Answer"),
+                                    IconButton(icon: const Icon(Icons.call), onPressed: () { ToastManager().dismissAll(); },)
+                                  ],
+                                ), 
                               ),
-                              
-                            )
-                          ],
+                              IconButton(
+                                onPressed: (){},
+                                icon: Row(
+                                  children: [
+                                    const Text("Refuse"),
+                                    IconButton(icon: const Icon(Icons.call_end_outlined), onPressed: () { ToastManager().dismissAll(); },)
+                                  ],
+                                ),
+                                
+                              )
+                            ],
+                          ),
                         ),
-                      ),
-                      isIgnoring: false,
-                      context: context,
-                      animation: StyledToastAnimation.slideFromTopFade,
-                      reverseAnimation: StyledToastAnimation.fade,
-                      position: StyledToastPosition.top,
-                      animDuration: const Duration(milliseconds: 500),
-                      duration: const Duration(seconds: 30),
-                      curve: Curves.decelerate,
-                      reverseCurve: Curves.linear,
-                    );
-                  },
-                  icon: const Icon(CupertinoIcons.video_camera),
-                  )
-              ],
+                        isIgnoring: false,
+                        context: context,
+                        animation: StyledToastAnimation.slideFromTopFade,
+                        reverseAnimation: StyledToastAnimation.fade,
+                        position: StyledToastPosition.top,
+                        animDuration: const Duration(milliseconds: 500),
+                        duration: const Duration(seconds: 30),
+                        curve: Curves.decelerate,
+                        reverseCurve: Curves.linear,
+                      );
+                    },
+                    icon: const Icon(CupertinoIcons.video_camera),
+                    )
+                ],
+              ),
             ),
-          ),
-          Expanded(child: MoleculeChatMessages(user: userId)),
-          const SizedBox(height: 3),
-          const OrganismChatInput(),
-          const SizedBox(height: 5),
-        ],
+            Expanded(child: MoleculeChatMessages(user: userId)),
+            const SizedBox(height: 3),
+            MoleculeChatInput(to: userId, messageType: MessageType.user),
+            const SizedBox(height: 5),
+          ],
+        ),
       )
       );
   }
 }
 
-class MoleculeChatMessages extends StatelessWidget {
+class MoleculeChatMessages extends StatefulWidget {
   final String user;
   const MoleculeChatMessages({super.key, required this.user});
 
   @override
+  State<MoleculeChatMessages> createState() => _MoleculeChatMessagesState();
+}
+
+class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
+
+  final _scrollController = ScrollController();
+  int skip = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    const int skip = 0;
-    return FutureBuilder(
-      future: getChatMessages(UserMessagesBody(user: user, skip: skip)),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if(snapshot.hasData){
-          if(snapshot.data is List){
-            return Flexible(
-              child: Container(
+    return BlocBuilder<MessageBloc, MessageState>(
+      builder: (context, state) {
+        switch (state.status) {
+          case MessageStatus.failure:
+            return const Center(child: Text("Failed fetching messages"));
+          case MessageStatus.success:
+            if(state.messages.isEmpty) {
+              return const Center(child: Text('no posts'));
+              }
+              return Container(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                 color: Colors.black38,
                 child: ListView.builder(
-                    reverse: true,
-                    itemCount: snapshot.data.length,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (_, i) => AtomIndividualMessage(message: snapshot.data[i])),
-              ),
-            );
-          }else {
-            return const Text('Error loading messages');
-          }
-        }else {
-          return const Flexible(child: CircularProgressIndicator());
-        }
+                  shrinkWrap: false,
+                  addAutomaticKeepAlives: true,
+                  reverse: true,
+                  itemBuilder: (BuildContext context,int index) {
+                    return index >= state.messages.length
+                      ? const CircularProgressIndicator()
+                      : AtomIndividualMessage(message: state.messages[index]);
+                  } ,
+                  itemCount: state.hasReachedMax
+                    ? state.messages.length
+                    : state.messages.length + 1,
+                  controller: _scrollController,
+                ),
+              );
+          case MessageStatus.initial:
+            return const Center(child: CircularProgressIndicator());
+            }
       },
     );
   }
 
-  Future getChatMessages(UserMessagesBody payload) async {
-    return await MessagesService().getUserChatMessages(payload);
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    debugPrint(_isBottom.toString());
+    if (_isBottom) {
+      context.read<MessageBloc>().add(UserMessageFetched(messagesBody: UserMessagesBody(user: widget.user, skip: skip)));
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
   }
 }

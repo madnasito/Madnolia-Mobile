@@ -5,19 +5,19 @@ enum MessageStatus { initial, success, failure }
 final class MessageState extends Equatable {
   
   final MessageStatus status;
-  final List<Message> messages;
+  final List<IndividualMessage> messages;
   final bool hasReachedMax;
 
   const MessageState({
     this.status = MessageStatus.initial,
-    this.messages = const <Message>[],
+    this.messages = const <IndividualMessage>[],
     this.hasReachedMax = false, 
   });
 
 
   MessageState copyWith({
     MessageStatus? status,
-    List<Message>? messages,
+    List<IndividualMessage>? messages,
     bool? hasReachedMax,
   }) {
     return MessageState(
