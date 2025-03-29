@@ -1,5 +1,6 @@
 
-import 'package:madnolia/pages/chat/chat_page.dart';
+import 'package:madnolia/pages/chat/user_chat_page.dart';
+import 'package:madnolia/pages/chat/chats_page.dart';
 import 'package:madnolia/pages/chat/room_call_page.dart';
 import 'package:madnolia/pages/game/game_page.dart';
 import 'package:flutter/widgets.dart';
@@ -57,8 +58,12 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: "chat",
           name: "chat",
-
-          builder: (context, state) => const ChatPage()
+          builder: (context, state) => const ChatsPage()
+        ),
+        GoRoute(
+          path: "user_chat",
+          name: "user_chat",
+          builder: (context, state) => const UserChatPage()
         ),
         GoRoute(
           path: "search",

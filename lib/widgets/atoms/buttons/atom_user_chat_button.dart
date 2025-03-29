@@ -8,7 +8,7 @@ class AtomUserChatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () => context.goNamed("chat", extra: userId),
+      onPressed: () => context.goNamed("user_chat", extra: userId),
       icon: const Icon(Icons.messenger_outline_sharp));
   }
 }

@@ -81,8 +81,9 @@ class _SearchPageState extends State<SearchPage> {
                               itemBuilder: (BuildContext context, int index) { 
                                 return ListTile(
                                   leading: CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: CachedNetworkImageProvider(snapshot.data![index].thumb),),
+                                    radius: 20,
+                                    backgroundImage: CachedNetworkImageProvider(snapshot.data![index].thumb)
+                                  ),
                                   subtitle: Text(snapshot.data![index].username, style: const TextStyle(color: Colors.white54),),
                                   title: Text(snapshot.data![index].name),
                                   trailing: MoleculeConnectionButton(simpleUser: snapshot.data?[index]),

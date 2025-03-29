@@ -14,3 +14,9 @@ final class UserMessageFetched extends MessageEvent {
 }
 
 final class RestoreState extends MessageEvent {}
+
+final class AddIndividualMessage extends MessageEvent {
+  final IndividualMessage message;
+
+  const AddIndividualMessage({ required this.message});
+}

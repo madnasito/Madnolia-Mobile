@@ -1,19 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/models/chat/individual_message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/widgets/atoms/messages/atom_individual_message.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_chat_input.dart';
 
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({super.key});
+class UserChatPage extends StatelessWidget {
+  const UserChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -124,13 +126,30 @@ class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
 
   final _scrollController = ScrollController();
   late MessageBloc _messageBloc;
+  late FlutterBackgroundService _backgroundService;
+  late UserBloc _userBloc;
   int skip = 0;
 
+  void _addMessage(Map<String, dynamic> onData){
+    final IndividualMessage message = IndividualMessage.fromJson(onData);
+
+    if((message.user == _userBloc.state.id && message.to == widget.user) || (message.to == _userBloc.state.id && message.user == widget.user)){
+      setState(() {    
+        _messageBloc.add(AddIndividualMessage(message: message));
+      });
+    }
+  }
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
     _messageBloc = context.read<MessageBloc>();
+    _backgroundService = FlutterBackgroundService();
+    _userBloc = context.read<UserBloc>();
+
+    if(mounted){
+      _backgroundService.on("message").listen((onData) => _addMessage(onData!));
+    }
   }
 
 
@@ -170,6 +189,7 @@ class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
             return const Center(child: CircularProgressIndicator());
             }
       },
+      // bloc: MessageBloc(),
     );
   }
 

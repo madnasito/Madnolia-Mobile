@@ -26,6 +26,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       _onFetchUserMessages, transformer: throttleDroppable(throttleDuration));
     
     on<RestoreState>(_restoreState);
+
+    on<AddIndividualMessage>(_addMessage);
   }
 
   Future _onFetchUserMessages(
@@ -54,6 +56,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   }
 
   void _restoreState(RestoreState event, Emitter<MessageState> emit){
+    skip = 0;
     emit(
       state.copyWith(
       status: MessageStatus.initial,
@@ -61,4 +64,10 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       hasReachedMax: false
     ));
   }
+
+  void _addMessage( AddIndividualMessage event, Emitter<MessageState> emit) => emit(
+    state.copyWith(
+      messages: [event.message, ...state.messages]
+    )
+  );
 }

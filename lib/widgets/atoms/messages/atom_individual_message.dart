@@ -42,9 +42,10 @@ class _AtomIndividualMessageState extends State<AtomIndividualMessage>
               widget.message.user == myId ? Alignment.centerRight : Alignment.centerLeft,
           child: Container( // Removed Flexible
             padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.all(2),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              border: Border.all(color: Colors.white38, width: 0.5),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: widget.message.user == myId ? Colors.lightBlueAccent : Colors.white54, width: 0.5),
             ),
             child: Text(widget.message.text, overflow: TextOverflow.clip),
           ),

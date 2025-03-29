@@ -7,6 +7,8 @@ import 'package:madnolia/models/chat/message_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:dio/dio.dart';
+
+import '../models/chat/user_chat_model.dart';
 class MessagesService {
 
   final _storage = const FlutterSecureStorage();
@@ -45,6 +47,16 @@ class MessagesService {
     }
   }
 
-
+  Future<List<dynamic>> getChats() async {
+    try {
+      final url = "$baseUrl/messages";
+      final String? token = await _storage.read(key: "token");
+      final resp = await Dio().get(url, options: Options(headers: {"Authorization": "Bearer $token"}));
+      final chats = resp.data.map((e) => UserChat.fromJson(e)).toList();
+      return chats;
+    } catch (e) {
+      throw ArgumentError(e);
+    }
+  }
 
 }

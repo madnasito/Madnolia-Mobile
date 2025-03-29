@@ -70,12 +70,12 @@ class _MatchChatState extends State<MatchChat> {
   }).toList();
 
   setState(() {
-    _messages.addAll(messages);
-  });
-}
+      _messages.addAll(messages);
+    });
+  }
 
 
-  void _listenMessage(Map<String, dynamic> payload) async{
+  void _listenMessage(Map<String, dynamic> payload) async {
     if (!mounted) {
       return;
     }
@@ -100,8 +100,6 @@ class _MatchChatState extends State<MatchChat> {
         user: decodedMessage.user);
     
     // await LocalNotificationsService.displayMessage(decodedMessage);
-
-    
 
     setState(() {
       _messages.insert(0, message);

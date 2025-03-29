@@ -47,16 +47,18 @@ onStart(ServiceInstance service) async {
       debugPrint("MESSAGE!!!");
       debugPrint(username);
       debugPrint(currentRoom);
-      Message message = Message.fromJson(payload);
+
+
+      // Message message = Message.fromJson(payload);
 
       service.invoke("message", payload);
       
 
-      debugPrint(message.to);
+      // debugPrint(message.to);
 
-      if(currentRoom != message.to && message.user.id != username){
-        LocalNotificationsService.displayMessage(message);
-      }
+      // if(currentRoom != message.to && message.user.id != username){
+      //   LocalNotificationsService.displayMessage(message);
+      // }
       // Send message to UI (if app is in foreground)
       // if (window.isActive) {
       //   // Create a method to send data to the UI (e.g., using a Stream or Provider)
