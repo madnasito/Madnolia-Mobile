@@ -12,3 +12,5 @@ final class UserMessageFetched extends MessageEvent {
 
   const UserMessageFetched({ required this.messagesBody});
 }
+
+final class RestoreState extends MessageEvent {}

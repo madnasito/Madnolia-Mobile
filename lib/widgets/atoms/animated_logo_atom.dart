@@ -46,7 +46,7 @@ class _AnimatedLogoAtomState extends State<AnimatedLogoAtom>
     return AnimatedBuilder(
       animation: controller,
       child: Stack(alignment: Alignment.center, children: [
-        Image.asset("assets/madnolia home logo.png", width: 155),
+        Image.asset("assets/madnolia-home-logo.png", width: 155),
         // Cube(
         //   size: widget.size * 1.05,
         //   borderWidth: 5,

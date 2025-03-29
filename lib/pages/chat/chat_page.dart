@@ -123,12 +123,14 @@ class MoleculeChatMessages extends StatefulWidget {
 class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
 
   final _scrollController = ScrollController();
+  late MessageBloc _messageBloc;
   int skip = 0;
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    _messageBloc = context.read<MessageBloc>();
   }
 
 
@@ -174,6 +176,7 @@ class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _messageBloc.add(RestoreState());
     super.dispose();
   }
 

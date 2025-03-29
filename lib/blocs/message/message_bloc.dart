@@ -24,6 +24,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   MessageBloc() : super(MessageInitial()) {
     on<UserMessageFetched>(
       _onFetchUserMessages, transformer: throttleDroppable(throttleDuration));
+    
+    on<RestoreState>(_restoreState);
   }
 
   Future _onFetchUserMessages(
@@ -51,5 +53,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       }
   }
 
-
+  void _restoreState(RestoreState event, Emitter<MessageState> emit){
+    emit(
+      state.copyWith(
+      status: MessageStatus.initial,
+      messages: [],
+      hasReachedMax: false
+    ));
+  }
 }

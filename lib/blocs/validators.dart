@@ -3,7 +3,8 @@ import 'dart:async';
 mixin class Validators {
   final validateName = StreamTransformer<String, String>.fromHandlers(
     handleData: (name, sink) {
-      RegExp regExp = RegExp(r'^(?!.*\s.*\s.*)[a-zA-Z0-9.\$\_-]*$');
+      // La expresión regular modificada:
+      RegExp regExp = RegExp(r'^[a-zA-Z0-9.\$\_-]*\s?$');
 
       if (regExp.hasMatch(name)) {
         sink.add(name);
