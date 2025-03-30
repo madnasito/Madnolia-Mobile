@@ -3,8 +3,6 @@ import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/blocs/message_provider.dart';
-import 'package:madnolia/widgets/views/match_view.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/views/view_match.dart';
 
@@ -14,7 +12,6 @@ class MatchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final extraInfo = GoRouterState.of(context).extra!;
-    final bloc = MessageProvider.of(context);
     final service = FlutterBackgroundService();
     service.invoke("look");
     return CustomScaffold(
@@ -26,17 +23,9 @@ class MatchPage extends StatelessWidget {
 
               if (snapshot.data.containsKey("match")) {
                 final FullMatch match = FullMatch.fromJson(snapshot.data["match"]);
-                
-                final respMessages = snapshot.data["messages"];
 
                 // final socketBloc = context.watch<SocketsBloc>();
                 return ViewMatch(match: match);
-                return MatchChat(
-                  match: match,
-                  bloc: bloc,
-                  matchMessages: respMessages,
-                  // socketClient: socketBloc.state.socketHandler.socket
-                );
               } else {
                 return const Center(child: Text("Error loading match."));
               }

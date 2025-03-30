@@ -1,16 +1,11 @@
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_translate/flutter_translate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
-import 'package:madnolia/widgets/chat/input_widget.dart';
-import 'package:madnolia/widgets/form_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
 
 // import 'package:socket_io_client/socket_io_client.dart';
@@ -233,100 +228,100 @@ class _MatchChatState extends State<MatchChat> {
     );
   }
 
-  Widget _bottomRow(FullMatch match, UserState userState, bool isInMatch,
-      bool socketConnected) {
-    if (!mounted) {
-      return const CircularProgressIndicator();
-    }
-    bool owner = userState.id == match.user.id ? true : false;
-    List<ChatUser> founded =
-        match.joined.where((e) => userState.id == e.id).toList();
+  // Widget _bottomRow(FullMatch match, UserState userState, bool isInMatch,
+  //     bool socketConnected) {
+  //   if (!mounted) {
+  //     return const CircularProgressIndicator();
+  //   }
+  //   bool owner = userState.id == match.user.id ? true : false;
+  //   List<ChatUser> founded =
+  //       match.joined.where((e) => userState.id == e.id).toList();
 
-    if (owner || founded.isNotEmpty || isInMatch) {
-      isInMatch = true;
-      Size screenSize = MediaQuery.of(context).size;
+  //   if (owner || founded.isNotEmpty || isInMatch) {
+  //     isInMatch = true;
+  //     Size screenSize = MediaQuery.of(context).size;
 
-      double screenWidth = screenSize.width;
+  //     double screenWidth = screenSize.width;
 
-      if (!socketConnected) {
-        return Center(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
-          child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION")),
-        ));
-      }
-      return Wrap(
-        children: [
-          Container(
-            width: screenWidth * 0.8,
-            margin: const EdgeInsets.only(right: 8),
-            child: InputGroupMessage(
-              inputKey: messageKey,
-              usersList: widget.match.joined,
-              stream: widget.bloc.messageStream,
-              placeholder: "Message",
-              onChanged: widget.bloc.changeMessage,
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            child: ElevatedButton(
-              onPressed: () {
-                _handleSubmit(widget.bloc.message);
-                widget.bloc.changeMessage("");
-                messageKey.currentState?.controller?.clear();
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shape: const StadiumBorder(),
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 65, 169, 255),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-              child: const Icon(Icons.send_outlined),
-            ),
-          ),
-          // ElevatedButton.icon(
-          //     onPressed: () {}, icon: Icon(Icons.abc), label: Text(""))
-        ],
-      );
-    } else {
-      return FormButton(
-          text: "Join to match",
-          color: Colors.transparent,
-          onPressed: () {
-            try {
-              backgroundService.invoke("join_to_match", {"match": match.id});
-            } catch (e) {
-              debugPrint(e.toString());
-            }
-          });
-    }
-  }
+  //     if (!socketConnected) {
+  //       return Center(
+  //           child: Padding(
+  //         padding: const EdgeInsets.symmetric(vertical: 7),
+  //         child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION")),
+  //       ));
+  //     }
+  //     return Wrap(
+  //       children: [
+  //         Container(
+  //           width: screenWidth * 0.8,
+  //           margin: const EdgeInsets.only(right: 8),
+  //           child: InputGroupMessage(
+  //             inputKey: messageKey,
+  //             usersList: widget.match.joined,
+  //             stream: widget.bloc.messageStream,
+  //             placeholder: "Message",
+  //             onChanged: widget.bloc.changeMessage,
+  //           ),
+  //         ),
+  //         Container(
+  //           margin: const EdgeInsets.only(bottom: 8),
+  //           child: ElevatedButton(
+  //             onPressed: () {
+  //               _handleSubmit(widget.bloc.message);
+  //               widget.bloc.changeMessage("");
+  //               messageKey.currentState?.controller?.clear();
+  //             },
+  //             style: ElevatedButton.styleFrom(
+  //                 backgroundColor: Colors.transparent,
+  //                 shape: const StadiumBorder(),
+  //                 side: const BorderSide(
+  //                   color: Color.fromARGB(255, 65, 169, 255),
+  //                 ),
+  //                 padding:
+  //                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+  //             child: const Icon(Icons.send_outlined),
+  //           ),
+  //         ),
+  //         // ElevatedButton.icon(
+  //         //     onPressed: () {}, icon: Icon(Icons.abc), label: Text(""))
+  //       ],
+  //     );
+  //   } else {
+  //     return FormButton(
+  //         text: "Join to match",
+  //         color: Colors.transparent,
+  //         onPressed: () {
+  //           try {
+  //             backgroundService.invoke("join_to_match", {"match": match.id});
+  //           } catch (e) {
+  //             debugPrint(e.toString());
+  //           }
+  //         });
+  //   }
+  // }
 
-  void _handleSubmit(String text) {
-    if (text.isEmpty) return;
-    debugPrint("¡Invoking new message from view!");
-    backgroundService.invoke(
-        "new_message", {"text": text, "to": widget.match.id, "type": 2});
-  }
+  // void _handleSubmit(String text) {
+  //   if (text.isEmpty) return;
+  //   debugPrint("¡Invoking new message from view!");
+  //   backgroundService.invoke(
+  //       "new_message", {"text": text, "to": widget.match.id, "type": 2});
+  // }
 
-  List<Positioned> _activeUsers(List<ChatUser> users) {
-    List<Positioned> usersThumbs = [];
-    double separation = 10;
-    for (var i = 0; i < users.length; i++) {
-      usersThumbs.add(Positioned(
-          right: separation,
-          child: CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(users[i].thumb),
-            radius: 12,
-          )));
-      separation += 8;
-    }
+  // List<Positioned> _activeUsers(List<ChatUser> users) {
+  //   List<Positioned> usersThumbs = [];
+  //   double separation = 10;
+  //   for (var i = 0; i < users.length; i++) {
+  //     usersThumbs.add(Positioned(
+  //         right: separation,
+  //         child: CircleAvatar(
+  //           backgroundImage: CachedNetworkImageProvider(users[i].thumb),
+  //           radius: 12,
+  //         )));
+  //     separation += 8;
+  //   }
 
-    return usersThumbs;
-  }
+  //   return usersThumbs;
+  // }
 }
 
 class MoleculeRoomMessages extends StatefulWidget {
@@ -341,8 +336,6 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
   final _scrollController = ScrollController();
   late MessageBloc _messageBloc;
   late FlutterBackgroundService _backgroundService;
-  late UserBloc _userBloc;
-  int skip = 0;
 
   void _addMessage(Map<String, dynamic> onData) {
     final GroupMessage message = GroupMessage.fromJson(onData);
@@ -360,7 +353,6 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
     _scrollController.addListener(_onScroll);
     _messageBloc = context.read<MessageBloc>();
     _backgroundService = FlutterBackgroundService();
-    _userBloc = context.read<UserBloc>();
 
     if (mounted) {
       _backgroundService.on("message").listen((onData) => _addMessage(onData!));

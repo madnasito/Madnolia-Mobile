@@ -7,12 +7,10 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/message/message_bloc.dart';
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
-import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
-import 'package:madnolia/widgets/molecules/chat/molecule_chat_input.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
 
@@ -220,7 +218,6 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
   final _scrollController = ScrollController();
   late MessageBloc _messageBloc;
   late FlutterBackgroundService _backgroundService;
-  late UserBloc _userBloc;
   int skip = 0;
 
   void _addMessage(Map<String, dynamic> onData) {
@@ -240,7 +237,6 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
     _messageBloc = context.read<MessageBloc>();
     _messageBloc.add(GroupMessageFetched(roomId: widget.room));
     _backgroundService = FlutterBackgroundService();
-    _userBloc = context.read<UserBloc>();
 
     if (mounted) {
       _backgroundService.on("message").listen((onData) => _addMessage(onData!));
