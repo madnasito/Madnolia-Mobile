@@ -1,118 +1,45 @@
+import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImage;
+import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:go_router/go_router.dart';
-import 'package:madnolia/blocs/blocs.dart';
-import 'package:madnolia/models/match/full_match.model.dart';
-import 'package:madnolia/widgets/alert_widget.dart';
+import 'package:madnolia/blocs/message/message_bloc.dart';
+import 'package:madnolia/blocs/message_provider.dart';
+import 'package:madnolia/blocs/user/user_bloc.dart';
+import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/models/chat/message_model.dart';
+import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:madnolia/blocs/message_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:madnolia/blocs/user/user_bloc.dart';
+import 'package:madnolia/widgets/molecules/chat/molecule_chat_input.dart';
+import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
 
-// import 'package:socket_io_client/socket_io_client.dart';
+import '../../models/match/full_match.model.dart';
 
-import '../../models/chat/message_model.dart';
-import 'package:madnolia/services/match_service.dart';
-import 'package:madnolia/widgets/organism/chat_message_organism.dart';
-import 'package:flutter_mentions/flutter_mentions.dart';
-
-import '../../models/chat_user_model.dart';
-
-class MatchChat extends StatefulWidget {
+class ViewMatch extends StatefulWidget {
   final FullMatch match;
-  final List matchMessages;
-  final MessageInputBloc bloc;
-
-  const MatchChat(
-      {super.key,
-      required this.match,
-      required this.bloc,
-      required this.matchMessages});
+  const ViewMatch({super.key, required this.match});
 
   @override
-  State<MatchChat> createState() => _MatchChatState();
+  State<ViewMatch> createState() => _ViewMatchState();
 }
 
-class _MatchChatState extends State<MatchChat> {
+class _ViewMatchState extends State<ViewMatch> {
   bool isInMatch = false;
   bool socketConnected = true;
-  final List<GroupChatMessageOrganism> _messages = [];
-  final matchService = MatchService();
   late UserBloc userBloc;
   final backgroundService = FlutterBackgroundService();
-
-  late GlobalKey<FlutterMentionsState> messageKey;
-  void _loadHistory(String id) async {
-    final resp = await matchService.getMatch(id);
-
-    // Check if the widget is still mounted before proceeding
-    if (!mounted) return;
-
-    if (resp.containsKey("error")) {
-      return showErrorServerAlert(context, resp);
-    }
-
-    List<GroupMessage> history =
-        widget.matchMessages.map((e) => GroupMessage.fromJson(e)).toList();
-
-    String lastUser = "";
-    List<GroupChatMessageOrganism> messages = history.map((e) {
-      final isTheSame = e.user.id == lastUser ? false : true;
-      lastUser = e.user.id;
-      return GroupChatMessageOrganism(
-          text: e.text, user: e.user, mainMessage: isTheSame);
-    }).toList();
-
-    setState(() {
-      _messages.addAll(messages);
-    });
-  }
-
-  void _listenMessage(Map<String, dynamic> payload) async {
-    if (!mounted) {
-      return;
-    }
-
-    GroupMessage decodedMessage = GroupMessage.fromJson(payload);
-
-    if (decodedMessage.to != widget.match.id) return;
-
-    bool mainMessage = false;
-
-    if (_messages.isEmpty) {
-      mainMessage = true;
-    } else if (_messages[0].user.id == decodedMessage.user.id) {
-      mainMessage = false;
-    } else {
-      mainMessage = true;
-    }
-
-    GroupChatMessageOrganism message = GroupChatMessageOrganism(
-        mainMessage: mainMessage,
-        text: decodedMessage.text,
-        user: decodedMessage.user);
-
-    // await LocalNotificationsService.displayMessage(decodedMessage);
-
-    setState(() {
-      _messages.insert(0, message);
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    _loadHistory(widget.match.id);
-    messageKey = GlobalKey<FlutterMentionsState>();
     userBloc = context.read<UserBloc>();
 
     if (mounted) {
       backgroundService.invoke("init");
-      backgroundService.on("message").listen((data) => _listenMessage(data!));
+      // backgroundService.on("message").listen((data) => _listenMessage(data!));
       backgroundService.on("new_player_to_match").listen((data) {
         ChatUser user = ChatUser.fromJson(data!);
         debugPrint(user.name);
@@ -128,6 +55,16 @@ class _MatchChatState extends State<MatchChat> {
 
       backgroundService.invoke("init_chat", {"room": widget.match.id});
 
+      backgroundService
+        .on("disconnected_socket")
+        .listen((payload) => setState(() {
+              socketConnected = false;
+            }));
+
+      backgroundService.on("connected_socket").listen((payload) => setState(() {
+            socketConnected = true;
+          }));
+
       userBloc.updateChatRoom(widget.match.id);
     }
   }
@@ -140,24 +77,13 @@ class _MatchChatState extends State<MatchChat> {
     userBloc.updateChatRoom("");
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
-    backgroundService
-        .on("disconnected_socket")
-        .listen((payload) => setState(() {
-              socketConnected = false;
-            }));
-
-    backgroundService.on("connected_socket").listen((payload) => setState(() {
-          socketConnected = true;
-        }));
+    
+    
     return Column(
       children: [
-        Container(
-          color: Colors.black54,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          child: Row(
+       Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
@@ -184,63 +110,31 @@ class _MatchChatState extends State<MatchChat> {
                             imageUrl: widget.match.game.background!, width: 80)
                         : Image.asset("assets/no image.jpg", width: 80),
                   ),
-                  OrganismMatchInfo(match: widget.match)
+                  OrganismMatchInfo(match: widget.match),
                 ],
               ),
             ],
           ),
-        ),
-        // SizedBox(
-        //   height: 35,
-        //   child: MaterialButton(
-
-        //     height: 25,
-        //     color: Colors.pink,
-        //     onPressed: () {
-        //       context.pushNamed("match_call", extra: widget.match);
-        //      },
-        //     child: Stack(
-        //         alignment: AlignmentDirectional.centerStart,
-
-        //         children: [
-        //           const Positioned(
-        //             left: 10,
-        //             child: Text("Join to voice chat")
-        //           ),
-        //           ..._activeUsers(widget.match.joined)
-        //         ],
-        //       ),
-        //   ),
-        // ),
-        Flexible(
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 4),
-            color: Colors.black38,
-            child: MoleculeRoomMessages(room: widget.match.id),
-            // child: ListView.builder(
-            //     reverse: true,
-            //     itemCount: _messages.length,
-            //     physics: const BouncingScrollPhysics(),
-            //     itemBuilder: (_, i) => _messages[i]),
+          Expanded(
+            child: MoleculeRoomMessages(room: widget.match.id)
           ),
-        ),
-        // Container(
-        //     color: Colors.black54,
-        //     padding: const EdgeInsets.only(top: 10),
-        //     child: _bottomRow(
-        //         widget.match, userBloc.state, isInMatch, socketConnected))
+          // MoleculeChatInput(to: widget.match.id, messageType: MessageType.match),
+          _bottomRow(context, widget.match, userBloc.state, isInMatch, socketConnected )
       ],
     );
   }
 
-  Widget _bottomRow(FullMatch match, UserState userState, bool isInMatch,
-      bool socketConnected) {
-    if (!mounted) {
-      return const CircularProgressIndicator();
-    }
+  Widget _bottomRow(BuildContext context, FullMatch match, UserState userState, bool isInMatch, bool socketConnected) {
+    
+    final bloc = MessageProvider.of(context);
+    
     bool owner = userState.id == match.user.id ? true : false;
     List<ChatUser> founded =
         match.joined.where((e) => userState.id == e.id).toList();
+
+    final backgroundService = FlutterBackgroundService();
+
+    GlobalKey<FlutterMentionsState> messageKey = GlobalKey<FlutterMentionsState>();
 
     if (owner || founded.isNotEmpty || isInMatch) {
       isInMatch = true;
@@ -262,18 +156,18 @@ class _MatchChatState extends State<MatchChat> {
             margin: const EdgeInsets.only(right: 8),
             child: InputGroupMessage(
               inputKey: messageKey,
-              usersList: widget.match.joined,
-              stream: widget.bloc.messageStream,
+              usersList: match.joined,
+              stream: bloc.messageStream,
               placeholder: "Message",
-              onChanged: widget.bloc.changeMessage,
+              onChanged: bloc.changeMessage,
             ),
           ),
           Container(
             margin: const EdgeInsets.only(bottom: 8),
             child: ElevatedButton(
               onPressed: () {
-                _handleSubmit(widget.bloc.message);
-                widget.bloc.changeMessage("");
+                _handleSubmit(bloc.message);
+                bloc.changeMessage("");
                 messageKey.currentState?.controller?.clear();
               },
               style: ElevatedButton.styleFrom(
@@ -307,25 +201,10 @@ class _MatchChatState extends State<MatchChat> {
 
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
+    final backgroundService = FlutterBackgroundService();
     debugPrint("¡Invoking new message from view!");
     backgroundService.invoke(
         "new_message", {"text": text, "to": widget.match.id, "type": 2});
-  }
-
-  List<Positioned> _activeUsers(List<ChatUser> users) {
-    List<Positioned> usersThumbs = [];
-    double separation = 10;
-    for (var i = 0; i < users.length; i++) {
-      usersThumbs.add(Positioned(
-          right: separation,
-          child: CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(users[i].thumb),
-            radius: 12,
-          )));
-      separation += 8;
-    }
-
-    return usersThumbs;
   }
 }
 
@@ -359,6 +238,7 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
     super.initState();
     _scrollController.addListener(_onScroll);
     _messageBloc = context.read<MessageBloc>();
+    _messageBloc.add(GroupMessageFetched(roomId: widget.room));
     _backgroundService = FlutterBackgroundService();
     _userBloc = context.read<UserBloc>();
 
@@ -369,16 +249,14 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MessageBloc()..add(GroupMessageFetched(roomId: widget.room)),
-      child: BlocBuilder<MessageBloc, MessageState>(
+    return BlocBuilder<MessageBloc, MessageState>(
         builder: (context, state) {
           switch (state.status) {
             case MessageStatus.failure:
               return const Center(child: Text("Failed fetching messages"));
             case MessageStatus.success:
               if (state.groupMessages.isEmpty) {
-                return const Center(child: Text('no posts'));
+                return const Center(child: Text('No messages'));
               }
               return Container(
                 padding:
@@ -392,15 +270,27 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
                   itemBuilder: (BuildContext context,int index) {
 
                     bool mainMessage = false;
-                    // if(index < state.groupMessages.length){
-                    //   if (state.groupMessages.isEmpty) {
-                    //     mainMessage = true;
-                    //   } else if (state.groupMessages[0].user.id == state.groupMessages[index].user.id) {
-                    //     mainMessage = false;
-                    //   } else {
-                    //     mainMessage = true;
-                    //   }                  
-                    // }
+                    if(index < state.groupMessages.length){
+                      if (state.groupMessages.isEmpty) {
+                        mainMessage = false;
+                      }
+                      else if(index > 0){
+                        final message = state.groupMessages[index];
+
+                        if(message.user.id == state.groupMessages[index - 1].user.id){
+                          mainMessage = false;
+                        }else {
+                          mainMessage = true;
+                        }
+                      }else {
+                        mainMessage = true;
+                      }
+                      //  else if (state.groupMessages[0].user.id == state.groupMessages[index].user.id) {
+                      //   mainMessage = false;
+                      // } else {
+                      //   mainMessage = true;
+                      // }                  
+                    }
                     return index >= state.groupMessages.length
                       ? const CircularProgressIndicator()
                       : GroupChatMessageOrganism(
@@ -425,7 +315,7 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
           }
         },
         // bloc: MessageBloc(),
-      ),
+      
     );
   }
 

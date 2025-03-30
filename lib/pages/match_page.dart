@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/widgets/views/match_view.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/views/view_match.dart';
 
 class MatchPage extends StatelessWidget {
   const MatchPage({super.key});
@@ -29,6 +30,7 @@ class MatchPage extends StatelessWidget {
                 final respMessages = snapshot.data["messages"];
 
                 // final socketBloc = context.watch<SocketsBloc>();
+                return ViewMatch(match: match);
                 return MatchChat(
                   match: match,
                   bloc: bloc,

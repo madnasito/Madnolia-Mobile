@@ -97,13 +97,13 @@ class CustomScaffold extends StatelessWidget {
                   left: 20,
                   child: GestureDetector(
                     onTap: () async {
+                      userBloc.logOutUser();
+                      backgroundService.invoke("delete_all_notifications");
+                      backgroundService.invoke("stop");
                       const storage = FlutterSecureStorage();
                       await storage.delete(key: "token");
                       if(!context.mounted) return;
                       GoRouter.of(context).push("/home");
-                      userBloc.logOutUser();
-                      backgroundService.invoke("delete_all_notifications");
-                      backgroundService.invoke("stop");
                     },
                     child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,

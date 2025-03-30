@@ -5,36 +5,40 @@ enum MessageStatus { initial, success, failure }
 final class MessageState extends Equatable {
   
   final MessageStatus status;
-  final List<IndividualMessage> messages;
+  final List<IndividualMessage> userMessages;
+  final List<GroupMessage> groupMessages;
   final bool hasReachedMax;
 
   const MessageState({
     this.status = MessageStatus.initial,
-    this.messages = const <IndividualMessage>[],
+    this.userMessages = const <IndividualMessage>[],
+    this.groupMessages = const <GroupMessage>[],
     this.hasReachedMax = false, 
   });
 
 
   MessageState copyWith({
     MessageStatus? status,
-    List<IndividualMessage>? messages,
+    List<IndividualMessage>? userMessages,
+    List<GroupMessage>? groupMessages,
     bool? hasReachedMax,
   }) {
     return MessageState(
       status: status ?? this.status,
-      messages: messages ?? this.messages,
+      userMessages: userMessages ?? this.userMessages,
+      groupMessages: groupMessages ?? this.groupMessages,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax
     );
   }
   
   @override
   String toString() {
-    return '''PostState { status: $status, hasReachedMax: $hasReachedMax, posts: ${messages.length} }''';
+    return '''PostState { status: $status, hasReachedMax: $hasReachedMax, posts: ${userMessages.length} }''';
   }
 
   
   @override
-  List<Object> get props => [status, messages, hasReachedMax];
+  List<Object> get props => [status, userMessages, groupMessages, hasReachedMax];
 }
 
 final class MessageInitial extends MessageState {}

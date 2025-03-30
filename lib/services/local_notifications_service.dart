@@ -31,9 +31,9 @@ class LocalNotificationsService {
       );
   }
 
-  static final List<List<chat.Message>> _messages = []; // Lista para almacenar mensajes  
+  static final List<List<chat.GroupMessage>> _messages = []; // Lista para almacenar mensajes  
   
-  static Future<void> displayMessage(chat.Message message) async {
+  static Future<void> displayMessage(chat.GroupMessage message) async {
     try {
       const String groupChannelId = 'messages';
       const String groupChannelName = 'Messages';
@@ -130,7 +130,7 @@ class LocalNotificationsService {
     }
   }
 
-  static Future<void> displayInvitation(chat.Message message) async {
+  static Future<void> displayInvitation(chat.GroupMessage message) async {
     // To display the notification in device
     try {
       

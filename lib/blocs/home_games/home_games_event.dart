@@ -7,7 +7,6 @@ sealed class HomeGamesEvent extends Equatable {
   List<Object> get props => [];
 }
 
-
 class UpdateGames extends HomeGamesEvent {
   final int platformId;
   final List<HomeGame> homeGames;

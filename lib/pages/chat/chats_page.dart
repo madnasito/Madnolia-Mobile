@@ -51,7 +51,7 @@ class AtomUserChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () => context.goNamed("user_chat", extra: userChat.user.id),
+      onTap: () => context.pushReplacementNamed("user_chat", extra: userChat.user.id),
       leading: CircleAvatar(
         radius: 20,
         backgroundImage: CachedNetworkImageProvider(userChat.user.thumb),

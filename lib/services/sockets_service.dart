@@ -8,7 +8,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
-import '../models/chat/message_model.dart';
 
 @pragma('vm:entry-point')
 onStart(ServiceInstance service) async {

@@ -24,10 +24,10 @@ class MessagesService {
 
       final jsonBody = jsonDecode(resp.body);
 
-      final messages = jsonBody.map((e) => Message.fromJson(e)).toList();
+      final messages = jsonBody.map((e) => GroupMessage.fromJson(e)).toList();
       return messages;
     } catch (e) {
-      return [];
+      throw Exception(e);
     }
   }
 
@@ -43,7 +43,7 @@ class MessagesService {
       final messages = resp.data.map((e) => IndividualMessage.fromJson(e)).toList();
       return messages;
     } catch (e) {
-      return e;
+      throw Exception(e);
     }
   }
 

@@ -13,10 +13,21 @@ final class UserMessageFetched extends MessageEvent {
   const UserMessageFetched({ required this.messagesBody});
 }
 
+final class GroupMessageFetched extends MessageEvent {
+  final String roomId;
+
+  const GroupMessageFetched({ required this.roomId });
+}
+
 final class RestoreState extends MessageEvent {}
 
 final class AddIndividualMessage extends MessageEvent {
   final IndividualMessage message;
 
   const AddIndividualMessage({ required this.message});
+}
+
+final class AddRoomMessage extends MessageEvent {
+  final GroupMessage message;
+  const AddRoomMessage({ required this.message });
 }

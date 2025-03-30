@@ -161,8 +161,8 @@ class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
           case MessageStatus.failure:
             return const Center(child: Text("Failed fetching messages"));
           case MessageStatus.success:
-            if(state.messages.isEmpty) {
-              return const Center(child: Text('no posts'));
+            if(state.userMessages.isEmpty) {
+              return const Center(child: Text('No messages'));
               }
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -172,13 +172,13 @@ class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
                   addAutomaticKeepAlives: true,
                   reverse: true,
                   itemBuilder: (BuildContext context,int index) {
-                    return index >= state.messages.length
+                    return index >= state.userMessages.length
                       ? const CircularProgressIndicator()
-                      : AtomIndividualMessage(message: state.messages[index]);
+                      : AtomIndividualMessage(message: state.userMessages[index]);
                   } ,
                   itemCount: state.hasReachedMax
-                    ? state.messages.length
-                    : state.messages.length + 1,
+                    ? state.userMessages.length
+                    : state.userMessages.length + 1,
                   controller: _scrollController,
                 ),
               );
