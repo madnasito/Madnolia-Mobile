@@ -1,3 +1,5 @@
+import 'dart:async' show StreamSubscription;
+
 import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImage;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -28,16 +30,17 @@ class _ViewMatchState extends State<ViewMatch> {
   bool isInMatch = false;
   bool socketConnected = true;
   late UserBloc userBloc;
-  final backgroundService = FlutterBackgroundService();
+  late final FlutterBackgroundService backgroundService;
 
   @override
   void initState() {
     super.initState();
+
     userBloc = context.read<UserBloc>();
+    backgroundService = FlutterBackgroundService();
 
     if (mounted) {
       backgroundService.invoke("init");
-      // backgroundService.on("message").listen((data) => _listenMessage(data!));
       backgroundService.on("new_player_to_match").listen((data) {
         ChatUser user = ChatUser.fromJson(data!);
         debugPrint(user.name);
@@ -71,13 +74,12 @@ class _ViewMatchState extends State<ViewMatch> {
   void dispose() {
     backgroundService.invoke("disconnect_chat");
     backgroundService.invoke("off_new_player_to_match");
-
+    
     userBloc.updateChatRoom("");
     super.dispose();
   }
   @override
   Widget build(BuildContext context) {
-    
     
     return Column(
       children: [
@@ -217,11 +219,15 @@ class MoleculeRoomMessages extends StatefulWidget {
 class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
   final _scrollController = ScrollController();
   late MessageBloc _messageBloc;
-  late FlutterBackgroundService _backgroundService;
+  late final FlutterBackgroundService _backgroundService;
+  StreamSubscription? _messageSubscription;
   int skip = 0;
 
   void _addMessage(Map<String, dynamic> onData) {
+    if(onData['user'] is String) return;
     final GroupMessage message = GroupMessage.fromJson(onData);
+
+    if(message.id == _messageBloc.state.groupMessages[0].id) return;
 
     if (message.to == widget.room) {
       setState(() {
@@ -238,9 +244,9 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
     _messageBloc.add(GroupMessageFetched(roomId: widget.room));
     _backgroundService = FlutterBackgroundService();
 
-    if (mounted) {
-      _backgroundService.on("message").listen((onData) => _addMessage(onData!));
-    }
+    _messageSubscription = _backgroundService.on("message").listen((onData) {
+      if (mounted && onData != null) _addMessage(onData);
+    });
   }
 
   @override
@@ -318,7 +324,8 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
   @override
   void dispose() {
     _scrollController.dispose();
-    // _messageBloc.add(RestoreState());
+    _messageBloc.add(RestoreState());
+    _messageSubscription?.cancel();
     super.dispose();
   }
 

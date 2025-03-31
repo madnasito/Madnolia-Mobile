@@ -29,7 +29,7 @@ class CustomScaffold extends StatelessWidget {
           child: Stack(
             children: [
               GestureDetector(
-                onTap: () => GoRouter.of(context).push("/user/edit"),
+                onTap: () => GoRouter.of(context).pushReplacement("/user/edit"),
                 child: Wrap(
                   spacing: 10,
                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -103,7 +103,7 @@ class CustomScaffold extends StatelessWidget {
                       const storage = FlutterSecureStorage();
                       await storage.delete(key: "token");
                       if(!context.mounted) return;
-                      GoRouter.of(context).push("/home");
+                      GoRouter.of(context).pushReplacement("/home");
                     },
                     child: const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -132,7 +132,7 @@ class CustomScaffold extends StatelessWidget {
         title: IconButton(
             icon: SvgPicture.asset("assets/madnolia-logo.svg",
             width: MediaQuery.of(context).size.width / 11,),
-            onPressed: () => GoRouter.of(context).push("/")),
+            onPressed: () => GoRouter.of(context).pushReplacement("/")),
         actions: [
           IconButton(
             onPressed: (){
@@ -225,6 +225,6 @@ class _MenuButton extends StatelessWidget {
 void changeRoute(BuildContext context, String route){
   final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
   if (route != "" && route != currentRouteName) {
-    GoRouter.of(context).push(route);
+    GoRouter.of(context).pushReplacement(route);
   }
 }

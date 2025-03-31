@@ -1,3 +1,5 @@
+import 'dart:async' show StreamSubscription;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -129,14 +131,28 @@ class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
   late FlutterBackgroundService _backgroundService;
   late UserBloc _userBloc;
   int skip = 0;
+  StreamSubscription? _messageSubscription;
 
   void _addMessage(Map<String, dynamic> onData){
-    final IndividualMessage message = IndividualMessage.fromJson(onData);
 
-    if((message.user == _userBloc.state.id && message.to == widget.user) || (message.to == _userBloc.state.id && message.user == widget.user)){
-      setState(() {    
-        _messageBloc.add(AddIndividualMessage(message: message));
-      });
+    if (!mounted) return; // Verificación crucial
+  
+    if (onData['type'] != 0) return;
+    
+    try {
+      final IndividualMessage message = IndividualMessage.fromJson(onData);
+      final currentUserId = _userBloc.state.id;
+
+      if ((message.user == currentUserId && message.to == widget.user) || 
+          (message.to == currentUserId && message.user == widget.user)) {
+        if (mounted) { // Doble verificación para seguridad
+          setState(() {    
+            _messageBloc.add(AddIndividualMessage(message: message));
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Error processing message: $e');
     }
   }
   @override
@@ -147,9 +163,11 @@ class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
     _backgroundService = FlutterBackgroundService();
     _userBloc = context.read<UserBloc>();
 
-    if(mounted){
-      _backgroundService.on("message").listen((onData) => _addMessage(onData!));
-    }
+    _messageSubscription = _backgroundService.on("message").listen((onData) {
+      if (mounted && onData != null) {
+        _addMessage(onData);
+      }
+    });
   }
 
 
@@ -197,6 +215,7 @@ class _MoleculeChatMessagesState extends State<MoleculeChatMessages> {
   void dispose() {
     _scrollController.dispose();
     _messageBloc.add(RestoreState());
+    _messageSubscription?.cancel();
     super.dispose();
   }
 
