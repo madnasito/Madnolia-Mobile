@@ -78,6 +78,9 @@
   "MATCH": {
     "MATCH_UPDATED": "Match updated"
   },
+  "CHAT": {
+    "MESSAGES": "Messages"
+  },
   "GAME":{
       "GAME": "Game",
       "MATCH": "Match",
