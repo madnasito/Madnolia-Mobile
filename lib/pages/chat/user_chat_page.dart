@@ -11,6 +11,7 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
+import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/widgets/atoms/messages/atom_individual_message.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_chat_input.dart';
@@ -20,10 +21,10 @@ class UserChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String userId = '';
+    late ChatUser user;
     if (GoRouterState.of(context).extra != null) {
-      if (GoRouterState.of(context).extra is String) {
-        userId = GoRouterState.of(context).extra as String;
+      if (GoRouterState.of(context).extra is ChatUser) {
+        user = GoRouterState.of(context).extra as ChatUser;
       }
     } else {
       context.go('/');
@@ -33,19 +34,20 @@ class UserChatPage extends StatelessWidget {
     return CustomScaffold(
       body: BlocProvider(
         create: (context) => MessageBloc()
-          ..add(UserMessageFetched(messagesBody: UserMessagesBody(user: userId, skip: 0))),
+          ..add(UserMessageFetched(messagesBody: UserMessagesBody(user: user.id, skip: 0))),
         child: Column(
           children: [
-            _buildChatHeader(context),
-            Expanded(child: OrganismChatMessages(user: userId)),
+            MoleculeUserHeader(user: user),
+            Expanded(child: OrganismChatMessages(user: user.id)),
             const SizedBox(height: 3),
-            MoleculeChatInput(to: userId, messageType: MessageType.user),
+            MoleculeChatInput(to: user.id, messageType: MessageType.user),
             const SizedBox(height: 5),
           ],
         ),
       ),
     );
   }
+  
 
   Widget _buildChatHeader(BuildContext context) {
     return Container(
@@ -129,6 +131,46 @@ class UserChatPage extends StatelessWidget {
   }
 }
 
+
+class MoleculeUserHeader extends StatelessWidget {
+
+  final ChatUser user;
+  const MoleculeUserHeader({super.key, required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+      color: Colors.black45,
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundImage: CachedNetworkImageProvider(
+                user.thumb),
+            radius: 30,
+          ),
+          const SizedBox(width: 10,),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(user.name),
+              Text("@${user.username}", style: TextStyle(fontSize: 12)),
+            ],
+          ),
+          const Spacer(),
+          // IconButton(
+          //   onPressed: () {},
+          //   icon: const Icon(Icons.call_outlined),
+          // ),
+          // IconButton(
+          //   onPressed: () => _showCallOptions(context),
+          //   icon: const Icon(CupertinoIcons.video_camera),
+          // ),
+        ],
+      ),
+    );;
+  }
+}
 class OrganismChatMessages extends StatefulWidget {
   final String user;
   const OrganismChatMessages({super.key, required this.user});
