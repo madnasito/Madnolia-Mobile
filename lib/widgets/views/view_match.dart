@@ -229,17 +229,17 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   Widget build(BuildContext context) {
     return BlocBuilder<MessageBloc, MessageState>(
       builder: (context, state) {
-        if (state.status == MessageStatus.failure) {
+        if (state.status == MessageStatus.failure && state.groupMessages.isEmpty) {
           return const Center(child: Text("Failed fetching messages"));
+        }
+        if (state.groupMessages.isEmpty && state.hasReachedMax) {
+          return const Center(child: Text('No messages'));
         }
 
         if (state.status == MessageStatus.initial && state.groupMessages.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (state.groupMessages.isEmpty) {
-          return const Center(child: Text('No messages'));
-        }
 
         return _buildMessageList(state);
       },
