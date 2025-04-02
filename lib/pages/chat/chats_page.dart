@@ -75,7 +75,7 @@ class AtomUserChat extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8), // Add some spacing
       child: ListTile(
         trailing: Icon(Icons.message_rounded),
-        onTap: () => context.pushReplacementNamed(
+        onTap: () => context.pushNamed(
           "user_chat", 
           extra: userChat.user.id,
         ),

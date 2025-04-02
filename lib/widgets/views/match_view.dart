@@ -365,56 +365,51 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
       create: (context) => MessageBloc()..add(GroupMessageFetched(roomId: widget.room)),
       child: BlocBuilder<MessageBloc, MessageState>(
         builder: (context, state) {
-          switch (state.status) {
-            case MessageStatus.failure:
-              return const Center(child: Text("Failed fetching messages"));
-            case MessageStatus.success:
-              if (state.groupMessages.isEmpty) {
-                return const Center(child: Text('no posts'));
-              }
-              return Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                color: Colors.black38,
-                // child: Center(child: Text("Loaded messages")),
-                child: ListView.builder(
-                  shrinkWrap: false,
-                  addAutomaticKeepAlives: true, 
-                  reverse: true,
-                  itemBuilder: (BuildContext context,int index) {
 
-                    bool mainMessage = false;
-                    // if(index < state.groupMessages.length){
-                    //   if (state.groupMessages.isEmpty) {
-                    //     mainMessage = true;
-                    //   } else if (state.groupMessages[0].user.id == state.groupMessages[index].user.id) {
-                    //     mainMessage = false;
-                    //   } else {
-                    //     mainMessage = true;
-                    //   }                  
-                    // }
-                    return index >= state.groupMessages.length
-                      ? const CircularProgressIndicator()
-                      : GroupChatMessageOrganism(
-                        text: state.groupMessages[index].text,
-                        user: state.groupMessages[index].user,
-                        mainMessage: mainMessage
-                      );
-                  } ,
-                  itemCount: state.hasReachedMax
-                    ? state.groupMessages.length
-                    : state.groupMessages.length + 1,
-                  controller: _scrollController,
-                ),
-              );
-            case MessageStatus.initial:
-              if (state.hasReachedMax) {
-                return Center(
-                  child: Text("No messages here"),
-                );
-              }
-              return const Center(child: CircularProgressIndicator());
+          if(state.status == MessageStatus.failure) {
+            return const Center(child: Text("Failed fetching messages"));
           }
+
+          if(state.groupMessages.isNotEmpty){
+            return Container(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+              color: Colors.black38,
+              // child: Center(child: Text("Loaded messages")),
+              child: MoleculeRoomMessagesList(
+                scrollController: _scrollController,
+                state: state,
+                isLoading: state.status == MessageStatus.initial && !state.hasReachedMax,),
+            );
+          }
+
+          if (state.status == MessageStatus.initial && !state.hasReachedMax) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return const Center(child: Text('No messages'));
+          // switch (state.status) {
+          //   case MessageStatus.failure:
+          //     return const Center(child: Text("Failed fetching messages"));
+          //   case MessageStatus.success:
+          //     if (state.groupMessages.isEmpty) {
+          //       return const Center(child: Text('no posts'));
+          //     }
+          //     return Container(
+          //       padding:
+          //           const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          //       color: Colors.black38,
+          //       // child: Center(child: Text("Loaded messages")),
+          //       child: MoleculeRoomMessagesList(scrollController: _scrollController, state: state,),
+          //     );
+          //   case MessageStatus.initial:
+          //     if (state.hasReachedMax) {
+          //       return Center(
+          //         child: Text("No messages here"),
+          //       );
+          //     }
+          //     return const Center(child: CircularProgressIndicator());
+          // }
         },
         // bloc: MessageBloc(),
       ),
@@ -437,8 +432,49 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
 
   bool get _isBottom {
     if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
+    return _scrollController.offset >=
+        (_scrollController.position.maxScrollExtent * 0.9);
+  }
+}
+
+
+class MoleculeRoomMessagesList extends StatelessWidget {
+  final ScrollController scrollController;
+  final MessageState state;
+  final bool isLoading;
+  const MoleculeRoomMessagesList({
+    super.key, 
+    required this.scrollController,
+    required this.state,
+    this.isLoading = false
+    });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: false,
+      addAutomaticKeepAlives: true, 
+      reverse: true,
+      itemBuilder: (BuildContext context,int index) {
+        bool mainMessage = false;
+
+        if (index < state.groupMessages.length) {
+          return GroupChatMessageOrganism(text: state.groupMessages[index].text,
+            user: state.groupMessages[index].user,
+            mainMessage: mainMessage);
+        }
+        
+        // Only show loading indicator at the bottom if we're loading more
+        return isLoading
+            ? const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(child: CircularProgressIndicator()),
+              )
+            : const SizedBox.shrink();
+
+      } ,
+      itemCount: state.groupMessages.length + (isLoading ? 1 : 0),
+      controller: scrollController,
+      );
   }
 }

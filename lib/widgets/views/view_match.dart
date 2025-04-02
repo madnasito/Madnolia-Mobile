@@ -35,176 +35,156 @@ class _ViewMatchState extends State<ViewMatch> {
   @override
   void initState() {
     super.initState();
-
     userBloc = context.read<UserBloc>();
     backgroundService = FlutterBackgroundService();
+    _initializeServices();
+  }
 
-    if (mounted) {
-      backgroundService.invoke("init");
-      backgroundService.on("new_player_to_match").listen((data) {
-        ChatUser user = ChatUser.fromJson(data!);
-        debugPrint(user.name);
-      });
-      backgroundService.on("added_to_match").listen((data) {
-        if (data?["resp"] == true) {
-          isInMatch = true;
-          if (mounted) {
-            setState(() {});
-          }
-        }
-      });
-
-      backgroundService.invoke("init_chat", {"room": widget.match.id});
-
-      backgroundService
-        .on("disconnected_socket")
-        .listen((payload) => setState(() {
-              socketConnected = false;
-            }));
-
-      backgroundService.on("connected_socket").listen((payload) => setState(() {
-            socketConnected = true;
-          }));
-
-      userBloc.updateChatRoom(widget.match.id);
-    }
+  void _initializeServices() {
+    backgroundService.invoke("init");
+    backgroundService.on("new_player_to_match").listen((data) {
+      ChatUser user = ChatUser.fromJson(data!);
+      debugPrint(user.name);
+    });
+    backgroundService.on("added_to_match").listen((data) {
+      if (data?["resp"] == true) {
+        isInMatch = true;
+        if (mounted) setState(() {});
+      }
+    });
+    backgroundService.invoke("init_chat", {"room": widget.match.id});
+    backgroundService.on("disconnected_socket").listen((_) => setState(() => socketConnected = false));
+    backgroundService.on("connected_socket").listen((_) => setState(() => socketConnected = true));
+    userBloc.updateChatRoom(widget.match.id);
   }
 
   @override
   void dispose() {
     backgroundService.invoke("disconnect_chat");
     backgroundService.invoke("off_new_player_to_match");
-    
     userBloc.updateChatRoom("");
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    
     return Column(
       children: [
-       Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    widget.match.title,
-                    style: const TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    widget.match.game.name,
-                    style: const TextStyle(fontSize: 6),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Container(
-                    clipBehavior: Clip.antiAlias,
-                    margin: const EdgeInsets.only(right: 10),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                    child: widget.match.game.background != null
-                        ? CachedNetworkImage(
-                            imageUrl: widget.match.game.background!, width: 80)
-                        : Image.asset("assets/no image.jpg", width: 80),
-                  ),
-                  OrganismMatchInfo(match: widget.match),
-                ],
-              ),
-            ],
-          ),
-          Expanded(
-            child: MoleculeRoomMessages(room: widget.match.id)
-          ),
-          // MoleculeChatInput(to: widget.match.id, messageType: MessageType.match),
-          _bottomRow(context, widget.match, userBloc.state, isInMatch, socketConnected )
+        _buildMatchHeader(),
+        Expanded(child: MoleculeRoomMessages(room: widget.match.id)),
+        _buildBottomRow(context),
       ],
     );
   }
 
-  Widget _bottomRow(BuildContext context, FullMatch match, UserState userState, bool isInMatch, bool socketConnected) {
-    
-    final bloc = MessageProvider.of(context);
-    
-    bool owner = userState.id == match.user.id ? true : false;
-    List<ChatUser> founded =
-        match.joined.where((e) => userState.id == e.id).toList();
-
-    final backgroundService = FlutterBackgroundService();
-
-    GlobalKey<FlutterMentionsState> messageKey = GlobalKey<FlutterMentionsState>();
-
-    if (owner || founded.isNotEmpty || isInMatch) {
-      isInMatch = true;
-      Size screenSize = MediaQuery.of(context).size;
-
-      double screenWidth = screenSize.width;
-
-      if (!socketConnected) {
-        return Center(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
-          child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION")),
-        ));
-      }
-      return Wrap(
-        children: [
-          Container(
-            width: screenWidth * 0.8,
-            margin: const EdgeInsets.only(right: 8),
-            child: InputGroupMessage(
-              inputKey: messageKey,
-              usersList: match.joined,
-              stream: bloc.messageStream,
-              placeholder: "Message",
-              onChanged: bloc.changeMessage,
+  Widget _buildMatchHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(widget.match.title, style: const TextStyle(fontSize: 20)),
+            Text(widget.match.game.name, style: const TextStyle(fontSize: 12)),
+          ],
+        ),
+        Row(
+          children: [
+            Container(
+              clipBehavior: Clip.antiAlias,
+              margin: const EdgeInsets.only(right: 10),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+              child: widget.match.game.background != null
+                  ? CachedNetworkImage(
+                      imageUrl: widget.match.game.background!,
+                      width: 80,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset("assets/no image.jpg", width: 80),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            child: ElevatedButton(
-              onPressed: () {
-                _handleSubmit(bloc.message);
-                bloc.changeMessage("");
-                messageKey.currentState?.controller?.clear();
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shape: const StadiumBorder(),
-                  side: const BorderSide(
-                    color: Color.fromARGB(255, 65, 169, 255),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-              child: const Icon(Icons.send_outlined),
-            ),
-          ),
-          // ElevatedButton.icon(
-          //     onPressed: () {}, icon: Icon(Icons.abc), label: Text(""))
-        ],
-      );
-    } else {
-      return FormButton(
-          text: "Join to match",
-          color: Colors.transparent,
-          onPressed: () {
-            try {
-              backgroundService.invoke("join_to_match", {"match": match.id});
-            } catch (e) {
-              debugPrint(e.toString());
-            }
-          });
-    }
+            OrganismMatchInfo(match: widget.match),
+          ],
+        ),
+      ],
+    );
   }
 
-  void _handleSubmit(String text) {
-    if (text.isEmpty) return;
-    final backgroundService = FlutterBackgroundService();
+  Widget _buildBottomRow(BuildContext context) {
+    final bloc = MessageProvider.of(context);
+    final userState = userBloc.state;
+    final GlobalKey<FlutterMentionsState> messageKey = GlobalKey();
+
+    if (!socketConnected) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION")),
+        ),
+      );
+    }
+
+    final isOwnerOrMember = userState.id == widget.match.user.id || 
+        widget.match.joined.any((e) => userState.id == e.id) || 
+        isInMatch;
+
+    if (!isOwnerOrMember) {
+      return FormButton(
+        text: "Join to match",
+        color: Colors.transparent,
+        onPressed: () {
+          try {
+            backgroundService.invoke("join_to_match", {"match": widget.match.id});
+          } catch (e) {
+            debugPrint(e.toString());
+          }
+        },
+      );
+    }
+
+    return _buildMessageInput(bloc, messageKey);
+  }
+
+  Widget _buildMessageInput(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    
+    return Wrap(
+      children: [
+        Container(
+          width: screenWidth * 0.8,
+          margin: const EdgeInsets.only(right: 8),
+          child: InputGroupMessage(
+            inputKey: messageKey,
+            usersList: widget.match.joined,
+            stream: bloc.messageStream,
+            placeholder: "Message",
+            onChanged: bloc.changeMessage,
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          child: ElevatedButton(
+            onPressed: () => _handleSubmit(bloc, messageKey),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shape: const StadiumBorder(),
+              side: const BorderSide(color: Color.fromARGB(255, 65, 169, 255)),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+            child: const Icon(Icons.send_outlined),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _handleSubmit(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey) {
+    if (bloc.message.isEmpty) return;
     debugPrint("¡Invoking new message from view!");
     backgroundService.invoke(
-        "new_message", {"text": text, "to": widget.match.id, "type": 2});
+      "new_message", 
+      {"text": bloc.message, "to": widget.match.id, "type": 2}
+    );
+    bloc.changeMessage("");
+    messageKey.currentState?.controller?.clear();
   }
 }
 
@@ -213,111 +193,80 @@ class MoleculeRoomMessages extends StatefulWidget {
   const MoleculeRoomMessages({super.key, required this.room});
 
   @override
-  State<MoleculeRoomMessages> createState() => _MolecMoleculeRoomMessages();
+  State<MoleculeRoomMessages> createState() => _MoleculeRoomMessagesState();
 }
 
-class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
+class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   final _scrollController = ScrollController();
-  late MessageBloc _messageBloc;
+  late final MessageBloc _messageBloc;
   late final FlutterBackgroundService _backgroundService;
   StreamSubscription? _messageSubscription;
-  int skip = 0;
-
-  void _addMessage(Map<String, dynamic> onData) {
-    if(onData['user'] is String) return;
-    final GroupMessage message = GroupMessage.fromJson(onData);
-
-    if(message.id == _messageBloc.state.groupMessages[0].id) return;
-
-    if (message.to == widget.room) {
-      setState(() {
-        _messageBloc.add(AddRoomMessage(message: message));
-      });
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
     _messageBloc = context.read<MessageBloc>();
-    _messageBloc.add(GroupMessageFetched(roomId: widget.room));
     _backgroundService = FlutterBackgroundService();
+    _scrollController.addListener(_onScroll);
+    _setupMessageListener();
+    _messageBloc.add(GroupMessageFetched(roomId: widget.room));
+  }
 
+  void _setupMessageListener() {
     _messageSubscription = _backgroundService.on("message").listen((onData) {
-      if (mounted && onData != null) _addMessage(onData);
+      if (mounted && onData != null && onData['user'] is! String) {
+        final message = GroupMessage.fromJson(onData);
+        if (message.to == widget.room && 
+            (_messageBloc.state.groupMessages.isEmpty || 
+             message.id != _messageBloc.state.groupMessages[0].id)) {
+          _messageBloc.add(AddRoomMessage(message: message));
+        }
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MessageBloc, MessageState>(
-        builder: (context, state) {
-          switch (state.status) {
-            case MessageStatus.failure:
-              return const Center(child: Text("Failed fetching messages"));
-            case MessageStatus.success:
-              if (state.groupMessages.isEmpty) {
-                return const Center(child: Text('No messages'));
-              }
-              return Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                color: Colors.black38,
-                // child: Center(child: Text("Loaded messages")),
-                child: ListView.builder(
-                  shrinkWrap: false,
-                  addAutomaticKeepAlives: true, 
-                  reverse: true,
-                  itemBuilder: (BuildContext context,int index) {
+      builder: (context, state) {
+        if (state.status == MessageStatus.failure) {
+          return const Center(child: Text("Failed fetching messages"));
+        }
 
-                    bool mainMessage = false;
-                    if(index < state.groupMessages.length){
-                      if (state.groupMessages.isEmpty) {
-                        mainMessage = false;
-                      }
-                      else if(index > 0){
-                        final message = state.groupMessages[index];
+        if (state.status == MessageStatus.initial && state.groupMessages.isEmpty) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-                        if(message.user.id == state.groupMessages[index - 1].user.id){
-                          mainMessage = false;
-                        }else {
-                          mainMessage = true;
-                        }
-                      }else {
-                        mainMessage = true;
-                      }
-                      //  else if (state.groupMessages[0].user.id == state.groupMessages[index].user.id) {
-                      //   mainMessage = false;
-                      // } else {
-                      //   mainMessage = true;
-                      // }                  
-                    }
-                    return index >= state.groupMessages.length
-                      ? const CircularProgressIndicator()
-                      : GroupChatMessageOrganism(
-                        text: state.groupMessages[index].text,
-                        user: state.groupMessages[index].user,
-                        mainMessage: mainMessage
-                      );
-                  } ,
-                  itemCount: state.hasReachedMax
-                    ? state.groupMessages.length
-                    : state.groupMessages.length + 1,
-                  controller: _scrollController,
-                ),
-              );
-            case MessageStatus.initial:
-              if (state.hasReachedMax) {
-                return Center(
-                  child: Text("No messages here"),
-                );
-              }
-              return const Center(child: CircularProgressIndicator());
-          }
+        if (state.groupMessages.isEmpty) {
+          return const Center(child: Text('No messages'));
+        }
+
+        return _buildMessageList(state);
+      },
+    );
+  }
+
+  Widget _buildMessageList(MessageState state) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      color: Colors.black38,
+      child: ListView.builder(
+        controller: _scrollController,
+        shrinkWrap: false,
+        addAutomaticKeepAlives: true,
+        reverse: true,
+        itemCount: state.groupMessages.length,
+        itemBuilder: (context, index) {
+          final isMainMessage = index == 0 || 
+              state.groupMessages[index].user.id != state.groupMessages[index - 1].user.id;
+          
+          return GroupChatMessageOrganism(
+            text: state.groupMessages[index].text,
+            user: state.groupMessages[index].user,
+            mainMessage: isMainMessage,
+          );
         },
-        // bloc: MessageBloc(),
-      
+      ),
     );
   }
 
@@ -330,16 +279,13 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
   }
 
   void _onScroll() {
-    debugPrint(_isBottom.toString());
     if (_isBottom) {
-      context.read<MessageBloc>().add(GroupMessageFetched(roomId: widget.room));
+      _messageBloc.add(GroupMessageFetched(roomId: widget.room));
     }
   }
 
   bool get _isBottom {
     if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
+    return _scrollController.offset >= (_scrollController.position.maxScrollExtent * 0.9);
   }
 }
