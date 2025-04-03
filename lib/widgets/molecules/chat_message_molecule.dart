@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
+import 'package:url_launcher/url_launcher.dart' show launchUrl;
 
 class MyMessageMolecule extends StatelessWidget {
 
@@ -24,10 +27,26 @@ class MyMessageMolecule extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.blue, width: 0.5)),
-              child:Text(
+              child:ExpandableText(
                     text,
-                    overflow: TextOverflow.clip,
-                  ),
+                    expandText: translate("UTILS.SHOW_MORE"),
+                    collapseText: translate("UTILS.SHOW_LESS"),
+                    maxLines: 6,
+                    animation: true,
+                    collapseOnTextTap: true,
+                    expandOnTextTap: true,
+                    mentionStyle: TextStyle(color: Colors.greenAccent),
+                    onMentionTap: (value) => debugPrint('Mention $value'),
+                    onUrlTap: (value) async {
+                      final Uri url = Uri.parse(value);
+                      if (!await launchUrl(url)) {
+                            throw Exception('Could not launch $url');
+                      }
+                    },
+                    urlStyle: const TextStyle(
+                      color: Color.fromARGB(255, 169, 145, 255)
+                    ),
+                ),
             ),
           ),
           Container(
@@ -67,10 +86,26 @@ class NotMyMessageMolecule extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.white38, width: 0.5)),
-              child: Text(
+                  child: ExpandableText(
                     text,
-                    overflow: TextOverflow.clip,
-                  ),
+                    expandText: translate("UTILS.SHOW_MORE"),
+                    collapseText: translate("UTILS.SHOW_LESS"),
+                    maxLines: 6,
+                    animation: true,
+                    collapseOnTextTap: true,
+                    expandOnTextTap: true,
+                    mentionStyle: TextStyle(color: Colors.greenAccent),
+                    onMentionTap: (value) => debugPrint('Mention $value'),
+                    onUrlTap: (value) async {
+                        final Uri url = Uri.parse(value);
+                        if (!await launchUrl(url)) {
+                        throw Exception('Could not launch $url');
+                      }
+                    },
+                    urlStyle: const TextStyle(
+                      color: Color.fromARGB(255, 169, 145, 255)
+                    ),
+                ),
             ),
           ),
         ],
