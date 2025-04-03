@@ -1,7 +1,10 @@
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AtomIndividualMessage extends StatefulWidget {
   final IndividualMessage message;
@@ -47,7 +50,24 @@ class _AtomIndividualMessageState extends State<AtomIndividualMessage>
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: widget.message.user == myId ? Colors.lightBlueAccent : Colors.white54, width: 0.5),
             ),
-            child: Text(widget.message.text, overflow: TextOverflow.clip),
+            child: ExpandableText(
+                    widget.message.text,
+                    expandText: "↓ ${translate('UTILS.SHOW_MORE')}",
+                    collapseText: "↑ ${translate('UTILS.SHOW_LESS')}",
+                    maxLines: 6,
+                    animation: true,
+                    collapseOnTextTap: true,
+                    expandOnTextTap: true,
+                    onUrlTap: (value) async {
+                      final Uri url = Uri.parse(value);
+                      if (!await launchUrl(url)) {
+                            throw Exception('Could not launch $url');
+                      }
+                    },
+                    urlStyle: const TextStyle(
+                      color: Color.fromARGB(255, 169, 145, 255)
+                    ),
+                ),
           ),
         ),
       ),

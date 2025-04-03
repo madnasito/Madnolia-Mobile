@@ -48,16 +48,14 @@ onStart(ServiceInstance service) async {
       debugPrint(username);
       debugPrint(currentRoom);
 
-
-
       service.invoke("message", payload);
       
 
       // debugPrint(message.to);
 
-      if(currentRoom != payload["to"] && payload["user"]["id"] != username && payload["type"] != 0 && payload["text"].contains("@$username")){
+      if(currentRoom != payload["to"] && payload["user"] is Map && payload["type"] != 0 && payload["text"].contains("@$username")){
         GroupMessage message =GroupMessage.fromJson(payload);
-        LocalNotificationsService.displayMessage(message);
+        if(message.user.username != username) LocalNotificationsService.displayMessage(message);
       }
     });
 
