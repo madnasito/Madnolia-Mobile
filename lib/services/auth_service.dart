@@ -15,6 +15,7 @@ class AuthService {
   Future login(String username, String password) async {
     try {
       final url = Uri.parse("$apiUrl/auth/sign-in");
+      print(url);
 
       authenticating = true;
       final resp = await http.post(url,
