@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -48,25 +49,16 @@ onStart(ServiceInstance service) async {
       debugPrint(currentRoom);
 
 
-      // Message message = Message.fromJson(payload);
 
       service.invoke("message", payload);
       
 
       // debugPrint(message.to);
 
-      // if(currentRoom != message.to && message.user.id != username){
-      //   LocalNotificationsService.displayMessage(message);
-      // }
-      // Send message to UI (if app is in foreground)
-      // if (window.isActive) {
-      //   // Create a method to send data to the UI (e.g., using a Stream or Provider)
-      //   // Example:
-      //   // _messageStreamController.sink.add(message); 
-      // } else {
-      //   // Handle background notification for new messages
-      //   // (e.g., using a notification plugin like flutter_local_notifications) 
-      // }
+      if(currentRoom != payload["to"] && payload["user"]["id"] != username && payload["type"] != 0 && payload["text"].contains("@$username")){
+        GroupMessage message =GroupMessage.fromJson(payload);
+        LocalNotificationsService.displayMessage(message);
+      }
     });
 
   socket.on("invitation", (data) async {

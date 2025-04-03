@@ -15,9 +15,15 @@ class LocalNotificationsService {
 
   static void initialize() {
       // Initialization  setting for android
+      
       const InitializationSettings initializationSettingsAndroid =
-          InitializationSettings(
-              android: AndroidInitializationSettings("@mipmap/ic_launcher"));
+        InitializationSettings(
+          android: AndroidInitializationSettings("ic_stat_madnolia_logo")
+        );
+
+      _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestNotificationsPermission();
+        
       _notificationsPlugin.initialize(
         initializationSettingsAndroid,
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
@@ -31,24 +37,24 @@ class LocalNotificationsService {
       );
   }
 
-  static final List<List<chat.GroupMessage>> _messages = []; // Lista para almacenar mensajes  
+  static final List<List<chat.GroupMessage>> _roomMessages = []; // Lista para almacenar mensajes  
   
   static Future<void> displayMessage(chat.GroupMessage message) async {
     try {
       const String groupChannelId = 'messages';
       const String groupChannelName = 'Messages';
       const String groupChannelDescription = 'Canal de mensajes';
-      const String groupKey = 'com.example.yourapp.GROUP_KEY';
+      const String groupKey = 'com.madnolia.app.GROUP_KEY';
       // Agregar el nuevo mensaje a la lista
 
-      if(_messages.isEmpty){
+      if(_roomMessages.isEmpty){
         
-        _messages.add([message]);
+        _roomMessages.add([message]);
       }else{
 
         bool existsGroup = false;
 
-        for (var group in _messages) {
+        for (var group in _roomMessages) {
           if(group[0].to == message.to){
             existsGroup = true;
             group.add(message);
@@ -56,13 +62,13 @@ class LocalNotificationsService {
           }
         }
 
-        if(!existsGroup) _messages.add([message]);
+        if(!existsGroup) _roomMessages.add([message]);
 
       }
      
-      for (var i = 0; i < _messages.length; i++) {
+      for (var i = 0; i < _roomMessages.length; i++) {
         
-        List<Message> notiMessages = _messages[i].map((message) => Message(message.text, message.date, Person(name: message.user.name))).toList();
+        List<Message> notiMessages = _roomMessages[i].map((message) => Message(message.text, message.date, Person(name: message.user.name))).toList();
         // Configurar la notificación
         NotificationDetails notificationDetails = NotificationDetails(
           android: AndroidNotificationDetails(
@@ -89,7 +95,7 @@ class LocalNotificationsService {
             styleInformation: MessagingStyleInformation(
               Person(name: message.user.name, bot: false),
               groupConversation: true,
-              conversationTitle: _messages[i][0].to,
+              conversationTitle: _roomMessages[i][0].to,
               messages: notiMessages,
             ),
           ),
@@ -106,8 +112,8 @@ class LocalNotificationsService {
       
        final inboxStyleInformation = InboxStyleInformation(
           [],
-          contentTitle: '${_messages.length} messages',
-          summaryText: '${_messages.length} messages',);
+          contentTitle: '${_roomMessages.length} messages',
+          summaryText: '${_roomMessages.length} messages',);
         
 
       AndroidNotificationDetails androidNotificationDetails =
@@ -123,7 +129,7 @@ class LocalNotificationsService {
           NotificationDetails(android: androidNotificationDetails);
       
       await _notificationsPlugin.show(
-          -1, '${_messages.length} messages',null , notificationSummaryDetails);
+          -1, '${_roomMessages.length} messages',null , notificationSummaryDetails);
 
     } catch (e) {
       debugPrint(e.toString());
@@ -186,12 +192,12 @@ class LocalNotificationsService {
 }
 
   static Future<void> deleteRoomMessages(String room) async {
-    if (_messages.isEmpty) return;
+    if (_roomMessages.isEmpty) return;
 
-    for (int i = 0; i <= _messages.length; i++) {
-      if(_messages[i][0].to == room){
+    for (int i = 0; i <= _roomMessages.length; i++) {
+      if(_roomMessages[i][0].to == room){
         // _notificationsPlugin.cancel(id)
-        _messages.removeAt(i);
+        _roomMessages.removeAt(i);
         
         final activeMessages = await getActiveNotifications("messages");
 

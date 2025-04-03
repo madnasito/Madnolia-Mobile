@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
@@ -39,6 +41,11 @@ class _MatchChatState extends State<MatchChat> {
   final matchService = MatchService();
   late UserBloc userBloc;
   final backgroundService = FlutterBackgroundService();
+  
+  late StreamSubscription _messageSubscription;
+  late StreamSubscription _playerSubscription;
+  late StreamSubscription _addedSubscription;
+
 
   late GlobalKey<FlutterMentionsState> messageKey;
   void _loadHistory(String id) async {
@@ -68,35 +75,25 @@ class _MatchChatState extends State<MatchChat> {
   }
 
   void _listenMessage(Map<String, dynamic> payload) async {
-    if (!mounted) {
-      return;
-    }
+  if (!mounted) return;
 
-    GroupMessage decodedMessage = GroupMessage.fromJson(payload);
+  GroupMessage decodedMessage = GroupMessage.fromJson(payload);
+  if (decodedMessage.to != widget.match.id) return;
 
-    if (decodedMessage.to != widget.match.id) return;
+  bool mainMessage = _messages.isEmpty || _messages[0].user.id != decodedMessage.user.id;
 
-    bool mainMessage = false;
+  GroupChatMessageOrganism message = GroupChatMessageOrganism(
+    mainMessage: mainMessage,
+    text: decodedMessage.text,
+    user: decodedMessage.user,
+  );
 
-    if (_messages.isEmpty) {
-      mainMessage = true;
-    } else if (_messages[0].user.id == decodedMessage.user.id) {
-      mainMessage = false;
-    } else {
-      mainMessage = true;
-    }
-
-    GroupChatMessageOrganism message = GroupChatMessageOrganism(
-        mainMessage: mainMessage,
-        text: decodedMessage.text,
-        user: decodedMessage.user);
-
-    // await LocalNotificationsService.displayMessage(decodedMessage);
-
+  if (mounted) {
     setState(() {
       _messages.insert(0, message);
     });
   }
+}
 
   @override
   void initState() {
@@ -104,6 +101,20 @@ class _MatchChatState extends State<MatchChat> {
     _loadHistory(widget.match.id);
     messageKey = GlobalKey<FlutterMentionsState>();
     userBloc = context.read<UserBloc>();
+
+    _messageSubscription = backgroundService.on("message").listen((data) => _listenMessage(data!));
+    _playerSubscription = backgroundService.on("new_player_to_match").listen((data) {
+      ChatUser user = ChatUser.fromJson(data!);
+      debugPrint(user.name);
+    });
+    _addedSubscription = backgroundService.on("added_to_match").listen((data) {
+      if (data?["resp"] == true) {
+        isInMatch = true;
+        if (mounted) {
+          setState(() {});
+        }
+      }
+    });
 
     if (mounted) {
       backgroundService.invoke("init");
@@ -129,9 +140,11 @@ class _MatchChatState extends State<MatchChat> {
 
   @override
   void dispose() {
+    _messageSubscription.cancel();
+    _playerSubscription.cancel();
+    _addedSubscription.cancel();
     backgroundService.invoke("disconnect_chat");
     backgroundService.invoke("off_new_player_to_match");
-
     userBloc.updateChatRoom("");
     super.dispose();
   }
@@ -360,61 +373,33 @@ class _MolecMoleculeRoomMessages extends State<MoleculeRoomMessages> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => MessageBloc()..add(GroupMessageFetched(roomId: widget.room)),
-      child: BlocBuilder<MessageBloc, MessageState>(
-        builder: (context, state) {
+Widget build(BuildContext context) {
+  return BlocBuilder<MessageBloc, MessageState>(
+    builder: (context, state) {
+      if (state.status == MessageStatus.failure) {
+        return const Center(child: Text("Failed fetching messages"));
+      }
 
-          if(state.status == MessageStatus.failure) {
-            return const Center(child: Text("Failed fetching messages"));
-          }
+      if (state.groupMessages.isNotEmpty) {
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          color: Colors.black38,
+          child: MoleculeRoomMessagesList(
+            scrollController: _scrollController,
+            state: state,
+            isLoading: state.status == MessageStatus.initial && !state.hasReachedMax,
+          ),
+        );
+      }
 
-          if(state.groupMessages.isNotEmpty){
-            return Container(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-              color: Colors.black38,
-              // child: Center(child: Text("Loaded messages")),
-              child: MoleculeRoomMessagesList(
-                scrollController: _scrollController,
-                state: state,
-                isLoading: state.status == MessageStatus.initial && !state.hasReachedMax,),
-            );
-          }
+      if (state.status == MessageStatus.initial && !state.hasReachedMax) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-          if (state.status == MessageStatus.initial && !state.hasReachedMax) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          return const Center(child: Text('No messages'));
-          // switch (state.status) {
-          //   case MessageStatus.failure:
-          //     return const Center(child: Text("Failed fetching messages"));
-          //   case MessageStatus.success:
-          //     if (state.groupMessages.isEmpty) {
-          //       return const Center(child: Text('no posts'));
-          //     }
-          //     return Container(
-          //       padding:
-          //           const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-          //       color: Colors.black38,
-          //       // child: Center(child: Text("Loaded messages")),
-          //       child: MoleculeRoomMessagesList(scrollController: _scrollController, state: state,),
-          //     );
-          //   case MessageStatus.initial:
-          //     if (state.hasReachedMax) {
-          //       return Center(
-          //         child: Text("No messages here"),
-          //       );
-          //     }
-          //     return const Center(child: CircularProgressIndicator());
-          // }
-        },
-        // bloc: MessageBloc(),
-      ),
-    );
-  }
+      return const Center(child: Text('No messages'));
+    },
+  );
+}
 
   @override
   void dispose() {
