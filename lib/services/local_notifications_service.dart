@@ -18,7 +18,7 @@ class LocalNotificationsService {
       
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
-          android: AndroidInitializationSettings("ic_stat_madnolia_logo")
+          android: AndroidInitializationSettings("@mipmap/ic_launcher")
         );
 
       _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
