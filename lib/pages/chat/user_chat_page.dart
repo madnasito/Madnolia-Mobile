@@ -168,7 +168,7 @@ class MoleculeUserHeader extends StatelessWidget {
           // ),
         ],
       ),
-    );;
+    );
   }
 }
 class OrganismChatMessages extends StatefulWidget {
