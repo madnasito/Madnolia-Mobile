@@ -1,11 +1,9 @@
 import 'dart:async' show StreamSubscription;
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
@@ -44,88 +42,6 @@ class UserChatPage extends StatelessWidget {
             const SizedBox(height: 5),
           ],
         ),
-      ),
-    );
-  }
-  
-
-  Widget _buildChatHeader(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-      color: Colors.black45,
-      child: Row(
-        children: [
-          const CircleAvatar(
-            backgroundImage: CachedNetworkImageProvider(
-                "https://i.beeimg.com/images/thumb/z66297834451-xs.jpg"),
-            radius: 30,
-          ),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("NAME"),
-              Text("@username", style: TextStyle(fontSize: 12)),
-            ],
-          ),
-          const Spacer(),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.call_outlined),
-          ),
-          IconButton(
-            onPressed: () => _showCallOptions(context),
-            icon: const Icon(CupertinoIcons.video_camera),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showCallOptions(BuildContext context) {
-    showToastWidget(
-      Container(
-        padding: const EdgeInsets.all(20),
-        color: Colors.black45,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildCallOptionButton(
-              label: "Answer",
-              icon: Icons.call,
-              onPressed: () => ToastManager().dismissAll(),
-            ),
-            const SizedBox(width: 20),
-            _buildCallOptionButton(
-              label: "Refuse",
-              icon: Icons.call_end_outlined,
-              onPressed: () => ToastManager().dismissAll(),
-            ),
-          ],
-        ),
-      ),
-      context: context,
-      animation: StyledToastAnimation.slideFromTopFade,
-      reverseAnimation: StyledToastAnimation.fade,
-      position: StyledToastPosition.top,
-      animDuration: const Duration(milliseconds: 500),
-      duration: const Duration(seconds: 30),
-      isIgnoring: false,
-    );
-  }
-
-  Widget _buildCallOptionButton({
-    required String label,
-    required IconData icon,
-    required VoidCallback onPressed,
-  }) {
-    return TextButton(
-      onPressed: onPressed,
-      child: Row(
-        children: [
-          Text(label),
-          const SizedBox(width: 5),
-          Icon(icon, size: 20),
-        ],
       ),
     );
   }
@@ -244,7 +160,7 @@ class _OrganismChatMessagesState extends State<OrganismChatMessages> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return const Center(child: Text('No messages'));
+        return const Center(child: Text('Say hi'));
       },
     );
   }

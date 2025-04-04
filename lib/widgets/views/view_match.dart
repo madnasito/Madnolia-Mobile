@@ -233,7 +233,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
           return const Center(child: Text("Failed fetching messages"));
         }
         if (state.groupMessages.isEmpty && state.hasReachedMax) {
-          return const Center(child: Text('No messages'));
+          return const Center(child: Text('Say hi'));
         }
 
         if (state.status == MessageStatus.initial && state.groupMessages.isEmpty) {
