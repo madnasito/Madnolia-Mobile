@@ -70,9 +70,11 @@ class _SearchPageState extends State<SearchPage> {
                           if(snapshot.hasData){
                             final backgroundService = FlutterBackgroundService();
 
-                            backgroundService.on('new_request_connection').listen((event) => setState(() {}));
-                            backgroundService.on('connection_accepted').listen((onData) => setState(() {}));
-                            backgroundService.on('canceled_connection').listen((onData) => setState(() {}));
+                            if(mounted){
+                              backgroundService.on('new_request_connection').listen((event) => setState(() {}));
+                              backgroundService.on('connection_accepted').listen((onData) => setState(() {}));
+                              backgroundService.on('canceled_connection').listen((onData) => setState(() {}));
+                            }
                             
                             return ListView.builder(
                               padding: const EdgeInsets.all(0),

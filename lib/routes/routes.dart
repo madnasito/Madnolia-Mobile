@@ -16,7 +16,7 @@ import 'package:madnolia/pages/new/create_match_page.dart';
 import 'package:madnolia/pages/home/home_new_page.dart';
 import 'package:madnolia/pages/match_page.dart';
 import 'package:madnolia/pages/match/match_form_page.dart';
-import 'package:madnolia/pages/invitations_page.dart';
+import 'package:madnolia/pages/notifications/notifications_page.dart';
 import 'package:madnolia/pages/platforms/platform_games_page.dart';
 // import 'package:madnolia/pages/home/home_new_page.dart';
 import 'package:madnolia/pages/platforms/platforms_page.dart';
@@ -109,7 +109,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: "notifications",
           name: "notifications",
-          builder: (context, state) => const InvitationsPage(),
+          builder: (context, state) => const NotificationsPage(),
         ),
         GoRoute(
           path: "joined",
