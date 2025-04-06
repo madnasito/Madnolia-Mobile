@@ -6,6 +6,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 
 
 
@@ -39,21 +40,17 @@ class _NewPageState extends State<NewPage> {
               const SizedBox(height: 20),
               FadeIn(
                   delay: const Duration(milliseconds: 300),
-                  child: Text(
-                    translate("CREATE_MATCH.TITLE"),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
+                  child: CenterTitleAtom(
+                    text: translate("CREATE_MATCH.TITLE"),
                   )),
-              const SizedBox(height: 40),
+              const SizedBox(height: 10),
               SingleChildScrollView(
                 dragStartBehavior: DragStartBehavior.start,
                 child: FadeIn(
                   delay: const Duration(seconds: 1),
                   child: Column(
                     children: [
-                      const SizedBox(height: 70),
+                      const SizedBox(height: 40),
                       ...userPlatforms(),
                       const SizedBox(height: 70),
                     ],

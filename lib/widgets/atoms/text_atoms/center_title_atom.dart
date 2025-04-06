@@ -18,6 +18,7 @@ class CenterTitleAtom extends StatelessWidget {
         child: Text(
           text,
           style: textStyle,
+          textAlign: TextAlign.center,
         ),
       ),
     );
