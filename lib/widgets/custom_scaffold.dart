@@ -21,6 +21,10 @@ class CustomScaffold extends StatelessWidget {
     
     final userBloc = context.read<UserBloc>();
     final backgroundService = FlutterBackgroundService();
+
+    backgroundService.on("new_request_connection").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
+    backgroundService.on("invitation").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
+    
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
@@ -60,24 +64,30 @@ class CustomScaffold extends StatelessWidget {
                   //   route: "/platforms",
                   // ),
                   _MenuButton(
-                    icon: Icons.bolt_outlined,
+                    icon: Icon(Icons.bolt_outlined, size: 40,color: Colors.white),
                     title: translate("HEADER.MATCH"),
                     route: "/new",
                   ),
                   _MenuButton(
-                    icon: CupertinoIcons.gamecontroller,
+                    icon: Icon(CupertinoIcons.gamecontroller, size: 40, color: Colors.white),
                     title:
                         translate("HEADER.JOINED_MATCHES"),
                     route: "/joined",
                   ),
                   _MenuButton(
-                    icon: Icons.notifications_none_outlined,
+                    icon: userBloc.state.notifications == 0 ? Icon(Icons.notifications_none_rounded,size: 40, color: Colors.white ) : Stack(
+                      alignment: Alignment.center,
+                      children: [
+                      Icon(Icons.notifications_active_rounded,size: 40, color: Colors.redAccent ),
+                      Text(userBloc.state.notifications.toString(), style: TextStyle(color: Colors.white, fontSize: 14))
+                    ] 
+                    ),
                     title:
                         translate("HEADER.NOTIFICATIONS"),
                     route: "/notifications",
                   ),
                   const _MenuButton(
-                    icon: Icons.chat_bubble_outline_rounded,
+                    icon: Icon(Icons.chat_bubble_outline_rounded, size: 40, color: Colors.white),
                     title: "Chat",
                     route: "/chat",
                   ),
@@ -86,7 +96,7 @@ class CustomScaffold extends StatelessWidget {
                   //     title: translate("HEADER.PROFILE"),
                   //     route: "/user"),
                   _MenuButton(
-                      icon: Icons.person_outline_outlined,
+                      icon: Icon(Icons.person_outline_outlined, size: 40, color: Colors.white),
                       title: translate("HEADER.PROFILE"),
                       route: "/user"),
                   const SizedBox(height: 230),
@@ -152,7 +162,7 @@ class CustomScaffold extends StatelessWidget {
 }
 
 class _MenuButton extends StatelessWidget {
-  final IconData icon;
+  final Widget icon;
   final String title;
   final String route;
   const _MenuButton(
@@ -196,11 +206,7 @@ class _MenuButton extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(
-                icon,
-                size: 40,
-                color: Colors.white,
-              ),
+              icon,
               Text(
                 "     $title",
                 style: const TextStyle(color: Colors.white),

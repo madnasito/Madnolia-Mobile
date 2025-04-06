@@ -61,6 +61,7 @@ onStart(ServiceInstance service) async {
 
   socket.on("invitation", (data) async {
       try {
+        service.invoke("invitation", data);
         // Invitation invitation = Invitation.fromJson(data);
 
         // Send invitation to UI (if app is in foreground)

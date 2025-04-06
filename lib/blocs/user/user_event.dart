@@ -26,3 +26,10 @@ class UserUpdateChatRoom extends UserEvent {
 
   const UserUpdateChatRoom({required this.chatRoom});
 }
+
+class AddNotifications extends UserEvent {
+  final int value;
+  const AddNotifications({required this.value});
+}
+
+class RestoreNotifications extends UserEvent {}

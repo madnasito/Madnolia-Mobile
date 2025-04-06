@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/enums/connection-status.enum.dart';
 import 'package:madnolia/models/notification/notification_model.dart' show NotificationModel;
 import 'package:madnolia/models/user/simple_user_model.dart';
@@ -19,8 +21,8 @@ class NotificationsPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 10),
-            CenterTitleAtom(text: translate("CHAT.MESSAGES")),
+            const SizedBox(height: 20),
+            CenterTitleAtom(text: translate("NOTIFICATIONS.TITLE")),
             const SizedBox(height: 10),
             FutureBuilder(
               future: NotificationsService().getUserNotifications(),
@@ -29,11 +31,13 @@ class NotificationsPage extends StatelessWidget {
                   return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
                 }
                 if (snapshot.hasError || snapshot.data == null) {
-                  return SizedBox(height: 200, child: Center(child: Text('Error loading notifications')));
+                  return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.ERROR_LOADING"))));
                 }
                 if (snapshot.data!.isEmpty) {
                   return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.EMPTY"))));
                 }
+                final userBloc = context.watch<UserBloc>();
+                userBloc.restoreNotifications();
                 return Column(
                   children: snapshot.data!.map((notification) =>
                     notification.type == 0

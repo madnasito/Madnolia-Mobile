@@ -140,6 +140,9 @@ flutter:
     - family: Rapier Zero Hollow
       fonts:
         - asset: assets/fonts/Rapier Zero Hollow.otf
+    - family: Mashetic
+      fonts:
+        - asset: assets/fonts/Mashetic.otf
     - family: Icomoon
       fonts:
         - asset: assets/fonts/icomoon.ttf

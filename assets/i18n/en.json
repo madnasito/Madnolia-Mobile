@@ -44,12 +44,13 @@
       "TOAST_SIGN_UP": "Great! Thanks for sign up"
   },
   "LOGIN":{
-        "WELCOME": "Welcome, Player",
-      "BUTTON": "Login",
-      "ERRORS":{
-          "USER": "Not founded user",
-          "PASSWORD": "No valid password"
-      }
+    "WELCOME": "Welcome, Player",
+    "BUTTON": "Login",
+    "ERRORS":{
+        "USER": "Not founded user",
+        "PASSWORD": "No valid password"
+    },
+    "FORGOT_PASSWORD": "Forgot password?"
   },
   "CREATE_MATCH":{
       "TITLE": "Select the platform",
@@ -88,11 +89,15 @@
       "PLATFORM": "Platform"
   },
   "NOTIFICATIONS":{
-      "INVITATIONS": "Invitations"
+      "INVITATIONS": "Invitations",
+      "TITLE": "Notifications",
+      "EMPTY": "No notifications",
+      "ERROR_LOADING": "Error loading notifications"
   },
   "PROFILE":{
       "YOU": "You",
       "MATCHES": "Matches",
+      "TITLE": "Profile",
       "PLATFORMS": "Your platforms",
       "MATCHES_PAGE":{
           "TITLE": "My matches",

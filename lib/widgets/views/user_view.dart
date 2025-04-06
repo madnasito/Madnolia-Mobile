@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:madnolia/blocs/edit_user_bloc.dart';
 import 'package:madnolia/blocs/edit_user_provider.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
+import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:toast/toast.dart';
@@ -27,6 +28,9 @@ class UserMainView extends StatelessWidget {
     ToastContext().init(context);
     return Column(
       children: [
+        const SizedBox(height: 10),
+        CenterTitleAtom(text: translate("PROFILE.TITLE")),
+        const SizedBox(height: 10),
         _Card(
           icon: Icons.person,
           title: translate("PROFILE.YOU"),
@@ -41,7 +45,12 @@ class UserMainView extends StatelessWidget {
           icon: Icons.gamepad_outlined,
           title: translate("PROFILE.PLATFORMS"),
           routeName: "/user/platforms",
-        )
+        ),
+        // _Card(
+        //   icon: Icons.group_outlined,
+        //   title: translate("PROFILE.PLATFORMS"),
+        //   routeName: "/user/platforms",
+        // )
       ],
     );
   }
@@ -59,25 +68,26 @@ class _Card extends StatelessWidget {
     return GestureDetector(
       onTap: () => GoRouter.of(context).push(routeName),
       child: Container(
-        margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 60),
+        width: double.maxFinite,
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
             color: Colors.black12,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.blue, width: 3)),
-        child: Column(
-          children: [
-            Icon(icon),
+            border: Border.all(color: Colors.blue, width: 1)),
+        child: ListTile(
+          leading: Icon(icon, size: 30),
+          title: 
             Text(
               title,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  fontSize: 30,
-                  fontFamily: "Cyberverse",
+                  fontSize: 20,
+                  fontFamily: "Mashetic",
                   color: Colors.white),
-            )
-          ],
-        ),
+            ),
+          trailing: Icon(Icons.arrow_forward_ios_rounded),
+        )
       ),
     );
   }
@@ -121,9 +131,9 @@ class _EditUserViewState extends State<EditUserView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const SizedBox(height: 10),
-                Text(
-                  bloc.name,
-                  style: const TextStyle(fontSize: 20),
+                CenterTitleAtom(
+                  text: bloc.name,
+                  
                 ),
                 Container(
                   margin: const EdgeInsets.all(30),

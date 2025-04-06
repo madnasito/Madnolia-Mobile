@@ -27,7 +27,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       if(event is UserLogOut){
         emit(
-          state.copyWith(loadedUser: false)
+          state.copyWith(loadedUser: false, notifications: 0)
         );
       }
 
@@ -41,6 +41,10 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       }
 
       if(event is UserUpdateChatRoom) emit(state.copyWith(chatRoom: event.chatRoom));
+
+      if(event is AddNotifications) emit(state.copyWith(notifications: event.value));
+
+      if(event is RestoreNotifications) emit(state.copyWith(notifications: 0));
     });
   }
   
@@ -58,5 +62,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   void updateChatRoom(String room) => add(UserUpdateChatRoom(chatRoom: room));
 
   void logOutUser() => add(UserLogOut());
+
+  void updateNotifications(int value) => add(AddNotifications(value: value));
+
+  void restoreNotifications() => add(RestoreNotifications());
   
 }

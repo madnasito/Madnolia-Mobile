@@ -11,18 +11,20 @@ class UserState extends Equatable {
   final String id;
   final int availability;
   final String chatRoom;
+  final int notifications;
 
   const UserState({
-  this.loadedUser = false,
-  this.name = "",
-  this.email = "",
-  this.username = "",
-  this.platforms = const [],
-  this.img = "",
-  this.thumb = "",
-  this.id = "",
-  this.availability = 1,
-  this.chatRoom= "",
+    this.loadedUser = false,
+    this.name = "",
+    this.email = "",
+    this.username = "",
+    this.platforms = const [],
+    this.img = "",
+    this.thumb = "",
+    this.id = "",
+    this.availability = 1,
+    this.chatRoom= "",
+    this.notifications = 0
   });
 
   UserState copyWith({
@@ -35,7 +37,8 @@ class UserState extends Equatable {
     String? id,
     bool? loadedUser,
     int? availability,
-    String? chatRoom
+    String? chatRoom,
+    int? notifications
   }) => UserState(
     name: name ?? this.name,
     email: email ?? this.email,
@@ -46,11 +49,12 @@ class UserState extends Equatable {
     id: id ?? this.id,
     loadedUser: loadedUser ?? this.loadedUser,
     availability: availability ?? this.availability,
-    chatRoom: chatRoom ?? this.chatRoom
+    chatRoom: chatRoom ?? this.chatRoom,
+    notifications: notifications ?? this.notifications
   );
   
   @override
   List<Object> get props => [
-    name, email, username, platforms, img, thumb, id, loadedUser, availability, chatRoom
+    name, email, username, platforms, img, thumb, id, loadedUser, availability, chatRoom, notifications
   ];
 }

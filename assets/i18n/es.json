@@ -15,6 +15,8 @@
       "LOGOUT": "Salir"
     },
 
+
+    
     "HOME":{
         "MATCH": "Partida creada",
         "MATCHES": "Partidas creadas",
@@ -49,7 +51,8 @@
         "ERRORS":{
             "USER": "No se ha encontrado al usuario",
             "PASSWORD": "La contraseña es invalida"
-        }
+        },
+        "FORGOT_PASSWORD": "¿Olvido la contraseña?"
     },
     "CREATE_MATCH":{
         "TITLE": "Selecciona la plataforma",
@@ -86,10 +89,14 @@
         "PLATFORM": "Plataforma"
     },
     "NOTIFICATIONS":{
-        "INVITATIONS": "Invitaciones"
+        "INVITATIONS": "Invitaciones",
+        "TITLE": "Notificaciones",
+        "EMPTY": "Sin notificaciones",
+        "ERROR_LOADING": "Error cargando notificaciones"
     },
     "PROFILE":{
         "YOU": "Perfil",
+        "TITLE": "Perfil",
         "MATCHES": "Partidas",
         "PLATFORMS": "Tus plataformas",
         "MATCHES_PAGE":{
