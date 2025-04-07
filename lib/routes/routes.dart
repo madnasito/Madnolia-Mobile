@@ -1,4 +1,5 @@
 
+import 'package:madnolia/pages/auth/recover_password_page.dart';
 import 'package:madnolia/pages/chat/user_chat_page.dart';
 import 'package:madnolia/pages/chat/chats_page.dart';
 import 'package:madnolia/pages/chat/room_call_page.dart';
@@ -78,6 +79,13 @@ final GoRouter router = GoRouter(
           path: 'login',
           builder: (BuildContext context, GoRouterState state) {
             return const LoginPage();
+          },
+        ),
+        GoRoute(
+          path: 'recover-password',
+          name: 'recover-password',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ForgotPasswordPage();
           },
         ),
         GoRoute(

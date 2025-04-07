@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/organism/form/organism_login_form.dart';
 
@@ -29,7 +30,9 @@ class LoginPage extends StatelessWidget {
                   const OrganismLoginForm(),
 
                   const SizedBox(height: 30),
-                  FadeIn(delay: const Duration(milliseconds: 350),child: Text(translate("LOGIN.FORGOT_PASSWORD")),)
+                  GestureDetector(
+                    onTap: () => context.pushNamed('recover-password'),
+                    child: FadeIn(delay: const Duration(milliseconds: 350),child: Text(translate("LOGIN.FORGOT_PASSWORD")),))
                 ],
               ),
             ),
