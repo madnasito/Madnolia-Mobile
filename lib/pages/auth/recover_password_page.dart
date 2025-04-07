@@ -4,6 +4,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/services/mail_service.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
+import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
@@ -26,14 +27,25 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(body: Column(
-      children: [
-        SizedBox(height: 20),
-        CenterTitleAtom(text: "Recover your password"),
-        SizedBox(height: 20),
-        OrganismRecoverPasswordForm()
-      ],
-    ));
+    return Scaffold(
+      body: Background(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  CenterTitleAtom(text: "Recover your password"),
+                  SizedBox(height: 20),
+                  OrganismRecoverPasswordForm()
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
