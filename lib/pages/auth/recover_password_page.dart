@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/services/mail_service.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
@@ -35,7 +36,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               child: Column(
                 children: [
                   SizedBox(height: 20),
-                  CenterTitleAtom(text: "Recover your password"),
+                  CenterTitleAtom(text: translate("RECOVER_PASSWORD.TITLE")),
                   SizedBox(height: 20),
                   OrganismRecoverPasswordForm()
                 ],
@@ -69,7 +70,7 @@ class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordFor
             formKey: formKey,
             keyboardType: TextInputType.emailAddress,
             name: "email",
-            label: "Email",
+            label: translate("REGISTER.EMAIL"),
             icon: Icons.email_outlined,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.email()
@@ -78,7 +79,7 @@ class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordFor
           ),
           SizedBox(height: 20),
           MoleculeFormButton(
-            text: 'Recover password', 
+            text: translate("RECOVER_PASSWORD.RECOVER_PASSWORD"), 
             color: Colors.transparent, 
             isLoading: _isLoading, // Pasamos el estado de carga al botón
             onPressed: () async {
@@ -114,7 +115,7 @@ class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordFor
                       child: AlertDialog(
                         icon: Icon(Icons.check_circle_outline_rounded),
                         iconColor: Colors.greenAccent,
-                        title: Text('Email Sended!'),
+                        title: Text(translate("RECOVER_PASSWORD.EMAIL_SENDED")),
                         backgroundColor: Colors.black54,
                       ),
                     )

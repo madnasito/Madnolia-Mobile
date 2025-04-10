@@ -14,15 +14,15 @@ class ChatsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      body: Flexible(
-        child: Column(
-          children: [
-            SizedBox(height: 10),
-            CenterTitleAtom(text: translate("CHAT.MESSAGES")),
-            SizedBox(height: 10),
-            Expanded(child: OrganismUserChats())
-          ],
-        ),
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          CenterTitleAtom(text: translate("CHAT.MESSAGES")),
+          const SizedBox(height: 10),
+          Expanded(  // Use Expanded instead of Flexible here
+            child: OrganismUserChats(),
+          ),
+        ],
       ),
     );
   }

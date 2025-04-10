@@ -17,6 +17,7 @@ class MoleculeTextField extends StatelessWidget {
   final int delay;
   final bool enabled;
   final AutovalidateMode autovalidateMode;
+  final Function(String?)? onChanged;
   const MoleculeTextField( {
     super.key,
     required this.formKey,
@@ -28,7 +29,8 @@ class MoleculeTextField extends StatelessWidget {
     this.isPassword = false, this.initialValue,
     this.delay = 300,
     this.enabled = true,
-    this.autovalidateMode = AutovalidateMode.onUserInteraction
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
+    this.onChanged
   });
 
   @override
@@ -36,6 +38,7 @@ class MoleculeTextField extends StatelessWidget {
     return FadeIn(
       delay: Duration(milliseconds: delay),
       child: FormBuilderTextField(
+        onChanged: onChanged,
         enabled:enabled ,
         initialValue: initialValue,
         autofocus: false,

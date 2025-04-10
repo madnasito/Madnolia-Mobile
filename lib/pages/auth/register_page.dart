@@ -1,3 +1,5 @@
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +8,8 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/register_provider.dart';
 import 'package:madnolia/services/auth_service.dart';
+import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
+import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart' show MoleculeTextField;
 import 'package:madnolia/widgets/views/platforms_view.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
@@ -53,34 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: !verifiedUser
                         ? FadeIn(
                             delay: const Duration(milliseconds: 500),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <CustomInput> [
-                                CustomInput(
-                                  icon: Icons.abc,
-                                  stream: widget.bloc.nameStream,
-                                  placeholder: translate("REGISTER.NAME"),
-                                  onChanged: widget.bloc.changeName,
-                                ),
-                                CustomInput(
-                                    icon: Icons.account_circle_outlined,
-                                    placeholder: translate("REGISTER.USERNAME" ),
-                                    stream: widget.bloc.usernameStream,
-                                    onChanged: widget.bloc.changeUsername),
-                                CustomInput(
-                                    icon: Icons.mail_outline,
-                                    keyboardType: TextInputType.emailAddress,
-                                    placeholder: translate("REGISTER.EMAIL") ,
-                                    stream: widget.bloc.emailStream,
-                                    onChanged: widget.bloc.changeEmail),
-                                CustomInput(
-                                    icon: Icons.lock_outlined,
-                                    placeholder: translate("REGISTER.PASSWORD") ,
-                                    isPassword: true,
-                                    stream: widget.bloc.passwordStream,
-                                    onChanged: widget.bloc.changePassword),
-                              ],
-                            ),
+                            child: OrganismRegisterForm()
                           )
                         : Container(),
                   ),
@@ -145,4 +122,103 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     }
    }
+}
+
+class OrganismRegisterForm extends StatelessWidget {
+  const OrganismRegisterForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    bool _loading = false;
+    String notValidUser = "";
+    String notValidEmail = '';
+    final formKey = GlobalKey<FormBuilderState>();
+    return FormBuilder(
+      key: formKey,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: MoleculeTextField(
+              formKey: formKey,
+              name: "name",
+              label: translate("FORM.INPUT.NAME"),
+              icon: Icons.abc_rounded,
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(),
+                FormBuilderValidators.minLength(1),
+                FormBuilderValidators.maxLength(20) 
+              ]),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: MoleculeTextField(
+              formKey: formKey,
+              name: "username",
+              label: translate("FORM.INPUT.USERNAME"),
+              icon: Icons.account_circle_outlined,
+              onChanged: (String? value) {
+                
+              },
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(),
+                FormBuilderValidators.username(),
+                FormBuilderValidators.notEqual('madna')
+              ]),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: MoleculeTextField(
+              formKey: formKey,
+              name: "email",
+              label: translate("FORM.INPUT.EMAIL"),
+              icon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(),
+                FormBuilderValidators.email()
+              ]),
+              onChanged: (value) {
+                print(value);
+              }
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: MoleculeTextField(
+              formKey: formKey,
+              name: "password",
+              label: translate("FORM.INPUT.PASSWORD"),
+              icon: Icons.lock_outline_rounded,
+              isPassword: true,
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(),
+                FormBuilderValidators.minLength(1),
+                FormBuilderValidators.maxLength(100) 
+              ]),
+            ),
+          ),
+          MoleculeFormButton(
+            text: translate("REGISTER.NEXT"),
+            onPressed: _loading == false ? () async {
+              // On another side, can access all field values without saving form with instantValues
+              formKey.currentState?.validate();
+              debugPrint(formKey.currentState?.instantValue.toString());
+              // CHecking if the form is valid before send petition
+              if(!formKey.currentState!.isValid) return;
+              final values = formKey.currentState?.instantValue.values.toList();
+
+              final String name = formKey.currentState!.fields['name']?.transformedValue;
+              final String username = formKey.currentState!.fields['username']?.transformedValue;
+              final String email = formKey.currentState!.fields['email']?.transformedValue;
+              final String password = formKey.currentState!.fields['password']?.transformedValue;
+
+              print(values);
+          } : null,)
+        ],
+      ),
+    );
+  }
 }

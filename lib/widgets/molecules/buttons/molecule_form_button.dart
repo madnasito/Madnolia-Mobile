@@ -11,7 +11,7 @@ class MoleculeFormButton extends StatelessWidget {
     super.key,
     required this.text,
     this.onPressed,
-    required this.color,
+    this.color = Colors.transparent,
     this.isLoading = false, // Valor por defecto es false
   });
 

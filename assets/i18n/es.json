@@ -45,6 +45,11 @@
         "NEXT": "Siguiente",
         "TOAST_SIGN_UP": "¡Perfecto! Registro exitoso"
     },
+    "RECOVER_PASSWORD": {
+        "TITLE": "Recupera tu contraseña",
+        "RECOVER_PASSWORD": "Recuperar contraseña",
+        "EMAIL_SENDED": "¡Correo enviado!"
+    },
     "LOGIN":{
         "WELCOME": "Login",
         "BUTTON": "Iniciar Sesión",

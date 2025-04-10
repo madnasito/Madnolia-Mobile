@@ -43,6 +43,24 @@
       "NEXT": "Next",
       "TOAST_SIGN_UP": "Great! Thanks for sign up"
   },
+  "FORM": {
+    "INPUT": {
+        "NAME": "Name",
+        "USERNAME": "Username",
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "PASSWORD2": "Repeat password",
+        "PLATFORMS": "Platforms"
+    }
+  },
+  "BUTTONS": {
+
+  },
+  "RECOVER_PASSWORD": {
+    "TITLE": "Recover your password",
+    "RECOVER_PASSWORD": "Recover password",
+    "EMAIL_SENDED": "Email sended!"
+    },
   "LOGIN":{
     "WELCOME": "Welcome, Player",
     "BUTTON": "Login",
