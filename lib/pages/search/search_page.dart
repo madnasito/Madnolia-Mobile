@@ -18,9 +18,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  int counter = 0;
+  late int counter;
   late final TextEditingController searchController;
-  Timer? _debounceTimer;
   StreamSubscription? _requestSub;
   StreamSubscription? _acceptSub;
   StreamSubscription? _cancelSub;
@@ -30,6 +29,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     searchController = TextEditingController();
+    counter = 0;
     _setupStreamListeners();
   }
 
@@ -47,26 +47,24 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   void dispose() {
-    _debounceTimer?.cancel();
     _requestSub?.cancel();
     _acceptSub?.cancel();
     _cancelSub?.cancel();
     searchController.dispose();
+    counter = 0;
     super.dispose();
   }
 
   void _onSearchChanged(String value) {
-    debugPrint(value);
+    debugPrint(searchController.text);
     counter++;
-    
-    _debounceTimer?.cancel();
-    _debounceTimer = Timer(const Duration(seconds: 1), () {
-      if (mounted) {
-        setState(() {
-          counter--;
-        });
-      }
-    });
+    Timer(
+      const Duration(seconds: 1),
+      () {
+        counter--;
+        setState(() {});
+      },
+    );
   }
 
   @override
