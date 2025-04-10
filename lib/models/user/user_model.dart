@@ -17,7 +17,6 @@ class User {
     List<int> platforms;
     String img;
     String thumb;
-    List<String> partners;
     List<String> games;
     int notifications;
     int availability;
@@ -31,7 +30,6 @@ class User {
         required this.platforms,
         required this.img,
         required this.thumb,
-        required this.partners,
         required this.games,
         required this.notifications,
         required this.availability,
@@ -46,7 +44,6 @@ class User {
         platforms: List<int>.from(json["platforms"].map((x) => x)),
         img: json["img"],
         thumb: json["thumb"],
-        partners: List<String>.from(json["partners"].map((x) => x)),
         games: List<String>.from(json["games"].map((x) => x)),
         notifications: json["notifications"],
         availability: json["availability"],
@@ -61,7 +58,6 @@ class User {
         "platforms": List<dynamic>.from(platforms.map((x) => x)),
         "img": img,
         "thumb": thumb,
-        "partners": List<dynamic>.from(partners.map((x) => x)),
         "games": List<dynamic>.from(games.map((x) => x)),
         "notifications": notifications,
         "availability": availability,

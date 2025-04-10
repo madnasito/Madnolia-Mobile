@@ -22,16 +22,18 @@ class _AnimatedLogoAtomState extends State<AnimatedLogoAtom>
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 60));
+    if(mounted){
+      controller =
+          AnimationController(vsync: this, duration: const Duration(seconds: 60));
 
-    rotation = Tween(begin: 0.0, end: 2.0 * pi).animate(controller);
+      rotation = Tween(begin: 0.0, end: 2.0 * pi).animate(controller);
 
-    controller.addListener(() {
-      if (controller.status == AnimationStatus.completed) {
-        controller.repeat();
-      }
-    });
+      controller.addListener(() {
+        if (controller.status == AnimationStatus.completed) {
+          controller.repeat();
+        }
+      });
+    }
   }
 
   @override
