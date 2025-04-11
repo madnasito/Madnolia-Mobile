@@ -175,7 +175,7 @@ class _PlatformsViewState extends State<PlatformsView> {
     
     return Column(
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 50),
         FadeIn(
             delay: const Duration(milliseconds: 300),
             child: CenterTitleAtom(text: translate("REGISTER.SELECT_PLATFORMS")),

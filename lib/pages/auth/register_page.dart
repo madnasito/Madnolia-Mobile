@@ -17,6 +17,7 @@ import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/form_button.dart';
 
 bool verifiedUser = false;
+bool canScroll = false;
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
@@ -32,55 +33,38 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void dispose() {
     verifiedUser = false;
+    canScroll = false;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final PageController controller =  PageController(
+      keepPage: true,);
     
     return RegisterProvider(
       child: Scaffold(
         body: Background(
           child: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: verifiedUser ? 120 : 50),
-                  !verifiedUser
-                      ? CenterTitleAtom(text: translate("REGISTER.TITLE"))
-                      : Container(),
-                  const SizedBox(height: 40),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: !verifiedUser
-                        ? FadeIn(
-                            delay: const Duration(milliseconds: 500),
-                            child: OrganismRegisterForm()
-                          )
-                        : Container(),
-                  ),
-                  verifiedUser
-                      ? PlatformsView(
-                          platforms: widget.registerModel.platforms,
-                        )
-                      : Container(),
-                  FadeIn(
-                    delay: const Duration(seconds: 1),
-                    child: StreamBuilder(
-                      stream: widget.bloc.userValidStream,
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        return FormButton(
-                            text: translate("REGISTER.NEXT"),
-                            color: Colors.transparent,
-                            onPressed: (snapshot.hasData)
-                                ? () => register(context, widget.bloc)
-                                : null);
-                      },
-                    ),
-                  ),
-                ]
-              ),
+            child: PageView(
+              allowImplicitScrolling: true,
+              onPageChanged: (value) {
+                if(!canScroll) controller.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.bounceIn);
+              },
+              controller: controller,
+              children: [
+                FadeIn(
+                  delay: const Duration(milliseconds: 500),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: OrganismRegisterForm(registerModel: widget.registerModel, controller: controller,),
+                  )
+                ),
+                FadeIn(child: SingleChildScrollView(
+                  child: PlatformsView(platforms: widget.registerModel.platforms),
+                ))
+              ],
             )
           )
         ),
@@ -124,21 +108,25 @@ class _RegisterPageState extends State<RegisterPage> {
 }
 
 class OrganismRegisterForm extends StatelessWidget {
-  const OrganismRegisterForm({super.key});
+  final RegisterModel registerModel;
+  final PageController controller;
+  const OrganismRegisterForm({super.key, required this.registerModel, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     bool loading = false;
-    String notValidUser = "";
-    String notValidEmail = '';
     final formKey = GlobalKey<FormBuilderState>();
     return FormBuilder(
       key: formKey,
       child: Column(
         children: [
+          const SizedBox(height: 50),
+          CenterTitleAtom(text: translate("REGISTER.TITLE")),
+          const SizedBox(height: 40),
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
+              onChanged: (value) => canScroll = false,
               formKey: formKey,
               name: "name",
               label: translate("FORM.INPUT.NAME"),
@@ -153,13 +141,11 @@ class OrganismRegisterForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
+              onChanged: (value) => canScroll = false,
               formKey: formKey,
               name: "username",
               label: translate("FORM.INPUT.USERNAME"),
               icon: Icons.account_circle_outlined,
-              onChanged: (String? value) {
-                
-              },
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
                 FormBuilderValidators.username(),
@@ -170,6 +156,7 @@ class OrganismRegisterForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
+              onChanged: (value) => canScroll = false,
               formKey: formKey,
               name: "email",
               label: translate("FORM.INPUT.EMAIL"),
@@ -179,15 +166,13 @@ class OrganismRegisterForm extends StatelessWidget {
                 FormBuilderValidators.required(),
                 FormBuilderValidators.email(),
                 // FormBuilderValidators.notEqual(notValidEmail)
-              ]),
-              onChanged: (value) {
-                print(value);
-              }
+              ])
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
+              onChanged: (value) => canScroll = false,
               formKey: formKey,
               name: "password",
               label: translate("FORM.INPUT.PASSWORD"),
@@ -233,9 +218,13 @@ class OrganismRegisterForm extends StatelessWidget {
                 );
               }
 
+              canScroll = true;
               
-
-              print(values);
+              registerModel.name = name;
+              registerModel.email = email;
+              registerModel.password = password;
+              registerModel.username = username;
+              controller.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.bounceIn);
           } )
         ],
       ),
