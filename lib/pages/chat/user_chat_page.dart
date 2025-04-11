@@ -101,7 +101,7 @@ class _OrganismChatMessagesState extends State<OrganismChatMessages> {
   final _scrollController = ScrollController();
   late final MessageBloc _messageBloc;
   late final FlutterBackgroundService _backgroundService;
-  late final UserBloc _userBloc;
+  late final UserBloc userBloc;
   int skip = 0;
   StreamSubscription? _messageSubscription;
 
@@ -110,7 +110,7 @@ class _OrganismChatMessagesState extends State<OrganismChatMessages> {
     super.initState();
     _messageBloc = context.read<MessageBloc>();
     _backgroundService = FlutterBackgroundService();
-    _userBloc = context.read<UserBloc>();
+    userBloc = context.read<UserBloc>();
     _scrollController.addListener(_onScroll);
 
     _messageSubscription = _backgroundService.on("message").listen((onData) {
@@ -125,7 +125,6 @@ class _OrganismChatMessagesState extends State<OrganismChatMessages> {
 
     try {
       final message = IndividualMessage.fromJson(onData);
-      final currentUserId = _userBloc.state.id;
 
       if (message.to == widget.id)  {
         _messageBloc.add(AddIndividualMessage(message: message));

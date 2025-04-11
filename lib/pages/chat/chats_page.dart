@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/chat/user_chat_model.dart';
-import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/services/messages_service.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';

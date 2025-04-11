@@ -41,7 +41,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
     final PageController controller =  PageController(
       keepPage: true,);
-    bool loading = false;
     return RegisterProvider(
       child: Scaffold(
         body: Background(
