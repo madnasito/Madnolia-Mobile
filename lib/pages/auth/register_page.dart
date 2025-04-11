@@ -14,7 +14,6 @@ import 'package:madnolia/widgets/views/platforms_view.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 
 bool verifiedUser = false;
@@ -129,7 +128,7 @@ class OrganismRegisterForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool _loading = false;
+    bool loading = false;
     String notValidUser = "";
     String notValidEmail = '';
     final formKey = GlobalKey<FormBuilderState>();
@@ -164,7 +163,7 @@ class OrganismRegisterForm extends StatelessWidget {
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
                 FormBuilderValidators.username(),
-                FormBuilderValidators.notEqual('madna')
+                // FormBuilderValidators.notEqual(notValidUser)
               ]),
             ),
           ),
@@ -178,7 +177,8 @@ class OrganismRegisterForm extends StatelessWidget {
               keyboardType: TextInputType.emailAddress,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(),
-                FormBuilderValidators.email()
+                FormBuilderValidators.email(),
+                // FormBuilderValidators.notEqual(notValidEmail)
               ]),
               onChanged: (value) {
                 print(value);
@@ -202,21 +202,41 @@ class OrganismRegisterForm extends StatelessWidget {
           ),
           MoleculeFormButton(
             text: translate("REGISTER.NEXT"),
-            onPressed: _loading == false ? () async {
+            isLoading: loading,
+            onPressed: () async {
               // On another side, can access all field values without saving form with instantValues
+              loading = true;
               formKey.currentState?.validate();
               debugPrint(formKey.currentState?.instantValue.toString());
               // CHecking if the form is valid before send petition
               if(!formKey.currentState!.isValid) return;
               final values = formKey.currentState?.instantValue.values.toList();
 
+              if(!formKey.currentState!.isValid) {
+                loading = false;
+                return;
+              };
+
               final String name = formKey.currentState!.fields['name']?.transformedValue;
               final String username = formKey.currentState!.fields['username']?.transformedValue;
               final String email = formKey.currentState!.fields['email']?.transformedValue;
               final String password = formKey.currentState!.fields['password']?.transformedValue;
 
+              final resp = await AuthService().verifyUser(username, email);
+
+
+              loading = false;
+              if(resp.containsKey("error") && context.mounted) {
+                return showErrorServerAlert(
+                  context,
+                  resp,
+                );
+              }
+
+              
+
               print(values);
-          } : null,)
+          } )
         ],
       ),
     );

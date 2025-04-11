@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
+import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/widgets/atoms/messages/atom_individual_message.dart';
@@ -19,10 +20,10 @@ class UserChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late ChatUser user;
+    late UserChat userChat;
     if (GoRouterState.of(context).extra != null) {
-      if (GoRouterState.of(context).extra is ChatUser) {
-        user = GoRouterState.of(context).extra as ChatUser;
+      if (GoRouterState.of(context).extra is UserChat) {
+        userChat = GoRouterState.of(context).extra as UserChat;
       }
     } else {
       context.go('/');
@@ -32,13 +33,13 @@ class UserChatPage extends StatelessWidget {
     return CustomScaffold(
       body: BlocProvider(
         create: (context) => MessageBloc()
-          ..add(UserMessageFetched(messagesBody: UserMessagesBody(user: user.id, skip: 0))),
+          ..add(UserMessageFetched(messagesBody: UserMessagesBody(user: userChat.user.id, skip: 0))),
         child: Column(
           children: [
-            MoleculeUserHeader(user: user),
-            Expanded(child: OrganismChatMessages(user: user.id)),
+            MoleculeUserHeader(user: userChat.user),
+            Expanded(child: OrganismChatMessages(id: userChat.id, user: userChat.user.id)),
             const SizedBox(height: 3),
-            MoleculeChatInput(to: user.id, messageType: MessageType.user),
+            MoleculeChatInput(to: userChat.id, messageType: MessageType.user),
             const SizedBox(height: 5),
           ],
         ),
@@ -88,8 +89,9 @@ class MoleculeUserHeader extends StatelessWidget {
   }
 }
 class OrganismChatMessages extends StatefulWidget {
+  final String id;
   final String user;
-  const OrganismChatMessages({super.key, required this.user});
+  const OrganismChatMessages({super.key, required this.id, required this.user});
 
   @override
   State<OrganismChatMessages> createState() => _OrganismChatMessagesState();
@@ -125,8 +127,7 @@ class _OrganismChatMessagesState extends State<OrganismChatMessages> {
       final message = IndividualMessage.fromJson(onData);
       final currentUserId = _userBloc.state.id;
 
-      if ((message.user == currentUserId && message.to == widget.user) ||
-          (message.to == currentUserId && message.user == widget.user)) {
+      if (message.to == widget.id)  {
         _messageBloc.add(AddIndividualMessage(message: message));
       }
     } catch (e) {
@@ -179,7 +180,7 @@ class _OrganismChatMessagesState extends State<OrganismChatMessages> {
     if (_isBottom) {
       skip += 10; // Increment skip for pagination
       _messageBloc.add(UserMessageFetched(
-        messagesBody: UserMessagesBody(user: widget.user, skip: skip),
+        messagesBody: UserMessagesBody(user: widget.id, skip: skip),
       ));
     }
   }
