@@ -92,27 +92,29 @@ class _OrganismSelectPlatformState extends State<OrganismSelectPlatform> {
     return Column(
       children: [
         PlatformsView(platforms: widget.registerModel.platforms),
-        MoleculeFormButton(
-          text: translate("REGISTER.TITLE"),
-          isLoading: _isLoading,
-          onPressed: () async {
-            try {
-              setState(() => _isLoading = true);
-              final resp = await AuthService().register(widget.registerModel);
-
-              if (!context.mounted) return;
-
-              if (resp.containsKey("message")) {
-                showErrorServerAlert(context, resp);
-              } else {
-                context.go("/");
+        StatefulBuilder(
+          builder: (context, setState) =>  MoleculeFormButton(
+            text: translate("REGISTER.TITLE"),
+            isLoading: _isLoading,
+            onPressed: () async {
+              try {
+                setState(() => _isLoading = true);
+                final resp = await AuthService().register(widget.registerModel);
+          
+                if (!context.mounted) return;
+          
+                if (resp.containsKey("message")) {
+                  showErrorServerAlert(context, resp);
+                } else {
+                  context.go("/");
+                }
+              } catch (e) {
+                debugPrint(e.toString());
+              } finally {
+                if (mounted) setState(() => _isLoading = false);
               }
-            } catch (e) {
-              debugPrint(e.toString());
-            } finally {
-              if (mounted) setState(() => _isLoading = false);
-            }
-          },
+            },
+          ),
         )
       ],
     );
