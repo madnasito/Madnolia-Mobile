@@ -30,7 +30,7 @@ class MoleculeFormButton extends StatelessWidget {
           backgroundColor: color,
           shape: const StadiumBorder(),
         ),
-        onPressed: isLoading ? null : onPressed, // Deshabilitar si está cargando
+        onPressed: isLoading == true ? null : onPressed, // Deshabilitar si está cargando
         child: SizedBox(
           width: double.infinity,
           height: 55,

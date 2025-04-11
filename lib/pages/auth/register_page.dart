@@ -14,7 +14,6 @@ import 'package:madnolia/widgets/views/platforms_view.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/form_button.dart';
 
 bool verifiedUser = false;
 bool canScroll = false;
@@ -42,7 +41,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     final PageController controller =  PageController(
       keepPage: true,);
-    
+    bool loading = false;
     return RegisterProvider(
       child: Scaffold(
         body: Background(
@@ -58,11 +57,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   delay: const Duration(milliseconds: 500),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: OrganismRegisterForm(registerModel: widget.registerModel, controller: controller,),
+                    child: SingleChildScrollView(
+                      child: OrganismRegisterForm(registerModel: widget.registerModel, controller: controller)
+                    ),
                   )
                 ),
                 FadeIn(child: SingleChildScrollView(
-                  child: PlatformsView(platforms: widget.registerModel.platforms),
+                  child: OrganismSelectPlatform(registerModel: widget.registerModel)
                 ))
               ],
             )
@@ -72,39 +73,50 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void register(
-      BuildContext context, RegisterBloc bloc, ) async {
-    final Map resp = await AuthService().verifyUser(bloc.username!, bloc.email!);
-    if(!context.mounted) return;
-    if (resp.containsKey("error") && context.mounted) {
-      return showErrorServerAlert(context, resp);
-    }
+  
+}
 
-    widget.registerModel.name = bloc.name!;
-    widget.registerModel.email = bloc.email!;
-    widget.registerModel.username = bloc.username!;
-    widget.registerModel.password = bloc.password!;
+class OrganismSelectPlatform extends StatefulWidget {
+  final RegisterModel registerModel;
+  const OrganismSelectPlatform({super.key, required this.registerModel});
 
-    if (!verifiedUser && widget.registerModel.platforms.isEmpty) setState(() {});
+  @override
+  State<OrganismSelectPlatform> createState() => _OrganismSelectPlatformState();
+}
 
-    if (verifiedUser && widget.registerModel.platforms.isEmpty) {
-      return showAlert(
-        context,
-        translate("CREATE_MATCH.PLATFORMS_EMPTY"),
-      );
-    }
-    verifiedUser = true;
+class _OrganismSelectPlatformState extends State<OrganismSelectPlatform> {
+  bool _isLoading = false;
 
-    if (verifiedUser && widget.registerModel.platforms.isNotEmpty) {
-      final Map<String, dynamic> register = await AuthService().register(widget.registerModel);
-      if(!context.mounted) return;
-      if (register.containsKey("user")) {
-        context.go("/");
-      } else {
-        showErrorServerAlert(context, register);
-      }
-    }
-   }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        PlatformsView(platforms: widget.registerModel.platforms),
+        MoleculeFormButton(
+          text: translate("REGISTER.TITLE"),
+          isLoading: _isLoading,
+          onPressed: () async {
+            try {
+              setState(() => _isLoading = true);
+              final resp = await AuthService().register(widget.registerModel);
+
+              if (!context.mounted) return;
+
+              if (resp.containsKey("message")) {
+                showErrorServerAlert(context, resp);
+              } else {
+                context.go("/");
+              }
+            } catch (e) {
+              debugPrint(e.toString());
+            } finally {
+              if (mounted) setState(() => _isLoading = false);
+            }
+          },
+        )
+      ],
+    );
+  }
 }
 
 class OrganismRegisterForm extends StatelessWidget {
@@ -185,47 +197,54 @@ class OrganismRegisterForm extends StatelessWidget {
               ]),
             ),
           ),
-          MoleculeFormButton(
-            text: translate("REGISTER.NEXT"),
-            isLoading: loading,
-            onPressed: () async {
-              // On another side, can access all field values without saving form with instantValues
-              loading = true;
-              formKey.currentState?.validate();
-              debugPrint(formKey.currentState?.instantValue.toString());
-              // CHecking if the form is valid before send petition
-              if(!formKey.currentState!.isValid) return;
-              final values = formKey.currentState?.instantValue.values.toList();
+          StatefulBuilder(
+            builder: (context, setState) =>  MoleculeFormButton(
+              text: translate("REGISTER.NEXT"),
+              isLoading: loading,
+              onPressed:() async {
+                 try {
+                setState(() => loading = true);
+                
+                formKey.currentState?.validate();
+                if (!formKey.currentState!.isValid) {
+                  setState(() => loading = false);
+                  return;
+                }
 
-              if(!formKey.currentState!.isValid) {
-                loading = false;
-                return;
-              };
+                final String name = formKey.currentState!.fields['name']?.transformedValue;
+                final String username = formKey.currentState!.fields['username']?.transformedValue;
+                final String email = formKey.currentState!.fields['email']?.transformedValue;
+                final String password = formKey.currentState!.fields['password']?.transformedValue;
 
-              final String name = formKey.currentState!.fields['name']?.transformedValue;
-              final String username = formKey.currentState!.fields['username']?.transformedValue;
-              final String email = formKey.currentState!.fields['email']?.transformedValue;
-              final String password = formKey.currentState!.fields['password']?.transformedValue;
+                final resp = await AuthService().verifyUser(username, email);
 
-              final resp = await AuthService().verifyUser(username, email);
-
-
-              loading = false;
-              if(resp.containsKey("error") && context.mounted) {
-                return showErrorServerAlert(
-                  context,
-                  resp,
-                );
+                if (resp.containsKey("message") && context.mounted) {
+                  canScroll = false;
+                  showErrorServerAlert(context, resp);
+                } else {
+                  canScroll = true;
+                  registerModel.name = name;
+                  registerModel.email = email;
+                  registerModel.password = password;
+                  registerModel.username = username;
+                  controller.animateToPage(
+                    1,
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.bounceIn,
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  showAlert(context, e.toString());
+                }
+              } finally {
+                if (context.mounted) {
+                  setState(() => loading = false);
+                }
               }
-
-              canScroll = true;
-              
-              registerModel.name = name;
-              registerModel.email = email;
-              registerModel.password = password;
-              registerModel.username = username;
-              controller.animateToPage(1, duration: const Duration(milliseconds: 500), curve: Curves.bounceIn);
-          } )
+            
+              } ),
+          )
         ],
       ),
     );

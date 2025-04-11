@@ -5,7 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/services/auth_service.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
+import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 
 import 'package:madnolia/widgets/platform_icon_widget.dart';
 
@@ -199,7 +201,6 @@ class _PlatformsViewState extends State<PlatformsView> {
               children: [
                 const SizedBox(height: 70),
                 ...loadPlatforms(currentFather),
-                const SizedBox(height: 70),
               ],
             ),
           ),
