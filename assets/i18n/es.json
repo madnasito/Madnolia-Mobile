@@ -45,6 +45,17 @@
         "NEXT": "Siguiente",
         "TOAST_SIGN_UP": "¡Perfecto! Registro exitoso"
     },
+    "FORM": {
+        "INPUT": {
+            "NAME": "Nombre",
+            "USERNAME": "Nombre de usuario",
+            "EMAIL": "Correo",
+            "PASSWORD": "Contraseña",
+            "PASSWORD2": "Repita la Contraseña",
+            "PLATFORMS": "Plataformas",
+            "RESPOND": "Responder"
+        }
+    },
     "RECOVER_PASSWORD": {
         "TITLE": "Recupera tu contraseña",
         "RECOVER_PASSWORD": "Recuperar contraseña",
@@ -85,7 +96,8 @@
         "MATCH_UPDATED": "Partida actualizada"
     },
     "CHAT": {
-        "MESSAGES": "Mensajes"
+        "MESSAGES": "Mensajes",
+        "MESSAGE": "Mensaje"
     },
     "GAME":{
         "GAME": "Juego",

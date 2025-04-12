@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
@@ -81,11 +82,11 @@ class LocalNotificationsService {
             actions: [
               AndroidNotificationAction(
                 message.id,
-                "Respond",
+                translate("FORM.INPUT.RESPOND"),
                 allowGeneratedReplies: true,
                 inputs: [
-                   const AndroidNotificationActionInput(
-                    label: "Message",
+                   AndroidNotificationActionInput(
+                    label: translate("CHAT.MESSAGE"),
                     allowFreeFormInput: true
                   ),
                   
@@ -112,8 +113,8 @@ class LocalNotificationsService {
       
        final inboxStyleInformation = InboxStyleInformation(
           [],
-          contentTitle: '${_roomMessages.length} messages',
-          summaryText: '${_roomMessages.length} messages',);
+          contentTitle: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
+          summaryText: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',);
         
 
       AndroidNotificationDetails androidNotificationDetails =
@@ -129,7 +130,7 @@ class LocalNotificationsService {
           NotificationDetails(android: androidNotificationDetails);
       
       await _notificationsPlugin.show(
-          -1, '${_roomMessages.length} messages',null , notificationSummaryDetails);
+          -1, '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',null , notificationSummaryDetails);
 
     } catch (e) {
       debugPrint(e.toString());

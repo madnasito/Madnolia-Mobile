@@ -50,7 +50,8 @@
         "EMAIL": "Email",
         "PASSWORD": "Password",
         "PASSWORD2": "Repeat password",
-        "PLATFORMS": "Platforms"
+        "PLATFORMS": "Platforms",
+        "RESPOND": "Respond"
     }
   },
   "BUTTONS": {
@@ -98,7 +99,8 @@
     "MATCH_UPDATED": "Match updated"
   },
   "CHAT": {
-    "MESSAGES": "Messages"
+    "MESSAGES": "Messages",
+    "MESSAGE": "Mensaje"
   },
   "GAME":{
       "GAME": "Game",
