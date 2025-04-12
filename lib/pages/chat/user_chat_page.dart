@@ -1,3 +1,4 @@
+
 import 'dart:async' show StreamSubscription;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,9 +9,9 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
-import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/models/chat_user_model.dart';
+import 'package:madnolia/services/friendship_service.dart';
 import 'package:madnolia/widgets/atoms/messages/atom_individual_message.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_chat_input.dart';
@@ -20,31 +21,44 @@ class UserChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late UserChat userChat;
+    late ChatUser chatUser;
     if (GoRouterState.of(context).extra != null) {
-      if (GoRouterState.of(context).extra is UserChat) {
-        userChat = GoRouterState.of(context).extra as UserChat;
+      if (GoRouterState.of(context).extra is ChatUser) {
+        chatUser = GoRouterState.of(context).extra as ChatUser;
+
+        return CustomScaffold(
+          body: FutureBuilder(
+            future: FriendshipService().getFriendwhipWithUser(chatUser.id),
+            builder: (context, snapshot) {
+              if(snapshot.hasData){
+                return BlocProvider(
+                  create: (context) => MessageBloc()
+                    ..add(UserMessageFetched(messagesBody: UserMessagesBody(user: chatUser.id, skip: 0))),
+                  child: Column(
+                    children: [
+                      MoleculeUserHeader(user: chatUser),
+                      Expanded(child: OrganismChatMessages(id: snapshot.data!.id, user: chatUser.id)),
+                      const SizedBox(height: 3),
+                      MoleculeChatInput(to: snapshot.data!.id, messageType: MessageType.user),
+                      const SizedBox(height: 5),
+                    ],
+                  ),
+                );
+              } else if(snapshot.hasError) {
+                return Center(child: Text("Error loading chat"));
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+          },),
+        );
+      } else {
+        context.go('/');
+        return const SizedBox.shrink(); // Return empty widget while redirecting  
       }
     } else {
       context.go('/');
       return const SizedBox.shrink(); // Return empty widget while redirecting
     }
-
-    return CustomScaffold(
-      body: BlocProvider(
-        create: (context) => MessageBloc()
-          ..add(UserMessageFetched(messagesBody: UserMessagesBody(user: userChat.user.id, skip: 0))),
-        child: Column(
-          children: [
-            MoleculeUserHeader(user: userChat.user),
-            Expanded(child: OrganismChatMessages(id: userChat.id, user: userChat.user.id)),
-            const SizedBox(height: 3),
-            MoleculeChatInput(to: userChat.id, messageType: MessageType.user),
-            const SizedBox(height: 5),
-          ],
-        ),
-      ),
-    );
   }
 }
 
@@ -112,6 +126,8 @@ class _OrganismChatMessagesState extends State<OrganismChatMessages> {
     _backgroundService = FlutterBackgroundService();
     userBloc = context.read<UserBloc>();
     _scrollController.addListener(_onScroll);
+
+    _backgroundService.invoke("init_chat", {"room": widget.id});
 
     _messageSubscription = _backgroundService.on("message").listen((onData) {
       if (mounted && onData != null) {

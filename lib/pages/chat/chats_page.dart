@@ -77,7 +77,7 @@ class AtomUserChat extends StatelessWidget {
         trailing: Icon(Icons.message_rounded),
         onTap: () => context.pushNamed(
           "user_chat", 
-          extra: userChat,
+          extra: userChat.user,
         ),
         leading: CircleAvatar(
           radius: 20,

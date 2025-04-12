@@ -22,7 +22,9 @@ class CustomScaffold extends StatelessWidget {
     final userBloc = context.read<UserBloc>();
     final backgroundService = FlutterBackgroundService();
 
-    backgroundService.on("new_request_connection").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
+    backgroundService.on("new_request_connection").listen((onData) {
+      if(onData?['user'] == userBloc.state.id) userBloc.updateNotifications(userBloc.state.notifications + 1);
+    } );
     backgroundService.on("invitation").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
     
     return Scaffold(
