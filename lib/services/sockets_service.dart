@@ -47,7 +47,6 @@ onStart(ServiceInstance service) async {
       debugPrint("MESSAGE!!!");
       debugPrint(username);
       debugPrint(currentRoom);
-
       service.invoke("message", payload);
       
 
@@ -55,7 +54,7 @@ onStart(ServiceInstance service) async {
 
       if(currentRoom != payload["to"] && payload["user"] is Map && payload["type"] != 0 && payload["text"].contains("@$username")){
         GroupMessage message =GroupMessage.fromJson(payload);
-        if(message.user.username != username) LocalNotificationsService.displayMessage(message);
+        LocalNotificationsService.displayMessage(message);
       }
     });
 

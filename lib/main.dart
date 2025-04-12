@@ -15,8 +15,6 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
-import 'package:madnolia/services/local_notifications_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
@@ -53,7 +51,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LocalNotificationsService.initialize();
     var localizationDelegate = LocalizedApp.of(context).delegate;
     return LocalizationProvider(
       state: LocalizationProvider.of(context).state,

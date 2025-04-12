@@ -42,10 +42,13 @@ class LocalNotificationsService {
   
   static Future<void> displayMessage(chat.GroupMessage message) async {
     try {
+
+
       const String groupChannelId = 'messages';
       const String groupChannelName = 'Messages';
       const String groupChannelDescription = 'Canal de mensajes';
       const String groupKey = 'com.madnolia.app.GROUP_KEY';
+
       // Agregar el nuevo mensaje a la lista
 
       if(_roomMessages.isEmpty){
@@ -82,12 +85,14 @@ class LocalNotificationsService {
             actions: [
               AndroidNotificationAction(
                 message.id,
-                translate("FORM.INPUT.RESPOND"),
+                // translate("FORM.INPUT.RESPOND"),
+                "Respond",
                 allowGeneratedReplies: true,
                 inputs: [
                    AndroidNotificationActionInput(
-                    label: translate("CHAT.MESSAGE"),
-                    allowFreeFormInput: true
+                    // label: translate("CHAT.MESSAGE"),
+                    label: "Message",
+                    allowFreeFormInput: true,
                   ),
                   
                 ],
@@ -96,7 +101,7 @@ class LocalNotificationsService {
             styleInformation: MessagingStyleInformation(
               Person(name: message.user.name, bot: false),
               groupConversation: true,
-              conversationTitle: _roomMessages[i][0].to,
+              conversationTitle: "Match messages",
               messages: notiMessages,
             ),
           ),
@@ -113,8 +118,8 @@ class LocalNotificationsService {
       
        final inboxStyleInformation = InboxStyleInformation(
           [],
-          contentTitle: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
-          summaryText: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',);
+          contentTitle: '${_roomMessages.length} messages',
+          summaryText: '${_roomMessages.length} messages',);
         
 
       AndroidNotificationDetails androidNotificationDetails =
@@ -130,7 +135,7 @@ class LocalNotificationsService {
           NotificationDetails(android: androidNotificationDetails);
       
       await _notificationsPlugin.show(
-          -1, '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',null , notificationSummaryDetails);
+          -1, '${_roomMessages.length}}',null , notificationSummaryDetails);
 
     } catch (e) {
       debugPrint(e.toString());
