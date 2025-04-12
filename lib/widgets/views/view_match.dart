@@ -54,7 +54,7 @@ class _ViewMatchState extends State<ViewMatch> {
     });
     backgroundService.invoke("init_chat", {"room": widget.match.id});
     backgroundService.on("disconnected_socket").listen((_) => setState(() => socketConnected = false));
-    backgroundService.on("connected_socket").listen((_) => setState(() => socketConnected = true));
+    if(mounted) backgroundService.on("connected_socket").listen((_) => setState(() => socketConnected = true));
     userBloc.updateChatRoom(widget.match.id);
   }
 
@@ -146,6 +146,9 @@ class _ViewMatchState extends State<ViewMatch> {
 
   Widget _buildMessageInput(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey) {
     final screenWidth = MediaQuery.of(context).size.width;
+
+    final List<ChatUser> usersLists = widget.match.joined.where((member) => member.id != userBloc.state.id).toList();
+    if(userBloc.state.id != widget.match.user.id) usersLists.add(widget.match.user);
     
     return Wrap(
       children: [
@@ -154,7 +157,7 @@ class _ViewMatchState extends State<ViewMatch> {
           margin: const EdgeInsets.only(right: 8),
           child: InputGroupMessage(
             inputKey: messageKey,
-            usersList: widget.match.joined,
+            usersList: usersLists,
             stream: bloc.messageStream,
             placeholder: "Message",
             onChanged: bloc.changeMessage,
