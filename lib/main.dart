@@ -15,6 +15,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
@@ -32,10 +33,11 @@ void main() async {
 
   List<String> supportedLangs = ['en', 'es'];
 
-  var delegate = await LocalizationDelegate.create(
+  LocalizationDelegate delegate = await LocalizationDelegate.create(
     fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
     supportedLocales: supportedLangs,
   );
+
 
   unawaited(MobileAds.instance.initialize());
   MobileAds.instance.initialize();

@@ -14,14 +14,13 @@ class LocalNotificationsService {
       FlutterLocalNotificationsPlugin();
   
 
-  static void initialize() {
-      // Initialization  setting for android
-      
+  static Future<void> initialize() async {
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
           android: AndroidInitializationSettings("@mipmap/ic_launcher")
         );
 
+        
       _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.requestNotificationsPermission();
         
@@ -40,10 +39,28 @@ class LocalNotificationsService {
 
   static final List<List<chat.GroupMessage>> _roomMessages = []; // Lista para almacenar mensajes  
   
+
+  static Future<void> initializeTranslations() async {
+      // Use PlatformDispatcher to get the device locale
+    Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
+        ? const Locale('en') // Fallback if needed
+        : const Locale('en'); // Replace with actual logic to get locale
+
+    String langCode = deviceLocale.languageCode;
+
+    List<String> supportedLangs = ['en', 'es'];
+
+    await LocalizationDelegate.create(
+      fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
+      supportedLocales: supportedLangs,
+    );
+  }
+
   static Future<void> displayMessage(chat.GroupMessage message) async {
     try {
 
-
+      await initializeTranslations();
+      print(translate("CREATE_MATCH.DURATION"));
       const String groupChannelId = 'messages';
       const String groupChannelName = 'Messages';
       const String groupChannelDescription = 'Canal de mensajes';
@@ -85,13 +102,12 @@ class LocalNotificationsService {
             actions: [
               AndroidNotificationAction(
                 message.id,
-                // translate("FORM.INPUT.RESPOND"),
-                "Respond",
+                translate("FORM.INPUT.RESPOND"),
                 allowGeneratedReplies: true,
                 inputs: [
                    AndroidNotificationActionInput(
-                    // label: translate("CHAT.MESSAGE"),
-                    label: "Message",
+                    label: translate("CHAT.MESSAGE"),
+                    // label: "Message",
                     allowFreeFormInput: true,
                   ),
                   
@@ -118,8 +134,8 @@ class LocalNotificationsService {
       
        final inboxStyleInformation = InboxStyleInformation(
           [],
-          contentTitle: '${_roomMessages.length} messages',
-          summaryText: '${_roomMessages.length} messages',);
+          contentTitle: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
+          summaryText: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',);
         
 
       AndroidNotificationDetails androidNotificationDetails =
@@ -135,7 +151,7 @@ class LocalNotificationsService {
           NotificationDetails(android: androidNotificationDetails);
       
       await _notificationsPlugin.show(
-          -1, '${_roomMessages.length}}',null , notificationSummaryDetails);
+          -1, '${_roomMessages.length}} ${translate("CHAT.MESSAGES")}',null , notificationSummaryDetails);
 
     } catch (e) {
       debugPrint(e.toString());
