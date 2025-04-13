@@ -5,7 +5,10 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
+import 'package:madnolia/models/match/minimal_match_model.dart';
 import 'package:madnolia/routes/routes.dart';
+import 'package:madnolia/services/database/match_db.dart';
+import 'package:madnolia/services/match_service.dart';
 import '../models/chat/message_model.dart' as chat;
 
 class LocalNotificationsService {
@@ -58,39 +61,60 @@ class LocalNotificationsService {
 
   static Future<void> displayMessage(chat.GroupMessage message) async {
     try {
-
       await initializeTranslations();
-      print(translate("CREATE_MATCH.DURATION"));
       const String groupChannelId = 'messages';
       const String groupChannelName = 'Messages';
       const String groupChannelDescription = 'Canal de mensajes';
       const String groupKey = 'com.madnolia.app.GROUP_KEY';
 
       // Agregar el nuevo mensaje a la lista
-
-      if(_roomMessages.isEmpty){
-        
+      bool messageAdded = false;
+      
+      for (var group in _roomMessages) {
+        if(group[0].to == message.to) {
+          group.add(message);
+          messageAdded = true;
+          break;
+        }
+      }
+      
+      if(!messageAdded) {
         _roomMessages.add([message]);
-      }else{
+      }
 
-        bool existsGroup = false;
+      // Obtener información del match UNA SOLA VEZ
+      final matchProvider = MatchProvider();
+      await matchProvider.open();
+      
+      MinimalMatchDb? matchDb;
+      if(await matchProvider.getMatch(message.to) == null) {
+        final Map<String, dynamic> matchInfo = await MatchService().getMatch(message.to);
+        final MinimalMatch minimalMatch = MinimalMatch.fromJson(matchInfo);
+        matchDb = MinimalMatchDb(
+          date: minimalMatch.date, 
+          platform: minimalMatch.platform, 
+          title: minimalMatch.title, 
+          id: minimalMatch.id
+        );
+        await matchProvider.insert(matchDb);
+      } else {
+        matchDb = await matchProvider.getMatch(message.to);
+      }
 
-        for (var group in _roomMessages) {
-          if(group[0].to == message.to){
-            existsGroup = true;
-            group.add(message);
-            break;
-          }
+      // Procesar cada grupo de mensajes
+      for (var i = 0; i < _roomMessages.length; i++) {
+        final currentGroup = _roomMessages[i];
+        
+        // Obtener el título específico para ESTE grupo
+        MinimalMatchDb? groupMatchDb;
+        if(await matchProvider.getMatch(currentGroup[0].to) != null) {
+          groupMatchDb = await matchProvider.getMatch(currentGroup[0].to);
         }
 
-        if(!existsGroup) _roomMessages.add([message]);
+        List<Message> notiMessages = currentGroup.map((msg) => 
+          Message(msg.text, msg.date, Person(name: msg.user.name))
+        ).toList();
 
-      }
-     
-      for (var i = 0; i < _roomMessages.length; i++) {
-        
-        List<Message> notiMessages = _roomMessages[i].map((message) => Message(message.text, message.date, Person(name: message.user.name))).toList();
-        // Configurar la notificación
         NotificationDetails notificationDetails = NotificationDetails(
           android: AndroidNotificationDetails(
             groupKey: groupKey,
@@ -105,56 +129,62 @@ class LocalNotificationsService {
                 translate("FORM.INPUT.RESPOND"),
                 allowGeneratedReplies: true,
                 inputs: [
-                   AndroidNotificationActionInput(
+                  AndroidNotificationActionInput(
                     label: translate("CHAT.MESSAGE"),
-                    // label: "Message",
                     allowFreeFormInput: true,
                   ),
-                  
                 ],
               )
             ],
             styleInformation: MessagingStyleInformation(
               Person(name: message.user.name, bot: false),
               groupConversation: true,
-              conversationTitle: "Match messages",
+              // Usar el título específico de este grupo
+              conversationTitle: groupMatchDb?.title ?? 'Match messages',
               messages: notiMessages,
             ),
           ),
         );
 
-        // Mostrar o actualizar la notificación
         await _notificationsPlugin.show(
           i,
           null,
-          null, notificationDetails,
-          payload: message.to,);
+          null, 
+          notificationDetails,
+          payload: currentGroup[0].to,
+        );
       }
 
-      
-       final inboxStyleInformation = InboxStyleInformation(
-          [],
-          contentTitle: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
-          summaryText: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',);
-        
+      // Notificación resumen
+      final inboxStyleInformation = InboxStyleInformation(
+        [],
+        contentTitle: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
+        summaryText: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
+      );
 
-      AndroidNotificationDetails androidNotificationDetails =
-          AndroidNotificationDetails(
-            groupChannelId, groupChannelName,
-            channelDescription: groupChannelDescription,
-            styleInformation: inboxStyleInformation,
-            
-            groupKey: groupKey,
-            setAsGroupSummary: true
-          );
-      NotificationDetails notificationSummaryDetails =
-          NotificationDetails(android: androidNotificationDetails);
+      final notificationSummaryDetails = NotificationDetails(
+        android: AndroidNotificationDetails(
+          groupChannelId, 
+          groupChannelName,
+          channelDescription: groupChannelDescription,
+          styleInformation: inboxStyleInformation,
+          groupKey: groupKey,
+          setAsGroupSummary: true
+        ),
+      );
       
       await _notificationsPlugin.show(
-          -1, '${_roomMessages.length}} ${translate("CHAT.MESSAGES")}',null , notificationSummaryDetails);
+        -1, 
+        '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
+        null,
+        notificationSummaryDetails
+      );
 
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('Error en displayMessage: $e');
+    } finally {
+      // Cerrar la conexión a la base de datos
+      // (Considera mantenerla abierta si haces muchas operaciones seguidas)
     }
   }
 
