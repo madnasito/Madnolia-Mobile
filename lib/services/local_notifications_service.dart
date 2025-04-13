@@ -20,7 +20,7 @@ class LocalNotificationsService {
   static Future<void> initialize() async {
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
-          android: AndroidInitializationSettings("@mipmap/ic_launcher")
+          android: AndroidInitializationSettings("@mipmap/ic_notifications")
         );
 
         
@@ -122,6 +122,7 @@ class LocalNotificationsService {
             groupChannelName,
             channelDescription: groupChannelDescription,
             importance: Importance.high,
+            icon: 'ic_notifications',
             priority: Priority.high,
             actions: [
               AndroidNotificationAction(

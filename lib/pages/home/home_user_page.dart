@@ -4,7 +4,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
-import 'package:madnolia/services/sqflite_service.dart';
 import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/molecules/molecule_platform_matches.dart';
@@ -104,7 +103,6 @@ class HomeUserPage extends StatelessWidget {
       final userBloc = context.read<UserBloc>();
 
       const storage = FlutterSecureStorage();
-      await LocalSqlService().init();
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
 
       if (userInfo.containsKey("error")) {

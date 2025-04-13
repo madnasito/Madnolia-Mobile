@@ -1,5 +1,4 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
 
 final String tableMatch = 'matches';
 final String columnId = '_id';
@@ -47,7 +46,7 @@ class MatchProvider {
 
   Future open() async {
     final databasePath = await getDatabasesPath();
-    final path = join(databasePath, 'madnolia.db');
+    final path = '$databasePath/madnolia.db';
     
     _db = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
