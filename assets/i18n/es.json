@@ -109,7 +109,9 @@
         "INVITATIONS": "Invitaciones",
         "TITLE": "Notificaciones",
         "EMPTY": "Sin notificaciones",
-        "ERROR_LOADING": "Error cargando notificaciones"
+        "ERROR_LOADING": "Error cargando notificaciones",
+        "MATCH_INVITATION": "Invitacion a partida",
+        "INVITED_TO": "Fuiste invitado a"
     },
     "PROFILE":{
         "YOU": "Perfil",

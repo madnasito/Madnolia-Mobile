@@ -112,7 +112,9 @@
       "INVITATIONS": "Invitations",
       "TITLE": "Notifications",
       "EMPTY": "No notifications",
-      "ERROR_LOADING": "Error loading notifications"
+      "ERROR_LOADING": "Error loading notifications",
+      "MATCH_INVITATION": "Match Invitation",
+      "INVITED_TO": "You are invited to"
   },
   "PROFILE":{
       "YOU": "You",

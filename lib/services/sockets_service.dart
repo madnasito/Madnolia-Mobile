@@ -9,6 +9,8 @@ import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
+import '../models/invitation_model.dart' show Invitation;
+
 
 @pragma('vm:entry-point')
 onStart(ServiceInstance service) async {
@@ -61,8 +63,9 @@ onStart(ServiceInstance service) async {
   socket.on("invitation", (data) async {
       try {
         service.invoke("invitation", data);
-        // Invitation invitation = Invitation.fromJson(data);
-
+        Invitation invitation = Invitation.fromJson(data);
+        
+        LocalNotificationsService.displayInvitation(invitation);
         // Send invitation to UI (if app is in foreground)
         // if (window.isActive) {
         //   // Create a method to send data to the UI (e.g., using a Stream or Provider)

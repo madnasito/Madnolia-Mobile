@@ -14,12 +14,14 @@ class Invitation {
   String url;
   String match;
   String img;
+  String user;
 
   Invitation({
     required this.name,
     required this.url,
     required this.match,
     required this.img,
+    required this.user
   });
 
   factory Invitation.fromJson(Map<String, dynamic> json) => Invitation(
@@ -27,6 +29,7 @@ class Invitation {
         url: json["url"],
         match: json["match"],
         img: json["img"],
+        user: json["user"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -34,5 +37,6 @@ class Invitation {
         "url": url,
         "match": match,
         "img": img,
+        "user": user,
       };
 }

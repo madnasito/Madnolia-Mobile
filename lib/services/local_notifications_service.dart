@@ -1,8 +1,16 @@
 
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'package:madnolia/models/invitation_model.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/models/match/minimal_match_model.dart';
@@ -59,6 +67,32 @@ class LocalNotificationsService {
     );
   }
 
+  static Future<String> imageProviderToBase64(ImageProvider imageProvider) async {
+    // Create a completer to handle the asynchronous image loading
+    final completer = Completer<Uint8List>();
+    
+    // Convert ImageProvider to ImageStream and listen for the image data
+    final imageStream = imageProvider.resolve(ImageConfiguration.empty);
+    final listener = ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) async {
+      final byteData = await imageInfo.image.toByteData(format: ImageByteFormat.png);
+      final bytes = byteData!.buffer.asUint8List();
+      if (!completer.isCompleted) {
+        completer.complete(bytes);
+      }
+    });
+    
+    imageStream.addListener(listener);
+    
+    // Wait for the image bytes
+    final bytes = await completer.future;
+    
+    // Remove the listener when done
+    imageStream.removeListener(listener);
+    
+    // Convert to base64
+    return base64Encode(bytes);
+  }
+
   static Future<void> displayMessage(chat.GroupMessage message) async {
     try {
       await initializeTranslations();
@@ -104,7 +138,7 @@ class LocalNotificationsService {
       // Procesar cada grupo de mensajes
       for (var i = 0; i < _roomMessages.length; i++) {
         final currentGroup = _roomMessages[i];
-        
+
         // Obtener el título específico para ESTE grupo
         MinimalMatchDb? groupMatchDb;
         if(await matchProvider.getMatch(currentGroup[0].to) != null) {
@@ -114,6 +148,7 @@ class LocalNotificationsService {
         List<Message> notiMessages = currentGroup.map((msg) => 
           Message(msg.text, msg.date, Person(name: msg.user.name))
         ).toList();
+        
 
         NotificationDetails notificationDetails = NotificationDetails(
           android: AndroidNotificationDetails(
@@ -189,22 +224,33 @@ class LocalNotificationsService {
     }
   }
 
-  static Future<void> displayInvitation(chat.GroupMessage message) async {
+  static Future<void> displayInvitation(Invitation invitation) async {
     // To display the notification in device
+    
     try {
-      
 
+      await initializeTranslations();
+      final image = await imageProviderToBase64(CachedNetworkImageProvider(invitation.img));
+      final icon = ByteArrayAndroidBitmap.fromBase64String(image);
+      
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      NotificationDetails notificationDetails = const NotificationDetails(
+      NotificationDetails notificationDetails =  NotificationDetails(
         android: AndroidNotificationDetails(
             "Channel Id",
             "Main Channel",
-            groupKey: "gfg",
-            color: Colors.green,             
+            groupKey: "gfg",          
             playSound: true, 
+            icon: 'ic_notifications',
+            subText: translate("NOTIFICATIONS.MATCH_INVITATION"),
+            styleInformation: BigPictureStyleInformation(
+              icon,
+              contentTitle: "${translate('NOTIFICATIONS.INVITED_TO')} ${invitation.name}",
+              summaryText: "@${invitation.user}"
+            ),
+            // styleInformation: BigPictureStyleInformation(bigPicture),
             priority: Priority.high),
       );
-      await _notificationsPlugin.show(id, message.user.name,message.text, notificationDetails);
+      await _notificationsPlugin.show(id, null, null, notificationDetails, payload: invitation.match);
     } catch (e) {
       debugPrint(e.toString());
     }
