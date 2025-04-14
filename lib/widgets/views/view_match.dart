@@ -11,6 +11,7 @@ import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
+import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
@@ -81,12 +82,24 @@ class _ViewMatchState extends State<ViewMatch> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(widget.match.title, style: const TextStyle(fontSize: 20)),
-            Text(widget.match.game.name, style: const TextStyle(fontSize: 12)),
-          ],
+        Flexible( // Asegura que el texto no desborde
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.match.title,
+                style: const TextStyle(fontSize: 20),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              Text(
+                widget.match.game.name,
+                style: const TextStyle(fontSize: 12),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            ],
+          ),
         ),
         Row(
           children: [
@@ -94,13 +107,10 @@ class _ViewMatchState extends State<ViewMatch> {
               clipBehavior: Clip.antiAlias,
               margin: const EdgeInsets.only(right: 10),
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-              child: widget.match.game.background != null
-                  ? CachedNetworkImage(
-                      imageUrl: widget.match.game.background!,
-                      width: 80,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.asset("assets/no image.jpg", width: 80),
+              child: SizedBox(
+                width: 90,
+                child: AtomGameImage(background: widget.match.game.background),
+              ),
             ),
             OrganismMatchInfo(match: widget.match),
           ],

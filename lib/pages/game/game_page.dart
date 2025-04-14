@@ -40,7 +40,7 @@ class GamePage extends StatelessWidget {
                           final Game game = snapshot.data!;
                           return  Column(
                               children: [
-                                GameImageAtom(name: game.name, background: game.background),
+                                AtomGameImage(name: game.name, background: game.background),
                                 Container(
                                   margin: const EdgeInsets.symmetric(vertical: 4),
                                   padding: const EdgeInsets.all(8.0),

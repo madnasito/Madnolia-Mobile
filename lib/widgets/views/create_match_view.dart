@@ -187,7 +187,7 @@ class MatchFormView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(1),
               color: Colors.white38,
-              child: GameImageAtom(name: game.name, background: game.backgroundImage,),
+              child: AtomGameImage(name: game.name, background: game.backgroundImage,),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5), 

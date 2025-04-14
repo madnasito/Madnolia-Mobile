@@ -4,7 +4,6 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +17,7 @@ import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 
 import '../../models/chat_user_model.dart';
+import '../atoms/game_image_atom.dart';
 
 class MatchChat extends StatefulWidget {
   final FullMatch match;
@@ -187,10 +187,7 @@ class _MatchChatState extends State<MatchChat> {
                     margin: const EdgeInsets.only(right: 10),
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                    child: widget.match.game.background != null
-                        ? CachedNetworkImage(
-                            imageUrl: widget.match.game.background!, width: 80)
-                        : Image.asset("assets/no image.jpg", width: 80),
+                    child:AtomGameImage(name: widget.match.game.name, background: widget.match.game.background,),
                   ),
                   OrganismMatchInfo(match: widget.match)
                 ],

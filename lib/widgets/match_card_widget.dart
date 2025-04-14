@@ -1,6 +1,6 @@
 import 'package:madnolia/models/match/match_with_game_model.dart';
-import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import 'package:flutter/material.dart';
+import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 
 class GameCard extends StatelessWidget {
   final String name;
@@ -17,7 +17,7 @@ class GameCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10, top: 2),
       child: Column(
         children: [
-          GameImageAtom(name: name, background: background,),
+          AtomGameImage(name: name, background: background,),
           bottom
         ],
       ),
@@ -39,7 +39,7 @@ class MatchCard extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10, top: 2),
       child: Column(
         children: [
-          GameImageAtom(name: match.game.name, background: match.game.background,),
+          AtomGameImage(name: match.game.name, background: match.game.background,),
           bottom
         ],
       ),
