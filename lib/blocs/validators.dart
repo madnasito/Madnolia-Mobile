@@ -4,13 +4,13 @@ mixin class Validators {
   final validateName = StreamTransformer<String, String>.fromHandlers(
     handleData: (name, sink) {
       // La expresión regular modificada:
-      RegExp regExp = RegExp(r'^[a-zA-Z0-9.\$\_-]*\s?$');
+      // RegExp regExp = RegExp(r'^[a-zA-Z0-9.\$\_-]*\s?$');
 
-      if (regExp.hasMatch(name)) {
-        sink.add(name);
-      } else {
-        sink.addError("No valid name");
-      }
+      // if (regExp.hasMatch(name)) {
+      //   sink.add(name);
+      // } else {
+      //   sink.addError("No valid name");
+      // }
 
       if (name.length >= 20) {
         sink.addError("Name too long");
