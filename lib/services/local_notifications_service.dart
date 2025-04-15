@@ -7,15 +7,22 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/models/chat/individual_message_model.dart';
+import 'package:madnolia/models/friendship/friendship_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/models/match/minimal_match_model.dart';
 import 'package:madnolia/routes/routes.dart';
+import 'package:madnolia/services/database/friendship_db.dart';
 import 'package:madnolia/services/database/match_db.dart';
+import 'package:madnolia/services/database/user_db.dart';
+import 'package:madnolia/services/friendship_service.dart';
 import 'package:madnolia/services/match_service.dart';
+import 'package:madnolia/services/user_service.dart';
 import '../models/chat/message_model.dart' as chat;
 
 class LocalNotificationsService {
@@ -123,7 +130,62 @@ class LocalNotificationsService {
     }
   }
 
-  static Future<void> displayMessage(chat.GroupMessage message) async {
+  static Future<UserDb> getUserDb(String id) async {
+    try {
+
+      late final UserDb userDb;
+      
+      final userProvider = UserProvider();
+      await userProvider.open();
+      
+      if(await userProvider.getUser(id) == null){
+        final userInfo = await UserService().getUserInfoById(id);
+        userDb = UserDb.fromMap(userInfo);
+        await userProvider.insert(userDb);
+      }else {
+        userDb = (await userProvider.getUser(id))!;
+      }
+
+      return userDb;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  static Future<FriendshipDb> getFriendshipDb(String id) async {
+    try {
+
+      late final FriendshipDb friendshipDb;
+      
+      final friendshipProvider = FriendshipProvider();
+      await friendshipProvider.open();
+      
+      if(await friendshipProvider.getFriendshipsByUser(id) == null){
+        
+        // Create storage
+        final storage = FlutterSecureStorage();
+
+        final String? userId = await storage.read(key: "userId");
+
+        final friendshipInfo = await FriendshipService().getFriendwhipWithUser(userId!);
+        friendshipDb = FriendshipDb.fromMap(friendshipInfo.toJson());
+        await friendshipProvider.insert(friendshipDb);
+      }else {
+        friendshipDb = (await friendshipProvider.getFriendship(id))!;
+      }
+
+      return friendshipDb;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  static Future<void> displayUserMessage(IndividualMessage message) async {
+    await getUserDb(message.user);
+    await getFriendshipDb(message.to);
+  }
+
+  static Future<void> displayRoomMessage(chat.GroupMessage message) async {
     try {
       await initializeTranslations();
       const String groupChannelId = 'messages';

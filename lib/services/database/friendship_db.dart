@@ -164,7 +164,7 @@ class FriendshipProvider {
     return null;
   }
 
-  Future<List<FriendshipDb>> getFriendshipsByUser(String userId) async {
+  Future<List<FriendshipDb?>> getFriendshipsByUser(String userId) async {
     final List<Map<String, dynamic>> maps = await _db!.query(
       tableFriendship,
       where: '$columnUser1 = ? OR $columnUser2 = ?',

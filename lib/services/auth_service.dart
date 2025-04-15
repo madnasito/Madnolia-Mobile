@@ -28,6 +28,7 @@ class AuthService {
 
       if (respBody.containsKey("token")) {
         await _storage.write(key: "token", value: respBody["token"]);
+        _storage.write(key: "userId", value: respBody["user"]["_id"]);
         return respBody;
       } else {
         return respBody;
@@ -64,6 +65,7 @@ class AuthService {
 
       if (respDecoded.containsKey("user")) {
         _storage.write(key: "token", value: respDecoded["token"]);
+        _storage.write(key: "userId", value: respDecoded["user"]["_id"]);
       } 
       return respDecoded;
     } catch (e) {

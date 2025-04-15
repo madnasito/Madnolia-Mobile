@@ -1,5 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/cubits/cubits.dart';
@@ -118,8 +119,12 @@ class HomeUserPage extends StatelessWidget {
           return context.go("/home");
       }
 
+      final backgroundService = FlutterBackgroundService();
+
+      if(await backgroundService.isRunning() == false){
+        await initializeService();
+      }
       
-      await initializeService();
       if (userInfo.isEmpty) {
         await storage.delete(key: "token");
         userBloc.logOutUser();

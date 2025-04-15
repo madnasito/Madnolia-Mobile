@@ -14,6 +14,8 @@ class UserService {
 
   Future getUserInfo() => userGetRequest("user/info");
 
+  Future getUserInfoById(String id) => userGetRequest("user/info/$id");
+
   Future getPartners() => userGetRequest("get_partners");
 
   Future getInvitations() => userGetRequest("match/invitations");
