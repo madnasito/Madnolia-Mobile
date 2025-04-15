@@ -39,9 +39,12 @@ class LocalNotificationsService {
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
         // to handle event when we receive notification 
         onDidReceiveNotificationResponse: (details) {
-          if (details.payload != null) {
+          try {
+            MinimalMatchDb matchDb = MinimalMatchDb.fromJson(details.payload!);
             final context = navigatorKey.currentContext;
-            GoRouter.of(context!).pushNamed("match", extra: details.payload);
+            GoRouter.of(context!).pushNamed("match", extra: matchDb.id);
+          } catch (e) {
+            debugPrint(e.toString());
           }
         },
       );
@@ -92,6 +95,34 @@ class LocalNotificationsService {
     return base64Encode(bytes);
   }
 
+  static Future<MinimalMatchDb?> getMatchDb (String id) async {
+
+    try {
+    // Obtener información del match UNA SOLA VEZ
+      final matchProvider = MatchProvider();
+      await matchProvider.open();
+      
+      MinimalMatchDb? matchDb;
+      if(await matchProvider.getMatch(id) == null) {
+        final Map<String, dynamic> matchInfo = await MatchService().getMatch(id);
+        final MinimalMatch minimalMatch = MinimalMatch.fromJson(matchInfo);
+        matchDb = MinimalMatchDb(
+          date: minimalMatch.date, 
+          platform: minimalMatch.platform, 
+          title: minimalMatch.title, 
+          id: minimalMatch.id
+        );
+        await matchProvider.insert(matchDb);
+      } else {
+        matchDb = await matchProvider.getMatch(id);
+      }
+
+      return matchDb;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   static Future<void> displayMessage(chat.GroupMessage message) async {
     try {
       await initializeTranslations();
@@ -115,24 +146,7 @@ class LocalNotificationsService {
         _roomMessages.add([message]);
       }
 
-      // Obtener información del match UNA SOLA VEZ
-      final matchProvider = MatchProvider();
-      await matchProvider.open();
       
-      MinimalMatchDb? matchDb;
-      if(await matchProvider.getMatch(message.to) == null) {
-        final Map<String, dynamic> matchInfo = await MatchService().getMatch(message.to);
-        final MinimalMatch minimalMatch = MinimalMatch.fromJson(matchInfo);
-        matchDb = MinimalMatchDb(
-          date: minimalMatch.date, 
-          platform: minimalMatch.platform, 
-          title: minimalMatch.title, 
-          id: minimalMatch.id
-        );
-        await matchProvider.insert(matchDb);
-      } else {
-        matchDb = await matchProvider.getMatch(message.to);
-      }
 
       // Procesar cada grupo de mensajes
       for (var i = 0; i < _roomMessages.length; i++) {
@@ -140,8 +154,8 @@ class LocalNotificationsService {
 
         // Obtener el título específico para ESTE grupo
         MinimalMatchDb? groupMatchDb;
-        if(await matchProvider.getMatch(currentGroup[0].to) != null) {
-          groupMatchDb = await matchProvider.getMatch(currentGroup[0].to);
+        if(await getMatchDb(currentGroup[0].to) != null) {
+          groupMatchDb = await getMatchDb(currentGroup[0].to);
         }
 
         List<Message> notiMessages = currentGroup.map((msg) => 
@@ -186,7 +200,7 @@ class LocalNotificationsService {
           null,
           null, 
           notificationDetails,
-          payload: currentGroup[0].to,
+          payload: groupMatchDb?.toJson(),
         );
       }
 
@@ -229,6 +243,7 @@ class LocalNotificationsService {
     try {
 
       await initializeTranslations();
+      final matchDb = await getMatchDb(invitation.match);
       final image = await imageProviderToBase64(CachedNetworkImageProvider(invitation.img));
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
       
@@ -249,7 +264,7 @@ class LocalNotificationsService {
             // styleInformation: BigPictureStyleInformation(bigPicture),
             priority: Priority.high),
       );
-      await _notificationsPlugin.show(id, null, null, notificationDetails, payload: invitation.match);
+      await _notificationsPlugin.show(id, null, null, notificationDetails, payload: matchDb?.toJson());
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -260,7 +275,7 @@ class LocalNotificationsService {
     // To display the notification in device
     try {
       final MatchReady payload = MatchReady.fromJson(data);
-      debugPrint(payload.title);
+      final matchDb = await getMatchDb(payload.match);
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails = const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -276,7 +291,7 @@ class LocalNotificationsService {
         id, "Match ready",
         "${payload.title} has started",
         notificationDetails,
-        payload: payload.match);
+        payload: matchDb?.toJson());
     } catch (e) {
       debugPrint(e.toString());
     }

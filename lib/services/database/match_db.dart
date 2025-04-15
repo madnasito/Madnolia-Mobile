@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:sqflite/sqflite.dart';
 
 final String tableMatch = 'matches';
@@ -37,6 +39,27 @@ class MinimalMatchDb {
       title: map[columnTitle],
       platform: map[columnPlatform],
       date: map[columnDate],
+    );
+  }
+
+  // Método para convertir a JSON String
+  String toJson() {
+    return jsonEncode({
+      '_id': id,
+      'title': title,
+      'platform': platform,
+      'date': date,
+    });
+  }
+
+  // Método para crear desde JSON String
+  factory MinimalMatchDb.fromJson(String jsonString) {
+    final Map<String, dynamic> data = jsonDecode(jsonString);
+    return MinimalMatchDb(
+      id: data['_id']?.toString() ?? '',
+      title: data['title'] ?? '',
+      platform: data['platform'] ?? 0,
+      date: data['date'] ?? 0,
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:async' show StreamSubscription;
 
-import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImage;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
