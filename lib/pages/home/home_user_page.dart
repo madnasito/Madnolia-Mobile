@@ -100,7 +100,7 @@ class HomeUserPage extends StatelessWidget {
   
   _loadInfo(BuildContext context) async {
     try {
-      LocalNotificationsService.initialize();
+      await LocalNotificationsService.initialize();
       final userBloc = context.read<UserBloc>();
 
       const storage = FlutterSecureStorage();

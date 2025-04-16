@@ -76,7 +76,7 @@ class UserProvider {
 
   Future open() async {
     final databasePath = await getDatabasesPath();
-    final path = '$databasePath/madnolia_users.db';
+    final path = '$databasePath/madnolia.db';
     
     _db = await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {

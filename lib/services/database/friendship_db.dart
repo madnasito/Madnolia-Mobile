@@ -88,7 +88,7 @@ class FriendshipProvider {
 
   Future<void> open() async {
     final databasePath = await getDatabasesPath();
-    final path = '$databasePath/madna.db';
+    final path = '$databasePath/madnolia.db';
 
     _db = await openDatabase(
       path,
@@ -164,7 +164,7 @@ class FriendshipProvider {
     return null;
   }
 
-  Future<List<FriendshipDb?>> getFriendshipsByUser(String userId) async {
+  Future<List<FriendshipDb>> getFriendshipsByUser(String userId) async {
     final List<Map<String, dynamic>> maps = await _db!.query(
       tableFriendship,
       where: '$columnUser1 = ? OR $columnUser2 = ?',

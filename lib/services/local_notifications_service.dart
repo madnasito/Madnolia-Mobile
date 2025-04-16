@@ -160,7 +160,7 @@ class LocalNotificationsService {
       final friendshipProvider = FriendshipProvider();
       await friendshipProvider.open();
       
-      if(await friendshipProvider.getFriendshipsByUser(id) == null){
+      if(await friendshipProvider.getFriendship(id) == null){
         
         // Create storage
         final storage = FlutterSecureStorage();
