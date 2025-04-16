@@ -154,29 +154,35 @@ class LocalNotificationsService {
 
   static Future<FriendshipDb> getFriendshipDb(String id) async {
     try {
-
-      late final FriendshipDb friendshipDb;
-      
       final friendshipProvider = FriendshipProvider();
       await friendshipProvider.open();
       
-      if(await friendshipProvider.getFriendship(id) == null){
-        
+      // First try to get from local DB
+      FriendshipDb? friendshipDb = await friendshipProvider.getFriendship(id);
+      
+      if (friendshipDb == null) {
         // Create storage
         final storage = FlutterSecureStorage();
-
         final String? userId = await storage.read(key: "userId");
 
-        final friendshipInfo = await FriendshipService().getFriendwhipWithUser(userId!);
+        if (userId == null) {
+          throw Exception("User ID not found in secure storage");
+        }
+
+        // Fetch from API if not found locally
+        final friendshipInfo = await FriendshipService().getFriendwhipWithUser(userId);
         friendshipDb = FriendshipDb.fromMap(friendshipInfo.toJson());
+        
+        // Store in local DB
         await friendshipProvider.insert(friendshipDb);
-      }else {
-        friendshipDb = (await friendshipProvider.getFriendship(id))!;
       }
 
       return friendshipDb;
     } catch (e) {
-      throw Exception(e);
+      debugPrint('Error in getFriendshipDb: $e');
+      rethrow;
+    } finally {
+      // Consider whether to close here or manage connection lifecycle differently
     }
   }
 
