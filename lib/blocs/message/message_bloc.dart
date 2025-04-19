@@ -4,7 +4,9 @@ import 'package:equatable/equatable.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
+import 'package:madnolia/services/database/user_db.dart' show UserDb;
 import 'package:madnolia/services/messages_service.dart';
+import 'package:madnolia/utils/user_db_util.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 part 'message_event.dart';
@@ -61,16 +63,30 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       if (state.hasReachedMax) return;
 
       try {
-        final messages = await MessagesService().getMatchMessages(event.roomId, state.groupMessages.length);
+        final List<GroupMessage> messages = await MessagesService().getMatchMessages(event.roomId, state.groupMessages.length);
 
         if(messages.isEmpty){
           return emit(state.copyWith(hasReachedMax: true));
+        }
+        
+        List<String> users = [];
+        List<UserDb> chatUsers = [];
+        chatUsers.addAll(state.users);
+
+        users = messages.map((e) => e.user).toList();
+
+        users = users.toSet().toList();
+
+        for (var id in users) {        
+          final newChatUser = await getUserDb(id);
+          if(!chatUsers.contains(newChatUser)) chatUsers.add(newChatUser);
         }
 
         emit(
           state.copyWith(
             status: MessageStatus.success,
-            groupMessages: [...state.groupMessages, ...messages]
+            groupMessages: [...state.groupMessages, ...messages],
+            users: chatUsers
           )
         );
       } catch (e) {

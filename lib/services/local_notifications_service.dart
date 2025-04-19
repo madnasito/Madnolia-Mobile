@@ -11,7 +11,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' show Flutter
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
-import 'package:madnolia/models/friendship/friendship_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
@@ -22,7 +21,8 @@ import 'package:madnolia/services/database/match_db.dart';
 import 'package:madnolia/services/database/user_db.dart';
 import 'package:madnolia/services/friendship_service.dart';
 import 'package:madnolia/services/match_service.dart';
-import 'package:madnolia/services/user_service.dart';
+import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
+import 'package:madnolia/utils/user_db_util.dart' show getUserDb;
 import '../models/chat/message_model.dart' as chat;
 
 class LocalNotificationsService {
@@ -34,7 +34,7 @@ class LocalNotificationsService {
   static Future<void> initialize() async {
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
-          android: AndroidInitializationSettings("@mipmap/ic_notifications")
+          android: AndroidInitializationSettings("@mipmap/ic_launcher")
         );
 
         
@@ -102,56 +102,6 @@ class LocalNotificationsService {
     return base64Encode(bytes);
   }
 
-  static Future<MinimalMatchDb?> getMatchDb (String id) async {
-
-    try {
-    // Obtener información del match UNA SOLA VEZ
-      final matchProvider = MatchProvider();
-      await matchProvider.open();
-      
-      MinimalMatchDb? matchDb;
-      if(await matchProvider.getMatch(id) == null) {
-        final Map<String, dynamic> matchInfo = await MatchService().getMatch(id);
-        final MinimalMatch minimalMatch = MinimalMatch.fromJson(matchInfo);
-        matchDb = MinimalMatchDb(
-          date: minimalMatch.date, 
-          platform: minimalMatch.platform, 
-          title: minimalMatch.title, 
-          id: minimalMatch.id
-        );
-        await matchProvider.insert(matchDb);
-      } else {
-        matchDb = await matchProvider.getMatch(id);
-      }
-
-      return matchDb;
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-
-  static Future<UserDb> getUserDb(String id) async {
-    try {
-
-      late final UserDb userDb;
-      
-      final userProvider = UserProvider();
-      await userProvider.open();
-      
-      if(await userProvider.getUser(id) == null){
-        final userInfo = await UserService().getUserInfoById(id);
-        userDb = UserDb.fromMap(userInfo);
-        await userProvider.insert(userDb);
-      }else {
-        userDb = (await userProvider.getUser(id))!;
-      }
-
-      return userDb;
-    } catch (e) {
-      throw Exception(e);
-    }
-  }
-
   static Future<FriendshipDb> getFriendshipDb(String id) async {
     try {
       final friendshipProvider = FriendshipProvider();
@@ -188,7 +138,7 @@ class LocalNotificationsService {
 
   static Future<void> displayUserMessage(IndividualMessage message) async {
     await getUserDb(message.user);
-    await getFriendshipDb(message.to);
+    // await getFriendshipDb(message.to);
   }
 
   static Future<void> displayRoomMessage(chat.GroupMessage message) async {
@@ -220,14 +170,17 @@ class LocalNotificationsService {
       for (var i = 0; i < _roomMessages.length; i++) {
         final currentGroup = _roomMessages[i];
 
+        
+
         // Obtener el título específico para ESTE grupo
         MinimalMatchDb? groupMatchDb;
+        UserDb userDb = await getUserDb(message.user);
         if(await getMatchDb(currentGroup[0].to) != null) {
           groupMatchDb = await getMatchDb(currentGroup[0].to);
         }
 
         List<Message> notiMessages = currentGroup.map((msg) => 
-          Message(msg.text, msg.date, Person(name: msg.user.name))
+          Message(msg.text, msg.date, Person(name: userDb.name))
         ).toList();
         
 
@@ -254,7 +207,9 @@ class LocalNotificationsService {
               )
             ],
             styleInformation: MessagingStyleInformation(
-              Person(name: message.user.name, bot: false),
+              Person(
+                name: userDb.name,
+                bot: false),
               groupConversation: true,
               // Usar el título específico de este grupo
               conversationTitle: groupMatchDb?.title ?? 'Match messages',
@@ -286,7 +241,8 @@ class LocalNotificationsService {
           channelDescription: groupChannelDescription,
           styleInformation: inboxStyleInformation,
           groupKey: groupKey,
-          setAsGroupSummary: true
+          setAsGroupSummary: true,
+          icon: 'ic_notifications'
         ),
       );
       
@@ -347,10 +303,10 @@ class LocalNotificationsService {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails = const NotificationDetails(
         android: AndroidNotificationDetails(
+            icon: 'ic_notifications',
             "Channel Id",
             "Main Channel",
-            groupKey: "gfg",
-            color: Colors.green,             
+            groupKey: "gfg",             
             playSound: true,
             timeoutAfter: 1000 * 60 * 5,
             priority: Priority.high),

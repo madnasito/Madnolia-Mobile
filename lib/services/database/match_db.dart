@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:sqflite/sqflite.dart';
+import 'package:madnolia/services/database/db_provider.dart';
 
 final String tableMatch = 'matches';
 final String columnId = '_id';
@@ -65,70 +65,25 @@ class MinimalMatchDb {
 }
 
 class MatchProvider {
-  Database? _db;
-
-  Future open() async {
-    final databasePath = await getDatabasesPath();
-    final path = '$databasePath/madnolia.db';
-    
-    _db = await openDatabase(path, version: 1,
-        onCreate: (Database db, int version) async {
-      await db.execute('''
-        CREATE TABLE $tableMatch (
-          $columnId TEXT PRIMARY KEY,
-          $columnTitle TEXT NOT NULL,
-          $columnPlatform INTEGER NOT NULL,
-          $columnDate INTEGER NOT NULL
-        )
-      ''');
-    });
-  }
-
-  Future<MinimalMatchDb> insert(MinimalMatchDb match) async {
-    await _db!.insert(tableMatch, match.toMap());
+  static Future<MinimalMatchDb> insertMatch(MinimalMatchDb match) async {
+    final db = await BaseDatabaseProvider.database;
+    await db.insert(tableMatch, match.toMap());
     return match;
   }
 
-  Future<List<MinimalMatchDb>> getAllMatches() async {
-    final List<Map<String, dynamic>> maps = await _db!.query(tableMatch);
-    return List.generate(maps.length, (i) {
-      return MinimalMatchDb.fromMap(maps[i]);
-    });
-  }
-
-  Future<MinimalMatchDb?> getMatch(String id) async {
-    List<Map> maps = await _db!.query(
-      tableMatch,
-      columns: [columnId, columnTitle, columnPlatform, columnDate],
-      where: '$columnId = ?',
-      whereArgs: [id],
-    );
-    if (maps.isNotEmpty) {
-      return MinimalMatchDb.fromMap(maps.first as Map<String, dynamic>);
-    }
-    return null;
-  }
-
-  Future<int> delete(String id) async {
-    return await _db!.delete(
+  static Future<MinimalMatchDb?> getMatch(String id) async {
+    final db = await BaseDatabaseProvider.database;
+    final List<Map> maps = await db.query(
       tableMatch,
       where: '$columnId = ?',
       whereArgs: [id],
+      limit: 1,
     );
+    
+    return maps.isNotEmpty 
+        ? MinimalMatchDb.fromMap(maps.first as Map<String, dynamic>) 
+        : null;
   }
 
-  Future<int> update(MinimalMatchDb match) async {
-    return await _db!.update(
-      tableMatch,
-      match.toMap(),
-      where: '$columnId = ?',
-      whereArgs: [match.id],
-    );
-  }
-
-  Future<int> deleteAll() async {
-    return await _db!.delete(tableMatch);
-  }
-
-  Future close() async => _db?.close();
+  // Other match-specific operations...
 }

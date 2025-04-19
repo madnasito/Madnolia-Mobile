@@ -16,20 +16,29 @@ class MessagesService {
   final String baseUrl = dotenv.get("API_URL");
 
 
-  Future<List> getMatchMessages(String id, int page) async{
-    try {
-      final url = Uri.parse("$baseUrl/messages/match?match=$id&skip=$page");
+  Future<List<GroupMessage>> getMatchMessages(String id, int page) async {
+  try {
+    final url = Uri.parse("$baseUrl/messages/match?match=$id&skip=$page");
+    final resp = await http.get(url);
 
-      final resp = await http.get(url);
-
-      final jsonBody = jsonDecode(resp.body);
-
-      final messages = jsonBody.map((e) => GroupMessage.fromJson(e)).toList();
-      return messages;
-    } catch (e) {
-      throw Exception(e);
+    // Ensure response is successful
+    if (resp.statusCode != 200) {
+      throw Exception('Failed to load messages: ${resp.statusCode}');
     }
+
+    // Explicitly type the decoded JSON
+    final List<dynamic> jsonBody = jsonDecode(resp.body);
+
+    // Properly convert each item to GroupMessage
+    final List<GroupMessage> messages = jsonBody
+        .map<GroupMessage>((dynamic e) => GroupMessage.fromJson(e as Map<String, dynamic>))
+        .toList();
+
+    return messages;
+  } catch (e) {
+    throw Exception('Failed to fetch match messages: $e');
   }
+}
 
   Future getUserChatMessages(UserMessagesBody messagesBody) async {
     try {

@@ -15,6 +15,7 @@ import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
+import '../../services/database/user_db.dart' show UserDb;
 
 import '../../models/match/full_match.model.dart';
 
@@ -213,6 +214,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   late final MessageBloc _messageBloc;
   late final FlutterBackgroundService _backgroundService;
   StreamSubscription? _messageSubscription;
+  late List<UserDb> chatUsers;
 
   @override
   void initState() {
@@ -222,11 +224,12 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
     _scrollController.addListener(_onScroll);
     _setupMessageListener();
     _messageBloc.add(GroupMessageFetched(roomId: widget.room));
+    chatUsers = [];
   }
 
   void _setupMessageListener() {
     _messageSubscription = _backgroundService.on("message").listen((onData) {
-      if (mounted && onData != null && onData['user'] is! String) {
+      if (mounted && onData != null) {
         final message = GroupMessage.fromJson(onData);
         if (message.to == widget.room && 
             (_messageBloc.state.groupMessages.isEmpty || 
@@ -251,36 +254,42 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
         if (state.status == MessageStatus.initial && state.groupMessages.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
-
-
+        
         return _buildMessageList(state);
+
       },
     );
   }
-
   Widget _buildMessageList(MessageState state) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-      color: Colors.black38,
-      child: ListView.builder(
-        controller: _scrollController,
-        shrinkWrap: false,
-        addAutomaticKeepAlives: true,
-        reverse: true,
-        itemCount: state.groupMessages.length,
-        itemBuilder: (context, index) {
-          final isMainMessage = index == 0 || 
-              state.groupMessages[index].user.id != state.groupMessages[index - 1].user.id;
-          
-          return GroupChatMessageOrganism(
-            text: state.groupMessages[index].text,
-            user: state.groupMessages[index].user,
-            mainMessage: isMainMessage,
-          );
-        },
-      ),
-    );
-  }
+
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+    color: Colors.black38,
+    child: ListView.builder(
+      controller: _scrollController,
+      cacheExtent: 99999,
+      reverse: true,
+      addAutomaticKeepAlives: true,
+      itemCount: state.groupMessages.length,
+      itemBuilder: (context, index) {
+        
+        final message = state.groupMessages[index];
+        UserDb user = state.users.firstWhere((user) => message.user == user.id);
+
+
+        final isMainMessage = index == 0 || 
+            state.groupMessages[index].user != state.groupMessages[index - 1].user;
+        
+        return GroupChatMessageOrganism(
+          text: state.groupMessages[index].text,
+          user: user,
+          mainMessage: isMainMessage,
+        );
+      },
+    ),
+  );
+}
+
 
   @override
   void dispose() {

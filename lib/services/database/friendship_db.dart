@@ -93,41 +93,66 @@ class FriendshipDb {
 }
 
 class FriendshipProvider {
-  Database? _db;
+   Database? _db;
+  static const _databaseVersion = 2; // Incrementa este número cada que cambies el esquema
 
   Future open() async {
     final databasePath = await getDatabasesPath();
     final path = '$databasePath/madnolia.db';
-  
-  // Añade onOpen y aumenta la versión para forzar recreación si es necesario
-  _db = await openDatabase(
-    path, 
-    version: 1, // Incrementa la versión
-    onCreate: (Database db, int version) async {
-      await _createTables(db);
-    },
-    onUpgrade: (Database db, int oldVersion, int newVersion) async {
-      await db.execute('DROP TABLE IF EXISTS $tableFriendship');
-      await _createTables(db);
-    },
-  );
-}
+    await deleteDatabase(path);
+    _db = await openDatabase(
+      path,
+      version: _databaseVersion,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
+  }
 
-Future _createTables(Database db) async {
-  await db.execute('''
-    CREATE TABLE $tableFriendship (
-      $columnId TEXT PRIMARY KEY,
-      $columnUser1 TEXT NOT NULL,
-      $columnUser2 TEXT NOT NULL,
-      $columnStatus INTEGER NOT NULL,
-      $columnCreatedAt TEXT NOT NULL
-    )
-  ''');
-  
-    // Crear índices
-    await db.execute('CREATE INDEX idx_user1 ON $tableFriendship ($columnUser1)');
-    await db.execute('CREATE INDEX idx_user2 ON $tableFriendship ($columnUser2)');
-    await db.execute('CREATE INDEX idx_status ON $tableFriendship ($columnStatus)');
+  Future<void> _onCreate(Database db, int version) async {
+    await db.execute('''
+      CREATE TABLE $tableFriendship (
+        $columnId TEXT PRIMARY KEY,
+        $columnUser1 TEXT NOT NULL,
+        $columnUser2 TEXT NOT NULL,
+        $columnStatus INTEGER NOT NULL,
+        $columnCreatedAt TEXT NOT NULL
+      )
+    ''');
+    
+    // Crear índices después de crear la tabla
+    await _createIndexes(db);
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 1) {
+      await db.execute('DROP TABLE IF EXISTS $tableFriendship');
+      await _onCreate(db, newVersion);
+    }
+  }
+
+  Future<void> _createIndexes(Database db) async {
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_friendship_user1 
+      ON $tableFriendship($columnUser1)
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_friendship_user2 
+      ON $tableFriendship($columnUser2)
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_friendship_status 
+      ON $tableFriendship($columnStatus)
+    ''');
+  }
+
+  // Método para verificar si la tabla existe
+  Future<bool> tableExists() async {
+    try {
+      await _db!.rawQuery('SELECT 1 FROM $tableFriendship LIMIT 1');
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<FriendshipDb> insert(FriendshipDb friendship) async {

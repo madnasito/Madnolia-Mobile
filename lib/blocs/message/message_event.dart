@@ -31,3 +31,8 @@ final class AddRoomMessage extends MessageEvent {
   final GroupMessage message;
   const AddRoomMessage({ required this.message });
 }
+
+final class AddUser extends MessageEvent {
+  final String userId;
+  const AddUser( { required this.userId });
+}

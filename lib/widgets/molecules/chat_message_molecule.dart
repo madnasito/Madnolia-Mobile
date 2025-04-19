@@ -2,14 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/services/database/user_db.dart';
+// import 'package:madnolia/utils/user_db_util.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl;
 
 class MyMessageMolecule extends StatelessWidget {
 
+  final UserDb user;
   final String text;
-  final String thumb;
   final bool mainMessage;
-  const MyMessageMolecule({super.key, required this.text, required this.thumb, required this.mainMessage});
+  const MyMessageMolecule({super.key, required this.text, required this.mainMessage, required this.user,});
 
   @override
   Widget build(BuildContext context) {
@@ -52,64 +54,65 @@ class MyMessageMolecule extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 5),
             child: CircleAvatar(
-                backgroundImage: mainMessage ? CachedNetworkImageProvider(thumb) : null,
+                backgroundImage: mainMessage ?  CachedNetworkImageProvider(user.thumb) : null,
                 backgroundColor: Colors.transparent,
             ),
           ),
         ],
       ),
-    );
+    );  
   }
 }
 
 class NotMyMessageMolecule extends StatelessWidget {
 
-  final String thumb;
+  final UserDb? user;
   final String text;
   final bool mainMessage;
-  const NotMyMessageMolecule({super.key, required this.thumb, required this.text, required this.mainMessage});
+  const NotMyMessageMolecule({super.key, this.user, required this.text, required this.mainMessage});
 
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.centerLeft,
-      child: Row(
-        children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 2),
-            child: CircleAvatar(backgroundImage: mainMessage ? CachedNetworkImageProvider(thumb) : null,
-            backgroundColor: Colors.transparent,)
-          ),
-          Flexible(
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.white38, width: 0.5)),
-                  child: ExpandableText(
-                    text,
-                    expandText: translate("UTILS.SHOW_MORE"),
-                    collapseText: translate("UTILS.SHOW_LESS"),
-                    maxLines: 6,
-                    animation: true,
-                    collapseOnTextTap: true,
-                    expandOnTextTap: true,
-                    mentionStyle: TextStyle(color: Colors.greenAccent),
-                    onMentionTap: (value) => debugPrint('Mention $value'),
-                    onUrlTap: (value) async {
-                        final Uri url = Uri.parse(value);
-                        if (!await launchUrl(url)) {
-                        throw Exception('Could not launch $url');
-                      }
-                    },
-                    urlStyle: const TextStyle(
-                      color: Color.fromARGB(255, 169, 145, 255)
-                    ),
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 2),
+                  child: CircleAvatar(backgroundImage: mainMessage ? CachedNetworkImageProvider(user!.thumb) : null,
+                  backgroundColor: Colors.transparent,)
                 ),
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.white38, width: 0.5)),
+                        child: ExpandableText(
+                          text,
+                          expandText: translate("UTILS.SHOW_MORE"),
+                          collapseText: translate("UTILS.SHOW_LESS"),
+                          maxLines: 6,
+                          animation: true,
+                          collapseOnTextTap: true,
+                          expandOnTextTap: true,
+                          mentionStyle: TextStyle(color: Colors.greenAccent),
+                          onMentionTap: (value) => debugPrint('Mention $value'),
+                          onUrlTap: (value) async {
+                              final Uri url = Uri.parse(value);
+                              if (!await launchUrl(url)) {
+                              throw Exception('Could not launch $url');
+                            }
+                          },
+                          urlStyle: const TextStyle(
+                            color: Color.fromARGB(255, 169, 145, 255)
+                          ),
+                      ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          );
+    
   }
 }

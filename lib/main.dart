@@ -14,13 +14,14 @@ import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:madnolia/services/database/db_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
   serviceLocatorInit();
   cubitServiceLocatorInit();
+  await BaseDatabaseProvider.database;
 
   (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
 

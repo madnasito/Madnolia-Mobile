@@ -7,12 +7,14 @@ final class MessageState extends Equatable {
   final MessageStatus status;
   final List<IndividualMessage> userMessages;
   final List<GroupMessage> groupMessages;
+  final List<UserDb> users;
   final bool hasReachedMax;
 
   const MessageState({
     this.status = MessageStatus.initial,
     this.userMessages = const <IndividualMessage>[],
     this.groupMessages = const <GroupMessage>[],
+    this.users = const <UserDb>[],
     this.hasReachedMax = false, 
   });
 
@@ -21,13 +23,15 @@ final class MessageState extends Equatable {
     MessageStatus? status,
     List<IndividualMessage>? userMessages,
     List<GroupMessage>? groupMessages,
+    List<UserDb>? users,
     bool? hasReachedMax,
   }) {
     return MessageState(
       status: status ?? this.status,
       userMessages: userMessages ?? this.userMessages,
       groupMessages: groupMessages ?? this.groupMessages,
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax
+      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+      users: users ?? this.users
     );
   }
   
@@ -38,7 +42,7 @@ final class MessageState extends Equatable {
 
   
   @override
-  List<Object> get props => [status, userMessages, groupMessages, hasReachedMax];
+  List<Object> get props => [status, userMessages, groupMessages, hasReachedMax, users];
 }
 
 final class MessageInitial extends MessageState {}
