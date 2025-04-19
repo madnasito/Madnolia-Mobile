@@ -14,13 +14,11 @@ import 'package:madnolia/models/chat/individual_message_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
-import 'package:madnolia/models/match/minimal_match_model.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/services/database/friendship_db.dart';
 import 'package:madnolia/services/database/match_db.dart';
-import 'package:madnolia/services/database/user_db.dart';
+import 'package:madnolia/services/database/user_db.dart' show UserDb;
 import 'package:madnolia/services/friendship_service.dart';
-import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
 import 'package:madnolia/utils/user_db_util.dart' show getUserDb;
 import '../models/chat/message_model.dart' as chat;
@@ -142,124 +140,136 @@ class LocalNotificationsService {
   }
 
   static Future<void> displayRoomMessage(chat.GroupMessage message) async {
-    try {
-      await initializeTranslations();
-      const String groupChannelId = 'messages';
-      const String groupChannelName = 'Messages';
-      const String groupChannelDescription = 'Canal de mensajes';
-      const String groupKey = 'com.madnolia.app.GROUP_KEY';
+  try {
+    await initializeTranslations();
+    const String groupChannelId = 'messages';
+    const String groupChannelName = 'Messages';
+    const String groupChannelDescription = 'Canal de mensajes';
+    const String groupKey = 'com.madnolia.app.GROUP_KEY';
 
-      // Agregar el nuevo mensaje a la lista
-      bool messageAdded = false;
-      
-      for (var group in _roomMessages) {
-        if(group[0].to == message.to) {
-          group.add(message);
-          messageAdded = true;
-          break;
-        }
+    // Agregar el nuevo mensaje a la lista
+    bool messageAdded = false;
+    
+    for (var group in _roomMessages) {
+      if(group[0].to == message.to) {
+        group.add(message);
+        messageAdded = true;
+        break;
       }
+    }
+    
+    if(!messageAdded) {
+      _roomMessages.add([message]);
+    }
+
+    // Procesar cada grupo de mensajes
+    for (var i = 0; i < _roomMessages.length; i++) {
+      final currentGroup = _roomMessages[i];
+      final roomId = currentGroup[0].to;
+
+      // Obtener información del match
+      MinimalMatchDb? groupMatchDb = await getMatchDb(roomId);
+
+      // Pre-cargar datos de todos los usuarios en este grupo
+      final userIds = currentGroup.map((msg) => msg.user).toSet();
+      final userData = <String, UserDb>{};
       
-      if(!messageAdded) {
-        _roomMessages.add([message]);
+      for (final userId in userIds) {
+        userData[userId] = await getUserDb(userId);
       }
 
-      
-
-      // Procesar cada grupo de mensajes
-      for (var i = 0; i < _roomMessages.length; i++) {
-        final currentGroup = _roomMessages[i];
-
-        
-
-        // Obtener el título específico para ESTE grupo
-        MinimalMatchDb? groupMatchDb;
-        UserDb userDb = await getUserDb(message.user);
-        if(await getMatchDb(currentGroup[0].to) != null) {
-          groupMatchDb = await getMatchDb(currentGroup[0].to);
-        }
-
-        List<Message> notiMessages = currentGroup.map((msg) => 
-          Message(msg.text, msg.date, Person(name: userDb.name))
-        ).toList();
-        
-
-        NotificationDetails notificationDetails = NotificationDetails(
-          android: AndroidNotificationDetails(
-            groupKey: groupKey,
-            groupChannelId,
-            groupChannelName,
-            channelDescription: groupChannelDescription,
-            importance: Importance.high,
-            icon: 'ic_notifications',
-            priority: Priority.high,
-            actions: [
-              AndroidNotificationAction(
-                message.id,
-                translate("FORM.INPUT.RESPOND"),
-                allowGeneratedReplies: true,
-                inputs: [
-                  AndroidNotificationActionInput(
-                    label: translate("CHAT.MESSAGE"),
-                    allowFreeFormInput: true,
-                  ),
-                ],
-              )
-            ],
-            styleInformation: MessagingStyleInformation(
-              Person(
-                name: userDb.name,
-                bot: false),
-              groupConversation: true,
-              // Usar el título específico de este grupo
-              conversationTitle: groupMatchDb?.title ?? 'Match messages',
-              messages: notiMessages,
-            ),
-          ),
+      // Crear mensajes de notificación con los remitentes correctos
+      List<Message> notiMessages = currentGroup.map((msg) {
+        final user = userData[msg.user]!;
+        return Message(
+          msg.text,
+          msg.date,
+          Person(
+            name: user.name,
+            bot: false,
+            // icon: user.thumb // Opcional: mostrar avatar
+          )
         );
+      }).toList();
 
-        await _notificationsPlugin.show(
-          i,
-          null,
-          null, 
-          notificationDetails,
-          payload: groupMatchDb?.toJson(),
-        );
-      }
+      // Persona principal de la notificación (el último remitente)
+      final lastSender = userData[currentGroup.last.user]!;
 
-      // Notificación resumen
-      final inboxStyleInformation = InboxStyleInformation(
-        [],
-        contentTitle: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
-        summaryText: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
-      );
-
-      final notificationSummaryDetails = NotificationDetails(
+      NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
-          groupChannelId, 
+          groupKey: groupKey,
+          groupChannelId,
           groupChannelName,
           channelDescription: groupChannelDescription,
-          styleInformation: inboxStyleInformation,
-          groupKey: groupKey,
-          setAsGroupSummary: true,
-          icon: 'ic_notifications'
+          importance: Importance.high,
+          icon: 'ic_notifications',
+          priority: Priority.high,
+          actions: [
+            AndroidNotificationAction(
+              message.id,
+              translate("FORM.INPUT.RESPOND"),
+              allowGeneratedReplies: true,
+              inputs: [
+                AndroidNotificationActionInput(
+                  label: translate("CHAT.MESSAGE"),
+                  allowFreeFormInput: true,
+                ),
+              ],
+            )
+          ],
+          styleInformation: MessagingStyleInformation(
+            Person(
+              name: lastSender.name,
+              bot: false,
+              // icon: lastSender.thumb,
+              key: lastSender.id // Identificador único
+            ),
+            groupConversation: true,
+            conversationTitle: groupMatchDb?.title ?? 'Match messages',
+            messages: notiMessages,
+          ),
         ),
       );
-      
-      await _notificationsPlugin.show(
-        -1, 
-        '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
-        null,
-        notificationSummaryDetails
-      );
 
-    } catch (e) {
-      debugPrint('Error en displayMessage: $e');
-    } finally {
-      // Cerrar la conexión a la base de datos
-      // (Considera mantenerla abierta si haces muchas operaciones seguidas)
+      await _notificationsPlugin.show(
+        i,
+        null,
+        null, 
+        notificationDetails,
+        payload: groupMatchDb?.toJson(),
+      );
     }
+
+    // Notificación resumen (sin cambios)
+    final inboxStyleInformation = InboxStyleInformation(
+      [],
+      contentTitle: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
+      summaryText: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
+    );
+
+    final notificationSummaryDetails = NotificationDetails(
+      android: AndroidNotificationDetails(
+        groupChannelId, 
+        groupChannelName,
+        channelDescription: groupChannelDescription,
+        styleInformation: inboxStyleInformation,
+        groupKey: groupKey,
+        setAsGroupSummary: true,
+        icon: 'ic_notifications'
+      ),
+    );
+    
+    await _notificationsPlugin.show(
+      -1, 
+      '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
+      null,
+      notificationSummaryDetails
+    );
+
+  } catch (e) {
+    debugPrint('Error en displayMessage: $e');
   }
+}
 
   static Future<void> displayInvitation(Invitation invitation) async {
     // To display the notification in device

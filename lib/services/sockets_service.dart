@@ -61,7 +61,6 @@ onStart(ServiceInstance service) async {
       } else if(payload["type"] == 0 ) {
         final IndividualMessage message = IndividualMessage.fromJson(payload);
         LocalNotificationsService.displayUserMessage(message);
-        print(message);
       }
     });
 
@@ -71,15 +70,6 @@ onStart(ServiceInstance service) async {
         Invitation invitation = Invitation.fromJson(data);
         
         LocalNotificationsService.displayInvitation(invitation);
-        // Send invitation to UI (if app is in foreground)
-        // if (window.isActive) {
-        //   // Create a method to send data to the UI (e.g., using a Stream or Provider)
-        //   // Example:
-        //   // _invitationStreamController.sink.add(invitation); 
-        // } else {
-        //   // Handle background notification for new invitations
-        //   // (e.g., using a notification plugin like flutter_local_notifications) 
-        // }
       } catch (e) {
         debugPrint(e.toString());
       }

@@ -110,9 +110,19 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     )
   );
 
-  void _addRoomMessage( AddRoomMessage event, Emitter<MessageState> emit ) => emit(
-    state.copyWith(
-      groupMessages: [event.message, ...state.groupMessages]
-    )
-  );
+  void _addRoomMessage( AddRoomMessage event, Emitter<MessageState> emit ) async {
+
+    List<UserDb> chatUsers = [];
+    chatUsers.addAll(state.users);
+
+    final userDb = await getUserDb(event.message.user);
+    if(!chatUsers.contains(userDb)) chatUsers.add(userDb);
+
+    emit(
+      state.copyWith(
+        groupMessages: [event.message, ...state.groupMessages],
+        users: chatUsers
+      )
+    );
+  } 
 }
