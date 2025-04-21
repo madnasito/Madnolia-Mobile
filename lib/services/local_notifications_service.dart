@@ -56,7 +56,7 @@ class LocalNotificationsService {
   }
 
   static final List<List<chat.GroupMessage>> _roomMessages = []; // Lista para almacenar mensajes  
-  
+  static final List<List<IndividualMessage>> _userMessages = [];
 
   static Future<void> initializeTranslations() async {
       // Use PlatformDispatcher to get the device locale
@@ -158,11 +158,6 @@ class LocalNotificationsService {
     } finally {
       // Consider whether to close here or manage connection lifecycle differently
     }
-  }
-
-  static Future<void> displayUserMessage(IndividualMessage message) async {
-    await getUserDb(message.user);
-    // await getFriendshipDb(message.to);
   }
 
   static Future<void> displayRoomMessage(chat.GroupMessage message) async {
@@ -296,6 +291,89 @@ class LocalNotificationsService {
 
   } catch (e) {
     debugPrint('Error en displayMessage: $e');
+  }
+}
+  
+  static Future<void> displayUserMessage(IndividualMessage message) async {
+  try {
+    await initializeTranslations();
+    const String individualChannelId = 'individual_messages';
+    const String individualChannelName = 'Individual Messages';
+    const String individualChannelDescription = 'Individual messages channel';
+    const String individualKey = 'com.madnolia.app.INDIVIDUAL_KEY';
+
+    // Obtener información del usuario que envía el mensaje
+    UserDb? senderUser  = await getUserDb(message.user);
+
+    // Agregar el nuevo mensaje a la lista de mensajes por usuario
+    bool messageAdded = false;
+    for (var group in _userMessages) {
+      if (group[0].to == message.to) {
+        group.add(message);
+        messageAdded = true;
+        break;
+      }
+    }
+    
+    if (!messageAdded) {
+      _userMessages.add([message]);
+    }
+
+    // Procesar cada grupo de mensajes
+    for (var i = 0; i < _userMessages.length; i++) {
+      final currentGroup = _userMessages[i];
+      final userId = currentGroup[0].to;
+
+      // Crear mensajes de notificación con los remitentes correctos
+      List<Message> notiMessages = currentGroup.map((msg) {
+        return Message(
+          msg.text,
+          msg.date,
+          Person(
+            name: senderUser .name,
+            bot: false,
+          ),
+        );
+      }).toList();
+
+      // Persona principal de la notificación (el último remitente)
+      final lastSender = senderUser ;
+      final image = await imageProviderToUint8List(CachedNetworkImageProvider(lastSender.thumb));
+
+      NotificationDetails notificationDetails = NotificationDetails(
+        android: AndroidNotificationDetails(
+          groupKey: individualKey,
+          individualChannelId,
+          individualChannelName,
+          channelDescription: individualChannelDescription,
+          importance: Importance.high,
+          icon: 'ic_notifications',
+          priority: Priority.high,
+          styleInformation: MessagingStyleInformation(
+            Person(
+              name: lastSender.name,
+              bot: false,
+              icon: ByteArrayAndroidIcon(image),
+              key: lastSender.id, // Identificador único
+            ),
+            groupConversation: true,
+            conversationTitle: lastSender.name,
+            messages: notiMessages,
+          ),
+        ),
+      );
+
+      await _notificationsPlugin.show(
+        userId.hashCode, // Usar hashCode del ID del usuario como ID único
+        null,
+        null,
+        notificationDetails,
+        payload: currentGroup.map((msg) => msg.to).toList()[0], // Puedes enviar los mensajes como payload
+      );
+    }
+  } catch (e) {
+    // Manejo de errores
+    print("Error displaying grouped individual message notification: $e");
   }
 }
   static Future<void> displayInvitation(Invitation invitation) async {
