@@ -100,6 +100,32 @@ class LocalNotificationsService {
     return base64Encode(bytes);
   }
 
+  static Future<Uint8List> imageProviderToUint8List(ImageProvider imageProvider) async {
+    // Create a completer to handle the asynchronous image loading
+    final completer = Completer<Uint8List>();
+    
+    // Convert ImageProvider to ImageStream and listen for the image data
+    final imageStream = imageProvider.resolve(ImageConfiguration.empty);
+    final listener = ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) async {
+      final byteData = await imageInfo.image.toByteData(format: ImageByteFormat.png);
+      final bytes = byteData!.buffer.asUint8List();
+      if (!completer.isCompleted) {
+        completer.complete(bytes);
+      }
+    });
+    
+    imageStream.addListener(listener);
+    
+    // Wait for the image bytes
+    final bytes = await completer.future;
+    
+    // Remove the listener when done
+    imageStream.removeListener(listener);
+    
+    // Convert to base64
+    return bytes;
+  }
+
   static Future<FriendshipDb> getFriendshipDb(String id) async {
     try {
       final friendshipProvider = FriendshipProvider();
@@ -144,7 +170,7 @@ class LocalNotificationsService {
     await initializeTranslations();
     const String groupChannelId = 'messages';
     const String groupChannelName = 'Messages';
-    const String groupChannelDescription = 'Canal de mensajes';
+    const String groupChannelDescription = 'Messages channel';
     const String groupKey = 'com.madnolia.app.GROUP_KEY';
 
     // Agregar el nuevo mensaje a la lista
@@ -194,6 +220,8 @@ class LocalNotificationsService {
 
       // Persona principal de la notificación (el último remitente)
       final lastSender = userData[currentGroup.last.user]!;
+      final image = await imageProviderToUint8List(CachedNetworkImageProvider(lastSender.thumb));
+      
 
       NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
@@ -221,7 +249,7 @@ class LocalNotificationsService {
             Person(
               name: lastSender.name,
               bot: false,
-              // icon: lastSender.thumb,
+              icon: ByteArrayAndroidIcon(image),
               key: lastSender.id // Identificador único
             ),
             groupConversation: true,
@@ -270,7 +298,6 @@ class LocalNotificationsService {
     debugPrint('Error en displayMessage: $e');
   }
 }
-
   static Future<void> displayInvitation(Invitation invitation) async {
     // To display the notification in device
     

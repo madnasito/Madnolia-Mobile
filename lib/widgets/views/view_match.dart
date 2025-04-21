@@ -32,6 +32,12 @@ class _ViewMatchState extends State<ViewMatch> {
   bool socketConnected = true;
   late UserBloc userBloc;
   late final FlutterBackgroundService backgroundService;
+  
+  // Añade estas variables para manejar las suscripciones
+  StreamSubscription? _newPlayerSubscription;
+  StreamSubscription? _addedToMatchSubscription;
+  StreamSubscription? _socketDisconnectedSubscription;
+  StreamSubscription? _socketConnectedSubscription;
 
   @override
   void initState() {
@@ -43,24 +49,43 @@ class _ViewMatchState extends State<ViewMatch> {
 
   void _initializeServices() {
     backgroundService.invoke("init");
-    backgroundService.on("new_player_to_match").listen((data) {
+    
+    // Guarda las suscripciones para poder cancelarlas después
+    _newPlayerSubscription = backgroundService.on("new_player_to_match").listen((data) {
+      if (!mounted) return;
       ChatUser user = ChatUser.fromJson(data!);
       debugPrint(user.name);
     });
-    backgroundService.on("added_to_match").listen((data) {
+    
+    _addedToMatchSubscription = backgroundService.on("added_to_match").listen((data) {
+      if (!mounted) return;
       if (data?["resp"] == true) {
         isInMatch = true;
         if (mounted) setState(() {});
       }
     });
+    
     backgroundService.invoke("init_chat", {"room": widget.match.id});
-    backgroundService.on("disconnected_socket").listen((_) => setState(() => socketConnected = false));
-    if(mounted) backgroundService.on("connected_socket").listen((_) => setState(() => socketConnected = true));
+    
+    _socketDisconnectedSubscription = backgroundService.on("disconnected_socket").listen((_) {
+      if (mounted) setState(() => socketConnected = false);
+    });
+    
+    _socketConnectedSubscription = backgroundService.on("connected_socket").listen((_) {
+      if (mounted) setState(() => socketConnected = true);
+    });
+    
     userBloc.updateChatRoom(widget.match.id);
   }
 
   @override
   void dispose() {
+    // Cancela todas las suscripciones
+    _newPlayerSubscription?.cancel();
+    _addedToMatchSubscription?.cancel();
+    _socketDisconnectedSubscription?.cancel();
+    _socketConnectedSubscription?.cancel();
+    
     backgroundService.invoke("disconnect_chat");
     backgroundService.invoke("off_new_player_to_match");
     userBloc.updateChatRoom("");
@@ -229,7 +254,9 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
 
   void _setupMessageListener() {
     _messageSubscription = _backgroundService.on("message").listen((onData) {
-      if (mounted && onData != null) {
+      if (!mounted) return; // Verifica si el widget está montado
+      
+      if (onData != null) {
         final message = GroupMessage.fromJson(onData);
         if (message.to == widget.room && 
             (_messageBloc.state.groupMessages.isEmpty || 
@@ -239,6 +266,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
       }
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
