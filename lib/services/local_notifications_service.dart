@@ -200,18 +200,19 @@ class LocalNotificationsService {
       }
 
       // Crear mensajes de notificación con los remitentes correctos
-      List<Message> notiMessages = currentGroup.map((msg) {
+      List<Message> notiMessages = await Future.wait(currentGroup.map((msg) async{
         final user = userData[msg.user]!;
+        final image = await imageProviderToUint8List(CachedNetworkImageProvider(user.thumb));
         return Message(
           msg.text,
           msg.date,
           Person(
             name: user.name,
             bot: false,
-            // icon: user.thumb // Opcional: mostrar avatar
+            icon: ByteArrayAndroidIcon(image) // Opcional: mostrar avatar
           )
         );
-      }).toList();
+      }).toList()) ;
 
       // Persona principal de la notificación (el último remitente)
       final lastSender = userData[currentGroup.last.user]!;
@@ -294,86 +295,118 @@ class LocalNotificationsService {
   }
 }
   
+  
   static Future<void> displayUserMessage(IndividualMessage message) async {
   try {
     await initializeTranslations();
-    const String individualChannelId = 'individual_messages';
-    const String individualChannelName = 'Individual Messages';
-    const String individualChannelDescription = 'Individual messages channel';
-    const String individualKey = 'com.madnolia.app.INDIVIDUAL_KEY';
+    const String groupChannelId = 'messages';
+    const String groupChannelName = 'Messages';
+    const String groupChannelDescription = 'Messages channel';
+    const String groupKey = 'com.madnolia.app.GROUP_KEY';
 
-    // Obtener información del usuario que envía el mensaje
-    UserDb? senderUser  = await getUserDb(message.user);
+    // 1. Obtener información del remitente actual
+    final currentSender = await getUserDb(message.user);
 
-    // Agregar el nuevo mensaje a la lista de mensajes por usuario
-    bool messageAdded = false;
+    // 2. Actualizar lista de mensajes agrupados por destinatario
+    bool groupExists = false;
     for (var group in _userMessages) {
       if (group[0].to == message.to) {
         group.add(message);
-        messageAdded = true;
+        groupExists = true;
         break;
       }
     }
     
-    if (!messageAdded) {
+    if (!groupExists) {
       _userMessages.add([message]);
     }
 
-    // Procesar cada grupo de mensajes
+    // 3. Procesar cada grupo de mensajes
     for (var i = 0; i < _userMessages.length; i++) {
       final currentGroup = _userMessages[i];
-      final userId = currentGroup[0].to;
+      final chatId = currentGroup[0].to; // ID único por chat/conversación
 
-      // Crear mensajes de notificación con los remitentes correctos
-      List<Message> notiMessages = currentGroup.map((msg) {
+      // 4. Obtener información del destinatario (para título de conversación)
+      final recipient = await getUserDb(chatId);
+
+      // 5. Preparar mensajes con sus remitentes reales
+      final notiMessages = await Future.wait(currentGroup.map((msg) async {
+        final msgSender = await getUserDb(msg.user);
+        final senderImage = await imageProviderToUint8List(
+          CachedNetworkImageProvider(msgSender.thumb)
+        );
+        
         return Message(
           msg.text,
           msg.date,
           Person(
-            name: senderUser .name,
+            name: msgSender.name,
             bot: false,
+            icon: ByteArrayAndroidIcon(senderImage),
+            key: msgSender.id,
           ),
         );
-      }).toList();
+      }));
 
-      // Persona principal de la notificación (el último remitente)
-      final lastSender = senderUser ;
-      final image = await imageProviderToUint8List(CachedNetworkImageProvider(lastSender.thumb));
-
-      NotificationDetails notificationDetails = NotificationDetails(
+      // 6. Configurar notificación con información correcta
+      final notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
-          groupKey: individualKey,
-          individualChannelId,
-          individualChannelName,
-          channelDescription: individualChannelDescription,
+          groupKey: groupKey,
+          groupChannelId,
+          groupChannelName,
+          channelDescription: groupChannelDescription,
           importance: Importance.high,
           icon: 'ic_notifications',
           priority: Priority.high,
           styleInformation: MessagingStyleInformation(
             Person(
-              name: lastSender.name,
+              name: recipient.name, // Nombre del destinatario como título
               bot: false,
-              icon: ByteArrayAndroidIcon(image),
-              key: lastSender.id, // Identificador único
+              icon: ByteArrayAndroidIcon(
+                await imageProviderToUint8List(CachedNetworkImageProvider(recipient.thumb))
+              ),
+              key: recipient.id,
             ),
             groupConversation: true,
-            conversationTitle: lastSender.name,
-            messages: notiMessages,
+            conversationTitle: recipient.name, // Nombre consistente del chat
+            messages: notiMessages, // Mensajes con sus remitentes reales
           ),
         ),
       );
 
+      // 7. Mostrar/actualizar notificación específica para este chat
       await _notificationsPlugin.show(
-        userId.hashCode, // Usar hashCode del ID del usuario como ID único
+        chatId.hashCode, // ID único basado en el chat
         null,
         null,
         notificationDetails,
-        payload: currentGroup.map((msg) => msg.to).toList()[0], // Puedes enviar los mensajes como payload
+        payload: chatId,
       );
     }
+
+    // 8. Notificación de resumen
+    final inboxStyle = InboxStyleInformation(
+      [],
+      contentTitle: 'Tienes ${_userMessages.length} chats nuevos',
+      summaryText: '${_userMessages.length} conversaciones activas',
+    );
+
+    await _notificationsPlugin.show(
+      0, // ID fijo para la notificación de resumen
+      'Nuevos mensajes',
+      'Toca para ver todas las conversaciones',
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          groupKey,
+          groupChannelName,
+          setAsGroupSummary: true,
+          styleInformation: inboxStyle,
+        ),
+      ),
+    );
+
   } catch (e) {
-    // Manejo de errores
-    print("Error displaying grouped individual message notification: $e");
+    debugPrint("Error en notificaciones de chat: $e");
   }
 }
   static Future<void> displayInvitation(Invitation invitation) async {
