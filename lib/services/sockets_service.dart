@@ -35,6 +35,7 @@ onStart(ServiceInstance service) async {
 
   String currentRoom = "";
   String username = "";
+  String? userId = await storage.read(key: "userId");
 
   socket.onConnect((_) async {
 
@@ -58,7 +59,7 @@ onStart(ServiceInstance service) async {
       if(currentRoom != payload["to"] && payload["type"] != 0 && payload["text"].contains("@$username")){
         GroupMessage message =GroupMessage.fromJson(payload);
         LocalNotificationsService.displayRoomMessage(message);
-      } else if(payload["type"] == 0 ) {
+      } else if(payload["type"] == 0 && payload['user'] != userId) {
         final IndividualMessage message = IndividualMessage.fromJson(payload);
         LocalNotificationsService.displayUserMessage(message);
       }
