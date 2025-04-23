@@ -92,4 +92,9 @@ class UserProvider {
         : null;
   }
 
+  static Future<void> clearTable() async {
+    final db = await BaseDatabaseProvider.database;
+    await db.delete('users');
+  }
+
 }

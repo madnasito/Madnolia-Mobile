@@ -63,7 +63,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       if (state.hasReachedMax) return;
 
       try {
-        final List<GroupMessage> messages = await MessagesService().getMatchMessages(event.roomId, state.groupMessages.length);
+        final List<ChatMessage> messages = await MessagesService().getMatchMessages(event.roomId, state.groupMessages.length);
 
         if(messages.isEmpty){
           return emit(state.copyWith(hasReachedMax: true));

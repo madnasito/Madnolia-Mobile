@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
+import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/services/friendship_service.dart';
@@ -52,7 +53,7 @@ class UserChatPage extends StatelessWidget {
           },),
         );
       } else {
-        context.go('/');
+        // context.go('/');
         return const SizedBox.shrink(); // Return empty widget while redirecting  
       }
     } else {
@@ -130,7 +131,7 @@ class _OrganismChatMessagesState extends State<OrganismChatMessages> {
     _backgroundService.invoke("init_chat", {"room": widget.id});
 
     _messageSubscription = _backgroundService.on("message").listen((onData) {
-      if (mounted && onData != null) {
+      if (onData != null) {
         _addMessage(onData);
       }
     });
@@ -140,7 +141,7 @@ class _OrganismChatMessagesState extends State<OrganismChatMessages> {
     if (!mounted || onData['type'] != 0) return;
 
     try {
-      final message = IndividualMessage.fromJson(onData);
+      final message = ChatMessage.fromJson(onData);
 
       if (message.to == widget.id)  {
         _messageBloc.add(AddIndividualMessage(message: message));

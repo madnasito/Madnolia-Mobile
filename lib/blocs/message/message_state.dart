@@ -5,15 +5,15 @@ enum MessageStatus { initial, success, failure }
 final class MessageState extends Equatable {
   
   final MessageStatus status;
-  final List<IndividualMessage> userMessages;
-  final List<GroupMessage> groupMessages;
+  final List<ChatMessage> userMessages;
+  final List<ChatMessage> groupMessages;
   final List<UserDb> users;
   final bool hasReachedMax;
 
   const MessageState({
     this.status = MessageStatus.initial,
-    this.userMessages = const <IndividualMessage>[],
-    this.groupMessages = const <GroupMessage>[],
+    this.userMessages = const <ChatMessage>[],
+    this.groupMessages = const <ChatMessage>[],
     this.users = const <UserDb>[],
     this.hasReachedMax = false, 
   });
@@ -21,8 +21,8 @@ final class MessageState extends Equatable {
 
   MessageState copyWith({
     MessageStatus? status,
-    List<IndividualMessage>? userMessages,
-    List<GroupMessage>? groupMessages,
+    List<ChatMessage>? userMessages,
+    List<ChatMessage>? groupMessages,
     List<UserDb>? users,
     bool? hasReachedMax,
   }) {

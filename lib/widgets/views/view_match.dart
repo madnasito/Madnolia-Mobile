@@ -257,7 +257,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
       if (!mounted) return; // Verifica si el widget está montado
       
       if (onData != null) {
-        final message = GroupMessage.fromJson(onData);
+        final message = ChatMessage.fromJson(onData);
         if (message.to == widget.room && 
             (_messageBloc.state.groupMessages.isEmpty || 
              message.id != _messageBloc.state.groupMessages[0].id)) {

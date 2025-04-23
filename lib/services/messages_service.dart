@@ -16,7 +16,7 @@ class MessagesService {
   final String baseUrl = dotenv.get("API_URL");
 
 
-  Future<List<GroupMessage>> getMatchMessages(String id, int page) async {
+  Future<List<ChatMessage>> getMatchMessages(String id, int page) async {
   try {
     final url = Uri.parse("$baseUrl/messages/match?match=$id&skip=$page");
     final resp = await http.get(url);
@@ -30,8 +30,8 @@ class MessagesService {
     final List<dynamic> jsonBody = jsonDecode(resp.body);
 
     // Properly convert each item to GroupMessage
-    final List<GroupMessage> messages = jsonBody
-        .map<GroupMessage>((dynamic e) => GroupMessage.fromJson(e as Map<String, dynamic>))
+    final List<ChatMessage> messages = jsonBody
+        .map<ChatMessage>((dynamic e) => ChatMessage.fromJson(e as Map<String, dynamic>))
         .toList();
 
     return messages;
@@ -49,7 +49,7 @@ class MessagesService {
 
       final resp = await Dio().post(url, data: body, options: Options(headers: {"Authorization": "Bearer $token"}));
 
-      final messages = resp.data.map((e) => IndividualMessage.fromJson(e)).toList();
+      final messages = resp.data.map((e) => ChatMessage.fromJson(e)).toList();
       return messages;
     } catch (e) {
       throw Exception(e);

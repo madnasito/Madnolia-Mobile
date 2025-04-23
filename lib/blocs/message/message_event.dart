@@ -22,13 +22,13 @@ final class GroupMessageFetched extends MessageEvent {
 final class RestoreState extends MessageEvent {}
 
 final class AddIndividualMessage extends MessageEvent {
-  final IndividualMessage message;
+  final ChatMessage message;
 
   const AddIndividualMessage({ required this.message});
 }
 
 final class AddRoomMessage extends MessageEvent {
-  final GroupMessage message;
+  final ChatMessage message;
   const AddRoomMessage({ required this.message });
 }
 

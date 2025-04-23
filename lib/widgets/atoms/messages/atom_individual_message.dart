@@ -4,10 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
+import 'package:madnolia/models/chat/message_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AtomIndividualMessage extends StatefulWidget {
-  final IndividualMessage message;
+  final ChatMessage message;
   const AtomIndividualMessage({super.key, required this.message});
 
   @override

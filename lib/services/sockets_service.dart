@@ -57,10 +57,10 @@ onStart(ServiceInstance service) async {
       // debugPrint(message.to);
 
       if(currentRoom != payload["to"] && payload["type"] != 0 && payload["text"].contains("@$username")){
-        GroupMessage message =GroupMessage.fromJson(payload);
+        ChatMessage message =ChatMessage.fromJson(payload);
         LocalNotificationsService.displayRoomMessage(message);
       } else if(payload["type"] == 0 && payload['user'] != userId) {
-        final IndividualMessage message = IndividualMessage.fromJson(payload);
+        final ChatMessage message = ChatMessage.fromJson(payload);
         LocalNotificationsService.displayUserMessage(message);
       }
     });

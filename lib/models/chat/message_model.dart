@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:equatable/equatable.dart';
 
-GroupMessage messageFromJson(String str) => GroupMessage.fromJson(json.decode(str));
+ChatMessage chatMessageFromJson(String str) => ChatMessage.fromJson(json.decode(str));
 
-String messageToJson(GroupMessage data) => json.encode(data.toJson());
+String chatMessageToJson(ChatMessage data) => json.encode(data.toJson());
 
-class GroupMessage extends Equatable {
+class ChatMessage extends Equatable {
   final String id;
   final String to;
   final String user;
@@ -14,7 +14,7 @@ class GroupMessage extends Equatable {
   final DateTime date;
   final MessageType type;
 
-  const GroupMessage({
+  const ChatMessage({
     required this.id,
     required this.to,
     required this.user,
@@ -23,7 +23,7 @@ class GroupMessage extends Equatable {
     required this.type,
   });
 
-  factory GroupMessage.fromJson(Map<String, dynamic> json) {
+  factory ChatMessage.fromJson(Map<String, dynamic> json) {
     MessageType messageType;
     switch (json["type"]) {
       case 0:
@@ -39,7 +39,7 @@ class GroupMessage extends Equatable {
         messageType = MessageType.user;
         break;
     }
-    return GroupMessage(
+    return ChatMessage(
       id: json["_id"],
       to: json["to"],
       user: json["user"],

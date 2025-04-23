@@ -10,7 +10,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/individual_message_model.dart';
+import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
@@ -21,7 +23,7 @@ import 'package:madnolia/services/database/user_db.dart' show UserDb;
 import 'package:madnolia/services/friendship_service.dart';
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
 import 'package:madnolia/utils/user_db_util.dart' show getUserDb;
-import '../models/chat/message_model.dart' as chat;
+import '../models/chat/message_model.dart';
 
 class LocalNotificationsService {
    // Instance of Flutternotification plugin
@@ -43,7 +45,9 @@ class LocalNotificationsService {
         initializationSettingsAndroid,
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
         // to handle event when we receive notification 
-        onDidReceiveNotificationResponse: (details) {
+        onDidReceiveNotificationResponse: (details) async {
+          _roomMessages.clear();
+          _userMessages.clear();
           try {
             MinimalMatchDb matchDb = MinimalMatchDb.fromJson(details.payload!);
             final context = navigatorKey.currentContext;
@@ -51,12 +55,29 @@ class LocalNotificationsService {
           } catch (e) {
             debugPrint(e.toString());
           }
+
+          try {
+            final ChatMessage message = chatMessageFromJson(details.payload!);
+            final context = navigatorKey.currentContext;
+            switch (message.type) {
+              case MessageType.user:
+                final UserDb userDb = await getUserDb(message.user);
+                final ChatUser chatUser = ChatUser(id: userDb.id, name: userDb.name, thumb: userDb.thumb, username: userDb.username);
+                GoRouter.of(context!).pushNamed("user_chat", extra: chatUser);
+                break;
+              default:
+                 GoRouter.of(context!).pushNamed("match", extra: message.to);
+
+            }
+          } catch (e) {
+            debugPrint(e.toString());
+          }
         },
       );
   }
 
-  static final List<List<chat.GroupMessage>> _roomMessages = []; // Lista para almacenar mensajes  
-  static final List<List<IndividualMessage>> _userMessages = [];
+  static final List<List<ChatMessage>> _roomMessages = []; // Lista para almacenar mensajes  
+  static final List<List<ChatMessage>> _userMessages = [];
 
   static Future<void> initializeTranslations() async {
       // Use PlatformDispatcher to get the device locale
@@ -160,7 +181,7 @@ class LocalNotificationsService {
     }
   }
 
-  static Future<void> displayRoomMessage(chat.GroupMessage message) async {
+  static Future<void> displayRoomMessage(ChatMessage message) async {
   try {
     await initializeTranslations();
     const String groupChannelId = 'messages';
@@ -218,7 +239,6 @@ class LocalNotificationsService {
       final lastSender = userData[currentGroup.last.user]!;
       final image = await imageProviderToUint8List(CachedNetworkImageProvider(lastSender.thumb));
       
-
       NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
           groupKey: groupKey,
@@ -228,15 +248,15 @@ class LocalNotificationsService {
           importance: Importance.high,
           icon: 'ic_notifications',
           priority: Priority.high,
+          largeIcon: ByteArrayAndroidBitmap(image),
           actions: [
             AndroidNotificationAction(
               message.id,
               translate("FORM.INPUT.RESPOND"),
-              allowGeneratedReplies: true,
               inputs: [
                 AndroidNotificationActionInput(
-                  label: translate("CHAT.MESSAGE"),
-                  allowFreeFormInput: true,
+                  label: translate("MESSAGE"),
+                  allowFreeFormInput: false,
                 ),
               ],
             )
@@ -260,7 +280,7 @@ class LocalNotificationsService {
         null,
         null, 
         notificationDetails,
-        payload: groupMatchDb?.toJson(),
+        payload: chatMessageToJson(message),
       );
     }
 
@@ -296,13 +316,14 @@ class LocalNotificationsService {
 }
   
   
-  static Future<void> displayUserMessage(IndividualMessage message) async {
+  static Future<void> displayUserMessage(ChatMessage message) async {
     try {
       await initializeTranslations();
-      const String groupChannelId = 'messages';
-      const String groupChannelName = 'Messages';
-      const String groupChannelDescription = 'Messages channel';
-      const String groupKey = 'com.madnolia.app.GROUP_KEY';
+      const String individualChannelId = 'individual_messages';
+      const String individualChannelName = 'Individual Messages';
+      const String individualChannelDescription = 'Individual messages channel';
+      const String individualKey = 'com.madnolia.app.INDIVIDUAL_KEY';
+
 
       // 1. Actualizar lista de mensajes agrupados por sala/chat
       bool groupExists = false;
@@ -318,68 +339,118 @@ class LocalNotificationsService {
         _userMessages.add([message]);
       }
 
-      // 2. Preparar lista de todas las conversaciones para la notificación
-      final List<Message> allMessages = [];
-      final List<String> activeChats = [];
 
-      for (var group in _userMessages) {
-        final latestMessage = group.last;
-        final sender = await getUserDb(latestMessage.user);
-        final senderImage = await imageProviderToUint8List(
-          CachedNetworkImageProvider(sender.thumb)
-        );
+      for (var i = 0; i < _userMessages.length; i++) {
+        final currentGroup = _userMessages[i];
+        final friendshipId = currentGroup[0].to;
 
-        // Agregar mensaje más reciente de cada chat
-        allMessages.add(
-          Message(
-            latestMessage.text,
-            latestMessage.date,
+        final UserDb user = await getUserDb(currentGroup[0].user);
+
+        // Crear mensajes de notificación con los remitentes correctos
+        List<Message> notiMessages = await Future.wait(currentGroup.map((msg) async{
+          final image = await imageProviderToUint8List(CachedNetworkImageProvider(user.thumb));
+          return Message(
+            msg.text,
+            msg.date,
             Person(
-              name: sender.name,
+              name: user.name,
               bot: false,
-              icon: ByteArrayAndroidIcon(senderImage),
-              key: sender.id,
+              icon: ByteArrayAndroidIcon(image) // Opcional: mostrar avatar
+            )
+          );
+        }).toList()) ;
+
+        final image = await imageProviderToUint8List(CachedNetworkImageProvider(user.thumb));
+
+        NotificationDetails notificationDetails = NotificationDetails(
+          android: AndroidNotificationDetails(
+            groupKey: individualKey,
+            individualChannelId,
+            individualChannelName,
+            channelDescription: individualChannelDescription,
+            importance: Importance.high,
+            icon: 'ic_notifications',
+            largeIcon: _userMessages.length > 1 ? ByteArrayAndroidBitmap(image) : null,
+            priority: Priority.high,
+            actions: [
+              AndroidNotificationAction(
+                message.id,
+                translate("FORM.INPUT.RESPOND"),
+              cancelNotification: true,
+                inputs: [
+                  AndroidNotificationActionInput(
+                    label: translate("CHAT.MESSAGE"),
+                    allowFreeFormInput: true,
+                  ),
+                ],
+              )
+            ],
+            styleInformation: MessagingStyleInformation(
+              Person(
+                name: user.name,
+                bot: false,
+                icon: ByteArrayAndroidIcon(image),
+                key: user.id // Identificador único
+              ),
+              groupConversation: true,
+              conversationTitle: user.name ,
+              messages: notiMessages,
             ),
           ),
         );
 
-        // Guardar nombres de chats activos
-        // final roomInfo = await getChatRoomInfo(group[0].to);
-        // activeChats.add(roomInfo['name'] ?? 'Chat');
+        await _notificationsPlugin.show(
+          i,
+          null,
+          null, 
+          notificationDetails,
+          payload: chatMessageToJson(message)
+        );
       }
 
-      // 3. Configurar notificación única con estilo de bandeja de entrada
-      final inboxStyle = InboxStyleInformation(
-        allMessages.take(5).map((msg) => 
-          "${msg.person?.name}: ${msg.text}"
-        ).toList(),
-        contentTitle: 'Tienes mensajes en ${_userMessages.length} chats',
-        summaryText: 'Chats activos: ${activeChats.join(', ')}',
+      // Notificación resumen (sin cambios)
+        final inboxStyle = InboxStyleInformation(
+          [],
+          contentTitle: '${_userMessages.length} ${translate("CHAT.MESSAGES")}',
+          summaryText: '${_userMessages.length} ${translate("CHAT.MESSAGES")}',
+        );
+
+      
+      final notificationSummaryDetails = NotificationDetails(
+        android: AndroidNotificationDetails(
+          individualChannelId, 
+          individualChannelName,
+          channelDescription: individualChannelDescription,
+          styleInformation: inboxStyle,
+          groupKey: individualKey,
+          setAsGroupSummary: true,
+          icon: 'ic_notifications'
+        ),
       );
 
-      // 4. Mostrar notificación única
       await _notificationsPlugin.show(
-        1, // ID fijo para la notificación agrupada
-        'Nuevos mensajes',
-        'Toca para ver todas las conversaciones',
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            groupKey,
-            groupChannelName,
-            channelDescription: groupChannelDescription,
-            importance: Importance.high,
-            priority: Priority.high,
-            setAsGroupSummary: true,
-            styleInformation: inboxStyle,
-          ),
-        ),
-        payload: 'all_chats', // Payload para manejar el clic
+        -1, 
+        '${_userMessages.length} ${translate("CHAT.MESSAGES")}',
+        null,
+        notificationSummaryDetails
       );
+
 
     } catch (e) {
       debugPrint("Error en notificaciones de chat: $e");
     }
   }
+
+  // Función de ejemplo para obtener información de la sala
+  static Future<Map<String, dynamic>> getChatRoomInfo(String roomId) async {
+    // Implementa esta función según tu estructura de datos
+    return {
+      'name': 'Nombre de la Sala',
+      'participants': ['user1', 'user2'],
+      'image': 'url_de_imagen'
+    };
+  }
+
   static Future<void> displayInvitation(Invitation invitation) async {
     // To display the notification in device
     
