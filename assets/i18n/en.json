@@ -175,6 +175,9 @@
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verify your connection"
+    },
+    "LOCAL": {
+      "LOADING_USERS": "Error loading users"
     }
   }
 }

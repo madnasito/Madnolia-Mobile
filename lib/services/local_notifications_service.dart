@@ -11,7 +11,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' show Flutter
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
-import 'package:madnolia/models/chat/individual_message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 
@@ -30,6 +29,7 @@ class LocalNotificationsService {
    static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
   
+  static bool _isRequestingPermissions = false;
 
   static Future<void> initialize() async {
       const InitializationSettings initializationSettingsAndroid =
@@ -37,9 +37,24 @@ class LocalNotificationsService {
           android: AndroidInitializationSettings("@mipmap/ic_launcher")
         );
 
+      // Verificar si ya se están solicitando permisos
+      if (!_isRequestingPermissions) {
+        _isRequestingPermissions = true;
         
-      _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestNotificationsPermission();
+        try {
+          final androidPlugin = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+          
+          // Verificar si ya tenemos los permisos
+          final bool granted = await androidPlugin?.areNotificationsEnabled() ?? false;
+          
+          if (!granted) {
+            await androidPlugin?.requestNotificationsPermission();
+          }
+        } finally {
+          _isRequestingPermissions = false;
+        }
+      }
+
         
       _notificationsPlugin.initialize(
         initializationSettingsAndroid,
@@ -63,7 +78,7 @@ class LocalNotificationsService {
               case MessageType.user:
                 final UserDb userDb = await getUserDb(message.user);
                 final ChatUser chatUser = ChatUser(id: userDb.id, name: userDb.name, thumb: userDb.thumb, username: userDb.username);
-                GoRouter.of(context!).pushNamed("user_chat", extra: chatUser);
+                if(context!.mounted) GoRouter.of(context).pushNamed("user_chat", extra: chatUser);
                 break;
               default:
                  GoRouter.of(context!).pushNamed("match", extra: message.to);
@@ -342,7 +357,7 @@ class LocalNotificationsService {
 
       for (var i = 0; i < _userMessages.length; i++) {
         final currentGroup = _userMessages[i];
-        final friendshipId = currentGroup[0].to;
+        // final friendshipId = currentGroup[0].to;
 
         final UserDb user = await getUserDb(currentGroup[0].user);
 

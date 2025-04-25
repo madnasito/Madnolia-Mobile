@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:madnolia/models/chat/individual_message_model.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';

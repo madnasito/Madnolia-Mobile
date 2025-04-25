@@ -14,8 +14,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-
-
     return Background(
         child: SafeArea(
       child: SingleChildScrollView(

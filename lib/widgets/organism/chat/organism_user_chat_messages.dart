@@ -1,0 +1,114 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/models/chat/user_messages.body.dart' show UserMessagesBody;
+import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart' show MoleculeUserChatMessagesList;
+import '../../../models/chat/message_model.dart' show ChatMessage;
+
+class OrganismUserChatMessages extends StatefulWidget {
+  final String id;
+  final String user;
+  const OrganismUserChatMessages({super.key, required this.id, required this.user});
+
+  @override
+  State<OrganismUserChatMessages> createState() => _OrganismUserChatMessagesState();
+}
+
+class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
+  final _scrollController = ScrollController();
+  late final MessageBloc _messageBloc;
+  late final FlutterBackgroundService _backgroundService;
+  late final UserBloc userBloc;
+  int skip = 0;
+  StreamSubscription? _messageSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _messageBloc = context.read<MessageBloc>();
+    _backgroundService = FlutterBackgroundService();
+    userBloc = context.read<UserBloc>();
+    _scrollController.addListener(_onScroll);
+
+    _backgroundService.invoke("init_chat", {"room": widget.id});
+
+    _messageSubscription = _backgroundService.on("message").listen((onData) {
+      if (onData != null) {
+        _addMessage(onData);
+      }
+    });
+  }
+
+  void _addMessage(Map<String, dynamic> onData) {
+    if (!mounted || onData['type'] != 0) return;
+
+    try {
+      final message = ChatMessage.fromJson(onData);
+
+      if (message.to == widget.id)  {
+        _messageBloc.add(AddIndividualMessage(message: message));
+      }
+    } catch (e) {
+      debugPrint('Error processing message: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<MessageBloc, MessageState>(
+      builder: (context, state) {
+        if (state.status == MessageStatus.failure) {
+          return const Center(child: Text("Failed fetching messages"));
+        }
+
+        // Show messages if we have any, regardless of loading status
+        if (state.userMessages.isNotEmpty) {
+          return Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            color: Colors.black38,
+            child: MoleculeUserChatMessagesList(
+              state: state,
+              scrollController: _scrollController,
+              isLoading: state.status == MessageStatus.initial && !state.hasReachedMax,
+            ),
+          );
+        }
+
+        // Only show loading indicator if we have no messages at all
+        if (state.status == MessageStatus.initial && !state.hasReachedMax) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return const Center(child: Text('Say hi'));
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
+    _messageBloc.add(RestoreState());
+    _messageSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_isBottom) {
+      skip += 10; // Increment skip for pagination
+      _messageBloc.add(UserMessageFetched(
+        messagesBody: UserMessagesBody(user: widget.id, skip: skip),
+      ));
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    return _scrollController.offset >=
+        (_scrollController.position.maxScrollExtent * 0.9);
+  }
+}

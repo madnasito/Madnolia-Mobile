@@ -66,7 +66,7 @@ class OrganismLoginForm extends StatelessWidget {
             if (resp.containsKey("error")) {
               return showErrorServerAlert(context, resp);
             } else {
-              context.go("/");
+              if(context.mounted) context.go("/");
             }
           } : null),
          

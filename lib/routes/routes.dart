@@ -15,7 +15,7 @@ import 'package:madnolia/pages/match/joined_page.dart';
 // import 'package:madnolia/pages/auth/register_page.dart';
 import 'package:madnolia/pages/new/create_match_page.dart';
 import 'package:madnolia/pages/home/home_new_page.dart';
-import 'package:madnolia/pages/match_page.dart';
+import 'package:madnolia/pages/match/match_page.dart';
 import 'package:madnolia/pages/match/match_form_page.dart';
 import 'package:madnolia/pages/notifications/notifications_page.dart';
 import 'package:madnolia/pages/platforms/platform_games_page.dart';

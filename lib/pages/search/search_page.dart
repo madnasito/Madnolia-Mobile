@@ -1,12 +1,11 @@
 import 'dart:async';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
-import 'package:madnolia/widgets/molecules/buttons/molecule_connection_button.dart';
+import 'package:madnolia/widgets/organism/organism_users_list.dart';
 
 import '../../models/user/simple_user_model.dart' show SimpleUser;
 
@@ -92,31 +91,10 @@ class _SearchPageState extends State<SearchPage> {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             return const CircularProgressIndicator();
                           }
-                          
                           if (snapshot.hasError || !snapshot.hasData) {
-                            return const Text('Error loading users');
+                            return Text(translate('ERRORS.LOCAL.LOADING_USERS'));
                           }
-                          
-                          return ListView.builder(
-                            padding: const EdgeInsets.all(0),
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: snapshot.data?.length,
-                            itemBuilder: (context, index) {
-                              final user = snapshot.data![index];
-                              return ListTile(
-                                leading: CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: CachedNetworkImageProvider(user.thumb),
-                                ),
-                                subtitle: Text(
-                                  user.username,
-                                  style: const TextStyle(color: Colors.white54),
-                                ),
-                                title: Text(user.name),
-                                trailing: MoleculeConnectionButton(simpleUser: user),
-                              );
-                            },
-                          );
+                          return OrganismUsersList(users: snapshot.data!);
                         },
                       ),
                     )

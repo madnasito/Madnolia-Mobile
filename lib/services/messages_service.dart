@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
-import 'package:madnolia/models/chat/individual_message_model.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:madnolia/models/chat/user_messages.body.dart';
@@ -56,15 +55,23 @@ class MessagesService {
     }
   }
 
-  Future<List<dynamic>> getChats() async {
-    try {
+  Future<List<UserChat>> getChats() async {
+  try {
       final url = "$baseUrl/messages";
       final String? token = await _storage.read(key: "token");
-      final resp = await Dio().get(url, options: Options(headers: {"Authorization": "Bearer $token"}));
-      final chats = resp.data.map((e) => UserChat.fromJson(e)).toList();
+      final resp = await Dio().get(
+        url, 
+        options: Options(headers: {"Authorization": "Bearer $token"})
+      );
+
+      // Explicit type casting solution
+      final List<UserChat> chats = (resp.data as List)
+          .map<UserChat>((e) => UserChat.fromJson(e))
+          .toList();
+
       return chats;
     } catch (e) {
-      throw ArgumentError(e);
+      throw ArgumentError(e.toString()); // Better to convert error to string
     }
   }
 

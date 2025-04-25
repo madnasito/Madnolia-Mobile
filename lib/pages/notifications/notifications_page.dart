@@ -1,14 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
-import 'package:madnolia/enums/connection-status.enum.dart';
-import 'package:madnolia/models/notification/notification_model.dart' show NotificationModel;
-import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/services/notifications_service.dart';
+import 'package:madnolia/widgets/atoms/notifications/atom_invitation_notification.dart';
+import 'package:madnolia/widgets/atoms/notifications/atom_request_notification.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
@@ -41,8 +37,8 @@ class NotificationsPage extends StatelessWidget {
                 return Column(
                   children: snapshot.data!.map((notification) =>
                     notification.type == 0
-                      ? AtomInvitationNotificationTile(notification: notification)
-                      : AtomRequestNotificationTile(notification: notification)
+                      ? AtomInvitationNotification(notification: notification)
+                      : AtomRequestNotification(notification: notification)
                   ).toList(),
                 );
               },
@@ -50,125 +46,6 @@ class NotificationsPage extends StatelessWidget {
           ],
         ),
       )
-    );
-  }
-}
-
-class MoleculeNotificationsList extends StatelessWidget {
-
-  final List<NotificationModel> notifications;
-  const MoleculeNotificationsList({super.key, required this.notifications});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: notifications.length,
-      itemBuilder: (BuildContext context, int index) {
-        if(notifications[index].type == 0) {
-          return AtomInvitationNotificationTile(notification: notifications[index]);
-        } else {
-          return AtomRequestNotificationTile(notification: notifications[index]);
-        }
-
-     },);
-  }
-}
-
-class AtomRequestNotificationTile extends StatelessWidget {
-
-  final NotificationModel notification;
-  const AtomRequestNotificationTile({super.key, required this.notification});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black45, // Darker background
-        borderRadius: BorderRadius.circular(12), // Optional rounded corners
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8), 
-      child: ListTile(
-        leading: CircleAvatar(
-          radius: 30,
-          backgroundColor: Colors.grey[800],
-          backgroundImage: CachedNetworkImageProvider(notification.thumb),),
-        title: Text("You have a new invitation to ${notification.title}"),
-        subtitle: Text("@${notification.subtitle}", style: TextStyle(
-            color: Colors.greenAccent,
-            overflow: TextOverflow.ellipsis, // Handle long text
-          )),
-        trailing: Icon(Icons.arrow_forward_ios_outlined),
-        onTap: () => context.pushNamed('match', extra: notification.path),
-      ),
-    );
-  }
-}
-
-class AtomInvitationNotificationTile extends StatelessWidget {
-  final NotificationModel notification;
-  const AtomInvitationNotificationTile({super.key, required this.notification});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black45, // Darker background
-        borderRadius: BorderRadius.circular(12), // Optional rounded corners
-      ),
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8), 
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.grey[800],
-          radius: 30,
-          backgroundImage: CachedNetworkImageProvider(notification.thumb),),
-        title: Text("${notification.title} wants connect with you"),
-        subtitle: Text("@${notification.subtitle}", style: TextStyle(
-            color: Colors.greenAccent, // Lighter grey for subtitle
-            overflow: TextOverflow.ellipsis, // Handle long text
-          )),
-        trailing: Icon(Icons.more_vert_rounded),
-        onTap: () => showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (context) {
-        final SimpleUser simpleUser = SimpleUser(id: notification.path, name: notification.title, username: notification.subtitle, thumb: notification.thumb, connection: ConnectionStatus.requestReceived);
-        return AlertDialog(
-          actionsAlignment: MainAxisAlignment.center,
-          contentPadding: const EdgeInsets.only(bottom: 10, top: 20),
-          actionsPadding: const EdgeInsets.all(0),
-          titleTextStyle: const TextStyle(fontSize: 20),
-          title: Column(
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundImage: CachedNetworkImageProvider(simpleUser.thumb),
-              ),
-              const SizedBox(height: 20),
-              Text('${simpleUser.name} wants to connect with you', textAlign: TextAlign.center,)
-            ],
-          ),
-          content: const Text('Accept request?', textAlign: TextAlign.center,),
-          actions: [
-            TextButton(
-              onPressed: () {
-                final backgroundService = FlutterBackgroundService();
-                backgroundService.invoke('reject_connection', {'user': simpleUser.id});
-                Navigator.pop(context, 'Cancel');
-              } ,
-              child: const Text('Cancel'),
-            ),
-              TextButton(
-                onPressed: () {
-                  final backgroundService = FlutterBackgroundService();
-                  backgroundService.invoke('accept_connection', {'user': simpleUser.id});
-                  Navigator.pop(context, 'OK');
-                  },
-                child: const Text('Accept'),
-              ),
-          ],
-        );
-      }),
-      ),
     );
   }
 }
