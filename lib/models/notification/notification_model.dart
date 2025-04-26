@@ -14,7 +14,7 @@ class NotificationModel {
     int type;
     String title;
     String thumb;
-    String subtitle;
+    String sender;
     String path;
     bool read;
     DateTime date;
@@ -25,7 +25,7 @@ class NotificationModel {
         required this.type,
         required this.title,
         required this.thumb,
-        required this.subtitle,
+        required this.sender,
         required this.path,
         required this.read,
         required this.date,
@@ -37,7 +37,7 @@ class NotificationModel {
         type: json["type"],
         title: json["title"],
         thumb: json["thumb"],
-        subtitle: json["subtitle"],
+        sender: json["sender"],
         path: json["path"],
         read: json["read"],
         date: DateTime.parse(json["date"]),
@@ -49,7 +49,7 @@ class NotificationModel {
         "type": type,
         "title": title,
         "thumb": thumb,
-        "subtitle": subtitle,
+        "sender": sender,
         "path": path,
         "read": read,
         "date": date.toIso8601String(),
