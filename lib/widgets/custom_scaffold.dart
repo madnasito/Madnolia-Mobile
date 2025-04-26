@@ -80,7 +80,7 @@ class CustomScaffold extends StatelessWidget {
                     icon: userBloc.state.notifications == 0 ? Icon(Icons.notifications_none_rounded,size: 40, color: Colors.white ) : Stack(
                       alignment: Alignment.center,
                       children: [
-                      Icon(Icons.notifications_active_rounded,size: 40, color: Colors.redAccent ),
+                      Icon(Icons.notifications_active_rounded,size: 40, color: Colors.pink ),
                       Text(userBloc.state.notifications > 9 ? '9+' : userBloc.state.notifications.toString(), style: TextStyle(color: Colors.white, fontSize: 14))
                     ] 
                     ),
