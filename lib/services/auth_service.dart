@@ -18,7 +18,6 @@ class AuthService {
 
       authenticating = true;
       final resp = await http.post(url,
-          // headers: {"Content-Type": "application/json"},h
           body: {"username": username, "password": password});
 
       authenticating = false;

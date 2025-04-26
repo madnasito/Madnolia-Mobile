@@ -4,6 +4,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
+import 'package:madnolia/services/notifications_service.dart';
 import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/ads/atom_banner_ad.dart';
@@ -89,6 +90,7 @@ class HomeUserPage extends StatelessWidget {
   
   _loadInfo(BuildContext context) async {
     try {
+      debugPrint('Se llamo a la carga de info');
       await LocalNotificationsService.initialize();
         if (!context.mounted) return;
       final userBloc = context.read<UserBloc>();
@@ -109,6 +111,7 @@ class HomeUserPage extends StatelessWidget {
           return context.go("/home");
       }
 
+
       final backgroundService = FlutterBackgroundService();
 
       if(await backgroundService.isRunning() == false){
@@ -126,6 +129,11 @@ class HomeUserPage extends StatelessWidget {
       }
 
       final User user = User.fromJson(userInfo);
+      
+      final int unreadNotificationsCount = await NotificationsService().getNotificationsCount();
+
+      userBloc.updateNotifications(unreadNotificationsCount);
+
       userBloc.loadInfo(user);
       
       return userInfo;

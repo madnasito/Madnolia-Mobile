@@ -24,7 +24,7 @@ class CustomScaffold extends StatelessWidget {
 
     backgroundService.on("new_request_connection").listen((onData) {
       if(onData?['user'] == userBloc.state.id) userBloc.updateNotifications(userBloc.state.notifications + 1);
-    } );
+    });
     backgroundService.on("invitation").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
     
     return Scaffold(
@@ -81,7 +81,7 @@ class CustomScaffold extends StatelessWidget {
                       alignment: Alignment.center,
                       children: [
                       Icon(Icons.notifications_active_rounded,size: 40, color: Colors.redAccent ),
-                      Text(userBloc.state.notifications.toString(), style: TextStyle(color: Colors.white, fontSize: 14))
+                      Text(userBloc.state.notifications > 9 ? '9+' : userBloc.state.notifications.toString(), style: TextStyle(color: Colors.white, fontSize: 14))
                     ] 
                     ),
                     title:
