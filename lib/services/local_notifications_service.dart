@@ -29,19 +29,13 @@ class LocalNotificationsService {
    static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
   
-  static bool _isRequestingPermissions = false;
-
   static Future<void> initialize() async {
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
           android: AndroidInitializationSettings("@mipmap/ic_launcher")
         );
 
-      // Verificar si ya se están solicitando permisos
-      if (!_isRequestingPermissions) {
-        _isRequestingPermissions = true;
-        
-        try {
+     {
           final androidPlugin = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
           
           // Verificar si ya tenemos los permisos
@@ -50,9 +44,6 @@ class LocalNotificationsService {
           if (!granted) {
             await androidPlugin?.requestNotificationsPermission();
           }
-        } finally {
-          _isRequestingPermissions = false;
-        }
       }
 
         
