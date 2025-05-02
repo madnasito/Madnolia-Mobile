@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:madnolia/blocs/blocs.dart';
@@ -105,7 +106,7 @@ class _EditUserViewState extends State<EditUserView> {
   Widget build(BuildContext context) {
     final bloc = EditUserProvider.of(context);
     final userBloc = context.read<UserBloc>();
-
+    ToastContext().init(context);
     final nameController = TextEditingController(text: userBloc.state.name);
     final usernameController =
         TextEditingController(text: userBloc.state.username);
@@ -262,7 +263,23 @@ class _EditUserViewState extends State<EditUserView> {
                             : null);
                   },
                 ),
-                const SizedBox(height: 20)
+                const SizedBox(height: 20),
+                MaterialButton(onPressed: () async {
+                  try {
+                    await UserService().deleteUser();
+                    Toast.show(
+                      "\tYour account has been deleted",
+                      gravity: 20,
+                      border: Border.all(color: Colors.red, width: 2),
+                      duration: 5);
+                    Timer(Duration(seconds: 1),(){
+                      context.go('/');
+                    });
+                  } catch (e) {
+                    
+                  }
+                  
+                }, child: Text('Delete user'),)
               ],
             ),
           );

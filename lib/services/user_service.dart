@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:dio/dio.dart' show Dio, Options;
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
 import 'package:http/http.dart' as http;
@@ -11,6 +13,7 @@ class UserService {
 
   final _storage = const FlutterSecureStorage();
   final String baseUrl = dotenv.get("API_URL");
+  final dio = Dio();
 
   Future getUserInfo() => userGetRequest("user/info");
 
@@ -87,6 +90,23 @@ class UserService {
     } catch (e) {
       // print(e);
       return {"error": "Network error", "message": "NETWORK_ERROR"};
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteUser() async {
+    try {
+      final String? token = await _storage.read(key: "token");
+
+      final url = "$baseUrl/super/user";
+
+      final response = await dio.delete(url, options: Options(headers:  {"Authorization": "Bearer $token"}));
+
+      await _storage.deleteAll();
+
+      return response.data;
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception(e);
     }
   }
 }
