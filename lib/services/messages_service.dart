@@ -48,7 +48,7 @@ class MessagesService {
 
       final resp = await Dio().post(url, data: body, options: Options(headers: {"Authorization": "Bearer $token"}));
 
-      final messages = resp.data.map((e) => ChatMessage.fromJson(e)).toList();
+      final messages = resp.data.map((e) => ChatMessage.fromJson(e as Map<String, dynamic>)).toList();
       return messages;
     } catch (e) {
       throw Exception(e);
