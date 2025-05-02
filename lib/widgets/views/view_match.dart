@@ -2,7 +2,6 @@ import 'dart:async' show StreamSubscription;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
@@ -142,10 +141,13 @@ class _ViewMatchState extends State<ViewMatch> {
             IconButton(onPressed: () async{
               // final String apiUrl = dotenv.get("SOCKETS_URL");
               final params = ShareParams(
-                title: '⚡️ Share this match!',
-                subject: "🎮 Let's play ${widget.match.game.name}",
-                text: "⚡️ Join now here: https://madnolia.app/match/${widget.match.id}"
-                // uri: Uri.parse('$apiUrl/match/${widget.match.id}')
+                title: translate("SHARE.TITLE"),
+                // subject: "🎮 Let's play ${widget.match.game.name}",
+                text: translate("SHARE.TEXT", args: {
+                  "gameName": widget.match.game.name,
+                  "match": "https://madnolia.app/match/${widget.match.id}"
+                  })
+                // uri: Uri.parse('https://madnolia.app/match/${widget.match.id}')
               );
 
               final result = await SharePlus.instance.share(params);

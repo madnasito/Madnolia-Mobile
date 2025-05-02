@@ -173,6 +173,11 @@
     "LOCAL": {
       "LOADING_USERS": "Error cargando usuarios"
     }
+  },
+  "SHARE": {
+    "TITLE": "⚡️ ¡Comparte esta partida!",
+    "SUBJECT": "🎮 Juguemos {name}",
+    "TEXT": "🎮 Juguemos {gameName} \n⚡️ Unete aqui: {match}"
   }
 }
 

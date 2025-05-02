@@ -179,6 +179,11 @@
     "LOCAL": {
       "LOADING_USERS": "Error loading users"
     }
+  },
+  "SHARE": {
+    "TITLE": "⚡️ Share this match!",
+    "SUBJECT": "🎮 Let's play {name}",
+    "TEXT": "🎮 Let's play {gameName} \n⚡️ Join now here: {match}"
   }
 }
 
