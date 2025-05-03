@@ -37,8 +37,8 @@ class NotificationsPage extends StatelessWidget {
                 return Column(
                   children: snapshot.data!.map((notification) =>
                     notification.type == 0
-                      ? AtomInvitationNotification(notification: notification)
-                      : AtomRequestNotification(notification: notification)
+                      ? AtomRequestNotification(notification: notification)
+                      : AtomInvitationNotification(notification: notification)
                   ).toList(),
                 );
               },
