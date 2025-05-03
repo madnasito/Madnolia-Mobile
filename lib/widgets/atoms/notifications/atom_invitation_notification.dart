@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:madnolia/enums/connection-status.enum.dart';
+import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
-import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/utils/user_db_util.dart';
 
 class AtomInvitationNotification extends StatelessWidget {
@@ -15,7 +13,7 @@ class AtomInvitationNotification extends StatelessWidget {
     return FutureBuilder(
       future: getUserDb(notification.sender),
       builder: (context, snapshot) {
-        if(snapshot.hasData){
+        if(snapshot.hasData){ 
           return Container(
             decoration: BoxDecoration(
               color: Colors.black45, // Darker background
@@ -24,62 +22,23 @@ class AtomInvitationNotification extends StatelessWidget {
             margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8), 
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: Colors.grey[800],
                 radius: 30,
+                backgroundColor: Colors.grey[800],
                 backgroundImage: CachedNetworkImageProvider(notification.thumb),),
-              title: Text("${notification.title} wants connect with you"),
+              title: Text("You have a new invitation to ${notification.title}"),
               subtitle: Text("@${snapshot.data?.username}", style: TextStyle(
-                  color: Colors.greenAccent, // Lighter grey for subtitle
+                  color: Colors.greenAccent,
                   overflow: TextOverflow.ellipsis, // Handle long text
                 )),
-              trailing: Icon(Icons.more_vert_rounded),
-              onTap: () => showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (context) {
-              final SimpleUser simpleUser = SimpleUser(id: notification.path, name: notification.title, username: snapshot.data!.username, thumb: notification.thumb, connection: ConnectionStatus.requestReceived);
-              return AlertDialog(
-                actionsAlignment: MainAxisAlignment.center,
-                contentPadding:  EdgeInsets.only(bottom: 10, top: 20),
-                actionsPadding: const EdgeInsets.all(0),
-                titleTextStyle: const TextStyle(fontSize: 20),
-                title: Column(
-                  children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: CachedNetworkImageProvider(simpleUser.thumb),
-                    ),
-                    const SizedBox(height: 20),
-                    Text('${simpleUser.name} wants to connect with you', textAlign: TextAlign.center,)
-                  ],
-                ),
-                content: const Text('Accept request?', textAlign: TextAlign.center,),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      final backgroundService = FlutterBackgroundService();
-                      backgroundService.invoke('reject_connection', {'user': simpleUser.id});
-                      Navigator.pop(context, 'Cancel');
-                    } ,
-                    child: const Text('Cancel'),
-                  ),
-                    TextButton(
-                      onPressed: () {
-                        final backgroundService = FlutterBackgroundService();
-                        backgroundService.invoke('accept_connection', {'user': simpleUser.id});
-                        Navigator.pop(context, 'OK');
-                        },
-                      child: const Text('Accept'),
-                    ),
-                ],
-              );
-            }),
+              trailing: Icon(Icons.arrow_forward_ios_outlined),
+              onTap: () => context.pushNamed('match', extra: notification.path),
             ),
-          );
-        } else {
-          return CircularProgressIndicator();
-        }
-      },
+              );
+            } else {
+              return CircularProgressIndicator();
+            }
+          }
+      
     );
   }
 }

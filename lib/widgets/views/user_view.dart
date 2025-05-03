@@ -265,21 +265,44 @@ class _EditUserViewState extends State<EditUserView> {
                 ),
                 const SizedBox(height: 20),
                 MaterialButton(onPressed: () async {
-                  try {
-                    await UserService().deleteUser();
-                    Toast.show(
-                      "\tYour account has been deleted",
-                      gravity: 20,
-                      border: Border.all(color: Colors.red, width: 2),
-                      duration: 5);
-                    Timer(Duration(seconds: 1),(){
-                      context.go('/');
-                    });
-                  } catch (e) {
-                    
-                  }
-                  
-                }, child: Text('Delete user'),)
+                  showDialog(context: context, builder: (BuildContext context) { 
+                    return AlertDialog(
+                    actionsAlignment: MainAxisAlignment.center,
+                    contentPadding: EdgeInsets.only(bottom: 10, top: 20),
+                    actionsPadding: const EdgeInsets.all(0),
+                    titleTextStyle: const TextStyle(fontSize: 20),
+                    title: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundImage: CachedNetworkImageProvider(userBloc.state.thumb),
+                        ),
+                        const SizedBox(height: 20),
+                        Text('@${userBloc.state.username}', textAlign: TextAlign.center,)
+                      ],
+                    ),
+                    content: Text(translate("ALERT.YOU_SURE"), textAlign: TextAlign.center),
+                    actions: [
+                      TextButton(onPressed: () => Navigator.pop(context), child: Text(translate('ALERT.CANCEL'))),
+                      TextButton(onPressed: () async {
+                        try {
+                          await UserService().deleteUser();
+                          Toast.show(
+                            translate("PROFILE.USER_PAGE.ACCOUNT_DELETED"),
+                            gravity: 20,
+                            border: Border.all(color: Colors.red, width: 2),
+                            duration: 5);
+                          Timer(Duration(seconds: 1),(){
+                            context.go('/');
+                          });
+                        } catch (e) {
+                          debugPrint(e.toString());
+                        }
+                      }, child: Text(translate("ALERT.DELETE_MY_ACCOUNT"), style: TextStyle(color: Colors.red),))
+                    ],
+                  );
+                 });  
+                }, child: Text(translate("PROFILE.USER_PAGE.DELETE_ACCOUNT")),)
               ],
             ),
           );

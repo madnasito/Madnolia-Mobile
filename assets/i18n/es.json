@@ -140,7 +140,9 @@
             },
             "UPLOADING_IMG": "Subiendo la imagen, espere un momento por favor",
             "UPDATED": "Cuenta actualizada",
-            "UPDATE": "Actualizar"
+            "UPDATE": "Actualizar",
+            "DELETE_ACCOUNT": "Eliminar cuenta",
+            "ACCOUNT_DELETED": "Tu cuenta ha sido borrada"
         },
         "PLATFORMS_PAGE":{
             "TITLE": "Tus plataformas",
@@ -152,7 +154,12 @@
       "SHOW_LESS": "Mostrar menos",
       "DETAILS": "Detalles",
       "ADMIN": "Admin"
-  },
+    },
+    "ALERT": {
+        "YOU_SURE": "¿Estás seguro?",
+        "CANCEL": "Cancelar",
+        "DELETE_MY_ACCOUNT": "Borrar mi cuenta"
+    },
   "ERRORS": {
     "SERVER": {
         "USER_NOT_FOUND": "Usuario no encontrado",

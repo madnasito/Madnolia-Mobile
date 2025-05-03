@@ -126,27 +126,29 @@
           "EMPTY": "You haven't created a match yet"
       },
       "USER_PAGE":{
-          "NAME": "Name",
-          "USERNAME": "Username",
-          "EMAIL": "Email",
-          "INVITATIONS":{
-              "TITLE": "Accept invitations from:",
-              "ALL": "Whatever, i want to play",
-              "PARTNERS": "Only my hommies",
-              "NOBODY": "Please, let me alone"
-          },
+        "NAME": "Name",
+        "USERNAME": "Username",
+        "EMAIL": "Email",
+        "INVITATIONS":{
+            "TITLE": "Accept invitations from:",
+            "ALL": "Whatever, i want to play",
+            "PARTNERS": "Only my hommies",
+            "NOBODY": "Please, let me alone"
+        },
 
-          "ERRORS":{
-              "VERIFY": "Please verify your information",
-              "EMAIL": "There is another user using this EMAIL",
-              "USERNAME": "There is another user using this USERNAME",
-              "IMG_SIZE": "The image size cant' moore than 2mb",
-              "IMG_EXTENSION": "The extension is not valid, please use: 'JPG', 'PNG', 'JPEG'",
-              "IMG_UPDATING": "Error updating the image"
-          },
-          "UPLOADING_IMG": "Uploading image, wait a moment please",
-          "UPDATED": "Updated!",
-          "UPDATE": "Update"
+        "ERRORS":{
+            "VERIFY": "Please verify your information",
+            "EMAIL": "There is another user using this EMAIL",
+            "USERNAME": "There is another user using this USERNAME",
+            "IMG_SIZE": "The image size cant' moore than 2mb",
+            "IMG_EXTENSION": "The extension is not valid, please use: 'JPG', 'PNG', 'JPEG'",
+            "IMG_UPDATING": "Error updating the image"
+        },
+        "UPLOADING_IMG": "Uploading image, wait a moment please",
+        "UPDATED": "Updated!",
+        "UPDATE": "Update",
+        "DELETE_ACCOUNT": "Delete account",
+        "ACCOUNT_DELETED": "Your account has been deleted"
       },
       "PLATFORMS_PAGE":{
           "TITLE": "Your platforms",
@@ -158,6 +160,11 @@
       "SHOW_LESS": "Show less",
       "DETAILS": "Details",
       "ADMIN": "Admin"
+  },
+  "ALERT": {
+    "YOU_SURE": "Are you sure?",
+    "CANCEL": "Cancel",
+    "DELETE_MY_ACCOUNT": "Delete my account"
   },
   "ERRORS": {
     "SERVER": {
