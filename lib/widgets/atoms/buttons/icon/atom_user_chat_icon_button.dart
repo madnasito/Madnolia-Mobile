@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 
-class AtomUserChatButton extends StatelessWidget {
+class AtomUserChatIconButton extends StatelessWidget {
     final ChatUser user;
-  const AtomUserChatButton({super.key, required this.user});
+  const AtomUserChatIconButton({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {

@@ -12,6 +12,7 @@ final String columnName = 'name';
 final String columnUsername = 'username';
 final String columnThumb = 'thumb';
 final String columnConnection = 'connection';
+final String columnLastUpdated = 'last_updated';
 
 
 abstract class BaseDatabaseProvider {
@@ -52,7 +53,8 @@ abstract class BaseDatabaseProvider {
         $columnName TEXT NOT NULL,
         $columnUsername TEXT NOT NULL,
         $columnThumb TEXT NOT NULL,
-        $columnConnection INTEGER NOT NULL
+        $columnConnection INTEGER NOT NULL,
+        $columnLastUpdated INTEGER NOT NULL DEFAULT 0
       )
     ''');
     await db.execute('''

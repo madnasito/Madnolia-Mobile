@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:madnolia/services/database/user_db.dart';
 // import 'package:madnolia/utils/user_db_util.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl;
@@ -77,10 +78,13 @@ class NotMyMessageMolecule extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: Row(
               children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 2),
-                  child: CircleAvatar(backgroundImage: mainMessage ? CachedNetworkImageProvider(user!.thumb) : null,
-                  backgroundColor: Colors.transparent,)
+                GestureDetector(
+                  // onTap: () => context.pushReplacement('/user/${user?.id}'),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    child: CircleAvatar(backgroundImage: mainMessage ? CachedNetworkImageProvider(user!.thumb) : null,
+                    backgroundColor: Colors.transparent,)
+                  ),
                 ),
                 Flexible(
                   child: Container(

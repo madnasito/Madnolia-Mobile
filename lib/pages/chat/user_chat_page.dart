@@ -31,7 +31,9 @@ class UserChatPage extends StatelessWidget {
                     ..add(UserMessageFetched(messagesBody: UserMessagesBody(user: chatUser.id, skip: 0))),
                   child: Column(
                     children: [
-                      MoleculeUserHeader(user: chatUser),
+                      GestureDetector(
+                        onTap: () => GoRouter.of(context).pushReplacement("/user/${chatUser.id}"),
+                        child: MoleculeUserHeader(user: chatUser)),
                       Expanded(child: OrganismUserChatMessages(id: snapshot.data!.id, user: chatUser.id)),
                       const SizedBox(height: 3),
                       MoleculeChatInput(to: snapshot.data!.id, messageType: MessageType.user),

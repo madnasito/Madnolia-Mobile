@@ -2,28 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:madnolia/enums/connection-status.enum.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/user/simple_user_model.dart';
-import 'package:madnolia/widgets/atoms/buttons/common/atom_pending_button.dart';
-import 'package:madnolia/widgets/atoms/buttons/common/atom_request_button.dart';
-import 'package:madnolia/widgets/atoms/buttons/common/atom_requested_button.dart';
-import 'package:madnolia/widgets/atoms/buttons/common/atom_user_chat_button.dart';
+import '../../atoms/buttons/atom_buttons.dart';
 
-class MoleculeConnectionButton extends StatelessWidget {
 
+class MoleculeConnectionIconButton extends StatelessWidget {
   final SimpleUser simpleUser;
-  
-  const MoleculeConnectionButton({super.key, required this.simpleUser});
+  const MoleculeConnectionIconButton({super.key, required this.simpleUser});
 
   @override
   Widget build(BuildContext context) {
     switch (simpleUser.connection) {
       case ConnectionStatus.none:
-        return AtomRequestButton(userId: simpleUser.id,);
+        return AtomRequestIconButton(userId: simpleUser.id,);
       case ConnectionStatus.requestSent:
-        return AtomRequestedButton(simpleUser: simpleUser,);
+        return AtomRequestedIconButton(simpleUser: simpleUser,);
       case ConnectionStatus.requestReceived:
-        return AtomPendingButton(simpleUser: simpleUser);
+        return AtomPendingIconButton(simpleUser: simpleUser);
       case ConnectionStatus.partner:
-        return AtomUserChatButton(user: ChatUser(
+        return AtomUserChatIconButton(user: ChatUser(
           id: simpleUser.id,
           name: simpleUser.name,
           thumb: simpleUser.thumb,

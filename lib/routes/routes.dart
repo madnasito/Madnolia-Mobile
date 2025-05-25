@@ -26,6 +26,7 @@ import 'package:madnolia/pages/user/edit_user_page.dart';
 import 'package:madnolia/pages/user/user_matches_page.dart';
 import 'package:madnolia/pages/user/user_page.dart';
 import 'package:madnolia/pages/user/user_platforms.dart';
+import 'package:madnolia/pages/user/user_profile_page.dart';
 
 // import 'package:madnolia/pages/user/user_platforms.dart';
 
@@ -124,9 +125,12 @@ final GoRouter router = GoRouter(
           name: "joined",
           builder: (context, state) => const JoinedPage(),
         ),
+        GoRoute(path: 'user/:id',
+          builder: (context, state) => UserProfilePage(id: state.pathParameters['id'].toString())
+        ),
         GoRoute(
-            name: "user",
-            path: 'user',
+            name: "me",
+            path: 'me',
             builder: (BuildContext context, GoRouterState state) {
               return const UserPage();
             },

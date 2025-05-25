@@ -35,7 +35,7 @@ class CustomScaffold extends StatelessWidget {
           child: Stack(
             children: [
               GestureDetector(
-                onTap: () => GoRouter.of(context).pushReplacement("/user/edit"),
+                onTap: () => GoRouter.of(context).pushReplacement("/me/edit"),
                 child: Wrap(
                   spacing: 10,
                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -100,7 +100,7 @@ class CustomScaffold extends StatelessWidget {
                   _MenuButton(
                       icon: Icon(Icons.person_outline_outlined, size: 40, color: Colors.white),
                       title: translate("HEADER.PROFILE"),
-                      route: "/user"),
+                      route: "/me"),
                   const SizedBox(height: 230),
                 ],
               ),

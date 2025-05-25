@@ -2,30 +2,37 @@ import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:madnolia/services/database/user_db.dart';
 import 'package:madnolia/services/user_service.dart' show UserService;
 
+
 Future<UserDb> getUserDb(String id) async {
   try {
+    // Obtener usuario de la base de datos local
+    // await UserProvider.clearTable();
+    final existingUser  = await UserProvider.getUser(id);
+    final now = DateTime.now();
     
-    // Ensure database is properly initialized
-    
-    // Check if user exists
-
-    // await UserProvider._getDatabase()
-    final existingUser = await UserProvider.getUser(id);
-    if (existingUser != null) {
+    // Si el usuario existe y fue actualizado hace menos de una hora, devolverlo
+    if (existingUser != null && 
+        now.difference(existingUser.lastUpdated).inHours < 1) {
       return existingUser;
     }
     
-    // Fetch from service if not in DB
+    // Si no existe o necesita actualización, obtener del servicio
     final userInfo = await UserService().getUserInfoById(id);
-    final userDb = UserDb.fromMap(userInfo);
+    final userDb = UserDb.fromMap({
+      ...userInfo,
+      columnLastUpdated: now.millisecondsSinceEpoch, // Actualizar timestamp
+    });
     
-    // Insert and return
-    await UserProvider.insertUser(userDb);
+    // Insertar o actualizar en la base de datos
+    if (existingUser == null) {
+      await UserProvider.insertUser(userDb);
+    } else {
+      await UserProvider.updateUser(userDb);
+    }
+    
     return userDb;
   } catch (e) {
     debugPrint('Error in getUserDb: $e');
     rethrow;
-  } finally {
-    // Consider whether to close here or manage provider lifecycle differently
   }
 }

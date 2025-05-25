@@ -35,17 +35,17 @@ class UserMainView extends StatelessWidget {
         _Card(
           icon: Icons.person,
           title: translate("PROFILE.YOU"),
-          routeName: "/user/edit",
+          routeName: "/me/edit",
         ),
         _Card(
           icon: Icons.bolt,
           title: translate("PROFILE.MATCHES"),
-          routeName: "/user/matches",
+          routeName: "/me/matches",
         ),
         _Card(
           icon: Icons.gamepad_outlined,
           title: translate("PROFILE.PLATFORMS"),
-          routeName: "/user/platforms",
+          routeName: "/me/platforms",
         ),
         // _Card(
         //   icon: Icons.group_outlined,
@@ -87,7 +87,7 @@ class _Card extends StatelessWidget {
                   fontFamily: "Mashetic",
                   color: Colors.white),
             ),
-          trailing: Icon(Icons.arrow_forward_ios_rounded),
+          trailing: Icon(Icons.arrow_forward_ios_rounded),  
         )
       ),
     );

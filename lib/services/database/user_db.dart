@@ -8,6 +8,7 @@ final String columnName = 'name';
 final String columnUsername = 'username';
 final String columnThumb = 'thumb';
 final String columnConnection = 'connection';
+final String columnLastUpdated = 'last_updated'; // Nuevo campo añadido
 
 class UserDb {
   String id;
@@ -15,6 +16,7 @@ class UserDb {
   String username;
   String thumb;
   ConnectionStatus connection;
+  DateTime lastUpdated; // Nuevo campo añadido
 
   UserDb({
     required this.id,
@@ -22,6 +24,7 @@ class UserDb {
     required this.username,
     required this.thumb,
     required this.connection,
+    required this.lastUpdated, // Nuevo campo añadido
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +34,7 @@ class UserDb {
       columnUsername: username,
       columnThumb: thumb,
       columnConnection: connection.index,
+      columnLastUpdated: lastUpdated.millisecondsSinceEpoch, // Guardamos como timestamp
     };
   }
 
@@ -63,6 +67,7 @@ class UserDb {
       username: map[columnUsername],
       thumb: map[columnThumb],
       connection: connectionStatus,
+      lastUpdated: DateTime.fromMillisecondsSinceEpoch(map[columnLastUpdated] ?? 0), // Parseamos el timestamp
     );
   }
 
@@ -97,4 +102,13 @@ class UserProvider {
     await db.delete('users');
   }
 
+  static Future<int> updateUser(UserDb user) async {
+    final db = await BaseDatabaseProvider.database;
+    return await db.update(
+      tableUser,
+      user.toMap(),
+      where: '$columnId = ?',
+      whereArgs: [user.id],
+    );
+  }
 }

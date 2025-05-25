@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 
-class AtomRequestButton extends StatelessWidget {
+class AtomRequestIconButton extends StatelessWidget {
   final String userId;
-  const AtomRequestButton({super.key, required this.userId});
+  const AtomRequestIconButton({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
