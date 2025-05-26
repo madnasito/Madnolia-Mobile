@@ -40,7 +40,6 @@ class OrganismEditMatchForm extends StatelessWidget {
                 const AtomStyledText(text: "Edit match", style: presentationTitle),
                 const SizedBox(height: 30),
                 MoleculeTextField(
-                  formKey: formKey,
                   icon: Icons.abc_rounded,
                   name: "title",
                   initialValue: match.title,
@@ -104,7 +103,6 @@ class OrganismEditMatchForm extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 MoleculeTextField(
-                  formKey: formKey,
                   icon: Icons.description_outlined,
                   name: "description",
                   initialValue: match.description,

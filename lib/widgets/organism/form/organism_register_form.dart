@@ -31,7 +31,6 @@ class OrganismRegisterForm extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
               onChanged: (value) => changeScroll(false),
-              formKey: formKey,
               name: "name",
               label: translate("FORM.INPUT.NAME"),
               icon: Icons.abc_rounded,
@@ -46,7 +45,6 @@ class OrganismRegisterForm extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
               onChanged: (value) => changeScroll(false),
-              formKey: formKey,
               name: "username",
               label: translate("FORM.INPUT.USERNAME"),
               icon: Icons.account_circle_outlined,
@@ -61,7 +59,6 @@ class OrganismRegisterForm extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
               onChanged: (value) => changeScroll(false),
-              formKey: formKey,
               name: "email",
               label: translate("FORM.INPUT.EMAIL"),
               icon: Icons.email_outlined,
@@ -77,7 +74,6 @@ class OrganismRegisterForm extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
               onChanged: (value) => changeScroll(false),
-              formKey: formKey,
               name: "password",
               label: translate("FORM.INPUT.PASSWORD"),
               icon: Icons.lock_outline_rounded,

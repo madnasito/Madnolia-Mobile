@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 
@@ -19,7 +20,7 @@ class AtomUserChatButton extends StatelessWidget {
       children: [
         Icon(Icons.chat_bubble_outline_rounded),
         SizedBox(width: 8),
-        Text('Messages')
+        Text(translate('CHAT.MESSAGES'))
         ]
       ,)
      );

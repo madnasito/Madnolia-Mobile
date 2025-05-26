@@ -25,7 +25,6 @@ class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordFor
       child: Column(
         children: [
           MoleculeTextField(
-            formKey: formKey,
             keyboardType: TextInputType.emailAddress,
             name: "email",
             label: translate("REGISTER.EMAIL"),

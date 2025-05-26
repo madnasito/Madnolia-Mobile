@@ -19,6 +19,24 @@ void showAlert(BuildContext context, String message) {
       });
 }
 
+void showSuccesfulAlert(BuildContext context, String message) {
+  showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.black12,
+          icon: const Icon(Icons.check_rounded),
+          titleTextStyle: const TextStyle(color: Colors.white),
+          shape: RoundedRectangleBorder(side: const BorderSide(color: Colors.lightBlue, width: 2), borderRadius: BorderRadius.circular(20)),
+          iconColor: Colors.green,
+          title: Text(
+            message,
+          ),
+        );
+      });
+}
+
 void showErrorServerAlert(BuildContext context, Map resp){
 
   if( resp['message'] is String){

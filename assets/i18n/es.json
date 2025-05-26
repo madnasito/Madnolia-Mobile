@@ -149,11 +149,23 @@
             "SUCCESS": "¡Plataformas actualizadas!"
         }
     },
+    "REPORTS": {
+        "CREATED": "Reporte creado",
+        "REPORT_USER": "Reportar este usuario",
+        "REPORT_TO": "Reportar a",
+        "SELECT_TYPE": "Selecciona el tipo",
+        "SPAM": "Spam",
+        "CHILD_ABUSE": "Abuso de menores",
+        "SUBMIT": "Subir reporte"
+    },
     "UTILS":{
       "SHOW_MORE": "Mostrar más",
       "SHOW_LESS": "Mostrar menos",
       "DETAILS": "Detalles",
-      "ADMIN": "Admin"
+      "ADMIN": "Admin",
+      "DESCRIPTION": "Descripción",
+      "SELECT_FILE": "Seleccionar archivo",
+      "FILE": "Archivo"
     },
     "ALERT": {
         "YOU_SURE": "¿Estás seguro?",
@@ -172,13 +184,15 @@
         "MISSING_TOKEN": "Falta el token",
         "NO_MESSAGE": "No hay mensaje",
         "NOT_VALID_EXTENSION": "Extensión no valida",
-        "INVALID_DATE": "Fecha invalida"
+        "INVALID_DATE": "Fecha invalida",
+        "REPORT_EXISTS": "Espera \n Ya has reportado a este usuario"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verifica tu conexión"
     },
     "LOCAL": {
-      "LOADING_USERS": "Error cargando usuarios"
+      "LOADING_USERS": "Error cargando usuarios",
+      "LOADING_USER": "Error cargando usuario"
     }
   },
   "SHARE": {

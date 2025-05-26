@@ -21,7 +21,6 @@ class OrganismLoginForm extends StatelessWidget {
       child: Column(
         children: [
         MoleculeTextField(
-          formKey: formKey,
           label: translate("REGISTER.USERNAME"),
           name: "username",
           icon: Icons.person_2_outlined,
@@ -31,7 +30,6 @@ class OrganismLoginForm extends StatelessWidget {
         ),
         const SizedBox(height: 15),
         MoleculeTextField(
-          formKey: formKey,
           label: translate("REGISTER.PASSWORD"),
           name: "password",
           isPassword: true,

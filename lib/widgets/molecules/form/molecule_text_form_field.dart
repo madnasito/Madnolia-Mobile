@@ -9,28 +9,30 @@ class MoleculeTextField extends StatelessWidget {
   final String name;
   final String label;
   final TextInputType keyboardType;
-  final GlobalKey<FormBuilderState> formKey;
   final String? initialValue;
   final bool isPassword;
   final IconData? icon;
   final String? Function(String?)? validator;
   final int delay;
   final bool enabled;
+  final bool readOnly;
   final AutovalidateMode autovalidateMode;
   final Function(String?)? onChanged;
+  final Function()? onTap;
   const MoleculeTextField( {
     super.key,
-    required this.formKey,
     required this.name,
     required this.label,
     this.keyboardType = TextInputType.text,
     this.icon,
     this.validator,
+    this.readOnly = false,
     this.isPassword = false, this.initialValue,
     this.delay = 300,
     this.enabled = true,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
-    this.onChanged
+    this.onChanged,
+    this.onTap
   });
 
   @override
@@ -56,6 +58,8 @@ class MoleculeTextField extends StatelessWidget {
         ),
         autovalidateMode: autovalidateMode,
         validator: validator,
+        onTap: onTap,
+        readOnly: readOnly,
       ),
     );
   }
