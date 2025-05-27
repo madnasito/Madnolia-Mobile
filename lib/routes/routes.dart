@@ -166,9 +166,8 @@ final GoRouter router = GoRouter(
           ],
         ),
         GoRoute(
-          path: "match",
-          name: "match",
-          builder: (context, state) => const MatchPage(),
+          path: "match/:id",
+          builder: (context, state) => MatchPage(id: state.pathParameters['id'].toString()),
           routes: [
             GoRoute(
               name: "match_call",

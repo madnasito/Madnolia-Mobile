@@ -57,7 +57,7 @@ class LocalNotificationsService {
           try {
             MinimalMatchDb matchDb = MinimalMatchDb.fromJson(details.payload!);
             final context = navigatorKey.currentContext;
-            GoRouter.of(context!).pushNamed("match", extra: matchDb.id);
+            GoRouter.of(context!).push("/match/${matchDb.id}");
           } catch (e) {
             debugPrint(e.toString());
           }
@@ -72,7 +72,7 @@ class LocalNotificationsService {
                 if(context!.mounted) GoRouter.of(context).pushNamed("user_chat", extra: chatUser);
                 break;
               default:
-                 GoRouter.of(context!).pushNamed("match", extra: message.to);
+                 GoRouter.of(context!).push("/match/${message.to}");
 
             }
           } catch (e) {
@@ -546,7 +546,7 @@ class LocalNotificationsService {
   static void notificationTapBackground(NotificationResponse notificationResponse) {      
       if (notificationResponse.payload != null) {
         final context = navigatorKey.currentContext;
-        GoRouter.of(context!).pushNamed("match", extra: notificationResponse.payload);
+        GoRouter.of(context!).push("/match/${notificationResponse.payload}");
       }
       
   }

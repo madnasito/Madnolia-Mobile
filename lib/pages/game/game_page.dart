@@ -113,7 +113,7 @@ class GamePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20)),
                       child: ListTile(
                         onTap: () => GoRouter.of(context)
-                            .push("/match", extra: matches[index].id),
+                            .push("/match/${matches[index].id}"),
                         title: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -31,7 +31,7 @@ class AtomInvitationNotification extends StatelessWidget {
                   overflow: TextOverflow.ellipsis, // Handle long text
                 )),
               trailing: Icon(Icons.arrow_forward_ios_outlined),
-              onTap: () => context.pushNamed('match', extra: notification.path),
+              onTap: () => context.push('/match/${notification.path}'),
             ),
               );
             } else {

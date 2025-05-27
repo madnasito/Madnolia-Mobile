@@ -17,7 +17,7 @@ class MoleculeMatchesList extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             GoRouter.of(context)
-                .push('/match', extra: matches[index].id);
+                .push('/match/${matches[index].id}',);
           },
           child: MatchCard(
               match: matches[index],
