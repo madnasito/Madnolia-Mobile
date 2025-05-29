@@ -90,7 +90,8 @@
         "DURATION": "Duración"
     },
     "MATCH": {
-        "MATCH_UPDATED": "Partida actualizada"
+        "MATCH_UPDATED": "Partida actualizada",
+        "ERROR_LOADING": "Error cargando partida"
     },
     "CHAT": {
         "MESSAGES": "Mensajes",

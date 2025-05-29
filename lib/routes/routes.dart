@@ -1,4 +1,6 @@
 
+import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/pages/auth/recover_password_page.dart';
 import 'package:madnolia/pages/chat/user_chat_page.dart';
 import 'package:madnolia/pages/chat/chats_page.dart';
@@ -47,8 +49,11 @@ final GoRouter router = GoRouter(
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasData) {
                 return const HomeUserPage();
-              } else {
+              } else if(snapshot.hasError) {
                 return const HomePage();
+              }
+              else {
+                return const Center(child: CircularProgressIndicator(),);
               }
             });
       },
@@ -167,7 +172,20 @@ final GoRouter router = GoRouter(
         ),
         GoRoute(
           path: "match/:id",
-          builder: (context, state) => MatchPage(id: state.pathParameters['id'].toString()),
+          builder: (context, state) {
+            return FutureBuilder(
+              future: getToken(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.hasData) {
+                  return MatchPage(id: state.pathParameters['id'].toString());
+                } else if(snapshot.hasError){
+                  return Center(child: Text(translate('MATCH.ERROR_LOADING')));
+                }else {
+                  return Center(child: CircularProgressIndicator(),);
+                }
+              }
+            );
+          },
           routes: [
             GoRoute(
               name: "match_call",
@@ -185,9 +203,17 @@ final GoRouter router = GoRouter(
 );
 
 Future<String?> getToken() async {
-  const storage = FlutterSecureStorage();
 
-  final token = await storage.read(key: "token");
+  try {
+    
+    const storage = FlutterSecureStorage();
 
-  return token;
+    final token = await storage.read(key: "token");
+
+    if(token == null) throw 'No token';
+
+    return token;
+  } catch (e) {
+    rethrow;
+  }
 }

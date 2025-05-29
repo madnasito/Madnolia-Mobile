@@ -96,7 +96,8 @@
       "DURATION": "Duration"
   },
   "MATCH": {
-    "MATCH_UPDATED": "Match updated"
+    "MATCH_UPDATED": "Match updated",
+    "ERROR_LOADING": "Error loading match"
   },
   "CHAT": {
     "MESSAGES": "Messages",

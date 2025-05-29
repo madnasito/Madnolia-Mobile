@@ -63,7 +63,7 @@ class AtomUserChat extends StatelessWidget {
         }else if(snapshot.hasError) {
           return Center(child: Text('Error loading this user'));
         } else{
-          return CircularProgressIndicator();
+          return CircularProgressIndicator.adaptive();
         }
       },
        
