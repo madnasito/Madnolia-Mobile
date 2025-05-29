@@ -1,6 +1,7 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
@@ -21,26 +22,57 @@ import 'package:madnolia/widgets/custom_scaffold.dart';
 
 import '../../services/sockets_service.dart';
 
-class HomeUserPage extends StatelessWidget {
+class HomeUserPage extends StatefulWidget {  // Changed to StatefulWidget
   const HomeUserPage({super.key});
 
   @override
+  State<HomeUserPage> createState() => _HomeUserPageState();
+}
+
+class _HomeUserPageState extends State<HomeUserPage> {
+  int _retryCount = 0;
+  final int _maxRetries = 3;
+  late Future<dynamic> _loadInfoFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInfoFuture = _loadInfo(context);
+  }
+
+  void _retryLoadInfo() {
+    if (_retryCount < _maxRetries) {
+      setState(() {
+        _retryCount++;
+        _loadInfoFuture = _loadInfo(context);
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    
     final platformGamesCubit = context.watch<PlatformGamesCubit>();
-    return  CustomScaffold(
+    
+    return CustomScaffold(
       body: CustomMaterialIndicator(
         autoRebuild: false,
-        onRefresh: () async{ 
-          // setState(() { 
-            platformGamesCubit.cleanData();
-            // print(platformGamesCubit.state.data);
-          // });
-         },
+        onRefresh: () async {
+          platformGamesCubit.cleanData();
+          _retryLoadInfo(); // Also retry when manually refreshing
+        },
         child: FutureBuilder(
-          future: _loadInfo(context),
+          future: _loadInfoFuture,
           builder: (context, snapshot) {
-            if(snapshot.hasData){
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError || snapshot.data == null) {
+              return Center(
+                child: ElevatedButton(
+                      onPressed: _retryLoadInfo,
+                      child: Text(translate('UTILS.RELOAD')),
+                    ),
+              );
+            } else if (snapshot.hasData) {
               final userBloc = context.watch<UserBloc>().state;
               return ListView.builder(
                 cacheExtent: 9999999,
@@ -49,7 +81,7 @@ class HomeUserPage extends StatelessWidget {
                 itemCount: userBloc.platforms.length,
                 itemBuilder: (BuildContext context, int platformIndex) {
                   return Column(
-                    children:[ 
+                    children: [
                       kDebugMode ? SizedBox() : const AtomBannerAd(),
                       Container(
                         width: double.infinity,
@@ -64,84 +96,71 @@ class HomeUserPage extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SvgPicture.asset(
-                              getPlatformInfo(userBloc.platforms[platformIndex]).path,
-                              width: 90,
-                              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                            ))],
+                                getPlatformInfo(userBloc.platforms[platformIndex]).path,
+                                width: 90,
+                                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       MoleculePlatformMatches(platform: userBloc.platforms[platformIndex])
-                    ]
+                    ],
                   );
-                }
-                );
-            } else if(!snapshot.hasData){
-              return const Center(child: CircularProgressIndicator());
-            }else if(snapshot.hasError){
-              return const Center(child: Text("Check your connection"));
-            }else{
-              return const Placeholder();
+                },
+              );
             }
+            return const Placeholder();
           },
         ),
       ),
     );
   }
-  
-  _loadInfo(BuildContext context) async {
-    try {
-      debugPrint('Se llamo a la carga de info');
-      await LocalNotificationsService.initialize();
-        if (!context.mounted) return;
-      final userBloc = context.read<UserBloc>();
 
+  Future<dynamic> _loadInfo(BuildContext context) async {
+    try {
+      debugPrint('Loading info... Attempt ${_retryCount + 1}/$_maxRetries');
+      await LocalNotificationsService.initialize();
+      if (!context.mounted) return null;
+
+      final userBloc = context.read<UserBloc>();
       const storage = FlutterSecureStorage();
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
 
       if (userInfo.containsKey("error")) {
-        // Check if the widget is still mounted before using context
-        if (!context.mounted) return;
-        return showErrorServerAlert(context, userInfo);
-      }else if (userInfo.containsKey("message")){
+        if (!context.mounted) return null;
+        showErrorServerAlert(context, userInfo);
+        throw Exception("Server error");
+      } else if (userInfo.containsKey("message")) {
         await storage.delete(key: "token");
         userBloc.logOutUser();
-        
-        // Check if the widget is still mounted before using context
-          if (!context.mounted) return;
-          return context.go("/home");
+        if (!context.mounted) return null;
+        context.go("/home");
+        return null;
       }
-
 
       final backgroundService = FlutterBackgroundService();
-
-      if(await backgroundService.isRunning() == false){
+      if (await backgroundService.isRunning() == false) {
         await initializeService();
       }
-      
+
       if (userInfo.isEmpty) {
         await storage.delete(key: "token");
         userBloc.logOutUser();
-        
-        // Check if the widget is still mounted before using context
-          if (!context.mounted) return;
-          return context.go("/home");
-        
+        if (!context.mounted) return null;
+        context.go("/home");
+        return null;
       }
 
       final User user = User.fromJson(userInfo);
-      
       final int unreadNotificationsCount = await NotificationsService().getNotificationsCount();
-
       userBloc.updateNotifications(unreadNotificationsCount);
-
       userBloc.loadInfo(user);
       
       return userInfo;
     } catch (e) {
-      debugPrint(e.toString());
-      return null;
+      debugPrint("Load error: $e");
+      rethrow;
     }
   }
 }
-
-

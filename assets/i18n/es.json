@@ -166,7 +166,8 @@
       "ADMIN": "Admin",
       "DESCRIPTION": "Descripción",
       "SELECT_FILE": "Seleccionar archivo",
-      "FILE": "Archivo"
+      "FILE": "Archivo",
+      "RELOAD": "Recargar"
     },
     "ALERT": {
         "YOU_SURE": "¿Estás seguro?",

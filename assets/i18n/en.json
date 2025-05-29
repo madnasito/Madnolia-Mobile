@@ -172,7 +172,8 @@
       "ADMIN": "Admin",
       "DESCRIPTION": "Description",
       "SELECT_FILE": "Select file",
-      "FILE": "File"
+      "FILE": "File",
+      "RELOAD": "Reload"
   },
   "ALERT": {
     "YOU_SURE": "Are you sure?",
