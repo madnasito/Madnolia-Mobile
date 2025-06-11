@@ -1,9 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImageProvider;
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/database/providers/friendship_db.dart';
+import 'package:madnolia/database/providers/user_db.dart';
+import 'package:madnolia/database/services/friendship-db.service.dart';
+import 'package:madnolia/enums/message-status.enum.dart';
 import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
-import 'package:madnolia/utils/user_db_util.dart';
+import 'package:madnolia/database/services/user-db.service.dart';
+
 
 class AtomUserChat extends StatelessWidget {
   final UserChat userChat;
@@ -15,58 +22,94 @@ class AtomUserChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  FutureBuilder(
-      future: getUserDb(userChat.user),
-      builder: (context, snapshot) {
-        if(snapshot.hasData) {
-          return Container(
-            decoration: BoxDecoration(
-              color: Colors.black45, // Darker background
-              borderRadius: BorderRadius.circular(12), // Optional rounded corners
-            ),
-            margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8), // Add some spacing
-            child: ListTile(
-              trailing: Icon(Icons.message_rounded),
-              onTap: () => context.pushNamed(
-                "user_chat", 
-                extra: ChatUser(
-                  id: snapshot.data!.id,
-                  name: snapshot.data!.name,
-                  thumb: snapshot.data!.thumb,
-                  username: snapshot.data!.username)
-                ,
-              ),
-              leading: CircleAvatar(
-                radius: 20,
-                backgroundImage: CachedNetworkImageProvider(snapshot.data!.thumb),
-                backgroundColor: Colors.grey[800], // Fallback color if image fails
-              ),
-              title: Text(
-                snapshot.data!.name,
-                style: TextStyle(
-                  color: Colors.white, // White text for better contrast
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              subtitle: Text(
-                userChat.lastMessage.text,
-                style: TextStyle(
-                  color: Colors.grey[300], // Lighter grey for subtitle
-                  overflow: TextOverflow.ellipsis, // Handle long text
-                ),
-              ),
-              tileColor: Colors.transparent, // Make ListTile transparent to show container color
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12), // Inner padding
-              dense: true, // Makes the tile more compact
-            ),
-          );
-        }else if(snapshot.hasError) {
-          return Center(child: Text('Error loading this user'));
-        } else{
-          return CircularProgressIndicator.adaptive();
+    return FutureBuilder<FriendshipDb>(
+      future: FriendshipService().getFriendship(userChat.id),
+      builder: (BuildContext context, AsyncSnapshot<FriendshipDb> friendshipSnapshot) {
+        // Manejo de estados del primer FutureBuilder
+        if (friendshipSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
         }
+        
+        if (friendshipSnapshot.hasError) {
+          return Center(child: Text('Error loading chat: ${friendshipSnapshot.error}'));
+        }
+        
+        if (!friendshipSnapshot.hasData) {
+          return const Center(child: Text('No friendship data'));
+        }
+
+        final friendship = friendshipSnapshot.data!;
+        final userId = context.read<UserBloc>().state.id;
+        final String notMe = friendship.user1 == userId ? friendship.user2 : friendship.user1;
+
+
+        // Segundo FutureBuilder para obtener los datos del usuario
+        return FutureBuilder<UserDb>(
+          future: getUserDb(notMe),
+          builder: (context, AsyncSnapshot<UserDb> snapshot) {
+            // Manejo de estados del segundo FutureBuilder
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            
+            if (snapshot.hasError) {
+              return Center(child: Text('Error loading user: ${snapshot.error}'));
+            }
+            
+            if (!snapshot.hasData) {
+              return const Center(child: Text('No user data'));
+            }
+
+            final user = snapshot.data!;
+            
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.black45,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              child: ListTile(
+                trailing: iReadThat(notMe) ? Icon(Icons.circle, color: Colors.yellow[400],) : null,
+                onTap: () => context.pushNamed(
+                  "user_chat", 
+                  extra: ChatUser(
+                    id: user.id,
+                    name: user.name,
+                    thumb: user.thumb,
+                    username: user.username,
+                  ),
+                ),
+                leading: CircleAvatar(
+                  radius: 20,
+                  backgroundImage: CachedNetworkImageProvider(user.thumb),
+                  backgroundColor: Colors.grey[800],
+                ),
+                title: Text(
+                  user.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                subtitle: Text(
+                  userChat.message.text,
+                  style: TextStyle(
+                    color: iReadThat(notMe) ? Colors.white : Colors.grey[300],
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                tileColor: Colors.transparent,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                dense: true,
+              ),
+            );
+          },
+        );
       },
-       
     );
+  }
+
+  bool iReadThat(String notMyId) {
+    return userChat.message.status == ChatMessageStatus.sent && userChat.message.creator == notMyId;
   }
 }

@@ -1,5 +1,5 @@
 import 'package:madnolia/blocs/blocs.dart';
-import 'package:madnolia/services/database/user_db.dart';
+import 'package:madnolia/database/providers/user_db.dart';
 import 'package:madnolia/widgets/molecules/chat_message_molecule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

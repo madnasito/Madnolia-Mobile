@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
-import 'package:madnolia/utils/user_db_util.dart';
+import 'package:madnolia/database/services/user-db.service.dart';
 
 class AtomInvitationNotification extends StatelessWidget {
   final NotificationModel notification;

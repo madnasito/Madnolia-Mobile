@@ -5,6 +5,7 @@ enum MessageStatus { initial, success, failure }
 final class MessageState extends Equatable {
   
   final MessageStatus status;
+  final int unreadUserChats;
   final List<ChatMessage> userMessages;
   final List<ChatMessage> groupMessages;
   final List<UserDb> users;
@@ -12,6 +13,7 @@ final class MessageState extends Equatable {
 
   const MessageState({
     this.status = MessageStatus.initial,
+    this.unreadUserChats = 0,
     this.userMessages = const <ChatMessage>[],
     this.groupMessages = const <ChatMessage>[],
     this.users = const <UserDb>[],
@@ -21,6 +23,7 @@ final class MessageState extends Equatable {
 
   MessageState copyWith({
     MessageStatus? status,
+    int? unreadUserChats,
     List<ChatMessage>? userMessages,
     List<ChatMessage>? groupMessages,
     List<UserDb>? users,
@@ -28,6 +31,7 @@ final class MessageState extends Equatable {
   }) {
     return MessageState(
       status: status ?? this.status,
+      unreadUserChats: unreadUserChats ?? this.unreadUserChats,
       userMessages: userMessages ?? this.userMessages,
       groupMessages: groupMessages ?? this.groupMessages,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
@@ -42,7 +46,7 @@ final class MessageState extends Equatable {
 
   
   @override
-  List<Object> get props => [status, userMessages, groupMessages, hasReachedMax, users];
+  List<Object> get props => [status, unreadUserChats, userMessages, groupMessages, hasReachedMax, users];
 }
 
 final class MessageInitial extends MessageState {}

@@ -36,7 +36,7 @@ class UserChatPage extends StatelessWidget {
                         child: MoleculeUserHeader(user: chatUser)),
                       Expanded(child: OrganismUserChatMessages(id: snapshot.data!.id, user: chatUser.id)),
                       const SizedBox(height: 3),
-                      MoleculeChatInput(to: snapshot.data!.id, messageType: MessageType.user),
+                      MoleculeChatInput(conversation: snapshot.data!.id, messageType: MessageType.user),
                       const SizedBox(height: 5),
                     ],
                   ),

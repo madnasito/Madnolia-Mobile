@@ -1,23 +1,32 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:synchronized/synchronized.dart' show Lock;
 
-
+// Tablas y columnas
 final String tableMatch = 'matches';
+final String tableUser = 'users';
+final String tableFriendship = 'friendships';
+
+// Columnas comunes
 final String columnId = '_id';
+
+// Columnas específicas
 final String columnTitle = 'title';
 final String columnPlatform = 'platform';
 final String columnDate = 'date';
-final String tableUser = 'users';
 final String columnName = 'name';
 final String columnUsername = 'username';
 final String columnThumb = 'thumb';
 final String columnConnection = 'connection';
 final String columnLastUpdated = 'last_updated';
-
+final String columnUser1 = 'user1';
+final String columnUser2 = 'user2';
+final String columnStatus = 'status';
+final String columnCreatedAt = 'createdAt';
 
 abstract class BaseDatabaseProvider {
   static Database? _database;
   static final _lock = Lock();
+  static const _databaseVersion = 1; // Incrementado por la nueva tabla
 
   static Future<Database> get database async {
     await _lock.synchronized(() async {
@@ -34,14 +43,11 @@ abstract class BaseDatabaseProvider {
 
     _database = await openDatabase(
       path,
-      version: 1, // Increment when schema changes
+      version: _databaseVersion,
       onCreate: (db, version) async {
         await _createUserTable(db);
         await _createMatchTable(db);
-        // Add other tables here
-      },
-      onUpgrade: (db, oldVersion, newVersion) async {
-        // Handle migrations here
+        await _createFriendshipTable(db);
       },
     );
   }
@@ -54,7 +60,7 @@ abstract class BaseDatabaseProvider {
         $columnUsername TEXT NOT NULL,
         $columnThumb TEXT NOT NULL,
         $columnConnection INTEGER NOT NULL,
-        $columnLastUpdated INTEGER NOT NULL DEFAULT 0
+        $columnLastUpdated INTEGER NOT NULL
       )
     ''');
     await db.execute('''
@@ -70,6 +76,33 @@ abstract class BaseDatabaseProvider {
         $columnPlatform INTEGER NOT NULL,
         $columnDate INTEGER NOT NULL
       )
+    ''');
+  }
+
+  static Future<void> _createFriendshipTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $tableFriendship (
+        $columnId TEXT PRIMARY KEY,
+        $columnUser1 TEXT NOT NULL,
+        $columnUser2 TEXT NOT NULL,
+        $columnStatus INTEGER NOT NULL,
+        $columnCreatedAt TEXT NOT NULL,
+        $columnLastUpdated TEXT NOT NULL
+      )
+    ''');
+    
+    // Crear índices para la tabla de amistades
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_friendship_user1 
+      ON $tableFriendship($columnUser1)
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_friendship_user2 
+      ON $tableFriendship($columnUser2)
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_friendship_status 
+      ON $tableFriendship($columnStatus)
     ''');
   }
 

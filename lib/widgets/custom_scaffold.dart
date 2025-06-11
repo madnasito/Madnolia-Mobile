@@ -20,6 +20,7 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     
     final userBloc = context.read<UserBloc>();
+    final messageBloc = context.read<MessageBloc>();
     final backgroundService = FlutterBackgroundService();
 
     backgroundService.on("new_request_connection").listen((onData) {
@@ -88,8 +89,16 @@ class CustomScaffold extends StatelessWidget {
                         translate("HEADER.NOTIFICATIONS"),
                     route: "/notifications",
                   ),
-                  const _MenuButton(
-                    icon: Icon(Icons.chat_bubble_outline_rounded, size: 40, color: Colors.white),
+                  _MenuButton(
+                    icon: messageBloc.state.unreadUserChats == 0 ? Icon(Icons.chat_bubble_outline_rounded,size: 40, color: Colors.white ) : Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Icon(Icons.chat_bubble_rounded,size: 40, color: Colors.pink ),
+                        Positioned(
+                          bottom: 12,
+                          child: Text(messageBloc.state.unreadUserChats > 9 ? '9+' : messageBloc.state.unreadUserChats.toString(), style: TextStyle(color: Colors.white, fontSize: 14)))
+                      ] 
+                    ),
                     title: "Chat",
                     route: "/chat",
                   ),

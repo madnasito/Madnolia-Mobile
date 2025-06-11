@@ -3,9 +3,9 @@ import 'package:bloc_concurrency/bloc_concurrency.dart' show droppable;
 import 'package:equatable/equatable.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
-import 'package:madnolia/services/database/user_db.dart' show UserDb;
+import 'package:madnolia/database/providers/user_db.dart' show UserDb;
 import 'package:madnolia/services/messages_service.dart';
-import 'package:madnolia/utils/user_db_util.dart';
+import 'package:madnolia/database/services/user-db.service.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 part 'message_event.dart';
@@ -28,6 +28,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     
     on<AddIndividualMessage>(_addIndividualMessage);
     on<AddRoomMessage>(_addRoomMessage);
+
+    on<UpdateUnreadUserChatCount>(_updateUnreadUserChatsCount);
 
     on<RestoreState>(_restoreState);
   }
@@ -72,7 +74,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         List<UserDb> chatUsers = [];
         chatUsers.addAll(state.users);
 
-        users = messages.map((e) => e.user).toList();
+        users = messages.map((e) => e.creator).toList();
 
         users = users.toSet().toList();
 
@@ -97,6 +99,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     emit(
       state.copyWith(
       status: MessageStatus.initial,
+      unreadUserChats: 0,
       userMessages: [],
       groupMessages: [],
       hasReachedMax: false
@@ -114,7 +117,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     List<UserDb> chatUsers = [];
     chatUsers.addAll(state.users);
 
-    final userDb = await getUserDb(event.message.user);
+    final userDb = await getUserDb(event.message.creator);
     if(!chatUsers.contains(userDb)) chatUsers.add(userDb);
 
     emit(
@@ -123,5 +126,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         users: chatUsers
       )
     );
-  } 
+  }
+
+  void _updateUnreadUserChatsCount(UpdateUnreadUserChatCount event, Emitter<MessageState> emit) =>
+  emit(
+    state.copyWith(
+      unreadUserChats: state.unreadUserChats + event.value
+    )
+  );
 }

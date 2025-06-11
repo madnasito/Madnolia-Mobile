@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final userChat = userChatFromJson(jsonString);
+
 import 'dart:convert';
 
 import 'package:madnolia/models/chat/message_model.dart';
@@ -8,24 +12,24 @@ String userChatToJson(UserChat data) => json.encode(data.toJson());
 
 class UserChat {
     String id;
-    String user;
-    ChatMessage lastMessage;
+    int unreadCount;
+    ChatMessage message;
 
     UserChat({
         required this.id,
-        required this.user,
-        required this.lastMessage,
+        required this.unreadCount,
+        required this.message,
     });
 
     factory UserChat.fromJson(Map<String, dynamic> json) => UserChat(
         id: json["_id"],
-        user: json["user"],
-        lastMessage: ChatMessage.fromJson(json["lastMessage"]),
+        unreadCount: json["unreadCount"],
+        message: ChatMessage.fromJson(json["message"]),
     );
 
     Map<String, dynamic> toJson() => {
         "_id": id,
-        "user": user,
-        "lastMessage": lastMessage.toJson(),
+        "unreadCount": unreadCount,
+        "message": message.toJson(),
     };
 }

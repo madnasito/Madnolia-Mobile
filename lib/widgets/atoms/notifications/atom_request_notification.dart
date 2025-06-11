@@ -4,7 +4,7 @@ import 'package:flutter_background_service/flutter_background_service.dart' show
 import 'package:madnolia/enums/connection-status.enum.dart' show ConnectionStatus;
 import 'package:madnolia/models/notification/notification_model.dart';
 import 'package:madnolia/models/user/simple_user_model.dart' show SimpleUser;
-import 'package:madnolia/utils/user_db_util.dart';
+import 'package:madnolia/database/services/user-db.service.dart';
 
 class AtomRequestNotification extends StatelessWidget {
 

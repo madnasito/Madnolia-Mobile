@@ -88,6 +88,6 @@ class MoleculeMatchChatInput extends StatelessWidget {
 
   void _handleSubmit(String text) {
     if (text.isEmpty) return;
-    socketClient.emit("message", {"text": text, "room": match.id});
+    socketClient.emit("message", {"text": text, "conversation": match.id, "type": 2});
   }
 }

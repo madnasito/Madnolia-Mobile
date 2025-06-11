@@ -1,0 +1,4 @@
+enum FriendshipStatus {
+  alive,
+  broke
+}

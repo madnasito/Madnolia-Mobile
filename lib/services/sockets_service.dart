@@ -58,11 +58,13 @@ onStart(ServiceInstance service) async {
       if(currentRoom != payload["to"] && payload["type"] != 0 && payload["text"].contains("@$username")){
         ChatMessage message =ChatMessage.fromJson(payload);
         LocalNotificationsService.displayRoomMessage(message);
-      } else if(payload["type"] == 0 && payload['user'] != userId) {
+      } else if(currentRoom != payload["to"] && payload["type"] == 0 && payload['creator'] != userId) {
         final ChatMessage message = ChatMessage.fromJson(payload);
         LocalNotificationsService.displayUserMessage(message);
       }
     });
+  
+  socket.on("update_recipient_status", (data) => service.invoke("update_recipient_status", data));
 
   socket.on("invitation", (data) async {
       try {
@@ -133,6 +135,8 @@ onStart(ServiceInstance service) async {
   );
 
   service.on("new_message").listen((onData) => socket.emit("message", onData));
+
+  service.on("update_recipient_status").listen((onData) => socket.emit("update_recipient_status", onData));
 
   service.on("disconnect_chat").listen((onData) {
     socket.emit("disconnect_chat");

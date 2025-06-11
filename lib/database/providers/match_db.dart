@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:madnolia/services/database/db_provider.dart';
+import 'package:madnolia/database/providers/db_provider.dart';
 
 final String tableMatch = 'matches';
 final String columnId = '_id';

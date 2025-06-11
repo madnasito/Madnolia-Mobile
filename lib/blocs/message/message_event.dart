@@ -36,3 +36,8 @@ final class AddUser extends MessageEvent {
   final String userId;
   const AddUser( { required this.userId });
 }
+
+final class UpdateUnreadUserChatCount extends MessageEvent {
+  final int value;
+  const UpdateUnreadUserChatCount({required this.value});
+}

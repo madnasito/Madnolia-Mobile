@@ -1,4 +1,4 @@
-import 'dart:async';
+import 'dart:async' show StreamSubscription;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
@@ -40,6 +40,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
         _addMessage(onData);
       }
     });
+
   }
 
   void _addMessage(Map<String, dynamic> onData) {
@@ -48,7 +49,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
     try {
       final message = ChatMessage.fromJson(onData);
 
-      if (message.to == widget.id)  {
+      if (message.conversation == widget.id)  {
         _messageBloc.add(AddIndividualMessage(message: message));
       }
     } catch (e) {

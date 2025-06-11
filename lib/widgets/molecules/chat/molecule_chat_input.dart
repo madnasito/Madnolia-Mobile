@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
-import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/widgets/atoms/input/atom_chat_input.dart';
 
 class MoleculeChatInput extends StatefulWidget {
-  final String to;
+  final String conversation;
   final MessageType messageType;
-  const MoleculeChatInput({super.key, required this.to, required this.messageType});
+  const MoleculeChatInput({super.key, required this.conversation, required this.messageType});
 
   @override
   State<MoleculeChatInput> createState() => _MoleculeChatInputState();
@@ -51,7 +50,13 @@ class _MoleculeChatInputState extends State<MoleculeChatInput> {
               
               if(inputController.text.isEmpty) return;
 
-              backgroundService.invoke("new_message",CreateMessage(to: widget.to, text: inputController.text, type: widget.messageType).toJson());
+              // final CreateMessage message = CreateMessage(conversation: widget.conversation, text: inputController.text, type: widget.messageType);
+
+              // backgroundService.invoke("new_message",message.toJson());
+              backgroundService.invoke(
+                "new_message", 
+                {"text": inputController.text, "conversation": widget.conversation, "type": 0}
+              );
 
               inputController.text = '';
             },),

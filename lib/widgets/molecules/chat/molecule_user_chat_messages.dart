@@ -17,7 +17,7 @@ class MoleculeUserChatMessagesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      shrinkWrap: false,
+      cacheExtent: 9999,
       addAutomaticKeepAlives: true,
       reverse: true,
       itemBuilder: (context, index) {

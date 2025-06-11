@@ -14,7 +14,8 @@ import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:madnolia/services/database/db_provider.dart';
+import 'package:madnolia/database/providers/db_provider.dart';
+import 'package:madnolia/services/sockets_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +40,12 @@ void main() async {
     supportedLocales: supportedLangs,
   );
 
+  try {
+    await getToken();
+    await initializeService();
+  } catch (e) {
+    debugPrint(e.toString());
+  }
 
   unawaited(MobileAds.instance.initialize());
   MobileAds.instance.initialize();

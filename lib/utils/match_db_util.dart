@@ -1,5 +1,5 @@
 import 'package:madnolia/models/match/minimal_match_model.dart' show MinimalMatch;
-import 'package:madnolia/services/database/match_db.dart' show MatchProvider, MinimalMatchDb;
+import 'package:madnolia/database/providers/match_db.dart' show MatchProvider, MinimalMatchDb;
 import 'package:madnolia/services/match_service.dart' show MatchService;
 
 Future<MinimalMatchDb?> getMatchDb (String id) async {

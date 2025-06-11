@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:madnolia/services/database/db_provider.dart' show BaseDatabaseProvider;
+import 'package:madnolia/database/providers/db_provider.dart' show BaseDatabaseProvider;
 import 'package:madnolia/enums/connection-status.enum.dart';
 
 final String tableUser = 'users';

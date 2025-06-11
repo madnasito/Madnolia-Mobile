@@ -16,7 +16,7 @@ import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
-import '../../services/database/user_db.dart' show UserDb;
+import '../../database/providers/user_db.dart' show UserDb;
 
 import '../../models/match/full_match.model.dart';
 
@@ -233,10 +233,9 @@ class _ViewMatchState extends State<ViewMatch> {
 
   void _handleSubmit(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey) {
     if (bloc.message.isEmpty) return;
-    debugPrint("¡Invoking new message from view!");
     backgroundService.invoke(
       "new_message", 
-      {"text": bloc.message, "to": widget.match.id, "type": 2}
+      {"text": bloc.message, "conversation": widget.match.id, "type": 2}
     );
     bloc.changeMessage("");
     messageKey.currentState?.controller?.clear();
@@ -271,11 +270,13 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
 
   void _setupMessageListener() {
     _messageSubscription = _backgroundService.on("message").listen((onData) {
-      if (!mounted) return; // Verifica si el widget está montado
+
+    debugPrint("¡Invoking new message from view!");
+      // if (!mounted) return; // Verifica si el widget está montado
       
       if (onData != null) {
         final message = ChatMessage.fromJson(onData);
-        if (message.to == widget.room && 
+        if (message.conversation == widget.room && 
             (_messageBloc.state.groupMessages.isEmpty || 
              message.id != _messageBloc.state.groupMessages[0].id)) {
           _messageBloc.add(AddRoomMessage(message: message));
@@ -319,11 +320,11 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
       itemBuilder: (context, index) {
         
         final message = state.groupMessages[index];
-        UserDb user = state.users.firstWhere((user) => message.user == user.id);
+        UserDb user = state.users.firstWhere((user) => message.creator == user.id);
 
 
         final isMainMessage = index == 0 || 
-            state.groupMessages[index].user != state.groupMessages[index - 1].user;
+            state.groupMessages[index].creator != state.groupMessages[index - 1].creator;
         
         return GroupChatMessageOrganism(
           text: state.groupMessages[index].text,

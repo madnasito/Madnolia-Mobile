@@ -6,29 +6,32 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/routes/routes.dart';
-import 'package:madnolia/services/database/friendship_db.dart';
-import 'package:madnolia/services/database/match_db.dart';
-import 'package:madnolia/services/database/user_db.dart' show UserDb;
-import 'package:madnolia/services/friendship_service.dart';
+import 'package:madnolia/database/providers/match_db.dart';
+import 'package:madnolia/database/providers/user_db.dart' show UserDb;
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
-import 'package:madnolia/utils/user_db_util.dart' show getUserDb;
+import 'package:madnolia/database/services/user-db.service.dart' show getUserDb;
 import '../models/chat/message_model.dart';
 
+
+@pragma("vm:entry-point")
 class LocalNotificationsService {
    // Instance of Flutternotification plugin
+   @pragma("vm:entry-point")
    static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  
+
+  @pragma("vm:entry-point")
   static Future<void> initialize() async {
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
@@ -52,6 +55,7 @@ class LocalNotificationsService {
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
         // to handle event when we receive notification 
         onDidReceiveNotificationResponse: (details) async {
+          print(details);
           _roomMessages.clear();
           _userMessages.clear();
           try {
@@ -67,12 +71,12 @@ class LocalNotificationsService {
             final context = navigatorKey.currentContext;
             switch (message.type) {
               case MessageType.user:
-                final UserDb userDb = await getUserDb(message.user);
+                final UserDb userDb = await getUserDb(message.creator);
                 final ChatUser chatUser = ChatUser(id: userDb.id, name: userDb.name, thumb: userDb.thumb, username: userDb.username);
                 if(context!.mounted) GoRouter.of(context).pushNamed("user_chat", extra: chatUser);
                 break;
               default:
-                 GoRouter.of(context!).push("/match/${message.to}");
+                 GoRouter.of(context!).push("/match/${message.conversation}");
 
             }
           } catch (e) {
@@ -80,11 +84,13 @@ class LocalNotificationsService {
           }
         },
       );
+
   }
 
   static final List<List<ChatMessage>> _roomMessages = []; // Lista para almacenar mensajes  
   static final List<List<ChatMessage>> _userMessages = [];
-
+  
+  @pragma("vm:entry-point")
   static Future<void> initializeTranslations() async {
       // Use PlatformDispatcher to get the device locale
     Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
@@ -101,6 +107,7 @@ class LocalNotificationsService {
     );
   }
 
+  @pragma("vm:entry-point")
   static Future<String> imageProviderToBase64(ImageProvider imageProvider) async {
     // Create a completer to handle the asynchronous image loading
     final completer = Completer<Uint8List>();
@@ -127,6 +134,7 @@ class LocalNotificationsService {
     return base64Encode(bytes);
   }
 
+  @pragma("vm:entry-point")
   static Future<Uint8List> imageProviderToUint8List(ImageProvider imageProvider) async {
     // Create a completer to handle the asynchronous image loading
     final completer = Completer<Uint8List>();
@@ -153,40 +161,7 @@ class LocalNotificationsService {
     return bytes;
   }
 
-  static Future<FriendshipDb> getFriendshipDb(String id) async {
-    try {
-      final friendshipProvider = FriendshipProvider();
-      await friendshipProvider.open();
-      
-      // First try to get from local DB
-      FriendshipDb? friendshipDb = await friendshipProvider.getFriendship(id);
-      
-      if (friendshipDb == null) {
-        // Create storage
-        final storage = FlutterSecureStorage();
-        final String? userId = await storage.read(key: "userId");
-
-        if (userId == null) {
-          throw Exception("User ID not found in secure storage");
-        }
-
-        // Fetch from API if not found locally
-        final friendshipInfo = await FriendshipService().getFriendwhipWithUser(userId);
-        friendshipDb = FriendshipDb.fromMap(friendshipInfo.toJson());
-        
-        // Store in local DB
-        await friendshipProvider.insert(friendshipDb);
-      }
-
-      return friendshipDb;
-    } catch (e) {
-      debugPrint('Error in getFriendshipDb: $e');
-      rethrow;
-    } finally {
-      // Consider whether to close here or manage connection lifecycle differently
-    }
-  }
-
+  @pragma("vm:entry-point")
   static Future<void> displayRoomMessage(ChatMessage message) async {
   try {
     await initializeTranslations();
@@ -199,7 +174,7 @@ class LocalNotificationsService {
     bool messageAdded = false;
     
     for (var group in _roomMessages) {
-      if(group[0].to == message.to) {
+      if(group[0].conversation == message.conversation) {
         group.add(message);
         messageAdded = true;
         break;
@@ -213,13 +188,13 @@ class LocalNotificationsService {
     // Procesar cada grupo de mensajes
     for (var i = 0; i < _roomMessages.length; i++) {
       final currentGroup = _roomMessages[i];
-      final roomId = currentGroup[0].to;
+      final roomId = currentGroup[0].conversation;
 
       // Obtener información del match
       MinimalMatchDb? groupMatchDb = await getMatchDb(roomId);
 
       // Pre-cargar datos de todos los usuarios en este grupo
-      final userIds = currentGroup.map((msg) => msg.user).toSet();
+      final userIds = currentGroup.map((msg) => msg.creator).toSet();
       final userData = <String, UserDb>{};
       
       for (final userId in userIds) {
@@ -228,7 +203,7 @@ class LocalNotificationsService {
 
       // Crear mensajes de notificación con los remitentes correctos
       List<Message> notiMessages = await Future.wait(currentGroup.map((msg) async{
-        final user = userData[msg.user]!;
+        final user = userData[msg.creator]!;
         final image = await imageProviderToUint8List(CachedNetworkImageProvider(user.thumb));
         return Message(
           msg.text,
@@ -242,7 +217,7 @@ class LocalNotificationsService {
       }).toList()) ;
 
       // Persona principal de la notificación (el último remitente)
-      final lastSender = userData[currentGroup.last.user]!;
+      final lastSender = userData[currentGroup.last.creator]!;
       final image = await imageProviderToUint8List(CachedNetworkImageProvider(lastSender.thumb));
       
       NotificationDetails notificationDetails = NotificationDetails(
@@ -259,6 +234,16 @@ class LocalNotificationsService {
             AndroidNotificationAction(
               message.id,
               translate("FORM.INPUT.RESPOND"),
+              inputs: [
+                AndroidNotificationActionInput(
+                  label: translate("MESSAGE"),
+                  allowFreeFormInput: true,
+                ),
+              ],
+            ),
+            AndroidNotificationAction(
+              message.id,
+              'Mark as read',
               inputs: [
                 AndroidNotificationActionInput(
                   label: translate("MESSAGE"),
@@ -321,7 +306,7 @@ class LocalNotificationsService {
   }
 }
   
-  
+  @pragma("vm:entry-point")
   static Future<void> displayUserMessage(ChatMessage message) async {
     try {
       await initializeTranslations();
@@ -334,7 +319,7 @@ class LocalNotificationsService {
       // 1. Actualizar lista de mensajes agrupados por sala/chat
       bool groupExists = false;
       for (var group in _userMessages) {
-        if (group[0].to == message.to) {
+        if (group[0].conversation == message.conversation) {
           group.add(message);
           groupExists = true;
           break;
@@ -350,7 +335,7 @@ class LocalNotificationsService {
         final currentGroup = _userMessages[i];
         // final friendshipId = currentGroup[0].to;
 
-        final UserDb user = await getUserDb(currentGroup[0].user);
+        final UserDb user = await getUserDb(currentGroup[0].creator);
 
         // Crear mensajes de notificación con los remitentes correctos
         List<Message> notiMessages = await Future.wait(currentGroup.map((msg) async{
@@ -382,11 +367,21 @@ class LocalNotificationsService {
               AndroidNotificationAction(
                 message.id,
                 translate("FORM.INPUT.RESPOND"),
-              cancelNotification: true,
+                cancelNotification: true,
                 inputs: [
                   AndroidNotificationActionInput(
                     label: translate("CHAT.MESSAGE"),
                     allowFreeFormInput: true,
+                  ),
+                ],
+              ),
+              AndroidNotificationAction(
+                message.id,
+                'Mark as read',
+                inputs: [
+                  AndroidNotificationActionInput(
+                    label: translate("MESSAGE"),
+                    allowFreeFormInput: false,
                   ),
                 ],
               )
@@ -448,6 +443,7 @@ class LocalNotificationsService {
   }
 
   // Función de ejemplo para obtener información de la sala
+  @pragma("vm:entry-point")
   static Future<Map<String, dynamic>> getChatRoomInfo(String roomId) async {
     // Implementa esta función según tu estructura de datos
     return {
@@ -457,6 +453,7 @@ class LocalNotificationsService {
     };
   }
 
+  @pragma("vm:entry-point")
   static Future<void> displayInvitation(Invitation invitation) async {
     // To display the notification in device
     
@@ -491,6 +488,7 @@ class LocalNotificationsService {
 
   }
 
+  @pragma("vm:entry-point")
   static Future<void> matchReady(dynamic data) async {
     // To display the notification in device
     try {
@@ -517,6 +515,8 @@ class LocalNotificationsService {
     }
 
   }
+
+  @pragma("vm:entry-point")
   void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
     final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {
@@ -524,32 +524,70 @@ class LocalNotificationsService {
     }
 }
 
+  @pragma("vm:entry-point")
   static Future<void> deleteRoomMessages(String room) async {
-    if (_roomMessages.isEmpty) return;
-
-    for (int i = 0; i <= _roomMessages.length; i++) {
-      if(_roomMessages[i][0].to == room){
-        // _notificationsPlugin.cancel(id)
-        _roomMessages.removeAt(i);
-        
-        final activeMessages = await getActiveNotifications("messages");
-
-        for (var message in activeMessages) {
-          _notificationsPlugin.cancel(message.id!);
+    try {
+      debugPrint('Delete messages of room $room');
+      // 1. Eliminar de la lista en memoria
+      _roomMessages.removeWhere((group) => group.isNotEmpty && group[0].conversation == room);
+      
+      // 2. Cancelar todas las notificaciones del grupo
+      final activeMessages = await _notificationsPlugin.getActiveNotifications();
+      
+      for (final notification in activeMessages) {
+        // Cancelar tanto mensajes individuales como el resumen
+        if (notification.channelId == 'messages') {
+          await _notificationsPlugin.cancel(notification.id!);
         }
-        break;
       }
-      i++;
+      
+      // 3. Cancelar específicamente la notificación de resumen
+      await _notificationsPlugin.cancel(0); // ID usado para el resumen
+      
+      debugPrint('Notificaciones eliminadas para la sala: $room');
+    } catch (e) {
+      debugPrint('Error al eliminar notificaciones: $e');
     }
   }
 
-  static void notificationTapBackground(NotificationResponse notificationResponse) {      
-      if (notificationResponse.payload != null) {
-        final context = navigatorKey.currentContext;
-        GoRouter.of(context!).push("/match/${notificationResponse.payload}");
+  @pragma("vm:entry-point")
+  static Future<void> notificationTapBackground(NotificationResponse notificationResponse) async {
+    if(notificationResponse.input != null) {
+      try {
+        final ChatMessage message = chatMessageFromJson(notificationResponse.payload!);
+
+        final backgroundService = FlutterBackgroundService();
+
+        backgroundService.invoke('new_message', {"text": notificationResponse.input, "conversation": message.conversation, "type": message.type.value});
+        
+        await deleteRoomMessages(message.conversation);
+        // final context = navigatorKey.currentContext;
+        // switch (message.type) {
+        //   case MessageType.user:
+        //     final UserDb userDb = await getUserDb(message.creator);
+        //     final ChatUser chatUser = ChatUser(id: userDb.id, name: userDb.name, thumb: userDb.thumb, username: userDb.username);
+        //     if(context!.mounted) GoRouter.of(context).pushNamed("user_chat", extra: chatUser);
+        //     break;
+        //   default:
+        //     GoRouter.of(context!).push("/match/${message.conversation}");
+
+        // }
+      } catch (e) {
+        debugPrint(e.toString());
       }
+
+      // await deleteAllNotifications();
+    }
+
+    
+      // if (notificationResponse.payload != null) {
+      //   final context = navigatorKey.currentContext;
+      //   GoRouter.of(context!).push("/match/${notificationResponse.payload}");
+      // }
       
   }
+
+  @pragma("vm:entry-point")
   static Future<List<ActiveNotification>> getActiveNotifications(String channelId) async {
     final List<ActiveNotification> activeNotifications =
         await _notificationsPlugin.getActiveNotifications();
@@ -563,12 +601,26 @@ class LocalNotificationsService {
     }
   }
 
+  @pragma("vm:entry-point")
   static Future<void> deleteAllNotifications() async {
-    final List<ActiveNotification> activeNotifications =
-        await _notificationsPlugin.getActiveNotifications();
+    try {
+    // 1. Limpiar listas en memoria
+    _roomMessages.clear();
+    _userMessages.clear();
     
-    for (var notification in activeNotifications) {
+    // 2. Cancelar todas las notificaciones activas
+    final activeNotifications = await _notificationsPlugin.getActiveNotifications();
+    
+    for (final notification in activeNotifications) {
       await _notificationsPlugin.cancel(notification.id!);
     }
+    
+    // 3. Cancelar cualquier notificación pendiente
+    await _notificationsPlugin.cancelAll();
+    
+    debugPrint('Todas las notificaciones fueron eliminadas');
+  } catch (e) {
+    debugPrint('Error al eliminar todas las notificaciones: $e');
+  }
   }
 }

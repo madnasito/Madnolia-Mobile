@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:sqflite/sqflite.dart';
+import 'package:madnolia/database/providers/db_provider.dart';
+import 'package:madnolia/enums/friendship-status.enum.dart';
 
 import '../../models/friendship/friendship_model.dart' show Friendship;
 
@@ -9,13 +10,15 @@ final String columnUser1 = 'user1';
 final String columnUser2 = 'user2';
 final String columnStatus = 'status';
 final String columnCreatedAt = 'createdAt';
+final String columnLastUpdated = 'lastUpdated';
 
 class FriendshipDb {
   String id;
   String user1;
   String user2;
-  int status;
+  FriendshipStatus status;
   DateTime createdAt;
+  DateTime lastUpdated; // Nuevo campo
 
   FriendshipDb({
     this.id = "",
@@ -23,14 +26,16 @@ class FriendshipDb {
     required this.user2,
     required this.status,
     required this.createdAt,
-  });
+    DateTime? lastUpdated, // Hacemos opcional para manejar casos donde no exista
+  }) : lastUpdated = lastUpdated ?? createdAt;
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnUser1: user1,
       columnUser2: user2,
-      columnStatus: status,
+      columnStatus: status.index,
       columnCreatedAt: createdAt.toIso8601String(),
+      columnLastUpdated: lastUpdated.toIso8601String(), // Nuevo campo
     };
     if (id.isNotEmpty) {
       map[columnId] = id;
@@ -39,24 +44,39 @@ class FriendshipDb {
   }
 
   factory FriendshipDb.fromMap(Map<String, dynamic> map) {
+    final FriendshipStatus friendshipStatus;
+
+    switch (map[columnStatus]) {
+      case 0:
+          friendshipStatus = FriendshipStatus.alive;
+        break;
+      case 1:
+        friendshipStatus = FriendshipStatus.broke;
+        break;
+      default:
+        friendshipStatus = FriendshipStatus.broke;
+        break;
+    }
     return FriendshipDb(
       id: map[columnId]?.toString() ?? '',
       user1: map[columnUser1],
       user2: map[columnUser2],
-      status: map[columnStatus],
+      status: friendshipStatus,
       createdAt: DateTime.parse(map[columnCreatedAt]),
+      lastUpdated: DateTime.parse(map[columnLastUpdated] ?? map[columnCreatedAt]),
     );
   }
 
-  String toJson() {
-    return jsonEncode({
-      '_id': id,
-      'user1': user1,
-      'user2': user2,
-      'status': status,
-      'createdAt': createdAt.toIso8601String(),
-    });
-  }
+  // String toJson() {
+  //   return jsonEncode({
+  //     '_id': id,
+  //     'user1': user1,
+  //     'user2': user2,
+  //     'status': status,
+  //     'createdAt': createdAt.toIso8601String(),
+  //     'lastUpdated': createdAt.toIso8601String(),
+  //   });
+  // }
 
   factory FriendshipDb.fromJson(String jsonString) {
     final Map<String, dynamic> data = jsonDecode(jsonString);
@@ -66,17 +86,20 @@ class FriendshipDb {
       user2: data['user2'] ?? '',
       status: data['status'] ?? 0,
       createdAt: DateTime.parse(data['createdAt']),
+      lastUpdated: DateTime.now()
     );
   }
 
   // Conversión desde el modelo original Friendship
   factory FriendshipDb.fromFriendship(Friendship friendship) {
+
     return FriendshipDb(
       id: friendship.id,
       user1: friendship.user1,
       user2: friendship.user2,
       status: friendship.status,
       createdAt: friendship.createdAt,
+      lastUpdated: DateTime.now(),
     );
   }
 
@@ -93,62 +116,35 @@ class FriendshipDb {
 }
 
 class FriendshipProvider {
-   Database? _db;
-  static const _databaseVersion = 2; // Incrementa este número cada que cambies el esquema
 
-  Future open() async {
-    final databasePath = await getDatabasesPath();
-    final path = '$databasePath/madnolia.db';
-    await deleteDatabase(path);
-    _db = await openDatabase(
-      path,
-      version: _databaseVersion,
-      onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
-    );
-  }
+  
+  // Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+  //   if (oldVersion < 1) {
+  //     await db.execute('DROP TABLE IF EXISTS $tableFriendship');
+  //     await _onCreate(db, newVersion);
+  //   }
+  // }
 
-  Future<void> _onCreate(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE $tableFriendship (
-        $columnId TEXT PRIMARY KEY,
-        $columnUser1 TEXT NOT NULL,
-        $columnUser2 TEXT NOT NULL,
-        $columnStatus INTEGER NOT NULL,
-        $columnCreatedAt TEXT NOT NULL
-      )
-    ''');
-    
-    // Crear índices después de crear la tabla
-    await _createIndexes(db);
-  }
-
-  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 1) {
-      await db.execute('DROP TABLE IF EXISTS $tableFriendship');
-      await _onCreate(db, newVersion);
-    }
-  }
-
-  Future<void> _createIndexes(Database db) async {
-    await db.execute('''
-      CREATE INDEX IF NOT EXISTS idx_friendship_user1 
-      ON $tableFriendship($columnUser1)
-    ''');
-    await db.execute('''
-      CREATE INDEX IF NOT EXISTS idx_friendship_user2 
-      ON $tableFriendship($columnUser2)
-    ''');
-    await db.execute('''
-      CREATE INDEX IF NOT EXISTS idx_friendship_status 
-      ON $tableFriendship($columnStatus)
-    ''');
-  }
+  // Future<void> _createIndexes(Database db) async {
+  //   await db.execute('''
+  //     CREATE INDEX IF NOT EXISTS idx_friendship_user1 
+  //     ON $tableFriendship($columnUser1)
+  //   ''');
+  //   await db.execute('''
+  //     CREATE INDEX IF NOT EXISTS idx_friendship_user2 
+  //     ON $tableFriendship($columnUser2)
+  //   ''');
+  //   await db.execute('''
+  //     CREATE INDEX IF NOT EXISTS idx_friendship_status 
+  //     ON $tableFriendship($columnStatus)
+  //   ''');
+  // }
 
   // Método para verificar si la tabla existe
   Future<bool> tableExists() async {
     try {
-      await _db!.rawQuery('SELECT 1 FROM $tableFriendship LIMIT 1');
+      final db = await BaseDatabaseProvider.database;
+      await db.rawQuery('SELECT 1 FROM $tableFriendship LIMIT 1');
       return true;
     } catch (e) {
       return false;
@@ -156,19 +152,22 @@ class FriendshipProvider {
   }
 
   Future<FriendshipDb> insert(FriendshipDb friendship) async {
-    await _db!.insert(tableFriendship, friendship.toMap());
+    final db = await BaseDatabaseProvider.database;
+    await db.insert(tableFriendship, friendship.toMap());
     return friendship;
   }
 
   Future<List<FriendshipDb>> getAllFriendships() async {
-    final List<Map<String, dynamic>> maps = await _db!.query(tableFriendship);
+    final db = await BaseDatabaseProvider.database;
+    final List<Map<String, dynamic>> maps = await db.query(tableFriendship);
     return List.generate(maps.length, (i) {
       return FriendshipDb.fromMap(maps[i]);
     });
   }
 
-  Future<FriendshipDb?> getFriendship(String id) async {
-    List<Map> maps = await _db!.query(
+  static Future<FriendshipDb?> getFriendship(String id) async {
+    final db = await BaseDatabaseProvider.database;
+    List<Map> maps = await db.query(
       tableFriendship,
       columns: [columnId, columnUser1, columnUser2, columnStatus, columnCreatedAt],
       where: '$columnId = ?',
@@ -181,7 +180,8 @@ class FriendshipProvider {
   }
 
   Future<List<FriendshipDb>> getFriendshipsByUser(String userId) async {
-    final List<Map<String, dynamic>> maps = await _db!.query(
+    final db = await BaseDatabaseProvider.database;
+    final List<Map<String, dynamic>> maps = await db.query(
       tableFriendship,
       where: '$columnUser1 = ? OR $columnUser2 = ?',
       whereArgs: [userId, userId],
@@ -192,7 +192,8 @@ class FriendshipProvider {
   }
 
   Future<List<FriendshipDb>> getFriendshipsByStatus(int status) async {
-    final List<Map<String, dynamic>> maps = await _db!.query(
+    final db = await BaseDatabaseProvider.database;
+    final List<Map<String, dynamic>> maps = await db.query(
       tableFriendship,
       where: '$columnStatus = ?',
       whereArgs: [status],
@@ -203,7 +204,8 @@ class FriendshipProvider {
   }
 
   Future<FriendshipDb?> getFriendshipBetweenUsers(String user1, String user2) async {
-    final List<Map<String, dynamic>> maps = await _db!.query(
+    final db = await BaseDatabaseProvider.database;
+    final List<Map<String, dynamic>> maps = await db.query(
       tableFriendship,
       where: '($columnUser1 = ? AND $columnUser2 = ?) OR ($columnUser1 = ? AND $columnUser2 = ?)',
       whereArgs: [user1, user2, user2, user1],
@@ -216,7 +218,8 @@ class FriendshipProvider {
   }
 
   Future<int> update(FriendshipDb friendship) async {
-    return await _db!.update(
+    final db = await BaseDatabaseProvider.database;
+    return await db.update(
       tableFriendship,
       friendship.toMap(),
       where: '$columnId = ?',
@@ -225,7 +228,8 @@ class FriendshipProvider {
   }
 
   Future<int> updateStatus(String id, int newStatus) async {
-    return await _db!.update(
+    final db = await BaseDatabaseProvider.database;
+    return await db.update(
       tableFriendship,
       {columnStatus: newStatus},
       where: '$columnId = ?',
@@ -234,7 +238,8 @@ class FriendshipProvider {
   }
 
   Future<int> delete(String id) async {
-    return await _db!.delete(
+    final db = await BaseDatabaseProvider.database;
+    return await db.delete(
       tableFriendship,
       where: '$columnId = ?',
       whereArgs: [id],
@@ -242,8 +247,8 @@ class FriendshipProvider {
   }
 
   Future<int> deleteAll() async {
-    return await _db!.delete(tableFriendship);
+    final db = await BaseDatabaseProvider.database;
+    return await db.delete(tableFriendship);
   }
 
-  Future close() async => _db?.close();
 }

@@ -1,10 +1,11 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/cubits/cubits.dart';
+import 'package:madnolia/enums/message-status.enum.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
+import 'package:madnolia/services/messages_service.dart';
 import 'package:madnolia/services/notifications_service.dart';
 import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
@@ -124,8 +125,16 @@ class _HomeUserPageState extends State<HomeUserPage> {
       if (!context.mounted) return null;
 
       final userBloc = context.read<UserBloc>();
+      final messageBloc = context.read<MessageBloc>();
       const storage = FlutterSecureStorage();
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
+
+      if(messageBloc.state.unreadUserChats == 0) {
+        final chats = await MessagesService().getChats();
+        for (var chat in chats) {
+          if(chat.message.creator != userBloc.state.id && chat.message.status == ChatMessageStatus.sent) messageBloc.add(UpdateUnreadUserChatCount(value: 1));
+        }
+      }
 
       if (userInfo.containsKey("error")) {
         if (!context.mounted) return null;
@@ -139,10 +148,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
         return null;
       }
 
-      final backgroundService = FlutterBackgroundService();
-      if (await backgroundService.isRunning() == false) {
-        await initializeService();
-      }
+      // final backgroundService = FlutterBackgroundService();
+      await initializeService();
 
       if (userInfo.isEmpty) {
         await storage.delete(key: "token");

@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart' show debugPrint;
-import 'package:madnolia/services/database/user_db.dart';
+import 'package:madnolia/database/providers/user_db.dart';
 import 'package:madnolia/services/user_service.dart' show UserService;
 
 
