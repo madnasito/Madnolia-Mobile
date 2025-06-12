@@ -55,7 +55,6 @@ class LocalNotificationsService {
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
         // to handle event when we receive notification 
         onDidReceiveNotificationResponse: (details) async {
-          print(details);
           _roomMessages.clear();
           _userMessages.clear();
           try {
@@ -558,25 +557,25 @@ class LocalNotificationsService {
 
         final backgroundService = FlutterBackgroundService();
 
-        backgroundService.invoke('new_message', {"text": notificationResponse.input, "conversation": message.conversation, "type": message.type.value});
+        backgroundService.invoke(
+          'new_message',
+          CreateMessage(
+            conversation: message.conversation,
+            text: notificationResponse.input.toString(),
+            type: message.type)
+          .toJson()
+        );
+
+        // Get current user info
+        // const storage = FlutterSecureStorage();
+        // String? myUserId = await storage.read(key: "userId");
+        // final currentUser = await getUserDb(myUserId!);
+        // final currentUserImage = await imageProviderToUint8List(CachedNetworkImageProvider(currentUser.thumb));
         
         await deleteRoomMessages(message.conversation);
-        // final context = navigatorKey.currentContext;
-        // switch (message.type) {
-        //   case MessageType.user:
-        //     final UserDb userDb = await getUserDb(message.creator);
-        //     final ChatUser chatUser = ChatUser(id: userDb.id, name: userDb.name, thumb: userDb.thumb, username: userDb.username);
-        //     if(context!.mounted) GoRouter.of(context).pushNamed("user_chat", extra: chatUser);
-        //     break;
-        //   default:
-        //     GoRouter.of(context!).push("/match/${message.conversation}");
-
-        // }
       } catch (e) {
         debugPrint(e.toString());
       }
-
-      // await deleteAllNotifications();
     }
 
     

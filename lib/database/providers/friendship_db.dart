@@ -10,7 +10,7 @@ final String columnUser1 = 'user1';
 final String columnUser2 = 'user2';
 final String columnStatus = 'status';
 final String columnCreatedAt = 'createdAt';
-final String columnLastUpdated = 'lastUpdated';
+final String columnLastUpdated = 'last_updated';
 
 class FriendshipDb {
   String id;
@@ -151,7 +151,7 @@ class FriendshipProvider {
     }
   }
 
-  Future<FriendshipDb> insert(FriendshipDb friendship) async {
+  static Future<FriendshipDb> insert(FriendshipDb friendship) async {
     final db = await BaseDatabaseProvider.database;
     await db.insert(tableFriendship, friendship.toMap());
     return friendship;
@@ -217,7 +217,7 @@ class FriendshipProvider {
     return null;
   }
 
-  Future<int> update(FriendshipDb friendship) async {
+  static Future<int> update(FriendshipDb friendship) async {
     final db = await BaseDatabaseProvider.database;
     return await db.update(
       tableFriendship,

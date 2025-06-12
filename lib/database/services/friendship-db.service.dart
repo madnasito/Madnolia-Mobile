@@ -55,11 +55,15 @@ class FriendshipService {
         return existingFriendship;
       }
 
-      if(existingFriendship == null){
-        return await getFriendshipByIdApi(id);
+      final friendshipInfo = await getFriendshipByIdApi(id);
+
+      if(existingFriendship == null) {
+        await FriendshipProvider.insert(friendshipInfo);
+      } else {
+        await FriendshipProvider.update(friendshipInfo);
       }
 
-      return existingFriendship;
+      return friendshipInfo;
     } catch (e) {
       rethrow;
     }
