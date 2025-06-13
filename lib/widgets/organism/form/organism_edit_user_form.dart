@@ -6,7 +6,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/enums/user-availability.enum.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
-import 'package:madnolia/widgets/alert_widget.dart' show showAlert, showErrorServerAlert;
+import 'package:madnolia/widgets/alert_widget.dart' show showErrorServerAlert;
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_dropdown_form_field.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';

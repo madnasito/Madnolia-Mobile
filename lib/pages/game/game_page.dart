@@ -167,12 +167,9 @@ class GamePage extends StatelessWidget {
       );
     }
 
-    final respData = await GamesService().getGameInfo(game);
+    final respData = await GamesService().getGameInfoById(game);
+    gameDataBloc.updateGame(respData);
 
-    final Game gameData = Game.fromJson(respData);
-
-    gameDataBloc.updateGame(gameData);
-
-    return gameData;
+    return respData;
   }
 }
