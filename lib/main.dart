@@ -41,8 +41,7 @@ void main() async {
   );
 
   try {
-    await getToken();
-    await initializeService();
+    if(await getToken() is String) await initializeService();
   } catch (e) {
     debugPrint(e.toString());
   }

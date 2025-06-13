@@ -21,7 +21,6 @@ import 'package:madnolia/services/user_service.dart';
 // import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
-import '../../services/sockets_service.dart';
 
 class HomeUserPage extends StatefulWidget {  // Changed to StatefulWidget
   const HomeUserPage({super.key});
@@ -148,8 +147,6 @@ class _HomeUserPageState extends State<HomeUserPage> {
         return null;
       }
 
-      // final backgroundService = FlutterBackgroundService();
-      await initializeService();
 
       if (userInfo.isEmpty) {
         await storage.delete(key: "token");

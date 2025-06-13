@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:madnolia/services/sockets_service.dart';
 
 class AuthService {
   bool authenticating = false;
@@ -27,7 +28,8 @@ class AuthService {
 
       if (respBody.containsKey("token")) {
         await _storage.write(key: "token", value: respBody["token"]);
-        _storage.write(key: "userId", value: respBody["user"]["_id"]);
+        await _storage.write(key: "userId", value: respBody["user"]["_id"]);
+        await initializeService();
         return respBody;
       } else {
         return respBody;
@@ -65,7 +67,8 @@ class AuthService {
       if (respDecoded.containsKey("user")) {
         _storage.write(key: "token", value: respDecoded["token"]);
         _storage.write(key: "userId", value: respDecoded["user"]["_id"]);
-      } 
+      }
+      await initializeService();
       return respDecoded;
     } catch (e) {
       // Print the exception for debugging purposes
