@@ -1,4 +1,5 @@
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:madnolia/enums/user-availability.enum.dart';
 import 'package:madnolia/models/user/user_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

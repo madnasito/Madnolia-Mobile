@@ -126,11 +126,10 @@
             "EMAIL": "Correo",
             "INVITATIONS":{
                 "TITLE": "Aceptar invitaciondes de:",
-                "ALL": "Lo que sea, quiero jugar",
+                "EVERYONE": "Lo que sea, quiero jugar",
                 "PARTNERS": "Solo colegas",
-                "NOBODY": "Ya, dejame en paz"
+                "NO": "Ya, dejame en paz"
             },
-
             "ERRORS":{
                 "VERIFY": "Por favor verifica tú información",
                 "EMAIL": "Ya hay una cuenta registrada con este CORREO",
@@ -140,7 +139,7 @@
                 "IMG_UPDATING": "Error actualizando la imagen"
             },
             "UPLOADING_IMG": "Subiendo la imagen, espere un momento por favor",
-            "UPDATED": "Cuenta actualizada",
+            "UPDATED": "Datos actualizados",
             "UPDATE": "Actualizar",
             "DELETE_ACCOUNT": "Eliminar cuenta",
             "ACCOUNT_DELETED": "Tu cuenta ha sido borrada"

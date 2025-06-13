@@ -1,11 +1,12 @@
 import 'dart:convert';
-import 'package:dio/dio.dart' show Dio, Options;
+import 'package:dio/dio.dart' show Dio, DioException, Options, Response;
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:madnolia/models/user/user_model.dart';
 
 
 class UserService {
@@ -30,8 +31,30 @@ class UserService {
   Future<Map> addUserPartner({partner}) =>
       userPutRequest("add_partner", partner);
 
-  Future<Map<String, dynamic>> updateUser(UpdateUser user) =>
-      userPutRequest("user/update", user);
+  Future<User> updateUser(UpdateUser user) async{
+    try {      
+      Response response;
+
+      final String? token = await _storage.read(key: "token");
+
+      response = await dio.put('$baseUrl/user/update', data: user.toJson(), options: Options(headers: {"Authorization": "Bearer $token"}));
+
+      final userUpdated 
+      = User.fromJson(response.data);
+
+      return userUpdated;
+    } catch (e) {
+      if(e is DioException){
+        if(e.response?.data is Map){
+          throw e.response?.data;
+        } else {
+          throw {'message': 'NETWORK_ERROR'};
+        }
+      }else {
+        throw {'message': 'NETWORK_ERROR'};
+      }
+    }
+  }
 
   Future<Map> updateUserPlatforms({platforms}) =>
       userPutRequest("user/update", platforms);

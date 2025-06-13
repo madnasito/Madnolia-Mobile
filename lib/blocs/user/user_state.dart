@@ -9,7 +9,7 @@ class UserState extends Equatable {
   final String img;
   final String thumb;
   final String id;
-  final int availability;
+  final UserAvailability availability;
   final String chatRoom;
   final int notifications;
 
@@ -22,7 +22,7 @@ class UserState extends Equatable {
     this.img = "",
     this.thumb = "",
     this.id = "",
-    this.availability = 1,
+    this.availability = UserAvailability.everyone,
     this.chatRoom= "",
     this.notifications = 0
   });
@@ -36,7 +36,7 @@ class UserState extends Equatable {
     String? thumb,
     String? id,
     bool? loadedUser,
-    int? availability,
+    UserAvailability? availability,
     String? chatRoom,
     int? notifications
   }) => UserState(

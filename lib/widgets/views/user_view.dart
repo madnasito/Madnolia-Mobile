@@ -9,12 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:madnolia/blocs/edit_user_bloc.dart';
 import 'package:madnolia/blocs/edit_user_provider.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
-import 'package:madnolia/widgets/custom_input_widget.dart';
-import 'package:madnolia/widgets/form_button.dart';
+import 'package:madnolia/widgets/organism/form/organism_edit_user_form.dart';
 import 'package:toast/toast.dart';
 
 import '../../models/user/user_model.dart';
@@ -112,6 +110,7 @@ class _EditUserViewState extends State<EditUserView> {
         TextEditingController(text: userBloc.state.username);
     final emailController =
         TextEditingController(text: userBloc.state.email);
+    final userAvailability = userBloc.state.availability;
 
     bloc.changeName(nameController.text);
     bloc.changeEmail(emailController.text);
@@ -119,7 +118,6 @@ class _EditUserViewState extends State<EditUserView> {
     bloc.changeImg(userBloc.state.img);
     bloc.changeThumb(userBloc.state.thumb);
 
-    int acceptInvitations = userBloc.state.availability;
     return FutureBuilder(
       future: _loadInfo(context),
       builder: (context, snapshot) {
@@ -208,60 +206,18 @@ class _EditUserViewState extends State<EditUserView> {
                                 }
                               },
                             ),
-                            //  const Center(
-                            //       heightFactor: 2,
-                            //       child: Column(
-                            //         children: [
-                            //           CircularProgressIndicator(
-                            //             color: Colors.lightBlueAccent,
-                            //           ),
-                            //           Text("Updating img")
-                            //         ],
-                            //       ),
-                            //     )
-                            // : Container()
                           ],
                         ),
                       )),
                 ),
                 const SizedBox(height: 20),
-                CustomInput(
-                    controller: nameController,
-                    icon: Icons.abc,
-                    placeholder: translate("PROFILE.USER_PAGE.NAME"),
-                    stream: bloc.nameStream,
-                    onChanged: bloc.changeName),
-                CustomInput(
-                    icon: Icons.account_circle_outlined,
-                    placeholder: translate("PROFILE.USER_PAGE.USERNAME"),
-                    stream: bloc.usernameStream,
-                    onChanged: bloc.changeUsername,
-                    controller: usernameController),
-                CustomInput(
-                    icon: Icons.email_outlined,
-                    placeholder: translate("PROFILE.USER_PAGE.EMAIL"),
-                    stream: bloc.emailStream,
-                    onChanged: bloc.changeEmail,
-                    controller: emailController),
-                // DropDownWidget(
-                //   value: userBloc.state.availability,
-                //   onChanged: (value) {
-                //     acceptInvitations = value as int;
-                //   },
-                // ),
-                const SizedBox(height: 20),
-                StreamBuilder(
-                  stream: bloc.userValidStream,
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    return FormButton(
-                        text: translate("PROFILE.USER_PAGE.UPDATE"),
-                        color: const Color.fromARGB(0, 33, 149, 243),
-                        onPressed: snapshot.hasData
-                            ? () => _uptadeUser(
-                                bloc, userBloc, acceptInvitations)
-                            : null);
-                  },
+                OrganismEditUserForm(
+                  updateUser: UpdateUser(
+                    name: nameController.text,
+                    username: usernameController.text,
+                    email: emailController.text,
+                    availability: userAvailability
+                  )
                 ),
                 const SizedBox(height: 20),
                 MaterialButton(onPressed: () async {
@@ -327,24 +283,3 @@ _loadInfo(BuildContext context) async {
   return userInfo;
 }
 
-_uptadeUser(
-    EditUserBloc bloc, UserBloc userBloc, int invitations) async {
-    
-    
-  UpdateUser user = UpdateUser(
-      email: bloc.email,
-      name: bloc.name,
-      username: bloc.username,
-      availability: 1);
-  Map<String, dynamic> resp = await UserService().updateUser(user);
-
-  if (resp.containsKey("error")) {
-    return Toast.show("Error");
-  }
-
-  Toast.show("Updated user", gravity: 20, duration: 2 );
-  final User newUser = User.fromJson(resp);
-
-  userBloc.loadInfo(newUser);
-
-}
