@@ -170,7 +170,7 @@ onStart(ServiceInstance service) async {
   // Events for handle connections
   service.on('request_connection').listen((onData) => socket.emit('request_connection', onData?['user']));
   service.on('accept_connection').listen((onData) => socket.emit('accept_connection', onData?['user']));
-  service.on('cancel_connection').listen((onData) => socket.emit('cancel_connection', onData?['user']));
+  service.on('reject_connection').listen((onData) => socket.emit('reject_connection', onData?['user']));
 
 }
 

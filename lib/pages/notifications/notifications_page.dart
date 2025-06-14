@@ -1,4 +1,7 @@
+import 'dart:async' show StreamSubscription;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
@@ -8,9 +11,44 @@ import 'package:madnolia/widgets/atoms/notifications/atom_request_notification.d
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 
-class NotificationsPage extends StatelessWidget {
+class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
 
+  @override
+  State<NotificationsPage> createState() => _NotificationsPageState();
+}
+
+class _NotificationsPageState extends State<NotificationsPage> {
+    late final FlutterBackgroundService _backgroundService;
+    late StreamSubscription _connectionAcceptedSub;
+    late StreamSubscription _connectionRejectedSub;
+
+  @override
+  void initState() {
+    super.initState();
+    _backgroundService = FlutterBackgroundService();
+    _setupBackgroundListeners();
+  }
+
+  void _setupBackgroundListeners() {
+    _connectionAcceptedSub = _backgroundService.on('connection_accepted').listen((_) {
+      setState(() {
+        
+      });
+    });
+    _connectionRejectedSub = _backgroundService.on('connection_rejected').listen((_) {
+      setState(() {
+        
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectionAcceptedSub.cancel();
+    _connectionRejectedSub.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
