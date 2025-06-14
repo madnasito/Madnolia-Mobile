@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/blocs.dart';
-import 'package:madnolia/pages/chat/call_screen.dart';
+// import 'package:madnolia/pages/chat/call_screen.dart';
 
 class JoinScreen extends StatefulWidget {
 
@@ -30,22 +30,22 @@ class _JoinScreenState extends State<JoinScreen> {
   }
 
   // join Call
-  _joinCall({
-    required String callerId,
-    required String calleeId,
-    dynamic offer,
-  }) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => CallScreen(
-          callerId: callerId,
-          calleeId: calleeId,
-          offer: offer,
-        ),
-      ),
-    );
-  }
+  // _joinCall({
+  //   required String callerId,
+  //   required String calleeId,
+  //   dynamic offer,
+  // }) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (_) => CallScreen(
+  //         callerId: callerId,
+  //         calleeId: calleeId,
+  //         offer: offer,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -104,10 +104,10 @@ class _JoinScreenState extends State<JoinScreen> {
                         ),
                       ),
                       onPressed: () {
-                        _joinCall(
-                          callerId: userBloc.state.username,
-                          calleeId: remoteCallerIdTextEditingController.text,
-                        );
+                        // _joinCall(
+                        //   callerId: userBloc.state.username,
+                        //   calleeId: remoteCallerIdTextEditingController.text,
+                        // );
                       },
                     ),
                   ],
@@ -134,11 +134,11 @@ class _JoinScreenState extends State<JoinScreen> {
                         icon: const Icon(Icons.call),
                         color: Colors.greenAccent,
                         onPressed: () {
-                          _joinCall(
-                            callerId: incomingSDPOffer["caller_id"]!,
-                            calleeId: userBloc.state.username,
-                            offer: incomingSDPOffer["sdp_offer"],
-                          );
+                          // _joinCall(
+                          //   callerId: incomingSDPOffer["caller_id"]!,
+                          //   calleeId: userBloc.state.username,
+                          //   offer: incomingSDPOffer["sdp_offer"],
+                          // );
                         },
                       )
                     ],
