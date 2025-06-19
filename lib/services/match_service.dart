@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:madnolia/models/game/home_game_model.dart';
 
 
 class MatchService {
@@ -11,6 +13,8 @@ class MatchService {
   final _storage = const FlutterSecureStorage();
 
   final String baseUrl = dotenv.get("API_URL");
+
+  final dio = Dio();
 
   // Getting the match
   Future getMatch(String id) => matchGetRequest("info/$id");
@@ -81,6 +85,44 @@ class MatchService {
     }
   }
 
+
+  Future<List<HomeGame>> getGamesMatchesByPlatform({
+    required int platformId,
+    required int page,
+    int limit = 5,
+  }) async {
+    try {
+      final String? token = await _storage.read(key: "token");
+      final url = "$baseUrl/match/platform";
+
+      Response response = await dio.get(
+        url,
+        queryParameters: {
+          'platform': platformId,
+          'skip': page,
+          'limit': limit,
+        },
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
+
+      // Proper conversion from List<dynamic> to List<HomeGame>
+      List<HomeGame> games = (response.data as List<dynamic>)
+          .map((e) => HomeGame.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+      return games;
+    } catch (e) {
+      if (e is DioException) {
+        if (e.response?.data is Map) {
+          throw e.response?.data;
+        } else {
+          throw {'message': 'NETWORK_ERROR'};
+        }
+      } else {
+        throw {'message': 'NETWORK_ERROR'};
+      }
+    }
+  }
   Future<Map<String, dynamic>> matchPostRequest(String apiUrl, Map body) async {
     try {
       authenticating = true;

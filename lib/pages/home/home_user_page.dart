@@ -2,6 +2,7 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/enums/message-status.enum.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
@@ -125,6 +126,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
       final userBloc = context.read<UserBloc>();
       final messageBloc = context.read<MessageBloc>();
+      final platformsGamesBloc = context.read<PlatformGamesBloc>();
       const storage = FlutterSecureStorage();
       final Map<String, dynamic> userInfo = await UserService().getUserInfo();
 
@@ -160,6 +162,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final int unreadNotificationsCount = await NotificationsService().getNotificationsCount();
       userBloc.updateNotifications(unreadNotificationsCount);
       userBloc.loadInfo(user);
+      if(platformsGamesBloc.state.platformGames.isEmpty) platformsGamesBloc.add(LoadPlatforms(platforms: user.platforms));
       
       return userInfo;
     } catch (e) {

@@ -15,18 +15,19 @@ class PlatformGamesCubit extends Cubit<PlatformGamesState> {
     List<PlatformGamesModel> platformGames = [];
     platformGames.add(data);
     platformGames.addAll(state.data);
-    emit(state.copyWith(data: platformGames, lastUpdate: DateTime.now().millisecondsSinceEpoch));
+    emit(state.copyWith(data: platformGames, lastUpdate: DateTime.now().millisecondsSinceEpoch,));
   }
 
 
   void addGamesToPlatform(int platform, List<HomeGame> games){
     try {
       PlatformGamesModel objetive = state.data.firstWhere((element) => element.platform == platform);
+      objetive.page++;
       objetive.games.addAll(games);
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
-  PlatformGamesModel getPlatformGames(int platform) => state.data.firstWhere((element) => element.platform == platform, orElse: () => PlatformGamesModel(platform: 0, games: []));
+  PlatformGamesModel getPlatformGames(int platform) => state.data.firstWhere((element) => element.platform == platform, orElse: () => PlatformGamesModel(platform: 0, games: [], page: 0, status: PlatformGamesStatus.initial, hasReachedMax: false));
 }

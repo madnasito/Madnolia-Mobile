@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/enums/user-availability.enum.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
@@ -108,10 +109,14 @@ class OrganismEditUserForm extends StatelessWidget {
                   
                   if(!context.mounted) return;
                   final userBloc = context.read<UserBloc>();
+                  final platformGamesBloc = context.read<PlatformGamesBloc>();
             
                   Toast.show(translate("PROFILE.USER_PAGE.UPDATED"), gravity: 20, duration: 2 );
             
                   userBloc.loadInfo(newUser);
+                  
+                  if(platformGamesBloc.state.platformGames.isEmpty) platformGamesBloc.add(LoadPlatforms(platforms: userBloc.state.platforms));
+
                   debugPrint(availability.toString());
                 } catch (e) {
                  if (context.mounted) {

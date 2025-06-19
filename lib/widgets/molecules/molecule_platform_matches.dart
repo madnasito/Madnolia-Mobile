@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
-import 'package:madnolia/models/platform/platform_games_model.dart';
 
 import '../../models/game/home_game_model.dart';
 import '../../services/match_service.dart';
@@ -25,6 +25,9 @@ class MoleculePlatformMatches extends StatelessWidget {
         if(snapshot.hasData){
 
           if(snapshot.data!.isNotEmpty){
+            CarouselSliderController gamesCarouselController = CarouselSliderController();
+
+
             return CarouselSlider.builder(
               itemCount: snapshot.data?.length,
               itemBuilder: (BuildContext context, int index, int realIndex) {  
@@ -44,12 +47,19 @@ class MoleculePlatformMatches extends StatelessWidget {
                   ),
                 );
               },
+              carouselController: gamesCarouselController,
               options: CarouselOptions(
+                enableInfiniteScroll: false,
                 aspectRatio: 1.262,
                 enlargeFactor: 0.1,
                 viewportFraction: 0.9,
                 disableCenter: true,
-                enlargeCenterPage: true
+                enlargeCenterPage: true,
+                onPageChanged: (index, reason) {
+                  if(index == snapshot.data!.length - 1) debugPrint('The end arrived');
+                  debugPrint(index.toString());
+                  debugPrint(reason.toString());
+                } ,
                 ),
               disableGesture: true,
             );
@@ -111,16 +121,17 @@ Future<List<HomeGame>> _loadGames(int platformId, BuildContext context) async {
     try {
       final platformGamesCubit = context.watch<PlatformGamesCubit>();
 
+      final platformGamesBloc = context.watch<PlatformGamesBloc>();
+
       final loadedGames = platformGamesCubit.getPlatformGames(platformId);
 
+      // DateTime checkUpdateTime = DateTime.fromMillisecondsSinceEpoch(platformGamesBloc.state.lastUpdate).add(const Duration(minutes: 4));
       DateTime checkUpdateTime = DateTime.fromMillisecondsSinceEpoch(platformGamesCubit.state.lastUpdate).add(const Duration(minutes: 4));
 
       if(loadedGames.platform == 0 || (checkUpdateTime.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch)){
-        final resp = await MatchService().getMatchesByPlatform(platformId);
-        final values =
-            resp.map((e) => HomeGame.fromJson(e)).toList();
-        platformGamesCubit.addPlatformAndGames(PlatformGamesModel(platform: platformId, games: values));
-        return values;
+        platformGamesBloc.add(PlatformGamesFetched(platformId: platformId));
+        final resp = await MatchService().getGamesMatchesByPlatform(platformId: platformId, page: 0);
+        return resp;
       }else{
         return loadedGames.games;
       }
