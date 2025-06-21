@@ -7,7 +7,7 @@ sealed class PlatformGamesEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class RestoreState extends PlatformGamesEvent {}
+final class RestorePlatformsGamesState extends PlatformGamesEvent {}
 
 final class LoadPlatforms extends PlatformGamesEvent {
   final List<int> platforms;
@@ -19,3 +19,6 @@ class PlatformGamesFetched extends PlatformGamesEvent {
 
   const PlatformGamesFetched({required this.platformId});
 }
+
+
+final class FetchAllPlatforms extends PlatformGamesEvent {}

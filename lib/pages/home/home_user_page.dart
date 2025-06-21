@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
-import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/enums/message-status.enum.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/services/messages_service.dart';
@@ -52,13 +51,14 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    final platformGamesCubit = context.watch<PlatformGamesCubit>();
+    
+    final platformsGamesBloc = context.watch<PlatformGamesBloc>();
     
     return CustomScaffold(
       body: CustomMaterialIndicator(
         autoRebuild: false,
         onRefresh: () async {
-          platformGamesCubit.cleanData();
+          platformsGamesBloc.add(RestorePlatformsGamesState());
           _retryLoadInfo(); // Also retry when manually refreshing
         },
         child: FutureBuilder(

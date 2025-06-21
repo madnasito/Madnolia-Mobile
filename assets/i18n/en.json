@@ -19,7 +19,8 @@
       "MATCH": "Created match",
       "MATCHES": "Created matches",
       "CREATE": "Create one here",
-      "NO_MATCHES": "There are no matches for"
+      "NO_MATCHES": "There are no matches for",
+      "ERROR_LOADING_MATCHES": "Error loading matches"
   },
   "REGISTER":{
       "TITLE": "Sign Up!",
