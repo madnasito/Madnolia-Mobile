@@ -5,7 +5,6 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/models/platform/platform_games_model.dart';
-import 'package:madnolia/utils/platforms.dart';
 
 import '../../models/game/home_game_model.dart';
 import '../match_card_widget.dart';
