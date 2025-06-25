@@ -134,12 +134,23 @@ onStart(ServiceInstance service) async {
     }
   );
 
+  service.on("join_room").listen((onData) {
+      currentRoom = onData?["room"];
+      debugPrint("INIT CHAT: ${onData?["room"]}");
+      LocalNotificationsService.deleteRoomMessages(onData?["room"]);
+    }
+  );
+
   service.on("new_message").listen((onData) => socket.emit("message", onData));
 
   service.on("update_recipient_status").listen((onData) => socket.emit("update_recipient_status", onData));
 
   service.on("disconnect_chat").listen((onData) {
     socket.emit("disconnect_chat");
+    currentRoom = "";
+  });
+
+  service.on("leave_room").listen((onData) {
     currentRoom = "";
   });
 

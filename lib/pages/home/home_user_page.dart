@@ -128,14 +128,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final messageBloc = context.read<MessageBloc>();
       final platformsGamesBloc = context.read<PlatformGamesBloc>();
       const storage = FlutterSecureStorage();
-      final Map<String, dynamic> userInfo = await UserService().getUserInfo();
-
-      if(messageBloc.state.unreadUserChats == 0) {
-        final chats = await MessagesService().getChats();
-        for (var chat in chats) {
-          if(chat.message.creator != userBloc.state.id && chat.message.status == ChatMessageStatus.sent) messageBloc.add(UpdateUnreadUserChatCount(value: 1));
-        }
-      }
+      final Map<String, dynamic> userInfo = await UserService().getUserInfo();      
 
       if (userInfo.containsKey("error")) {
         if (!context.mounted) return null;
@@ -163,6 +156,13 @@ class _HomeUserPageState extends State<HomeUserPage> {
       userBloc.updateNotifications(unreadNotificationsCount);
       userBloc.loadInfo(user);
       if(platformsGamesBloc.state.platformGames.isEmpty) platformsGamesBloc.add(LoadPlatforms(platforms: user.platforms));
+
+      if(messageBloc.state.unreadUserChats == 0) {
+        final chats = await MessagesService().getChats();
+        for (var chat in chats) {
+          if(chat.message.creator != userBloc.state.id && chat.message.status == ChatMessageStatus.sent) messageBloc.add(UpdateUnreadUserChatCount(value: 1));
+        }
+      }
       
       return userInfo;
     } catch (e) {

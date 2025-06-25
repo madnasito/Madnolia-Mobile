@@ -33,7 +33,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
     userBloc = context.read<UserBloc>();
     _scrollController.addListener(_onScroll);
 
-    _backgroundService.invoke("init_chat", {"room": widget.id});
+    _backgroundService.invoke("join_room", {"room": widget.id});
 
     _messageSubscription = _backgroundService.on("message").listen((onData) {
       if (onData != null) {
@@ -90,6 +90,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
 
   @override
   void dispose() {
+    _backgroundService.invoke("leave_room");
     _scrollController
       ..removeListener(_onScroll)
       ..dispose();
