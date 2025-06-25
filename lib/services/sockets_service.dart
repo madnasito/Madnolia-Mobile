@@ -55,10 +55,10 @@ onStart(ServiceInstance service) async {
 
       // debugPrint(message.to);
 
-      if(currentRoom != payload["to"] && payload["type"] != 0 && payload["text"].contains("@$username")){
+      if(currentRoom != payload["conversation"] && payload["type"] != 0 && payload["text"].contains("@$username")){
         ChatMessage message =ChatMessage.fromJson(payload);
         LocalNotificationsService.displayRoomMessage(message);
-      } else if(currentRoom != payload["to"] && payload["type"] == 0 && payload['creator'] != userId) {
+      } else if(currentRoom != payload["conversation"] && payload["type"] == 0 && payload['creator'] != userId) {
         final ChatMessage message = ChatMessage.fromJson(payload);
         LocalNotificationsService.displayUserMessage(message);
       }
