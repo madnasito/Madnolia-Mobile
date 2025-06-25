@@ -56,7 +56,7 @@ class UserService {
     }
   }
 
-  Future<Map> updateUserPlatforms({platforms}) =>
+  Future<Map<String, dynamic>> updateUserPlatforms({platforms}) =>
       userPutRequest("user/update", platforms);
 
   Future userGetRequest(String apiUrl) async {
