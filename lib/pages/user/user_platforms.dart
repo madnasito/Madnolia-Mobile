@@ -69,6 +69,7 @@ class UserPlatformsPage extends StatelessWidget {
                               final User user = User.fromJson(resp);
                               userBloc.loadInfo(user);
                               platformsGamesBloc.add(RestorePlatformsGamesState());
+                              platformsGamesBloc.add(LoadPlatforms(platforms: userBloc.state.platforms));
                               Toast.show(translate("PROFILE.PLATFORMS_PAGE.SUCCESS"),
                                   gravity: 100,
                                   border: Border.all(color: Colors.blueAccent),

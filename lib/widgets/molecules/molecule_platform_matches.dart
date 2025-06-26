@@ -21,6 +21,8 @@ class MoleculePlatformMatches extends StatelessWidget {
     final platformsGamesBloc = context.watch<PlatformGamesBloc>();
 
     final platformIndex = platformsGamesBloc.state.platformGames.indexWhere((e) => e.platform == platform);
+
+    if(platformIndex == -1 ) return Container();
     
     PlatformGamesModel platformState = platformsGamesBloc.state.platformGames.elementAt(platformIndex);
 
