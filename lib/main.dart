@@ -74,9 +74,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getIt<MessageBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<PlatformGamesBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<ChatsBloc>()),
+        BlocProvider(create: (BuildContext context) => getIt<PlayerMatchesBloc>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
-        BlocProvider(create: (BuildContext context) => getItCubit<PlayerMatchesBloc>()),
       ],
       child:MessageProvider(
               child: Portal(

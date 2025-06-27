@@ -27,18 +27,32 @@ class PlayerMatchesState extends Equatable {
 
 final class PlayerMatchesInitial extends PlayerMatchesState {}
 
-class LoadedMatches {
-  MatchesFilterType type;
-  bool hasReachesMax;
-  ListStatus status;
-  List<MatchWithGame> matches;
+class LoadedMatches extends Equatable {
+  final MatchesFilterType type;
+  final bool hasReachesMax;
+  final ListStatus status;
+  final List<MatchWithGame> matches;
 
-  LoadedMatches({
+  const LoadedMatches({
     required this.type,
     this.hasReachesMax = false,
     this.status = ListStatus.initial,
-    this.matches = const []
+    this.matches = const [],
   });
+
+  LoadedMatches copyWith({
+    bool? hasReachesMax,
+    ListStatus? status,
+    List<MatchWithGame>? matches,
+  }) {
+    return LoadedMatches(
+      type: type,
+      hasReachesMax: hasReachesMax ?? this.hasReachesMax,
+      status: status ?? this.status,
+      matches: matches ?? this.matches,
+    );
+  }
+
+  @override
+  List<Object> get props => [type, hasReachesMax, status, matches];
 }
-
-

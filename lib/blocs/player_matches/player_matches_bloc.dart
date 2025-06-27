@@ -29,87 +29,109 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
 
   _initState(InitialState event, Emitter<PlayerMatchesState> emit) {
     final mainList = [
-      LoadedMatches(type: MatchesFilterType.all),
-      LoadedMatches(type: MatchesFilterType.created),
-      LoadedMatches(type: MatchesFilterType.joined),
+      LoadedMatches(type: MatchesFilterType.all, hasReachesMax: false, matches: [], status: ListStatus.initial),
+      LoadedMatches(type: MatchesFilterType.created, hasReachesMax: false, matches: [], status: ListStatus.initial),
+      LoadedMatches(type: MatchesFilterType.joined, hasReachesMax: false, matches: [], status: ListStatus.initial),
     ];
 
     emit(
       state.copyWith(
-        matchesState: mainList
+        matchesState: mainList,
+        selectedType: MatchesFilterType.all,
       )
     );
   }
 
-  _updateFilterType(UpdateFilterType event, Emitter<PlayerMatchesState> emit) {
+  void _updateFilterType(UpdateFilterType event, Emitter<PlayerMatchesState> emit) {
+  // First emit the new selected type
+  emit(state.copyWith(selectedType: event.type));
 
-    emit(
-      state.copyWith(
-        selectedType: event.type
-      )
-    );
-    
-    final int index = state.matchesState.indexWhere((e) => e.type == event.type);
-
-    LoadedMatches matchesState = state.matchesState[index];
-
-    if(matchesState.status != ListStatus.success && matchesState.matches.isEmpty) {
-      add(
-        FetchMatchesType(filter: MatchesFilter(
-          skip: matchesState.matches.length,
-          sort: SortType.asc,
+  // Find the matching matches state or create a new one if not found
+  final index = state.matchesState.indexWhere((e) => e.type == event.type);
+  final matchesState = index != -1 
+      ? state.matchesState[index]
+      : LoadedMatches(
           type: event.type,
-          platform: null
-        )
-      )
-    );
-    }
+          matches: [],
+          status: ListStatus.initial,
+          hasReachesMax: false,
+        );
 
+  // If we need to fetch data (either new state or empty existing state)
+  if (matchesState.status != ListStatus.success || matchesState.matches.isEmpty) {
+    add(FetchMatchesType(
+      filter: MatchesFilter(
+        skip: matchesState.matches.length,
+        sort: SortType.asc,
+        type: event.type,
+        platform: null,
+      ),
+    ));
+  }
+
+    // If we created a new matchesState, add it to the list
+    if (index == -1) {
+      emit(state.copyWith(
+        matchesState: [...state.matchesState, matchesState],
+      ));
+    }
   }
 
   Future _fetchMatches(FetchMatchesType event, Emitter<PlayerMatchesState> emit) async {
 
     final int index = state.matchesState.indexWhere((e) => e.type == event.filter.type);
     // Create a new copy of the matchesState to modify
-      LoadedMatches matchesState = LoadedMatches(
-        type: state.matchesState[index].type,
-        matches: List<MatchWithGame>.from(state.matchesState[index].matches), // Create modifiable copy
-        status: state.matchesState[index].status,
-        hasReachesMax: state.matchesState[index].hasReachesMax,
-      );
+      final currentMatchesState = state.matchesState[index];
+
+      
 
     try {
       
 
-      if(matchesState.hasReachesMax) return;
+      if(currentMatchesState.hasReachesMax) return;
 
       final data = await MatchService().getMatches(event.filter);
 
-      if(data.isEmpty) {
-        matchesState.hasReachesMax = true;
-        state.matchesState[index] = matchesState;
-        return emit(
-          state.copyWith(
-            matchesState: state.matchesState,
-          )
-        );
-      }
-
-      matchesState.matches.addAll(data);
-      matchesState.status = ListStatus.success;
-
-      print(matchesState.matches);
-
-      state.matchesState[index] = matchesState;
-      emit(
-        state.copyWith(
-          matchesState: state.matchesState
-        )
+      final updatedMatchesState = LoadedMatches(
+        type: currentMatchesState.type,
+        hasReachesMax: data.isEmpty, // o currentMatchesState.hasReachesMax || data.isEmpty
+        status: ListStatus.success,
+        matches: [
+          ...currentMatchesState.matches,
+          ...data,
+        ],
       );
 
+      final List<LoadedMatches> updatedList = [
+        for (var item in state.matchesState)
+          if (item.type == event.filter.type) updatedMatchesState else item,
+      ];
+
+      emit(state.copyWith(matchesState: updatedList));
+
+      // matchesState.copyWith(status: ListStatus.success);
+      // if(data.isEmpty) {
+      //   matchesState.copyWith(hasReachesMax: true);
+      //   state.matchesState[index] = matchesState;
+      //   return emit(
+      //     state.copyWith(
+      //       matchesState: state.matchesState,
+      //     )
+      //   );
+      // }
+
+      // matchesState.matches.addAll(data);
+
+      // state.matchesState[index] = matchesState;
+      // emit(
+      //   state.copyWith(
+      //     matchesState: state.matchesState
+      //   )
+      // );
+
     } catch (e) {
-      matchesState.status = ListStatus.failure;
-      state.matchesState[index] = matchesState;
+      currentMatchesState.copyWith(status: ListStatus.failure);
+      state.matchesState[index] = currentMatchesState;
       emit(
         state.copyWith(
           matchesState: state.matchesState
