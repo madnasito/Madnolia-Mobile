@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
+import 'package:madnolia/widgets/alert_widget.dart';
+import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:toast/toast.dart';
 
 import 'package:madnolia/services/user_service.dart';
@@ -38,48 +40,60 @@ class UserPlatformsPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: FadeIn(
                 delay: const Duration(seconds: 1),
-                child: FormButton(
-                    text: "Update platforms",
+                child:
+                StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) => 
+                  MoleculeFormButton(
+                    text: translate('PROFILE.USER_PAGE.UPDATE'),
                     color: Colors.transparent,
+                    isLoading: updating,
                     onPressed: updating == false
                         ? () async {
-                            if (platforms.isEmpty) {
-                              Toast.show(
-                                  "You need to select at least one platform",
-                                  gravity: 100,
-                                  border: Border.all(color: Colors.blueAccent),
-                                  textStyle: const TextStyle(fontSize: 18),
-                                  duration: 2);
-                              return;
+                              try {
+                                if (platforms.isEmpty) {
+                                Toast.show(
+                                    "You need to select at least one platform",
+                                    gravity: 100,
+                                    border: Border.all(color: Colors.blueAccent),
+                                    textStyle: const TextStyle(fontSize: 18),
+                                    duration: 2);
+                                return;
+                              }
+
+                              setState(() => updating = true);
+
+                              final resp = await UserService()
+                                  .updateUserPlatforms(
+                                      platforms: {"platforms": platforms});
+
+                              if (resp.containsKey("error") ) {
+                                Toast.show("Error updating",
+                                    gravity: 100,
+                                    border: Border.all(color: Colors.redAccent),
+                                    textStyle: const TextStyle(fontSize: 18),
+                                    duration: 3);
+                              } else {
+                                final User user = User.fromJson(resp);
+                                userBloc.loadInfo(user);
+                                platformsGamesBloc.add(RestorePlatformsGamesState());
+                                platformsGamesBloc.add(LoadPlatforms(platforms: userBloc.state.platforms));
+                                Toast.show(translate("PROFILE.PLATFORMS_PAGE.SUCCESS"),
+                                    gravity: 100,
+                                    border: Border.all(color: Colors.blueAccent),
+                                    textStyle: const TextStyle(fontSize: 18),
+                                    duration: 3);
+                              }
+
+                              setState(() => updating = true);
+                            } catch (e) {
+                              if (context.mounted) showAlert(context, e.toString());
+                            } finally {
+                              setState(() => updating = false);
                             }
-
-                            updating = true;
-
-                            final resp = await UserService()
-                                .updateUserPlatforms(
-                                    platforms: {"platforms": platforms});
-
-                            if (resp.containsKey("error") ) {
-                              Toast.show("Error updating",
-                                  gravity: 100,
-                                  border: Border.all(color: Colors.redAccent),
-                                  textStyle: const TextStyle(fontSize: 18),
-                                  duration: 3);
-                            } else {
-                              final User user = User.fromJson(resp);
-                              userBloc.loadInfo(user);
-                              platformsGamesBloc.add(RestorePlatformsGamesState());
-                              platformsGamesBloc.add(LoadPlatforms(platforms: userBloc.state.platforms));
-                              Toast.show(translate("PROFILE.PLATFORMS_PAGE.SUCCESS"),
-                                  gravity: 100,
-                                  border: Border.all(color: Colors.blueAccent),
-                                  textStyle: const TextStyle(fontSize: 18),
-                                  duration: 3);
-                            }
-
-                            updating = false;
                           }
-                        : null),
+                        : null
+                    ),
+                  )
+                 ,
               ),
             )
           ],
