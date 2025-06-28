@@ -40,34 +40,49 @@ class OrganismLoginForm extends StatelessWidget {
           ]),
         ),
         const SizedBox(height: 15),
-        MoleculeFormButton(
-          text: "Login",
-          color: Colors.transparent,
-          onPressed:(logging == false) ? () async {
-            // Validate and save the form values
-            formKey.currentState?.saveAndValidate();
-            debugPrint(formKey.currentState?.value.toString());
-            // On another side, can access all field values without saving form with instantValues
-            formKey.currentState?.validate();
-            debugPrint(formKey.currentState?.instantValue.toString());
-            // CHecking if the form is valid before send petition
-            if(!formKey.currentState!.isValid) return;
-            final values = formKey.currentState?.instantValue.values.toList();
-            
-            logging = true;
-            final Map<String, dynamic> resp = await AuthService().login(values?[0], values?[1]);
-            
-            if(!context.mounted) return;
+        StatefulBuilder(
+          builder: (BuildContext context, setState) => MoleculeFormButton(
+            text: "Login",
+            isLoading: logging,
+            color: Colors.transparent,
+            onPressed:(logging == false) ? () async {
 
-            logging = false;
-            
-            if (resp.containsKey("error")) {
-              return showErrorServerAlert(context, resp);
-            } else {
-              if(context.mounted) context.go("/");
-            }
-          } : null),
-         
+              try {
+                setState(() => logging = true);
+                // Validate and save the form values
+                formKey.currentState?.saveAndValidate();
+                debugPrint(formKey.currentState?.value.toString());
+                // On another side, can access all field values without saving form with instantValues
+                formKey.currentState?.validate();
+                debugPrint(formKey.currentState?.instantValue.toString());
+                // CHecking if the form is valid before send petition
+                if(!formKey.currentState!.isValid) return;
+                final values = formKey.currentState?.instantValue.values.toList();
+                
+                if (!formKey.currentState!.isValid) {
+                    setState(() => logging = false);
+                    return;
+                  }
+                final Map<String, dynamic> resp = await AuthService().login(values?[0], values?[1]);
+                
+                if(!context.mounted) return;
+
+                
+                if (resp.containsKey("error")) {
+                  return showErrorServerAlert(context, resp);
+                } else {
+                  if(context.mounted) context.go("/");
+                }
+              } catch (e) {
+                if (context.mounted) showAlert(context, e.toString());
+              } finally {
+                if (context.mounted) {
+                  setState(() => logging = false);
+                }
+              }
+              
+            } : null)
+          ),
         ],
       ),
     );
