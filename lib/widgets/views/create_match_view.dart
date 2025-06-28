@@ -8,6 +8,7 @@ import 'package:madnolia/models/match/create_match_model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/minutes_picker.dart';
 import 'package:madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:madnolia/widgets/molecules/games_list_molecule.dart';
 import 'package:madnolia/widgets/search_user_widget.dart';
 import 'package:flutter/material.dart';
@@ -286,64 +287,79 @@ class MatchFormView extends StatelessWidget {
             const SizedBox(height: 20),
             Text(userState.name, style: const TextStyle(fontSize: 10)),
             const SizedBox(height: 10),
-            FormButton(
-                text:
-                    translate("CREATE_MATCH.CREATE_MATCH"),
+            StatefulBuilder(
+              builder: (BuildContext context, void Function(void Function()) setState) =>
+              MoleculeFormButton(
+                text: translate("CREATE_MATCH.CREATE_MATCH"),
                 color: Colors.transparent,
+                isLoading: uploading,
                 onPressed: () async {
-                  
-                  if (uploading == true) {
                     
-                    return Toast.show(
-                        translate("CREATE_MATCH.UPLOADING_MESSAGE"),
-                        gravity: 100,
-                        border: Border.all(color: Colors.blueAccent),
-                        textStyle: const TextStyle(fontSize: 18),
-                        duration: 3);
-                  }
-                  if (dateController.text == "") {
-                    return Toast.show(
-                        translate("CREATE_MATCH.DATE_ERROR"),
-                        gravity: 100,
-                        border: Border.all(color: Colors.blueAccent),
-                        textStyle: const TextStyle(fontSize: 18),
-                        duration: 3);
-                  }
-                  int formDate =
-                      DateTime.parse(dateController.text).millisecondsSinceEpoch;
+                  try {
+                    // if (uploading == true) {
+                    
+                    //   return Toast.show(
+                    //       translate("CREATE_MATCH.UPLOADING_MESSAGE"),
+                    //       gravity: 100,
+                    //       border: Border.all(color: Colors.blueAccent),
+                    //       textStyle: const TextStyle(fontSize: 18),
+                    //       duration: 3);
+                    // }
+                    if (dateController.text == "") {
+                      return Toast.show(
+                          translate("CREATE_MATCH.DATE_ERROR"),
+                          gravity: 100,
+                          border: Border.all(color: Colors.blueAccent),
+                          textStyle: const TextStyle(fontSize: 18),
+                          duration: 3);
+                    }
+                    
 
-                  final matchMinutesCubit = context.read<MatchMinutesCubit>();
-                  CreateMatch match = CreateMatch(
-                    title: nameController.text,
-                    description: descriptionController.text,
-                    date: formDate,
-                    inviteds: matchUsersCubit.getUsersId(),
-                    game: game.id,
-                    platform: platformId,
-                    duration: matchMinutesCubit.state.minutes
-                    );
+                    int formDate =
+                        DateTime.parse(dateController.text).millisecondsSinceEpoch;
 
-                  uploading = true;
-                  final Map<String, dynamic> resp = await MatchService().createMatch(match.toJson());
-                  uploading = false;
-                  if (resp.containsKey("message")) {
-                    if (!context.mounted) return;
-                    return showErrorServerAlert(context, resp);
-                  } else {
-                    Toast.show(
-                        translate("CREATE_MATCH.MATCH_CREATED"),
-                        gravity: 100,
-                        border: Border.all(color: Colors.blueAccent),
-                        textStyle: const TextStyle(fontSize: 18),
-                        duration: 3);
-                    dateController.clear();
-                    nameController.clear();
-                    matchMinutesCubit.restoreMinutes();
-                    matchUsersCubit.restore();
-                    if (!context.mounted) return;
-                    context.goNamed("user-matches");
+                    final matchMinutesCubit = context.read<MatchMinutesCubit>();
+                    CreateMatch match = CreateMatch(
+                      title: nameController.text,
+                      description: descriptionController.text,
+                      date: formDate,
+                      inviteds: matchUsersCubit.getUsersId(),
+                      game: game.id,
+                      platform: platformId,
+                      duration: matchMinutesCubit.state.minutes
+                      );
+
+                    setState(() => uploading = true);
+
+                    final Map<String, dynamic> resp = await MatchService().createMatch(match.toJson());
+
+                    if (resp.containsKey("message")) {
+                      if (!context.mounted) return;
+                      return showErrorServerAlert(context, resp);
+                    } else {
+                      Toast.show(
+                          translate("CREATE_MATCH.MATCH_CREATED"),
+                          gravity: 100,
+                          border: Border.all(color: Colors.blueAccent),
+                          textStyle: const TextStyle(fontSize: 18),
+                          duration: 3);
+                      dateController.clear();
+                      nameController.clear();
+                      matchMinutesCubit.restoreMinutes();
+                      matchUsersCubit.restore();
+                      if (!context.mounted) return;
+                      context.goNamed("user-matches");
+                    }
+                  } catch (e) {
+                    if (context.mounted) showAlert(context, e.toString());
+                  } finally{
+                    setState(() => uploading = false);
                   }
-                })
+                  
+                  }
+                )
+            )
+            
                 ],
               ),
             ),
