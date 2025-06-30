@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 
 import 'package:madnolia/widgets/platform_icon_widget.dart';
@@ -178,7 +179,8 @@ class _PlatformsViewState extends State<PlatformsView> {
         const SizedBox(height: 50),
         FadeIn(
             delay: const Duration(milliseconds: 300),
-            child: CenterTitleAtom(text: translate("REGISTER.SELECT_PLATFORMS")),
+            child: CenterTitleAtom(text: translate("REGISTER.SELECT_PLATFORMS"),
+            textStyle: neonTitleText,),
             ),
         const SizedBox(height: 40),
         Wrap(

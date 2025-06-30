@@ -12,7 +12,6 @@ import 'package:toast/toast.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/views/platforms_view.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
-import 'package:madnolia/widgets/form_button.dart';
 
 import '../../models/user/user_model.dart';
 

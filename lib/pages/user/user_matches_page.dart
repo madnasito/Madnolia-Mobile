@@ -3,7 +3,9 @@ import 'package:madnolia/services/match_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
+import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/match_card_widget.dart';
 
@@ -23,14 +25,7 @@ class UserMatchesPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 width: double.infinity,
-                child: Text(
-                  translate("PROFILE.MATCHES_PAGE.TITLE"),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontFamily: "Cyberverse",
-                      fontSize: 30,
-                      color: Colors.white),
-                ),
+                child: CenterTitleAtom(text: translate("PROFILE.MATCHES_PAGE.TITLE"), textStyle: neonTitleText,),
               ),
               FutureBuilder(
                 future: MatchService().getUserMatches(),

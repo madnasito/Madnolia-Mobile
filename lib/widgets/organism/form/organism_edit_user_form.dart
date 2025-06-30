@@ -7,6 +7,7 @@ import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/enums/user-availability.enum.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
+import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/alert_widget.dart' show showErrorServerAlert;
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_dropdown_form_field.dart';
@@ -19,6 +20,17 @@ class OrganismEditUserForm extends StatelessWidget {
 
   final UpdateUser updateUser;
   const OrganismEditUserForm({super.key, required this.updateUser});
+
+  IconData _getIconForAvailability(UserAvailability availability) {
+  switch (availability) {
+    case UserAvailability.everyone: // Asumiendo que uno de tus options.name es 'available'
+      return Icons.check_circle_outline;
+    case UserAvailability.partners: // Asumiendo que tienes 'friendsOnly'
+      return Icons.group_outlined;
+    case UserAvailability.no: // Asumiendo que tienes 'doNotDisturb'
+      return Icons.do_not_disturb_on_outlined;
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -73,18 +85,38 @@ class OrganismEditUserForm extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: MoleculeDropdownFormField(
-              name: 'availability',
-              label: translate('PROFILE.USER_PAGE.INVITATIONS.TITLE'),
-              items: availabilityOptions.map((option) =>
-              DropdownMenuItem(
-                value: option,
-                child: Text(translate('PROFILE.USER_PAGE.INVITATIONS.${option.name.toUpperCase()}') )
-                )
-              ).toList(),
-              initialValue: updateUser.availability),
-          ),
+  padding: const EdgeInsets.only(bottom: 16),
+  child: MoleculeDropdownFormField(
+    // CAMBIO 1: Ícono principal más adecuado.
+    // icon: Icons.shield, // O Icons.visibility, o Icons.toggle_on
+    
+    name: 'availability',
+    label: translate('PROFILE.USER_PAGE.INVITATIONS.TITLE'),
+    items: availabilityOptions.map((option) {
+      // CAMBIO 2: Items con estilo neón y más visuales.
+      return DropdownMenuItem(
+        value: option,
+        child: Row(
+          children: [
+            // Icono específico para cada opción
+            Icon(
+              _getIconForAvailability(option),
+              // color: const Color(0xFF00FFFF), // Mismo color del brillo para consistencia
+              // size: 22,
+            ),
+            const SizedBox(width: 12), // Espacio entre el ícono y el texto
+            // Texto con el estilo neón que definimos
+            Text(
+              translate('PROFILE.USER_PAGE.INVITATIONS.${option.name.toUpperCase()}')
+            ),
+          ],
+        ),
+      );
+    }).toList(),
+    initialValue: updateUser.availability,
+  ),
+),
+
           StatefulBuilder(
             builder: (context, setState) =>  MoleculeFormButton(
               text: translate('PROFILE.USER_PAGE.UPDATE'),

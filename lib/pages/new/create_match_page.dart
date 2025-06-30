@@ -6,6 +6,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 
 
@@ -42,6 +43,7 @@ class _NewPageState extends State<NewPage> {
                   delay: const Duration(milliseconds: 300),
                   child: CenterTitleAtom(
                     text: translate("CREATE_MATCH.TITLE"),
+                    textStyle: neonTitleText,
                   )),
               const SizedBox(height: 10),
               SingleChildScrollView(

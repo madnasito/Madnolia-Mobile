@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/services/notifications_service.dart';
+import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/notifications/atom_invitation_notification.dart';
 import 'package:madnolia/widgets/atoms/notifications/atom_request_notification.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
@@ -56,7 +57,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            CenterTitleAtom(text: translate("NOTIFICATIONS.TITLE")),
+            CenterTitleAtom(text: translate("NOTIFICATIONS.TITLE"), textStyle: neonTitleText,),
             const SizedBox(height: 10),
             FutureBuilder(
               future: NotificationsService().getUserNotifications(),

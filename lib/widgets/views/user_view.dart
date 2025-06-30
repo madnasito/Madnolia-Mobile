@@ -10,6 +10,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madnolia/blocs/edit_user_provider.dart';
+import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/organism/form/organism_edit_user_form.dart';
@@ -28,7 +29,7 @@ class UserMainView extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 10),
-        CenterTitleAtom(text: translate("PROFILE.TITLE")),
+        CenterTitleAtom(text: translate("PROFILE.TITLE"), textStyle: neonTitleText,),
         const SizedBox(height: 10),
         _Card(
           icon: Icons.person,
@@ -132,7 +133,7 @@ class _EditUserViewState extends State<EditUserView> {
                 const SizedBox(height: 10),
                 CenterTitleAtom(
                   text: bloc.name,
-                  
+                  textStyle: neonTitleText,
                 ),
                 Container(
                   margin: const EdgeInsets.all(30),

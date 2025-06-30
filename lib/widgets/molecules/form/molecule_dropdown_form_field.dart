@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:madnolia/style/text_style.dart';
 
 import '../../../style/form_style.dart';
 
@@ -26,7 +27,7 @@ class MoleculeDropdownFormField extends StatelessWidget {
     return FadeIn(
       delay: Duration(milliseconds: delay),
       child: FormBuilderDropdown(
-        dropdownColor: Colors.black12,
+        dropdownColor: Colors.black38,
         name: name,
         initialValue: initialValue,
         decoration: InputDecoration(
