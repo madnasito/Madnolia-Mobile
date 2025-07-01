@@ -7,7 +7,6 @@ import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/enums/user-availability.enum.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
-import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/alert_widget.dart' show showErrorServerAlert;
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_dropdown_form_field.dart';

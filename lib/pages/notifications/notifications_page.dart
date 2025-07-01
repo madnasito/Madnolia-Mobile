@@ -72,12 +72,16 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.EMPTY"))));
                 }
                 final userBloc = context.watch<UserBloc>();
+
+                // avoid multiple notifications services instances
+                final notificationsService = NotificationsService();
+
                 userBloc.restoreNotifications();
                 return Column(
                   children: snapshot.data!.map((notification) =>
                     notification.type == 0
                       ? AtomRequestNotification(notification: notification)
-                      : AtomInvitationNotification(notification: notification)
+                      : AtomInvitationNotification(notification: notification, notificationsService: notificationsService,)
                   ).toList(),
                 );
               },

@@ -41,4 +41,25 @@ class NotificationsService {
       throw Exception(e);
     }
   }
+
+  Future<NotificationModel> deleteNotification(String id) async {
+    try {
+      final url = "$baseUrl/notifications/delete";
+
+      final String? token = await _storage.read(key: "token");
+
+      final resp = await Dio().delete(
+        url,
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+        queryParameters: {'id': id}
+      );
+
+      final NotificationModel notificationDeleted = NotificationModel.fromJson(resp.data);
+
+      return notificationDeleted;
+    } catch (e) {
+      debugPrint(e.toString());
+      throw Exception(e);
+    }
+  }
 }
