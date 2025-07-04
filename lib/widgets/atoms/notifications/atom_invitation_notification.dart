@@ -23,7 +23,7 @@ class AtomInvitationNotification extends StatelessWidget {
                 await notificationsService.deleteNotification(notification.id);
                 return true;
               } catch (e) {
-                throw false;
+                return false;
               }
             },
             direction: DismissDirection.startToEnd,

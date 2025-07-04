@@ -6,7 +6,7 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/database/providers/friendship_db.dart';
 import 'package:madnolia/database/providers/user_db.dart';
 import 'package:madnolia/database/services/friendship-db.service.dart';
-import 'package:madnolia/enums/message-status.enum.dart';
+import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/database/services/user-db.service.dart';

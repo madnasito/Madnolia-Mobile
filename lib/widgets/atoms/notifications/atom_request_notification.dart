@@ -17,11 +17,7 @@ class AtomRequestNotification extends StatelessWidget {
       future: getUserDb(notification.sender),
       builder: (context, snapshot) {
         if(snapshot.hasData){
-          return Dismissible(
-            key: UniqueKey(),
-            background: Container(color: Colors.red,),
-            onDismissed: (direction) => print(direction),
-            child: Container(
+          return  Container(
               decoration: BoxDecoration(
                 color: Colors.black45, // Darker background
                 borderRadius: BorderRadius.circular(12), // Optional rounded corners
@@ -79,7 +75,6 @@ class AtomRequestNotification extends StatelessWidget {
                   ],
                 );
               }),
-              ),
             ),
           );
         } else {

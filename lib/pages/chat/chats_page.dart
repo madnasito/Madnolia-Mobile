@@ -1,11 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/models/chat/user_chat_model.dart';
-import 'package:madnolia/services/messages_service.dart';
+import 'package:madnolia/blocs/chats/chats_bloc.dart';
+import 'package:madnolia/enums/message_status.enum.dart';
+import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_users_chats.dart';
+
+import '../../widgets/custom_scaffold.dart';
 
 class ChatsPage extends StatelessWidget {
   const ChatsPage({super.key});
@@ -16,10 +23,13 @@ class ChatsPage extends StatelessWidget {
       body: Column(
         children: [
           const SizedBox(height: 10),
-          CenterTitleAtom(text: translate("CHAT.MESSAGES"), textStyle: neonTitleText,),
+          CenterTitleAtom(
+            text: translate("CHAT.MESSAGES"), 
+            textStyle: neonTitleText,
+          ),
           const SizedBox(height: 10),
-          Expanded(  // Use Expanded instead of Flexible here
-            child: OrganismUserChats(),
+          Expanded(
+            child: _ChatListWithUpdates(),
           ),
         ],
       ),
@@ -27,24 +37,66 @@ class ChatsPage extends StatelessWidget {
   }
 }
 
-class OrganismUserChats extends StatelessWidget {
-  const OrganismUserChats({super.key});
+class _ChatListWithUpdates extends StatefulWidget {
+  const _ChatListWithUpdates();
+
+  @override
+  __ChatListWithUpdatesState createState() => __ChatListWithUpdatesState();
+}
+
+class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
+  StreamSubscription? _messageSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _setupMessageListener();
+  }
+
+  @override
+  void dispose() {
+    _messageSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _setupMessageListener() {
+    final service = FlutterBackgroundService();
+    final chatsBloc = context.read<ChatsBloc>();
+
+    // Initialize if needed
+    if (chatsBloc.state.status == MessageStatus.initial) {
+      chatsBloc.add(UserChatsFetched());
+    }
+
+    // Listen for new messages
+    _messageSubscription = service.on('message').listen((onData) {
+      if (onData != null) {
+        final message = ChatMessage.fromJson(onData);
+        if (message.type == MessageType.user) {
+          chatsBloc.add(AddIndividualMessage(message: message));
+          setState(() {
+            
+          });
+        }
+      }
+    });
+    
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: MessagesService().getChats(),
-      builder: (BuildContext context, AsyncSnapshot<List<UserChat>> snapshot) {
-        if (snapshot.hasData) {
-          return MoleculeUsersChats(usersChats: snapshot.data!);
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text(translate("error.loading_chats")), // Consider using translation here
-          );
+    return BlocBuilder<ChatsBloc, ChatsState>(
+      builder: (context, state) {
+        if (state.status == MessageStatus.initial) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state.status == MessageStatus.success) {
+          return MoleculeUsersChats(usersChats: state.usersChats);
+        } else if (state.status == MessageStatus.failure && 
+                  state.usersChats.isEmpty) {
+          return Center(child: Text(translate('CHAT.LOADING_ERROR')));
         } else {
-          return const Center(
-            child: CircularProgressIndicator.adaptive(),
-          );
+          // Show existing chats even if there was a subsequent error
+          return MoleculeUsersChats(usersChats: state.usersChats);
         }
       },
     );

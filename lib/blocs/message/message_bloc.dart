@@ -8,6 +8,8 @@ import 'package:madnolia/services/messages_service.dart';
 import 'package:madnolia/database/services/user-db.service.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../enums/message_status.enum.dart' show MessageStatus;
+
 part 'message_event.dart';
 part 'message_state.dart';
 

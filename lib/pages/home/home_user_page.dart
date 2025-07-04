@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
-import 'package:madnolia/enums/message-status.enum.dart';
+import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/services/messages_service.dart';
 import 'package:madnolia/services/notifications_service.dart';
@@ -158,7 +158,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       if(platformsGamesBloc.state.platformGames.isEmpty) platformsGamesBloc.add(LoadPlatforms(platforms: user.platforms));
 
       if(messageBloc.state.unreadUserChats == 0) {
-        final chats = await MessagesService().getChats();
+        final chats = await MessagesService().getChats(0);
         for (var chat in chats) {
           if(chat.message.creator != userBloc.state.id && chat.message.status == ChatMessageStatus.sent) messageBloc.add(UpdateUnreadUserChatCount(value: 1));
         }

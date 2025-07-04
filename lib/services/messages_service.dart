@@ -55,7 +55,7 @@ class MessagesService {
     }
   }
 
-  Future<List<UserChat>> getChats() async {
+  Future<List<UserChat>> getChats(int page) async {
   try {
       final url = "$baseUrl/messages";
       final String? token = await _storage.read(key: "token");

@@ -1,6 +1,6 @@
 part of 'message_bloc.dart';
 
-enum MessageStatus { initial, success, failure }
+
 
 final class MessageState extends Equatable {
   

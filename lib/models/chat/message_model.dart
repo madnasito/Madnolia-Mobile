@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:madnolia/enums/message-status.enum.dart';
+import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 
 class ChatMessage {

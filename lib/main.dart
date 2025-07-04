@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<MessageBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<PlatformGamesBloc>()),
+        BlocProvider(create: (BuildContext context) => getIt<ChatsBloc>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
       ],

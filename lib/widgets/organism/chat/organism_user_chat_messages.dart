@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/enums/message_status.enum.dart' show MessageStatus;
 import 'package:madnolia/models/chat/user_messages.body.dart' show UserMessagesBody;
 import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart' show MoleculeUserChatMessagesList;
 import '../../../models/chat/message_model.dart' show ChatMessage;

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
-import 'package:madnolia/enums/message-status.enum.dart';
+import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -40,12 +41,15 @@ class _AtomIndividualMessageState extends State<AtomIndividualMessage>
   @override
   Widget build(BuildContext context) {
     final myId = context.read<UserBloc>().state.id;
+    final chatsBloc = context.watch<ChatsBloc>();
+
     return VisibilityDetector(
       key: Key(widget.message.id),
       onVisibilityChanged: (info) {
         if(info.visibleFraction > 0 && widget.message.status == ChatMessageStatus.sent && widget.message.creator != myId) {
           debugPrint('${widget.message.text}: ${widget.message.status}');
           backgroundService.invoke('update_recipient_status', {'id': widget.message.id, 'status': ChatMessageStatus.read.index});
+          chatsBloc.add(UpdateRecipientStatus(messageId: widget.message.id, status: ChatMessageStatus.read));
         }
       },
       child: Align(
