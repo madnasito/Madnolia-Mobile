@@ -97,7 +97,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       chatState.message = event.message;
       updatedChats.removeWhere((e) => e.message.conversation == event.message.conversation);
     } else {
-      chatState = UserChat(id: event.message.id, unreadCount: 1, message: event.message);
+      chatState = UserChat(id: event.message.conversation, unreadCount: 1, message: event.message);
     }
 
     updatedChats.insert(0, chatState);

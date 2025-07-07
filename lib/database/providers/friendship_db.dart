@@ -246,7 +246,7 @@ class FriendshipProvider {
     );
   }
 
-  Future<int> deleteAll() async {
+  static Future<int> deleteAll() async {
     final db = await BaseDatabaseProvider.database;
     return await db.delete(tableFriendship);
   }

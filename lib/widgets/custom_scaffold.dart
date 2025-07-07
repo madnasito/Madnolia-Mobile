@@ -8,6 +8,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/blocs/chats/chats_bloc.dart';
+import 'package:madnolia/database/providers/friendship_db.dart';
+import 'package:madnolia/database/providers/user_db.dart';
 import 'package:madnolia/widgets/background.dart';
 
 // import 'package:madnolia/widgets/form_button.dart';
@@ -21,6 +24,7 @@ class CustomScaffold extends StatelessWidget {
     
     final userBloc = context.read<UserBloc>();
     final messageBloc = context.read<MessageBloc>();
+    
     final backgroundService = FlutterBackgroundService();
 
     backgroundService.on("new_request_connection").listen((onData) {
@@ -118,12 +122,17 @@ class CustomScaffold extends StatelessWidget {
                   left: 20,
                   child: GestureDetector(
                     onTap: () async {
+                      final chatsBloc = context.read<ChatsBloc>();
                       userBloc.logOutUser();
+                      messageBloc.add(RestoreState());
+                      chatsBloc.add(RestoreUserChats());
                       backgroundService.invoke("delete_all_notifications");
                       backgroundService.invoke("stop");
                       const storage = FlutterSecureStorage();
                       await storage.delete(key: "token");
                       if(!context.mounted) return;
+                      UserProvider.clearTable();
+                      FriendshipProvider.deleteAll();
                       GoRouter.of(context).pushReplacement("/home");
                     },
                     child: const Wrap(
