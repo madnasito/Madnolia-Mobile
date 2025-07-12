@@ -7,6 +7,7 @@ import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
+import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart' show GlobalCupertinoLocalizations, GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
@@ -75,6 +76,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getIt<ChatsBloc>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
+        BlocProvider(create: (BuildContext context) => getItCubit<PlayerMatchesBloc>()),
       ],
       child:MessageProvider(
               child: Portal(

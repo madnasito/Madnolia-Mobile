@@ -160,7 +160,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       if(messageBloc.state.unreadUserChats == 0) {
         final chats = await MessagesService().getChats(0);
         for (var chat in chats) {
-          if(chat.message.creator != userBloc.state.id && chat.message.status == ChatMessageStatus.sent) messageBloc.add(UpdateUnreadUserChatCount(value: 1));
+          if(chat.message.creator != userBloc.state.id && chat.message.status == ChatListStatus.sent) messageBloc.add(UpdateUnreadUserChatCount(value: 1));
         }
       }
       

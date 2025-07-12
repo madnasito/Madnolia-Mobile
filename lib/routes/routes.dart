@@ -12,15 +12,13 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/pages/auth/login_page.dart';
 import 'package:madnolia/pages/auth/register_page.dart';
 import 'package:madnolia/pages/game/search_game_page.dart';
-import 'package:madnolia/pages/match/joined_page.dart';
-// import 'package:madnolia/pages/auth/register_page.dart';
+import 'package:madnolia/pages/match/matches_page.dart';
 import 'package:madnolia/pages/new/create_match_page.dart';
 import 'package:madnolia/pages/home/home_new_page.dart';
 import 'package:madnolia/pages/match/match_page.dart';
 import 'package:madnolia/pages/match/match_form_page.dart';
 import 'package:madnolia/pages/notifications/notifications_page.dart';
 import 'package:madnolia/pages/platforms/platform_games_page.dart';
-// import 'package:madnolia/pages/home/home_new_page.dart';
 import 'package:madnolia/pages/platforms/platforms_page.dart';
 import 'package:madnolia/pages/search/search_page.dart';
 import 'package:madnolia/pages/user/edit_user_page.dart';
@@ -29,7 +27,6 @@ import 'package:madnolia/pages/user/user_page.dart';
 import 'package:madnolia/pages/user/user_platforms.dart';
 import 'package:madnolia/pages/user/user_profile_page.dart';
 
-// import 'package:madnolia/pages/user/user_platforms.dart';
 
 import '../pages/home/home_user_page.dart';
 
@@ -67,8 +64,8 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const ChatsPage()
         ),
         GoRoute(
-          path: "user_chat",
-          name: "user_chat",
+          path: "user-chat",
+          name: "user-chat",
           builder: (context, state) => const UserChatPage()
         ),
         GoRoute(
@@ -125,9 +122,9 @@ final GoRouter router = GoRouter(
           builder: (context, state) => const NotificationsPage(),
         ),
         GoRoute(
-          path: "joined",
-          name: "joined",
-          builder: (context, state) => const JoinedPage(),
+          path: "matches",
+          name: "matches",
+          builder: (context, state) => const MatchesPage(),
         ),
         GoRoute(path: 'user/:id',
           builder: (context, state) => UserProfilePage(id: state.pathParameters['id'].toString())

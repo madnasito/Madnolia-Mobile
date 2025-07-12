@@ -8,7 +8,7 @@ import 'package:madnolia/services/messages_service.dart';
 import 'package:madnolia/database/services/user-db.service.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../enums/message_status.enum.dart' show MessageStatus;
+import '../../enums/list_status.enum.dart' show ListStatus;
 
 part 'message_event.dart';
 part 'message_state.dart';
@@ -51,12 +51,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
         emit(
           state.copyWith(
-            status: MessageStatus.success,
+            status: ListStatus.success,
             userMessages: [...state.userMessages, ...messages]
           )
         );
       } catch (e) {
-        emit(state.copyWith(status: MessageStatus.failure));
+        emit(state.copyWith(status: ListStatus.failure));
       }
   }
 
@@ -87,20 +87,20 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
         emit(
           state.copyWith(
-            status: MessageStatus.success,
+            status: ListStatus.success,
             groupMessages: [...state.groupMessages, ...messages],
             users: chatUsers
           )
         );
       } catch (e) {
-        emit(state.copyWith(status: MessageStatus.failure));
+        emit(state.copyWith(status: ListStatus.failure));
       }
     }
 
   void _restoreState(RestoreState event, Emitter<MessageState> emit){
     emit(
       state.copyWith(
-      status: MessageStatus.initial,
+      status: ListStatus.initial,
       unreadUserChats: 0,
       userMessages: [],
       groupMessages: [],

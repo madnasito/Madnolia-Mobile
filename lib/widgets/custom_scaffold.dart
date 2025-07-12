@@ -77,9 +77,8 @@ class CustomScaffold extends StatelessWidget {
                   ),
                   _MenuButton(
                     icon: Icon(CupertinoIcons.gamecontroller, size: 40, color: Colors.white),
-                    title:
-                        translate("HEADER.JOINED_MATCHES"),
-                    route: "/joined",
+                    title: 'Matches',
+                    route: "/matches",
                   ),
                   _MenuButton(
                     icon: userBloc.state.notifications == 0 ? Icon(Icons.notifications_none_rounded,size: 40, color: Colors.white ) : Stack(

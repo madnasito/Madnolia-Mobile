@@ -71,7 +71,7 @@ class AtomUserChat extends StatelessWidget {
               child: ListTile(
                 trailing: iReadThat(notMe) ? Icon(Icons.circle, color: Colors.yellow[400],) : null,
                 onTap: () => context.pushNamed(
-                  "user_chat", 
+                  "user-chat", 
                   extra: ChatUser(
                     id: user.id,
                     name: user.name,
@@ -110,6 +110,6 @@ class AtomUserChat extends StatelessWidget {
   }
 
   bool iReadThat(String notMyId) {
-    return userChat.message.status == ChatMessageStatus.sent && userChat.message.creator == notMyId;
+    return userChat.message.status == ChatListStatus.sent && userChat.message.creator == notMyId;
   }
 }

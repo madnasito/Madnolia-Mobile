@@ -17,9 +17,9 @@ class MatchWithGame {
     int platform;
     int date;
     String user;
-    List<dynamic> inviteds;
+    List<String> inviteds;
     String title;
-    List<dynamic> joined;
+    List<String> joined;
     bool private;
     bool tournament;
     int status;
@@ -45,10 +45,10 @@ class MatchWithGame {
         platform: json["platform"],
         date: json["date"],
         user: json["user"],
-        inviteds: List<dynamic>.from(json["inviteds"].map((x) => x)),
+        inviteds: List<String>.from(json["inviteds"].map((x) => x)),
         title: json["title"],
         description: json["description"],
-        joined: List<dynamic>.from(json["joined"].map((x) => x)),
+        joined: List<String>.from(json["joined"].map((x) => x)),
         private: json["private"],
         status: json["status"],
         tournament: json["tournament"],

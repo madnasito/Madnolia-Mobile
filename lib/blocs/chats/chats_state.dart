@@ -2,18 +2,18 @@ part of 'chats_bloc.dart';
 
 class ChatsState extends Equatable {
 
-  final MessageStatus status;
+  final ListStatus status;
   final List<UserChat> usersChats;
   final bool hasReachedMax;
 
   const ChatsState({
-    this.status = MessageStatus.initial,
+    this.status = ListStatus.initial,
     this.usersChats = const <UserChat>[],
     this.hasReachedMax = false
   });
 
   ChatsState copyWith({
-    MessageStatus? status,
+    ListStatus? status,
     List<UserChat>? usersChats,
     bool? hasReachedMax
   }){

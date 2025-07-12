@@ -1,1 +1,0 @@
-enum MessageStatus { initial, success, failure }

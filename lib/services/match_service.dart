@@ -5,6 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:madnolia/models/game/home_game_model.dart';
+import 'package:madnolia/models/match/match_with_game_model.dart';
+import 'package:madnolia/models/match/matches-filter.model.dart';
 
 
 class MatchService {
@@ -18,6 +20,25 @@ class MatchService {
 
   // Getting the match
   Future getMatch(String id) => matchGetRequest("info/$id");
+
+  Future<List<MatchWithGame>> getMatches(MatchesFilter payload) async {
+
+    try {
+      final String? token = await _storage.read(key: "token");
+      
+      Response response;
+
+      response = await dio.get('player-matches',
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+        queryParameters: payload.toJson()
+      );
+
+      return response.data;
+    } catch (e) {
+      rethrow;  
+    }
+
+  }
 
   // Getting the match
   Future getMatchWithGame(String id) => matchGetRequest("with-game/$id");

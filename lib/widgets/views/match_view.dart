@@ -373,7 +373,7 @@
 // Widget build(BuildContext context) {
 //   return BlocBuilder<MessageBloc, MessageState>(
 //     builder: (context, state) {
-//       if (state.status == MessageStatus.failure) {
+//       if (state.status == ListStatus.failure) {
 //         return const Center(child: Text("Failed fetching messages"));
 //       }
 
@@ -384,12 +384,12 @@
 //           child: MoleculeRoomMessagesList(
 //             scrollController: _scrollController,
 //             state: state,
-//             isLoading: state.status == MessageStatus.initial && !state.hasReachedMax,
+//             isLoading: state.status == ListStatus.initial && !state.hasReachedMax,
 //           ),
 //         );
 //       }
 
-//       if (state.status == MessageStatus.initial && !state.hasReachedMax) {
+//       if (state.status == ListStatus.initial && !state.hasReachedMax) {
 //         return const Center(child: CircularProgressIndicator());
 //       }
 

@@ -72,7 +72,7 @@ class LocalNotificationsService {
               case MessageType.user:
                 final UserDb userDb = await getUserDb(message.creator);
                 final ChatUser chatUser = ChatUser(id: userDb.id, name: userDb.name, thumb: userDb.thumb, username: userDb.username);
-                if(context!.mounted) GoRouter.of(context).pushNamed("user_chat", extra: chatUser);
+                if(context!.mounted) GoRouter.of(context).pushNamed("user-chat", extra: chatUser);
                 break;
               default:
                  GoRouter.of(context!).push("/match/${message.conversation}");

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/blocs.dart';
-import 'package:madnolia/enums/message_status.enum.dart' show MessageStatus;
+import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/models/chat/user_messages.body.dart' show UserMessagesBody;
 import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart' show MoleculeUserChatMessagesList;
 import '../../../models/chat/message_model.dart' show ChatMessage;
@@ -62,7 +62,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
   Widget build(BuildContext context) {
     return BlocBuilder<MessageBloc, MessageState>(
       builder: (context, state) {
-        if (state.status == MessageStatus.failure) {
+        if (state.status == ListStatus.failure) {
           return const Center(child: Text("Failed fetching messages"));
         }
 
@@ -74,13 +74,13 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
             child: MoleculeUserChatMessagesList(
               state: state,
               scrollController: _scrollController,
-              isLoading: state.status == MessageStatus.initial && !state.hasReachedMax,
+              isLoading: state.status == ListStatus.initial && !state.hasReachedMax,
             ),
           );
         }
 
         // Only show loading indicator if we have no messages at all
-        if (state.status == MessageStatus.initial && !state.hasReachedMax) {
+        if (state.status == ListStatus.initial && !state.hasReachedMax) {
           return const Center(child: CircularProgressIndicator());
         }
 

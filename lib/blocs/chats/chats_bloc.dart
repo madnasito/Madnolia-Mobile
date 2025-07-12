@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
-import 'package:madnolia/enums/message_status.enum.dart' show MessageStatus;
+import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/services/messages_service.dart';
@@ -24,7 +24,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     on<UserChatsFetched>(_onFetchUserChats, transformer: throttleDroppable(chatsThrottleDuration));
     on<AddIndividualMessage>(_addIndividualMessage);
     on<RestoreUserChats>(_restoreState);
-    on<UpdateRecipientStatus>(_updateMessageStatus);
+    on<UpdateRecipientStatus>(_updateListStatus);
     
   }
 
@@ -42,16 +42,16 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       
       emit(
         state.copyWith(
-          status: MessageStatus.success,
+          status: ListStatus.success,
           usersChats: [...state.usersChats, ...chats]
         )
       );
     } catch (e) {
-      emit(state.copyWith(status: MessageStatus.failure));
+      emit(state.copyWith(status: ListStatus.failure));
     }
   }
 
-  void _updateMessageStatus(UpdateRecipientStatus event, Emitter<ChatsState> emit) {
+  void _updateListStatus(UpdateRecipientStatus event, Emitter<ChatsState> emit) {
 
     final existsMessage = state.usersChats.indexWhere((e) => e.message.id == event.messageId);
 
@@ -72,7 +72,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
   void _restoreState(RestoreUserChats event, Emitter<ChatsState> emit) {
     emit(
       state.copyWith(
-        status: MessageStatus.initial,
+        status: ListStatus.initial,
         hasReachedMax: false,
         usersChats: []
       )

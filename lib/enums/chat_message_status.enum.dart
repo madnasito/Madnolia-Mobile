@@ -1,4 +1,4 @@
-enum ChatMessageStatus {
+enum ChatListStatus {
   sent,
   delivered,
   read,

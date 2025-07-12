@@ -5,7 +5,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
-import 'package:madnolia/enums/message_status.enum.dart';
+import 'package:madnolia/enums/list_status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/style/text_style.dart';
@@ -64,7 +64,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
     final chatsBloc = context.read<ChatsBloc>();
 
     // Initialize if needed
-    if (chatsBloc.state.status == MessageStatus.initial) {
+    if (chatsBloc.state.status == ListStatus.initial) {
       chatsBloc.add(UserChatsFetched());
     }
 
@@ -87,11 +87,11 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatsBloc, ChatsState>(
       builder: (context, state) {
-        if (state.status == MessageStatus.initial) {
+        if (state.status == ListStatus.initial) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state.status == MessageStatus.success) {
+        } else if (state.status == ListStatus.success) {
           return MoleculeUsersChats(usersChats: state.usersChats);
-        } else if (state.status == MessageStatus.failure && 
+        } else if (state.status == ListStatus.failure && 
                   state.usersChats.isEmpty) {
           return Center(child: Text(translate('CHAT.LOADING_ERROR')));
         } else {

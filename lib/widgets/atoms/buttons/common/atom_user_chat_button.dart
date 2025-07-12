@@ -11,7 +11,7 @@ class AtomUserChatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      onPressed: () => context.pushNamed("user_chat", extra: user),
+      onPressed: () => context.pushNamed("user-chat", extra: user),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       shape: StadiumBorder(side: BorderSide(color: Colors.teal, width: 1)),
       child: Row(
