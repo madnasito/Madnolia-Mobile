@@ -22,6 +22,7 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
   PlayerMatchesBloc() : super(PlayerMatchesInitial()) {
 
     on<InitialState>(_initState);
+    on<UpdateFilterType>(_updateFilterType);
     on<FetchMatchesType>(_fetchMatches, transformer: throttleDroppable(matchesThrottleDuration)); 
 
   }
@@ -40,11 +41,42 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
     );
   }
 
+  _updateFilterType(UpdateFilterType event, Emitter<PlayerMatchesState> emit) {
+
+    emit(
+      state.copyWith(
+        selectedType: event.type
+      )
+    );
+    
+    final int index = state.matchesState.indexWhere((e) => e.type == event.type);
+
+    LoadedMatches matchesState = state.matchesState[index];
+
+    if(matchesState.status != ListStatus.success && matchesState.matches.isEmpty) {
+      add(
+        FetchMatchesType(filter: MatchesFilter(
+          skip: matchesState.matches.length,
+          sort: SortType.asc,
+          type: event.type,
+          platform: null
+        )
+      )
+    );
+    }
+
+  }
+
   Future _fetchMatches(FetchMatchesType event, Emitter<PlayerMatchesState> emit) async {
 
     final int index = state.matchesState.indexWhere((e) => e.type == event.filter.type);
-
-    LoadedMatches matchesState = state.matchesState[index];
+    // Create a new copy of the matchesState to modify
+      LoadedMatches matchesState = LoadedMatches(
+        type: state.matchesState[index].type,
+        matches: List<MatchWithGame>.from(state.matchesState[index].matches), // Create modifiable copy
+        status: state.matchesState[index].status,
+        hasReachesMax: state.matchesState[index].hasReachesMax,
+      );
 
     try {
       
@@ -58,13 +90,15 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
         state.matchesState[index] = matchesState;
         return emit(
           state.copyWith(
-            matchesState: state.matchesState
+            matchesState: state.matchesState,
           )
         );
       }
 
       matchesState.matches.addAll(data);
       matchesState.status = ListStatus.success;
+
+      print(matchesState.matches);
 
       state.matchesState[index] = matchesState;
       emit(

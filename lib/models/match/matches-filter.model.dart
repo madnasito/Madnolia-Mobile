@@ -2,42 +2,44 @@
 //
 //     final matchesFilter = matchesFilterFromJson(jsonString);
 
-import 'dart:convert';
-
-MatchesFilter matchesFilterFromJson(String str) => MatchesFilter.fromJson(json.decode(str));
-
-String matchesFilterToJson(MatchesFilter data) => json.encode(data.toJson());
-
 class MatchesFilter {
-    MatchesFilterType type;
-    String sort;
-    int skip;
-    int? platform;
+  final MatchesFilterType type;
+  final SortType sort;
+  final int skip;
+  final int? platform;
 
-    MatchesFilter({
-        required this.type,
-        required this.sort,
-        required this.skip,
-        required this.platform,
-    });
+  MatchesFilter({
+    required this.type,
+    required this.sort,
+    required this.skip,
+    this.platform,
+  });
 
-    factory MatchesFilter.fromJson(Map<String, dynamic> json) => MatchesFilter(
-        type: json["type"],
-        sort: json["sort"],
-        skip: json["skip"],
-        platform: json["platform"],
+  // Enhanced serialization for enums
+  Map<String, dynamic> toJson() => {
+    "type": type.name, // Convert enum to string
+    "sort": sort.name, // Convert enum to string
+    "skip": skip,
+    "platform": platform,
+  };
+
+  // For WorkManager data passing
+  Map<String, dynamic> toWorkData() => {
+    'type': type.index, // Store enum index
+    'sort': sort.index,
+    'skip': skip,
+    'platform': platform,
+  };
+
+  factory MatchesFilter.fromWorkData(Map<String, dynamic> data) {
+    return MatchesFilter(
+      type: MatchesFilterType.values[data['type']],
+      sort: SortType.values[data['sort']],
+      skip: data['skip'],
+      platform: data['platform'],
     );
-
-    Map<String, dynamic> toJson() => {
-        "type": type,
-        "sort": sort,
-        "skip": skip,
-        "platform": platform,
-    };
+  }
 }
 
-enum MatchesFilterType {
-  all,
-  created,
-  joined
-}
+enum MatchesFilterType { all, created, joined }
+enum SortType { asc, desc }

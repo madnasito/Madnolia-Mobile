@@ -3,21 +3,25 @@ part of 'player_matches_bloc.dart';
 class PlayerMatchesState extends Equatable {
 
   final List<LoadedMatches> matchesState;
+  final MatchesFilterType selectedType;
 
   const PlayerMatchesState({
-    this.matchesState = const []
+    this.matchesState = const [],
+    this.selectedType = MatchesFilterType.all
   });
   
   PlayerMatchesState copyWith({
-    List<LoadedMatches>? matchesState
+    List<LoadedMatches>? matchesState,
+    MatchesFilterType? selectedType
   }) {
     return PlayerMatchesState (
-      matchesState: matchesState ?? this.matchesState
+      matchesState: matchesState ?? this.matchesState,
+      selectedType: selectedType ?? this.selectedType
     );
   }
   
   @override
-  List<Object> get props => [matchesState];
+  List<Object> get props => [matchesState, selectedType];
 }
 
 

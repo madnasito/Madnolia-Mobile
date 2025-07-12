@@ -28,12 +28,16 @@ class MatchService {
       
       Response response;
 
-      response = await dio.get('player-matches',
+      response = await dio.get('$baseUrl/match/player-matches',
         options: Options(headers: {"Authorization": "Bearer $token"}),
-        queryParameters: payload.toJson()
+        data: payload.toJson()
       );
 
-      return response.data;
+      final List<MatchWithGame> matches = (response.data as List)
+        .map<MatchWithGame>((e) => MatchWithGame.fromJson(e))
+        .toList();
+
+      return matches;
     } catch (e) {
       rethrow;  
     }
