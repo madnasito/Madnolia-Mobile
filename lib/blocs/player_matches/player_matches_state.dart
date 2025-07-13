@@ -4,24 +4,28 @@ class PlayerMatchesState extends Equatable {
 
   final List<LoadedMatches> matchesState;
   final MatchesFilterType selectedType;
+  final int lastUpdate;
 
   const PlayerMatchesState({
     this.matchesState = const [],
-    this.selectedType = MatchesFilterType.all
+    this.selectedType = MatchesFilterType.all,
+    this.lastUpdate = 0
   });
   
   PlayerMatchesState copyWith({
     List<LoadedMatches>? matchesState,
-    MatchesFilterType? selectedType
+    MatchesFilterType? selectedType,
+    int? lastUpdate
   }) {
     return PlayerMatchesState (
       matchesState: matchesState ?? this.matchesState,
-      selectedType: selectedType ?? this.selectedType
+      selectedType: selectedType ?? this.selectedType,
+      lastUpdate: lastUpdate ?? this.lastUpdate
     );
   }
   
   @override
-  List<Object> get props => [matchesState, selectedType];
+  List<Object> get props => [matchesState, selectedType, lastUpdate];
 }
 
 

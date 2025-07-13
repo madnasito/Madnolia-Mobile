@@ -7,7 +7,7 @@ sealed class PlayerMatchesEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class RestoreState extends PlayerMatchesEvent {}
+class RestoreMatchesState extends PlayerMatchesEvent {}
 
 class InitialState extends PlayerMatchesEvent {}
 

@@ -21,9 +21,10 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
   PlayerMatchesBloc() : super(PlayerMatchesInitial()) {
 
+    on<FetchMatchesType>(_fetchMatches, transformer: throttleDroppable(matchesThrottleDuration)); 
     on<InitialState>(_initState);
     on<UpdateFilterType>(_updateFilterType);
-    on<FetchMatchesType>(_fetchMatches, transformer: throttleDroppable(matchesThrottleDuration)); 
+    on<RestoreMatchesState>(_restoreState);
 
   }
 
@@ -42,6 +43,15 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
     );
   }
 
+  void _restoreState(RestoreMatchesState event, Emitter<PlayerMatchesState> emit){
+    emit(
+      state.copyWith(
+        lastUpdate: 0,
+        matchesState: [],
+        selectedType: MatchesFilterType.all
+      )
+    );
+  }
   void _updateFilterType(UpdateFilterType event, Emitter<PlayerMatchesState> emit) {
   // First emit the new selected type
   emit(state.copyWith(selectedType: event.type));
@@ -107,7 +117,11 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
           if (item.type == event.filter.type) updatedMatchesState else item,
       ];
 
-      emit(state.copyWith(matchesState: updatedList));
+      emit(state.copyWith(
+        matchesState: updatedList,
+        lastUpdate: DateTime.now().millisecondsSinceEpoch
+        )
+      );
 
       // matchesState.copyWith(status: ListStatus.success);
       // if(data.isEmpty) {
@@ -134,7 +148,8 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
       state.matchesState[index] = currentMatchesState;
       emit(
         state.copyWith(
-          matchesState: state.matchesState
+          matchesState: state.matchesState,
+          lastUpdate: DateTime.now().millisecondsSinceEpoch
         )
       );
       rethrow;  
