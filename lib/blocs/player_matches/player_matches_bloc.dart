@@ -7,6 +7,8 @@ import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../enums/sort_type.enum.dart';
+
 part 'player_matches_event.dart';
 part 'player_matches_state.dart';
 

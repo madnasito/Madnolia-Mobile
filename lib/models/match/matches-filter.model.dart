@@ -2,6 +2,8 @@
 //
 //     final matchesFilter = matchesFilterFromJson(jsonString);
 
+import 'package:madnolia/enums/sort_type.enum.dart' show SortType;
+
 class MatchesFilter {
   final MatchesFilterType type;
   final SortType sort;
@@ -42,4 +44,3 @@ class MatchesFilter {
 }
 
 enum MatchesFilterType { all, created, joined }
-enum SortType { asc, desc }

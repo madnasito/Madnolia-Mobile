@@ -347,7 +347,7 @@ class MatchFormView extends StatelessWidget {
                       matchMinutesCubit.restoreMinutes();
                       matchUsersCubit.restore();
                       if (!context.mounted) return;
-                      context.goNamed("user-matches");
+                      context.goNamed("matches");
                     }
                   } catch (e) {
                     if (context.mounted) showAlert(context, e.toString());

@@ -1,5 +1,9 @@
+import 'dart:math' as math show min;
+
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/enums/list_status.enum.dart';
@@ -9,6 +13,8 @@ import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/match_card_widget.dart';
+
+import '../../enums/sort_type.enum.dart' show SortType;
 
 class MatchesPage extends StatelessWidget {
   const MatchesPage({super.key});
@@ -22,33 +28,83 @@ class MatchesPage extends StatelessWidget {
         }
       },
       child: CustomScaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              AtomStyledText(
-                text: 'Matches',
-                style: neonTitleText,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              BlocBuilder<PlayerMatchesBloc, PlayerMatchesState>(
-                builder: (context, state) {
-                  return SegmentedButton(
-                    segments: [
-                      ButtonSegment(value: MatchesFilterType.all, label: Text('All')),
-                      ButtonSegment(value: MatchesFilterType.created, label: Text('Created')),
-                      ButtonSegment(value: MatchesFilterType.joined, label: Text('Joined')),
-                    ],
-                    selected: <MatchesFilterType>{state.selectedType},
-                    onSelectionChanged: (value) => context
-                        .read<PlayerMatchesBloc>()
-                        .add(UpdateFilterType(type: value.first)),
-                  );
-                },
-              ),
-              const OrganismLoadMatches(),
-            ],
+        body: CustomMaterialIndicator(
+          onRefresh: () async { 
+              context.read<PlayerMatchesBloc>().add(InitialState());
+             },
+             backgroundColor: Colors.white,
+             indicatorBuilder: (context, controller) {
+              return Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: CircularProgressIndicator(
+                  color: Colors.lightBlue,
+                  value: controller.state.isLoading ? null : math.min(controller.value, 1.0),
+                ),
+              );
+            },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 10),
+                AtomStyledText(
+                  text: translate("PROFILE.MATCHES"),
+                  style: neonTitleText,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 10),
+                BlocBuilder<PlayerMatchesBloc, PlayerMatchesState>(
+                  builder: (context, state) {
+                    return SegmentedButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                            // Black background when selected
+                            if (states.contains(WidgetState.selected)) {
+                              return Colors.black54;
+                            }
+                            // Transparent (or another color) when not selected
+                            return Colors.transparent;
+                          }),
+                          foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+                            // Amber text when selected
+                            if (states.contains(WidgetState.selected)) {
+                              return Colors.amber;
+                            }
+                            // Grey text when not selected
+                            return Colors.grey;
+                          }),
+                          // Optional: Add a border for better visibility
+                          side: WidgetStateProperty.all(BorderSide(color: Colors.grey)),
+                          // Optional: Remove extra padding
+                          visualDensity: VisualDensity.compact,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      segments: [
+                        ButtonSegment(
+                          value: MatchesFilterType.all,
+                          label: SizedBox(width: 50, child: Text('All', textAlign: TextAlign.center)),
+                        ),
+                        ButtonSegment(
+                          value: MatchesFilterType.created,
+                          label: SizedBox(width: 50, child: Text('Created', textAlign: TextAlign.center)),
+                        ),
+                        ButtonSegment(
+                          value: MatchesFilterType.joined,
+                          label: SizedBox(width: 50, child: Text('Joined', textAlign: TextAlign.center)),
+                        ),
+                      ],
+                      selected: <MatchesFilterType>{state.selectedType},
+                      onSelectionChanged: (value) => context
+                          .read<PlayerMatchesBloc>()
+                          .add(UpdateFilterType(type: value.first)),
+                    );
+                  },
+                ),
+                // Positioned(child: child)
+                const SizedBox(height: 10),
+                const OrganismLoadMatches(),
+              ],
+            ),
           ),
         ),
       ),
@@ -56,8 +112,29 @@ class MatchesPage extends StatelessWidget {
   }
 }
 
-class OrganismLoadMatches extends StatelessWidget {
+class OrganismLoadMatches extends StatefulWidget {
   const OrganismLoadMatches({super.key});
+
+  @override
+  State<OrganismLoadMatches> createState() => _OrganismLoadMatchesState();
+}
+
+class _OrganismLoadMatchesState extends State<OrganismLoadMatches> {
+  late final _scrollController = ScrollController();
+  late final PlayerMatchesBloc playerMatchesBloc;
+
+  @override
+  void initState() {
+    _scrollController.addListener(_onScroll);
+    playerMatchesBloc = context.read<PlayerMatchesBloc>();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +162,7 @@ class OrganismLoadMatches extends StatelessWidget {
             if (matchesState.matches.isEmpty) {
               return const Center(child: Text('No matches found'));
             }
-            return _MatchesList(matches: matchesState.matches);
+            return _MatchesList(matches: matchesState.matches, scrollController: _scrollController,);
           }
 
           if (matchesState.status == ListStatus.failure) {
@@ -94,7 +171,7 @@ class OrganismLoadMatches extends StatelessWidget {
             }
             return Column(
               children: [
-                _MatchesList(matches: matchesState.matches),
+                _MatchesList(matches: matchesState.matches, scrollController: _scrollController,),
                 const Text('Error loading more matches'),
               ],
             );
@@ -107,17 +184,34 @@ class OrganismLoadMatches extends StatelessWidget {
       },
     );
   }
+
+  void _onScroll() {
+    if (_isBottom) {
+      final matchesState = playerMatchesBloc.state.matchesState.firstWhere((e) => e.type == playerMatchesBloc.state.selectedType);
+      playerMatchesBloc.add(FetchMatchesType(
+        filter: MatchesFilter(type: playerMatchesBloc.state.selectedType, sort: SortType.asc, skip: matchesState.matches.length)
+      ));
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    return _scrollController.offset >=
+        (_scrollController.position.maxScrollExtent * 0.9);
+  }
 }
 
 class _MatchesList extends StatelessWidget {
+  final ScrollController scrollController;
   final List<MatchWithGame> matches;
 
-  const _MatchesList({required this.matches});
+  const _MatchesList({required this.matches, required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
+      controller: scrollController,
       shrinkWrap: true,
       itemCount: matches.length,
       itemBuilder: (context, index) => _MatchItem(match: matches[index]),

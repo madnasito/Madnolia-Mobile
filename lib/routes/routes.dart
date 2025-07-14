@@ -143,13 +143,7 @@ final GoRouter router = GoRouter(
                   return const UserEditPage();
                 },
               ),
-              GoRoute(
-                name: "user-matches",
-                path: 'matches',
-                builder: (BuildContext context, GoRouterState state) {
-                  return const UserMatchesPage();
-                },
-              ),
+              
               GoRoute(
                   path: "platforms",
                   name: "user-platforms",

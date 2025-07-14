@@ -9,7 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
-import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart' hide RestoreState;
+import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/database/providers/friendship_db.dart';
 import 'package:madnolia/database/providers/user_db.dart';
 import 'package:madnolia/widgets/background.dart';

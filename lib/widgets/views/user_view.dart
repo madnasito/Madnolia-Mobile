@@ -36,11 +36,11 @@ class UserMainView extends StatelessWidget {
           title: translate("PROFILE.YOU"),
           routeName: "/me/edit",
         ),
-        _Card(
-          icon: Icons.bolt,
-          title: translate("PROFILE.MATCHES"),
-          routeName: "/me/matches",
-        ),
+        // _Card(
+        //   icon: Icons.bolt,
+        //   title: translate("PROFILE.MATCHES"),
+        //   routeName: "/me/matches",
+        // ),
         _Card(
           icon: Icons.gamepad_outlined,
           title: translate("PROFILE.PLATFORMS"),
