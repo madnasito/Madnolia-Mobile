@@ -16,11 +16,50 @@ import 'package:madnolia/widgets/match_card_widget.dart';
 
 import '../../enums/sort_type.enum.dart' show SortType;
 
-class MatchesPage extends StatelessWidget {
+class MatchesPage extends StatefulWidget {
   const MatchesPage({super.key});
 
   @override
+  State<MatchesPage> createState() => _MatchesPageState();
+}
+
+class _MatchesPageState extends State<MatchesPage> {
+
+  late final _scrollController = ScrollController();
+  late final PlayerMatchesBloc playerMatchesBloc;
+
+  @override
+  void initState() {
+    _scrollController.addListener(_onScroll);
+    playerMatchesBloc = context.read<PlayerMatchesBloc>();
+    super.initState();
+  }
+
+  void _onScroll() {
+    if (_isBottom) {
+      final matchesState = playerMatchesBloc.state.matchesState.firstWhere((e) => e.type == playerMatchesBloc.state.selectedType);
+      playerMatchesBloc.add(FetchMatchesType(
+        filter: MatchesFilter(type: playerMatchesBloc.state.selectedType, sort: SortType.desc, skip: matchesState.matches.length)
+      ));
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    return _scrollController.offset >=
+        (_scrollController.position.maxScrollExtent * 0.9);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+    
     return BlocListener<PlayerMatchesBloc, PlayerMatchesState>(
       listener: (context, state) {
         if (state.matchesState.isEmpty) {
@@ -43,6 +82,7 @@ class MatchesPage extends StatelessWidget {
               );
             },
           child: SingleChildScrollView(
+            controller: _scrollController,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -112,29 +152,8 @@ class MatchesPage extends StatelessWidget {
   }
 }
 
-class OrganismLoadMatches extends StatefulWidget {
+class OrganismLoadMatches extends StatelessWidget {
   const OrganismLoadMatches({super.key});
-
-  @override
-  State<OrganismLoadMatches> createState() => _OrganismLoadMatchesState();
-}
-
-class _OrganismLoadMatchesState extends State<OrganismLoadMatches> {
-  late final _scrollController = ScrollController();
-  late final PlayerMatchesBloc playerMatchesBloc;
-
-  @override
-  void initState() {
-    _scrollController.addListener(_onScroll);
-    playerMatchesBloc = context.read<PlayerMatchesBloc>();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +181,12 @@ class _OrganismLoadMatchesState extends State<OrganismLoadMatches> {
             if (matchesState.matches.isEmpty) {
               return const Center(child: Text('No matches found'));
             }
-            return _MatchesList(matches: matchesState.matches, scrollController: _scrollController,);
+            return Column(
+              children: [
+                _MatchesList(matches: matchesState.matches),
+                (!matchesState.hasReachesMax) ? CircularProgressIndicator() : SizedBox() 
+              ],
+            );
           }
 
           if (matchesState.status == ListStatus.failure) {
@@ -171,7 +195,7 @@ class _OrganismLoadMatchesState extends State<OrganismLoadMatches> {
             }
             return Column(
               children: [
-                _MatchesList(matches: matchesState.matches, scrollController: _scrollController,),
+                _MatchesList(matches: matchesState.matches),
                 const Text('Error loading more matches'),
               ],
             );
@@ -184,34 +208,18 @@ class _OrganismLoadMatchesState extends State<OrganismLoadMatches> {
       },
     );
   }
-
-  void _onScroll() {
-    if (_isBottom) {
-      final matchesState = playerMatchesBloc.state.matchesState.firstWhere((e) => e.type == playerMatchesBloc.state.selectedType);
-      playerMatchesBloc.add(FetchMatchesType(
-        filter: MatchesFilter(type: playerMatchesBloc.state.selectedType, sort: SortType.asc, skip: matchesState.matches.length)
-      ));
-    }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    return _scrollController.offset >=
-        (_scrollController.position.maxScrollExtent * 0.9);
-  }
 }
 
+
 class _MatchesList extends StatelessWidget {
-  final ScrollController scrollController;
   final List<MatchWithGame> matches;
 
-  const _MatchesList({required this.matches, required this.scrollController});
+  const _MatchesList({required this.matches});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: const BouncingScrollPhysics(),
-      controller: scrollController,
       shrinkWrap: true,
       itemCount: matches.length,
       itemBuilder: (context, index) => _MatchItem(match: matches[index]),

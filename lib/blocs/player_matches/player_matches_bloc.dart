@@ -74,7 +74,7 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
     add(FetchMatchesType(
       filter: MatchesFilter(
         skip: matchesState.matches.length,
-        sort: SortType.asc,
+        sort: SortType.desc,
         type: event.type,
         platform: null,
       ),
@@ -90,71 +90,49 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
   }
 
   Future _fetchMatches(FetchMatchesType event, Emitter<PlayerMatchesState> emit) async {
-
-    final int index = state.matchesState.indexWhere((e) => e.type == event.filter.type);
-    // Create a new copy of the matchesState to modify
-      final currentMatchesState = state.matchesState[index];
-
-      
+  final int index = state.matchesState.indexWhere((e) => e.type == event.filter.type);
+  final currentMatchesState = state.matchesState[index];
 
     try {
-      
-
-      if(currentMatchesState.hasReachesMax) return;
+      if (currentMatchesState.hasReachesMax) return;
 
       final data = await MatchService().getMatches(event.filter);
 
       final updatedMatchesState = LoadedMatches(
         type: currentMatchesState.type,
-        hasReachesMax: data.isEmpty, // o currentMatchesState.hasReachesMax || data.isEmpty
+        hasReachesMax: data.isEmpty,
         status: ListStatus.success,
-        matches: [
-          ...currentMatchesState.matches,
-          ...data,
-        ],
+        matches: [...currentMatchesState.matches, ...data],
       );
 
-      final List<LoadedMatches> updatedList = [
+      final updatedList = [
         for (var item in state.matchesState)
           if (item.type == event.filter.type) updatedMatchesState else item,
       ];
 
       emit(state.copyWith(
         matchesState: updatedList,
-        lastUpdate: DateTime.now().millisecondsSinceEpoch
-        )
-      );
-
-      // matchesState.copyWith(status: ListStatus.success);
-      // if(data.isEmpty) {
-      //   matchesState.copyWith(hasReachesMax: true);
-      //   state.matchesState[index] = matchesState;
-      //   return emit(
-      //     state.copyWith(
-      //       matchesState: state.matchesState,
-      //     )
-      //   );
-      // }
-
-      // matchesState.matches.addAll(data);
-
-      // state.matchesState[index] = matchesState;
-      // emit(
-      //   state.copyWith(
-      //     matchesState: state.matchesState
-      //   )
-      // );
+        lastUpdate: DateTime.now().millisecondsSinceEpoch,
+      ));
 
     } catch (e) {
-      currentMatchesState.copyWith(status: ListStatus.failure);
-      state.matchesState[index] = currentMatchesState;
-      emit(
-        state.copyWith(
-          matchesState: state.matchesState,
-          lastUpdate: DateTime.now().millisecondsSinceEpoch
-        )
+      // Create a new failure state
+      final failedMatchesState = currentMatchesState.copyWith(
+        status: ListStatus.failure,
       );
-      rethrow;  
+
+      // Create a new list with the failed state
+      final updatedList = [
+        for (var item in state.matchesState)
+          if (item.type == event.filter.type) failedMatchesState else item,
+      ];
+
+      emit(state.copyWith(
+        matchesState: updatedList,
+        lastUpdate: DateTime.now().millisecondsSinceEpoch,
+      ));
+      
+      rethrow;
     }
   }
 }

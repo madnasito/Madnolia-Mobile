@@ -22,7 +22,6 @@ import 'package:madnolia/pages/platforms/platform_games_page.dart';
 import 'package:madnolia/pages/platforms/platforms_page.dart';
 import 'package:madnolia/pages/search/search_page.dart';
 import 'package:madnolia/pages/user/edit_user_page.dart';
-import 'package:madnolia/pages/user/user_matches_page.dart';
 import 'package:madnolia/pages/user/user_page.dart';
 import 'package:madnolia/pages/user/user_platforms.dart';
 import 'package:madnolia/pages/user/user_profile_page.dart';
