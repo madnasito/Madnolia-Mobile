@@ -73,7 +73,7 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
   final lastUpdate = DateTime.fromMillisecondsSinceEpoch(state.lastUpdate);
 
   // If we need to fetch data (either new state or empty existing state)
-  if (matchesState.status != ListStatus.success || matchesState.matches.isEmpty || now.difference(lastUpdate).inMinutes < 5) {
+  if (matchesState.status != ListStatus.success || matchesState.matches.isEmpty || now.difference(lastUpdate).inMinutes < 6) {
     add(FetchMatchesType(
       filter: MatchesFilter(
         skip: matchesState.matches.length,
