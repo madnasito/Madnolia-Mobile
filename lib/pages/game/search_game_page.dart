@@ -6,7 +6,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
-import 'package:madnolia/widgets/molecules/games_list_molecule.dart';
+import 'package:madnolia/widgets/molecules/lists/games_list_molecule.dart';
 
 import '../../models/game/minimal_game_model.dart';
 import '../../services/match_service.dart';

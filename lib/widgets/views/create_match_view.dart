@@ -9,7 +9,7 @@ import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/minutes_picker.dart';
 import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
-import 'package:madnolia/widgets/molecules/games_list_molecule.dart';
+import 'package:madnolia/widgets/molecules/lists/games_list_molecule.dart';
 import 'package:madnolia/widgets/search_user_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
