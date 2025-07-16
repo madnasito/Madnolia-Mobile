@@ -51,17 +51,18 @@ onStart(ServiceInstance service) async {
       debugPrint(username);
       debugPrint(currentRoom);
       service.invoke("message", payload);
+
       
 
       // debugPrint(message.to);
 
-      if(currentRoom != payload["conversation"] && payload["type"] != 0 && payload["text"].contains("@$username")){
-        ChatMessage message =ChatMessage.fromJson(payload);
+      if(currentRoom != payload["conversation"] /*  && payload["type"] != 0 && payload["text"].contains("@$username") */){
+        ChatMessage message = ChatMessage.fromJson(payload);
         LocalNotificationsService.displayRoomMessage(message);
-      } else if(currentRoom != payload["conversation"] && payload["type"] == 0 && payload['creator'] != userId) {
+      } /* else if(currentRoom != payload["conversation"] && payload["type"] == 0 && payload['creator'] != userId) {
         final ChatMessage message = ChatMessage.fromJson(payload);
         LocalNotificationsService.displayUserMessage(message);
-      }
+      }*/
     });
   
   socket.on("update_recipient_status", (data) => service.invoke("update_recipient_status", data));

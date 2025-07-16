@@ -141,7 +141,7 @@ class _MatchesPageState extends State<MatchesPage> {
                   },
                 ),
                 // Positioned(child: child)
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
                 const OrganismLoadMatches(),
               ],
             ),
@@ -241,11 +241,11 @@ class _MatchItem extends StatelessWidget {
         bottom: Column(
           children: [
             Text(match.title),
-            // Text(
-            //   DateFormat('yyyy-MM-dd HH:mm:ss').format(
-            //     DateTime.fromMillisecondsSinceEpoch(match.date),
-            //   ),
-            // ),
+            Text(DateTime.fromMillisecondsSinceEpoch(
+              match.date)
+              .toString()
+              .substring(0, 16)
+            ),
           ],
         ),
       ),
