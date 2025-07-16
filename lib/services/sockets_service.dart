@@ -47,22 +47,24 @@ onStart(ServiceInstance service) async {
   socket.on("added_to_match", (payload) => service.invoke("added_to_match", {"resp" : payload}));
 
   socket.on("message", (payload) async {
+
+    try {
       debugPrint("MESSAGE!!!");
       debugPrint(username);
       debugPrint(currentRoom);
       service.invoke("message", payload);
 
-      
+      ChatMessage message = ChatMessage.fromJson(payload);
 
-      // debugPrint(message.to);
+      if(message.creator == userId) return LocalNotificationsService.deleteRoomMessages(message.conversation);
 
-      if(currentRoom != payload["conversation"] /*  && payload["type"] != 0 && payload["text"].contains("@$username") */){
-        ChatMessage message = ChatMessage.fromJson(payload);
+      if(currentRoom != payload["conversation"] ){
         LocalNotificationsService.displayRoomMessage(message);
-      } /* else if(currentRoom != payload["conversation"] && payload["type"] == 0 && payload['creator'] != userId) {
-        final ChatMessage message = ChatMessage.fromJson(payload);
-        LocalNotificationsService.displayUserMessage(message);
-      }*/
+      }
+      
+    } catch (e) {
+      debugPrint(e.toString());
+    }
     });
   
   socket.on("update_recipient_status", (data) => service.invoke("update_recipient_status", data));

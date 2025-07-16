@@ -60,6 +60,5 @@ class MoleculeMatchesFilterButtons extends StatelessWidget {
         );
       },
     );
-    ;
   }
 }

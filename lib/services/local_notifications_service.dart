@@ -165,7 +165,7 @@ class LocalNotificationsService {
     // Procesar cada grupo de mensajes
     for (var i = 0; i < _roomMessages.length; i++) {
       final currentGroup = _roomMessages[i];
-      final roomId = currentGroup[0].conversation;
+      // final roomId = currentGroup[0].conversation;
       final firstMessage = currentGroup[0];
 
       // Obtener información del match usando el mensaje correspondiente al grupo actual
