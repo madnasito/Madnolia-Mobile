@@ -139,7 +139,7 @@ class LocalNotificationsService {
     const String groupChannelId = 'messages';
     const String groupChannelName = 'Messages';
     const String groupChannelDescription = 'Messages channel';
-    const String groupKey = 'com.madnolia.app.GROUP_KEY';
+    String groupKey = message.conversation;
 
     // Agregar el nuevo mensaje a la lista
     bool messageAdded = false;
@@ -388,6 +388,10 @@ class LocalNotificationsService {
       
       // 2. Cancelar todas las notificaciones del grupo
       final activeMessages = await _notificationsPlugin.getActiveNotifications();
+
+      for (ActiveNotification element in activeMessages) {
+        print(element);
+      }
       
       for (final notification in activeMessages) {
         // Cancelar tanto mensajes individuales como el resumen
@@ -421,6 +425,8 @@ class LocalNotificationsService {
             type: message.type)
           .toJson()
         );
+
+        print(_roomMessages);
 
         // Get current user info
         // const storage = FlutterSecureStorage();
@@ -464,8 +470,8 @@ class LocalNotificationsService {
       await _notificationsPlugin.cancel(notification.id!);
     }
     
-    // 3. Cancelar cualquier notificación pendiente
-    await _notificationsPlugin.cancelAll();
+    // // 3. Cancelar cualquier notificación pendiente
+    // await _notificationsPlugin.cancelAll();
     
     debugPrint('Todas las notificaciones fueron eliminadas');
   } catch (e) {
