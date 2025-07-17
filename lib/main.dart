@@ -44,9 +44,19 @@ void main() async {
   );
 
   try {
-    if(await getToken() is String) await initializeService();
+    if(await getToken() is String) {
+      await initializeService();
+      // Start the service manually in a safe context
+      Future.delayed(const Duration(seconds: 2), () {
+        try {
+          startBackgroundService();
+        } catch (e) {
+          debugPrint('Failed to start background service: $e');
+        }
+      });
+    }
   } catch (e) {
-    debugPrint(e.toString());
+    debugPrint('Error initializing service: $e');
   }
 
   unawaited(MobileAds.instance.initialize());

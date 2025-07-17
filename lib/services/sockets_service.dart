@@ -189,8 +189,12 @@ onStart(ServiceInstance service) async {
 }
 
 void startBackgroundService() {
-  final service = FlutterBackgroundService();
-  service.startService();
+  try {  
+    final service = FlutterBackgroundService();
+    service.startService();
+  } catch (e) {
+    debugPrint(e.toString());
+  }
 }
 
 void stopBackgroundService() {

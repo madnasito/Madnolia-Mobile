@@ -133,6 +133,50 @@ class LocalNotificationsService {
   }
 
   @pragma("vm:entry-point")
+  static Future<Uint8List> getRoundedImageBytes(ImageProvider imageProvider) async {
+    try {
+      // Load the image
+      final imageStream = imageProvider.resolve(ImageConfiguration.empty);
+      final completer = Completer<ImageInfo>();
+      final listener = ImageStreamListener((ImageInfo info, _) {
+        if (!completer.isCompleted) completer.complete(info);
+      });
+      imageStream.addListener(listener);
+      
+      final imageInfo = await completer.future;
+      imageStream.removeListener(listener);
+      
+      // Create a picture recorder and canvas for drawing
+      final recorder = PictureRecorder();
+      final canvas = Canvas(recorder);
+      final paint = Paint();
+      
+      // Create a rounded rectangle clip
+      final radius = Radius.circular(100); // Adjust for desired roundness
+      final rect = Rect.fromLTWH(0, 0, 
+          imageInfo.image.width.toDouble(), 
+          imageInfo.image.height.toDouble());
+      
+      // Draw rounded image
+      canvas.save();
+      canvas.clipPath(Path()..addRRect(RRect.fromRectAndRadius(rect, radius)));
+      canvas.drawImage(imageInfo.image, Offset.zero, paint);
+      canvas.restore();
+      
+      // Convert to byte data
+      final picture = recorder.endRecording();
+      final img = await picture.toImage(imageInfo.image.width, imageInfo.image.height);
+      final byteData = await img.toByteData(format: ImageByteFormat.png);
+      
+      return byteData!.buffer.asUint8List();
+    } catch (e) {
+      debugPrint('Error rounding image: $e');
+      // Fallback to original if rounding fails
+      return imageProviderToUint8List(imageProvider);
+    }
+  }
+
+  @pragma("vm:entry-point")
   static Future<void> displayRoomMessage(ChatMessage message) async {
   try {
     await initializeTranslations();
@@ -184,7 +228,7 @@ class LocalNotificationsService {
       // Crear mensajes de notificación con los remitentes correctos
       List<Message> notiMessages = await Future.wait(currentGroup.map((msg) async{
         final user = userData[msg.creator]!;
-        final image = await imageProviderToUint8List(CachedNetworkImageProvider(user.thumb));
+        final image = await getRoundedImageBytes(CachedNetworkImageProvider(user.thumb));
         return Message(
           msg.text,
           msg.date,
@@ -209,6 +253,8 @@ class LocalNotificationsService {
           importance: Importance.high,
           icon: 'ic_notifications',
           priority: Priority.high,
+          category: AndroidNotificationCategory.message,
+          colorized: true,
           largeIcon: ByteArrayAndroidBitmap(image),
           actions: [
             AndroidNotificationAction(
@@ -262,6 +308,10 @@ class LocalNotificationsService {
       summaryText: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
     );
 
+    final userDb = await getUserDb(message.creator);
+
+    final image = await getRoundedImageBytes(CachedNetworkImageProvider(userDb.thumb));
+
     final notificationSummaryDetails = NotificationDetails(
       android: AndroidNotificationDetails(
         groupChannelId, 
@@ -270,7 +320,8 @@ class LocalNotificationsService {
         styleInformation: inboxStyleInformation,
         groupKey: groupKey,
         setAsGroupSummary: true,
-        icon: 'ic_notifications'
+        icon: 'ic_notifications',
+        largeIcon: ByteArrayAndroidBitmap(image)
       ),
     );
     
@@ -351,8 +402,10 @@ class LocalNotificationsService {
 
   @pragma("vm:entry-point")
   static void onDidReceiveNotificationResponse(details) async {
-      _roomMessages.clear();
+
+      // _roomMessages.clear();
       // _userMessages.clear();
+      print(details);
       try {
         MinimalMatchDb matchDb = MinimalMatchDb.fromJson(details.payload!);
         final context = navigatorKey.currentContext;
@@ -389,8 +442,9 @@ class LocalNotificationsService {
       // 2. Cancelar todas las notificaciones del grupo
       final activeMessages = await _notificationsPlugin.getActiveNotifications();
 
-      for (ActiveNotification element in activeMessages) {
-        print(element);
+      // Only log if there are active messages to avoid spam
+      if (activeMessages.isNotEmpty) {
+        debugPrint('Found ${activeMessages.length} active notifications');
       }
       
       for (final notification in activeMessages) {
@@ -411,6 +465,7 @@ class LocalNotificationsService {
 
   @pragma("vm:entry-point")
   static Future<void> notificationTapBackground(NotificationResponse notificationResponse) async {
+    print(notificationResponse.actionId);
     if(notificationResponse.input != null) {
       try {
         final ChatMessage message = chatMessageFromJson(notificationResponse.payload!);
