@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/pages/auth/recover_password_page.dart';
 import 'package:madnolia/pages/chat/user_chat_page.dart';
@@ -25,6 +26,7 @@ import 'package:madnolia/pages/user/edit_user_page.dart';
 import 'package:madnolia/pages/user/user_page.dart';
 import 'package:madnolia/pages/user/user_platforms.dart';
 import 'package:madnolia/pages/user/user_profile_page.dart';
+import 'package:madnolia/services/sockets_service.dart';
 
 
 import '../pages/home/home_user_page.dart';
@@ -203,6 +205,7 @@ Future<String?> getToken() async {
 
     return token;
   } catch (e) {
+    stopBackgroundService();
     rethrow;
   }
 }

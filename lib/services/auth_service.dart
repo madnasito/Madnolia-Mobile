@@ -27,6 +27,7 @@ class AuthService {
       
 
       if (respBody.containsKey("token")) {
+        startBackgroundService();
         await _storage.write(key: "token", value: respBody["token"]);
         await _storage.write(key: "userId", value: respBody["user"]["_id"]);
         await initializeService();
@@ -65,6 +66,7 @@ class AuthService {
       final Map<String,dynamic> respDecoded = jsonDecode(response.body);
 
       if (respDecoded.containsKey("user")) {
+        startBackgroundService();
         _storage.write(key: "token", value: respDecoded["token"]);
         _storage.write(key: "userId", value: respDecoded["user"]["_id"]);
       }

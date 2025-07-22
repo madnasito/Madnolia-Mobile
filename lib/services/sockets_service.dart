@@ -17,6 +17,9 @@ onStart(ServiceInstance service) async {
   const storage = FlutterSecureStorage();
   final token = await storage.read(key: "token");
 
+  // Service will be configured as foreground through AndroidConfiguration
+  debugPrint('Background service starting with foreground mode enabled');
+
   (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
   
   final String socketsUrl = dotenv.get("SOCKETS_URL");
@@ -35,6 +38,18 @@ onStart(ServiceInstance service) async {
   String currentRoom = "";
   String username = "";
   String? userId = await storage.read(key: "userId");
+  
+  // Setup periodic keepalive to prevent service termination
+  Timer.periodic(const Duration(minutes: 1), (timer) async {
+    try {
+      service.invoke('keepAlive', {'timestamp': DateTime.now().millisecondsSinceEpoch});
+      final activeNotifications = await LocalNotificationsService.getActiveNotifications('madnolia_background');
+      if(activeNotifications.isNotEmpty) LocalNotificationsService.deleteNotification(activeNotifications[0].id!);
+      debugPrint('Service keepalive: ${DateTime.now()}');
+    } catch (e) {
+      debugPrint('Keepalive error: $e');
+    }
+  });
 
   socket.onConnect((_) async {
 
@@ -255,8 +270,12 @@ Future<FlutterBackgroundService> initializeService() async {
     androidConfiguration: AndroidConfiguration(
       autoStart: false,
       onStart: onStart,
-      isForegroundMode: false,
+      isForegroundMode: true,
       autoStartOnBoot: false,
+      notificationChannelId: 'madnolia_background',
+      initialNotificationTitle: 'Madnolia',
+      initialNotificationContent: 'Keeping connections active',
+      foregroundServiceNotificationId: 888,
     ),
   );
 

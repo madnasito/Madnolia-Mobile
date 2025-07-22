@@ -12,6 +12,7 @@ import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/database/providers/friendship_db.dart';
 import 'package:madnolia/database/providers/user_db.dart';
+import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/widgets/background.dart';
 
 // import 'package:madnolia/widgets/form_button.dart';
@@ -129,7 +130,8 @@ class CustomScaffold extends StatelessWidget {
                       matchesBloc.add(RestoreMatchesState());
                       chatsBloc.add(RestoreUserChats());
                       backgroundService.invoke("delete_all_notifications");
-                      backgroundService.invoke("stop");
+                      // backgroundService.invoke("stop");
+                      stopBackgroundService();
                       const storage = FlutterSecureStorage();
                       await storage.delete(key: "token");
                       if(!context.mounted) return;

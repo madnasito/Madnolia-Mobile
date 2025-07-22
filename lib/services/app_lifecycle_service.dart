@@ -1,5 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'dart:async';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:madnolia/routes/routes.dart';
 import 'sockets_service.dart';
 
 class AppLifecycleService extends WidgetsBindingObserver {
@@ -9,6 +11,8 @@ class AppLifecycleService extends WidgetsBindingObserver {
 
   bool _serviceStarted = false;
   AppLifecycleState? _lastState;
+  Timer? _monitoringTimer;
+  DateTime? _lastKeepalive;
 
   void initialize() {
     WidgetsBinding.instance.addObserver(this);
@@ -16,10 +20,11 @@ class AppLifecycleService extends WidgetsBindingObserver {
 
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _monitoringTimer?.cancel();
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async{
     super.didChangeAppLifecycleState(state);
     _lastState = state;
     
@@ -28,8 +33,11 @@ class AppLifecycleService extends WidgetsBindingObserver {
     switch (state) {
       case AppLifecycleState.resumed:
         // App is in foreground - safe to start background service
-        if (!_serviceStarted) {
-          _startServiceSafely();
+
+        if(await getToken() is String){
+          if (!_serviceStarted) {
+            _startServiceSafely();
+          }
         }
         break;
       case AppLifecycleState.paused:
@@ -56,9 +64,33 @@ class AppLifecycleService extends WidgetsBindingObserver {
       startBackgroundService();
       _serviceStarted = true;
       debugPrint('Background service started from lifecycle manager');
+      _startServiceMonitoring();
     } catch (e) {
       debugPrint('Failed to start background service from lifecycle: $e');
     }
+  }
+  
+  void _startServiceMonitoring() {
+    _monitoringTimer?.cancel();
+    _monitoringTimer = Timer.periodic(const Duration(minutes: 2), (timer) async {
+      try {
+        final service = FlutterBackgroundService();
+        bool isRunning = await service.isRunning();
+        
+        if (!isRunning && _serviceStarted) {
+          debugPrint('Service died! Attempting restart...');
+          _serviceStarted = false;
+          if (_lastState == AppLifecycleState.resumed || _lastState == null) {
+            _startServiceSafely();
+          }
+        } else if (isRunning) {
+          // Service is alive, send keepalive
+          service.invoke('keepAlive', {'from': 'monitor'});
+        }
+      } catch (e) {
+        debugPrint('Service monitoring error: $e');
+      }
+    });
   }
 
   void startServiceIfForeground() {

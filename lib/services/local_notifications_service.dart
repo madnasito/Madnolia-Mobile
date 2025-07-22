@@ -394,6 +394,12 @@ class LocalNotificationsService {
   }
 
   @pragma("vm:entry-point")
+  static deleteNotification(int id) {
+    debugPrint('Deleting notification with id $id');
+    _notificationsPlugin.cancel(id);
+  }
+
+  @pragma("vm:entry-point")
   static Future<List<ActiveNotification>> getActiveNotifications(String channelId) async {
     final List<ActiveNotification> activeNotifications =
         await _notificationsPlugin.getActiveNotifications();

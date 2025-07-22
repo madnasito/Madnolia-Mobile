@@ -20,6 +20,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/database/providers/db_provider.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/services/app_lifecycle_service.dart';
+import 'package:madnolia/services/notification_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +47,8 @@ void main() async {
 
   try {
     if(await getToken() is String) {
+      // Initialize notifications first
+      await NotificationHelper.initializeNotifications();
       await initializeService();
       // Initialize lifecycle service to manage background service properly
       AppLifecycleService().initialize();
