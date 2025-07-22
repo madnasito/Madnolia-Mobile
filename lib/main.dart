@@ -19,6 +19,7 @@ import 'dart:ui';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/database/providers/db_provider.dart';
 import 'package:madnolia/services/sockets_service.dart';
+import 'package:madnolia/services/app_lifecycle_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,14 +47,10 @@ void main() async {
   try {
     if(await getToken() is String) {
       await initializeService();
-      // Start the service manually in a safe context
-      Future.delayed(const Duration(seconds: 2), () {
-        try {
-          startBackgroundService();
-        } catch (e) {
-          debugPrint('Failed to start background service: $e');
-        }
-      });
+      // Initialize lifecycle service to manage background service properly
+      AppLifecycleService().initialize();
+      // Start service using lifecycle-aware approach
+      AppLifecycleService().startServiceIfForeground();
     }
   } catch (e) {
     debugPrint('Error initializing service: $e');

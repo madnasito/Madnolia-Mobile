@@ -305,7 +305,6 @@ class LocalNotificationsService {
 
       // _roomMessages.clear();
       // _userMessages.clear();
-      print(details);
       try {
         MinimalMatchDb matchDb = MinimalMatchDb.fromJson(details.payload!);
         final context = navigatorKey.currentContext;
@@ -365,7 +364,6 @@ class LocalNotificationsService {
 
   @pragma("vm:entry-point")
   static Future<void> notificationTapBackground(NotificationResponse notificationResponse) async {
-    print(notificationResponse.actionId);
     if(notificationResponse.input != null) {
       try {
         final ChatMessage message = chatMessageFromJson(notificationResponse.payload!);
@@ -380,8 +378,6 @@ class LocalNotificationsService {
             type: message.type)
           .toJson()
         );
-
-        print(_roomMessages);
 
         // Get current user info
         // const storage = FlutterSecureStorage();

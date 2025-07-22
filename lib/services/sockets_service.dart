@@ -191,9 +191,26 @@ onStart(ServiceInstance service) async {
 void startBackgroundService() {
   try {  
     final service = FlutterBackgroundService();
-    service.startService();
+    
+    // Only start if not already running
+    service.isRunning().then((isRunning) {
+      if (!isRunning) {
+        service.startService();
+        debugPrint('Background service started successfully');
+      } else {
+        debugPrint('Background service already running');
+      }
+    }).catchError((e) {
+      debugPrint('Failed to check/start background service: $e');
+      // Fallback: try to start anyway
+      try {
+        service.startService();
+      } catch (startError) {
+        debugPrint('Final fallback failed: $startError');
+      }
+    });
   } catch (e) {
-    debugPrint(e.toString());
+    debugPrint('Error in startBackgroundService: $e');
   }
 }
 
@@ -231,15 +248,15 @@ Future<FlutterBackgroundService> initializeService() async {
 
   await service.configure(
     iosConfiguration: IosConfiguration(
-      autoStart: true,
+      autoStart: false,
       onForeground: onStart,
       onBackground: onIosBackground,
     ),
     androidConfiguration: AndroidConfiguration(
-      autoStart: true,
+      autoStart: false,
       onStart: onStart,
       isForegroundMode: false,
-      autoStartOnBoot: true,
+      autoStartOnBoot: false,
     ),
   );
 
