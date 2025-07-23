@@ -9,6 +9,7 @@ import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
+
 import '../models/invitation_model.dart' show Invitation;
 
 
@@ -260,7 +261,6 @@ class SocketService {
 
 Future<FlutterBackgroundService> initializeService() async {
   final service = FlutterBackgroundService();
-
   await service.configure(
     iosConfiguration: IosConfiguration(
       autoStart: false,
@@ -272,7 +272,7 @@ Future<FlutterBackgroundService> initializeService() async {
       onStart: onStart,
       isForegroundMode: true,
       autoStartOnBoot: false,
-      notificationChannelId: 'madnolia_background',
+      notificationChannelId: 'silent_service_channel',
       initialNotificationTitle: 'Madnolia',
       initialNotificationContent: 'Keeping connections active',
       foregroundServiceNotificationId: 888,

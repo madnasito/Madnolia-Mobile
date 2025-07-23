@@ -4,7 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/foundation.dart';
 
 class NotificationHelper {
-  static const String channelId = 'madnolia_background';
+  static const String channelId = 'silent_service_channel';
   static const String channelName = 'Background Service';
   static const String channelDescription = 'Keeps your gaming connections active';
   
@@ -15,7 +15,7 @@ class NotificationHelper {
       channelId,
       channelName,
       description: channelDescription,
-      importance: Importance.low, // Low importance to minimize user distraction
+      importance: Importance.none, // Low importance to minimize user distraction
       playSound: false,
       enableVibration: false,
       showBadge: false,
