@@ -9,6 +9,8 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
+import 'package:madnolia/services/notification_helper.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 
@@ -17,13 +19,53 @@ import '../models/invitation_model.dart' show Invitation;
 
 @pragma('vm:entry-point')
 onStart(ServiceInstance service) async {
-  const storage = FlutterSecureStorage();
-  final token = await storage.read(key: "token");
+  debugPrint('Background service starting...');
+  
+  // Crear el canal de notificaciones INMEDIATAMENTE
+  try {
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'silent_service_channel',
+      'Background Service',
+      description: 'Keeps your gaming connections active',
+      importance: Importance.low,
+      playSound: false,
+      enableVibration: false,
+      showBadge: false,
+    );
 
-  // Service will be configured as foreground through AndroidConfiguration
-  debugPrint('Background service starting with foreground mode enabled');
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+        
+    debugPrint('Notification channel created successfully in service');
+  } catch (e) {
+    debugPrint('Error creating notification channel: $e');
+  }
+  
+  // Pequeño delay para asegurar que el canal esté creado
+  await Future.delayed(const Duration(milliseconds: 500));
+  
+  // CRÍTICO: Establecer como foreground service después del delay
+  if (service is AndroidServiceInstance) {
+    try {
+      service.setAsForegroundService();
+      debugPrint('Service set as foreground successfully');
+    } catch (e) {
+      debugPrint('Error setting service as foreground: $e');
+      // Continuar sin modo foreground si falla
+    }
+  }
+  
+  try {
+    const storage = FlutterSecureStorage();
+    final token = await storage.read(key: "token");
 
-  (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
+    debugPrint('Background service starting in foreground mode with token');
+
+    // Cargar dotenv de forma asíncrona sin bloquear
+    (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
   
   final String socketsUrl = dotenv.get("SOCKETS_URL");
 
@@ -206,6 +248,11 @@ onStart(ServiceInstance service) async {
   service.on('accept_connection').listen((onData) => socket.emit('accept_connection', onData?['user']));
   service.on('reject_connection').listen((onData) => socket.emit('reject_connection', onData?['user']));
 
+  } catch (e) {
+    debugPrint('Error initializing background service: $e');
+    // El servicio ya está en foreground, por lo que continuará funcionando
+    // aunque haya errores en la inicialización
+  }
 }
 
 void startBackgroundService() {
@@ -247,37 +294,22 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   return true;
 }
 
-class SocketService {
-  late Socket socket;
-
-  static void start() {
-    startBackgroundService();
-  }
-
-  static void stop() {
-    stopBackgroundService();
-  }
-
-  @pragma('vm:entry-point')
-  static Future<bool> startOnIos(ServiceInstance service) async =>
-      onIosBackground(service);
-}
-
 Future<FlutterBackgroundService> initializeService() async {
   final service = FlutterBackgroundService();
+  
   await service.configure(
     iosConfiguration: IosConfiguration(
-      autoStart: false,
+      autoStart: false, // No auto-iniciar, se controla manualmente
       onForeground: onStart,
       onBackground: onIosBackground,
     ),
     androidConfiguration: AndroidConfiguration(
-      autoStart: false,
+      autoStart: false, // IMPORTANTE: false para evitar inicio automático
       onStart: onStart,
-      isForegroundMode: true,
+      isForegroundMode: false, // CAMBIAR A FALSE temporalmente
       autoStartOnBoot: false,
       notificationChannelId: 'silent_service_channel',
-      initialNotificationTitle: 'Madnolia',
+      initialNotificationTitle: 'Madnolia Service',
       initialNotificationContent: translate('UTILS.KEEPING_CONNECTIONS'),
       foregroundServiceNotificationId: 888,
     ),

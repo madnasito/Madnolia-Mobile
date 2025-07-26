@@ -19,8 +19,7 @@ import 'dart:ui';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/database/providers/db_provider.dart';
 import 'package:madnolia/services/sockets_service.dart';
-import 'package:madnolia/services/app_lifecycle_service.dart';
-import 'package:madnolia/services/notification_helper.dart';
+import 'package:madnolia/services/local_notifications_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,13 +46,18 @@ void main() async {
 
   try {
     if(await getToken() is String) {
-      // Initialize notifications first
-      await NotificationHelper.initializeNotifications();
+      // Initialize notifications first with improved Android 12+ support  
+      await LocalNotificationsService.initialize();
+      // Solo inicializar el servicio
       await initializeService();
-      // Initialize lifecycle service to manage background service properly
-      AppLifecycleService().initialize();
-      // Start service using lifecycle-aware approach
-      AppLifecycleService().startServiceIfForeground();
+      // El servicio se iniciará cuando el usuario haga login
+      debugPrint('Service initialized, waiting for login to start');
+      // Esperar un momento para asegurar que el token esté guardado
+      
+        await Future.delayed(const Duration(milliseconds: 300));
+        
+        // Inicializar y iniciar el servicio
+        startBackgroundService();
     }
   } catch (e) {
     debugPrint('Error initializing service: $e');

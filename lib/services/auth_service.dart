@@ -5,8 +5,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:madnolia/services/app_lifecycle_service.dart' show AppLifecycleService;
 import 'package:madnolia/services/sockets_service.dart';
+import 'package:madnolia/services/local_notifications_service.dart';
 
 class AuthService {
   bool authenticating = false;
@@ -27,10 +27,16 @@ class AuthService {
       Map respBody = jsonDecode(resp.body);
 
       if (respBody.containsKey("token")) {
-        startBackgroundService();
+        // IMPORTANTE: Guardar el token PRIMERO antes de iniciar el servicio
         await _storage.write(key: "token", value: respBody["token"]);
         await _storage.write(key: "userId", value: respBody["user"]["_id"]);
-        AppLifecycleService().startServiceIfForeground();
+        
+        // Esperar un momento para asegurar que el token esté guardado
+        await Future.delayed(const Duration(milliseconds: 300));
+        
+        // Inicializar y iniciar el servicio
+        await _initializeAndStartService();
+        
         return respBody;
       } else {
         return respBody;
@@ -66,17 +72,59 @@ class AuthService {
       final Map<String,dynamic> respDecoded = jsonDecode(response.body);
 
       if (respDecoded.containsKey("user")) {
-        startBackgroundService();
-        _storage.write(key: "token", value: respDecoded["token"]);
-        _storage.write(key: "userId", value: respDecoded["user"]["_id"]);
+        // IMPORTANTE: Guardar el token PRIMERO antes de iniciar el servicio
+        await _storage.write(key: "token", value: respDecoded["token"]);
+        await _storage.write(key: "userId", value: respDecoded["user"]["_id"]);
+        
+        // Esperar un momento para asegurar que el token esté guardado
+        await Future.delayed(const Duration(milliseconds: 300));
+        
+        // Inicializar y iniciar el servicio
+        await _initializeAndStartService();
       }
-      AppLifecycleService().startServiceIfForeground();
       return respDecoded;
     } catch (e) {
       // Print the exception for debugging purposes
 
       // Return an error response
       return {"Error": true, "message": "NETWORK_ERROR"};
+    }
+  }
+
+  Future<void> _initializeAndStartService() async {
+    try {
+      // Esperar un momento para asegurar que el token esté guardado
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      // Verificar que el token realmente exista
+      final token = await _storage.read(key: "token");
+      if (token == null) {
+        debugPrint('No se puede iniciar servicio: token no encontrado');
+        return;
+      }
+      
+      debugPrint('Iniciando servicio con token disponible');
+      
+      // Inicializar canales de notificación primero y esperar
+      await LocalNotificationsService.initialize();
+      debugPrint('Canales de notificación inicializados');
+      
+      // Esperar un poco más para asegurar que todo esté listo
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      // Inicializar el servicio
+      await initializeService();
+      debugPrint('Servicio configurado');
+      
+      // Esperar antes de iniciar
+      await Future.delayed(const Duration(milliseconds: 300));
+      
+      // Iniciar el servicio directamente
+      startBackgroundService();
+      
+      debugPrint('Servicio iniciado automáticamente con token');
+    } catch (e) {
+      debugPrint('Error al inicializar servicio: $e');
     }
   }
 
