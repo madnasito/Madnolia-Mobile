@@ -52,7 +52,8 @@
         "PASSWORD": "Password",
         "PASSWORD2": "Repeat password",
         "PLATFORMS": "Platforms",
-        "RESPOND": "Respond"
+        "REPLY": "Reply",
+        "MARK_AS_READ": "Mark as read"
     }
   },
   "BUTTONS": {
@@ -98,11 +99,20 @@
   },
   "MATCH": {
     "MATCH_UPDATED": "Match updated",
-    "ERROR_LOADING": "Error loading match"
+    "ERROR_LOADING": "Error loading match",
+    "JOIN_TO_MATCH": "Join to match"
+  },
+  "MATCHES": {
+    "TITLE": "Matches",
+    "ALL": "All",
+    "CRAETED": "Created",
+    "JOINED": "Joined"
   },
   "CHAT": {
     "MESSAGES": "Messages",
-    "MESSAGE": "Mensaje"
+    "MESSAGE": "Mensaje",
+    "NO_MESSAGES": "No messages",
+    "LOADING_ERROR": "Error loading messages"
   },
   "GAME":{
       "GAME": "Game",
@@ -116,7 +126,12 @@
       "EMPTY": "No notifications",
       "ERROR_LOADING": "Error loading notifications",
       "MATCH_INVITATION": "Match Invitation",
-      "INVITED_TO": "You are invited to"
+      "INVITED_TO": "You are invited to",
+      "CONNECTION_REQUEST": "{name} wants connect with you",
+      "ACCEPT_REQUEST_TITLE": "Accept request?",
+      "INVITATION_TO_MATCH": "You have a new invitation to:",
+      "MATCH_READY": "Match ready",
+      "MATCH_STARTED": "{name} has started"
   },
   "PROFILE":{
       "YOU": "You",
@@ -173,7 +188,11 @@
       "DESCRIPTION": "Description",
       "SELECT_FILE": "Select file",
       "FILE": "File",
-      "RELOAD": "Reload"
+      "RELOAD": "Reload",
+      "KEEPING_CONNECTIONS": "Keeping connections active",
+      "ACCEPT": "Accept",
+      "CANCEL": "Cancel",
+      "REJECT": "Reject"
   },
   "ALERT": {
     "YOU_SURE": "Are you sure?",

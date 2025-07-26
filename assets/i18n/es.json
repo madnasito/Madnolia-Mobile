@@ -10,7 +10,7 @@
       "INVITATIONS": "Invitations",
       "JOINED_MATCHES": "Partidas ingresadas",
       "REGISTER": "Registrarse",
-      "LOGIN": "Login",
+      "LOGIN": "Ingresar",
       "PROFILE": "Perfil",
       "LOGOUT": "Salir"
     },    
@@ -51,7 +51,8 @@
             "PASSWORD": "Contraseña",
             "PASSWORD2": "Repita la Contraseña",
             "PLATFORMS": "Plataformas",
-            "RESPOND": "Responder"
+            "REPLY": "Responder",
+            "MARK_AS_READ": "Marcar como leido"
         }
     },
     "RECOVER_PASSWORD": {
@@ -60,7 +61,7 @@
         "EMAIL_SENDED": "¡Correo enviado!"
     },
     "LOGIN":{
-        "WELCOME": "Login",
+        "WELCOME": "Ingresar",
         "BUTTON": "Iniciar Sesión",
         "ERRORS":{
             "USER": "No se ha encontrado al usuario",
@@ -92,11 +93,20 @@
     },
     "MATCH": {
         "MATCH_UPDATED": "Partida actualizada",
-        "ERROR_LOADING": "Error cargando partida"
+        "ERROR_LOADING": "Error cargando partida",
+        "JOIN_TO_MATCH": "Unirse a la partida"
+    },
+    "MATCHES": {
+        "TITLE": "Partidas",
+        "ALL": "Todas",
+        "CREATED": "Creadas",
+        "JOINED": "Ingresadas"
     },
     "CHAT": {
         "MESSAGES": "Mensajes",
-        "MESSAGE": "Mensaje"
+        "MESSAGE": "Mensaje",
+        "NO_MESSAGES": "Sin mensajes",
+        "LOADING_ERROR": "Error cargando mensajes"
     },
     "GAME":{
         "GAME": "Juego",
@@ -110,7 +120,12 @@
         "EMPTY": "Sin notificaciones",
         "ERROR_LOADING": "Error cargando notificaciones",
         "MATCH_INVITATION": "Invitacion a partida",
-        "INVITED_TO": "Fuiste invitado a"
+        "INVITED_TO": "Fuiste invitado a:",
+        "CONNECTION_REQUEST": "{name} quiere conectar contigo",
+        "ACCEPT_REQUEST_TITLE": "¿Aceptar solicitud?",
+        "INVITATION_TO_MATCH": "Tienes una invitacion para: ",
+        "MATCH_READY": "Partida lista",
+        "MATCH_STARTED": "{name} ha empezado"
     },
     "PROFILE":{
         "YOU": "Perfil",
@@ -167,7 +182,11 @@
       "DESCRIPTION": "Descripción",
       "SELECT_FILE": "Seleccionar archivo",
       "FILE": "Archivo",
-      "RELOAD": "Recargar"
+      "RELOAD": "Recargar",
+      "KEEPING_CONNECTIONS": "Manteniendo conexiones activas",
+      "ACCEPT": "Aceptar",
+      "CANCEL": "Cancelar",
+      "REJECT": "Rechazar"
     },
     "ALERT": {
         "YOU_SURE": "¿Estás seguro?",

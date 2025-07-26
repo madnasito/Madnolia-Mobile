@@ -90,7 +90,10 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
         if (state.status == ListStatus.initial) {
           return const Center(child: CircularProgressIndicator());
         } else if (state.status == ListStatus.success) {
-          return MoleculeUsersChats(usersChats: state.usersChats);
+         return (state.usersChats.isNotEmpty) 
+          ? MoleculeUsersChats(usersChats: state.usersChats)
+          : Center(child: Text(translate('CHAT.NO_MESSAGES'))
+        );
         } else if (state.status == ListStatus.failure && 
                   state.usersChats.isEmpty) {
           return Center(child: Text(translate('CHAT.LOADING_ERROR')));

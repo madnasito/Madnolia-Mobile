@@ -79,7 +79,7 @@ class CustomScaffold extends StatelessWidget {
                   ),
                   _MenuButton(
                     icon: Icon(CupertinoIcons.gamecontroller, size: 40, color: Colors.white),
-                    title: 'Matches',
+                    title: translate('MATCHES.TITLE'),
                     route: "/matches",
                   ),
                   _MenuButton(

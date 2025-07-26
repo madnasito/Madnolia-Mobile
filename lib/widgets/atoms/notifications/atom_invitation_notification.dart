@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
 import 'package:madnolia/database/services/user-db.service.dart';
 import 'package:madnolia/services/notifications_service.dart';
+import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 
 class AtomInvitationNotification extends StatelessWidget {
   final NotificationModel notification;
@@ -49,8 +51,16 @@ class AtomInvitationNotification extends StatelessWidget {
                 leading: CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[800],
-                  backgroundImage: CachedNetworkImageProvider(notification.thumb),),
-                title: Text("You have a new invitation to ${notification.title}"),
+                  backgroundImage: CachedNetworkImageProvider(resizeImage(notification.thumb)),),
+                title: RichText(
+                  text: TextSpan(text: translate("NOTIFICATIONS.INVITATION_TO_MATCH"),
+                  children: [
+                    TextSpan(
+                      text: notification.title,
+                      style: TextStyle(fontWeight: FontWeight.bold)
+                    )
+                  ]
+                ),),
                 subtitle: Text("@${snapshot.data?.username}", style: TextStyle(
                     color: Colors.greenAccent,
                     overflow: TextOverflow.ellipsis, // Handle long text

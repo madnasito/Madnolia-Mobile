@@ -106,59 +106,63 @@ class _ViewMatchState extends State<ViewMatch> {
   }
 
   Widget _buildMatchHeader() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible( // Asegura que el texto no desborde
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      color: Colors.black54,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible( // Asegura que el texto no desborde
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.match.title,
+                  style: const TextStyle(fontSize: 20),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                Text(
+                  widget.match.game.name,
+                  style: const TextStyle(fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ],
+            ),
+          ),
+          Row(
             children: [
-              Text(
-                widget.match.title,
-                style: const TextStyle(fontSize: 20),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+              Container(
+                clipBehavior: Clip.antiAlias,
+                margin: const EdgeInsets.only(right: 10),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                child: SizedBox(
+                  width: 90,
+                  child: AtomGameImage(background: resizeImage(widget.match.game.background!)),
+                ),
               ),
-              Text(
-                widget.match.game.name,
-                style: const TextStyle(fontSize: 12),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
+              IconButton(onPressed: () async{
+                // final String apiUrl = dotenv.get("SOCKETS_URL");
+                final params = ShareParams(
+                  title: translate("SHARE.TITLE"),
+                  uri: Uri.tryParse("https://madnolia.app/match/${widget.match.id}"),
+                  // subject: "🎮 Let's play ${widget.match.game.name}",
+                  text: translate("SHARE.TEXT", args: {
+                    "gameName": widget.match.game.name,
+                    "match": "https://madnolia.app/match/${widget.match.id}"
+                    })
+                  // uri: Uri.parse('https://madnolia.app/match/${widget.match.id}')
+                );
+      
+                final result = await SharePlus.instance.share(params);
+      
+                debugPrint(result.status.toString());
+              }, icon: Icon(Icons.share_outlined)),
+              OrganismMatchInfo(match: widget.match),
             ],
           ),
-        ),
-        Row(
-          children: [
-            Container(
-              clipBehavior: Clip.antiAlias,
-              margin: const EdgeInsets.only(right: 10),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-              child: SizedBox(
-                width: 90,
-                child: AtomGameImage(background: widget.match.game.background),
-              ),
-            ),
-            IconButton(onPressed: () async{
-              // final String apiUrl = dotenv.get("SOCKETS_URL");
-              final params = ShareParams(
-                title: translate("SHARE.TITLE"),
-                // subject: "🎮 Let's play ${widget.match.game.name}",
-                text: translate("SHARE.TEXT", args: {
-                  "gameName": widget.match.game.name,
-                  "match": "https://madnolia.app/match/${widget.match.id}"
-                  })
-                // uri: Uri.parse('https://madnolia.app/match/${widget.match.id}')
-              );
-
-              final result = await SharePlus.instance.share(params);
-
-              debugPrint(result.status.toString());
-            }, icon: Icon(Icons.share_outlined)),
-            OrganismMatchInfo(match: widget.match),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -182,7 +186,7 @@ class _ViewMatchState extends State<ViewMatch> {
 
     if (!isOwnerOrMember) {
       return FormButton(
-        text: "Join to match",
+        text: translate('MATCH.JOIN_TO_MATCH'),
         color: Colors.transparent,
         onPressed: () {
           try {

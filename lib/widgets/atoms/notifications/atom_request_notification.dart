@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImageProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/enums/connection-status.enum.dart' show ConnectionStatus;
 import 'package:madnolia/models/notification/notification_model.dart';
 import 'package:madnolia/models/user/simple_user_model.dart' show SimpleUser;
@@ -28,7 +29,7 @@ class AtomRequestNotification extends StatelessWidget {
                   backgroundColor: Colors.grey[800],
                   radius: 30,
                   backgroundImage: CachedNetworkImageProvider(notification.thumb),),
-                title: Text("${notification.title} wants connect with you"),
+                title: Text(translate('NOTIFICATIONS.CONNECTION_REQUEST', args: {'name': notification.title})),
                 subtitle: Text("@${snapshot.data?.username}", style: TextStyle(
                     color: Colors.greenAccent, // Lighter grey for subtitle
                     overflow: TextOverflow.ellipsis, // Handle long text
@@ -51,10 +52,12 @@ class AtomRequestNotification extends StatelessWidget {
                         backgroundImage: CachedNetworkImageProvider(simpleUser.thumb),
                       ),
                       const SizedBox(height: 20),
-                      Text('${simpleUser.name} wants to connect with you', textAlign: TextAlign.center,)
+                      Text(translate('NOTIFICATIONS.CONNECTION_REQUEST', args: {'name': simpleUser.name}), textAlign: TextAlign.center,),
+                      SizedBox(height: 8,),
+                      Text("@${simpleUser.username}", textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: const Color.fromARGB(255, 158, 157, 80)),)
                     ],
                   ),
-                  content: const Text('Accept request?', textAlign: TextAlign.center,),
+                  content:  Text(translate('NOTIFICATIONS.ACCEPT_REQUEST_TITLE'), textAlign: TextAlign.center,),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -62,7 +65,7 @@ class AtomRequestNotification extends StatelessWidget {
                         backgroundService.invoke('reject_connection', {'user': simpleUser.id});
                         Navigator.pop(context, 'Cancel');
                       } ,
-                      child: const Text('Cancel'),
+                      child: Text(translate('UTILS.REJECT'), style: TextStyle(color: Colors.redAccent)),
                     ),
                       TextButton(
                         onPressed: () {
@@ -70,7 +73,7 @@ class AtomRequestNotification extends StatelessWidget {
                           backgroundService.invoke('accept_connection', {'user': simpleUser.id});
                           Navigator.pop(context, 'OK');
                           },
-                        child: const Text('Accept'),
+                        child: Text(translate('UTILS.ACCEPT'), style: TextStyle(color: Colors.greenAccent)),
                       ),
                   ],
                 );

@@ -42,7 +42,7 @@ class OrganismLoginForm extends StatelessWidget {
         const SizedBox(height: 15),
         StatefulBuilder(
           builder: (BuildContext context, setState) => MoleculeFormButton(
-            text: "Login",
+            text: translate('HEADER.LOGIN'),
             isLoading: logging,
             color: Colors.transparent,
             onPressed:(logging == false) ? () async {

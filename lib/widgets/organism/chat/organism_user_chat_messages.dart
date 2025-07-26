@@ -62,29 +62,32 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
   Widget build(BuildContext context) {
     return BlocBuilder<MessageBloc, MessageState>(
       builder: (context, state) {
-        if (state.status == ListStatus.failure) {
-          return const Center(child: Text("Failed fetching messages"));
-        }
 
-        // Show messages if we have any, regardless of loading status
-        if (state.userMessages.isNotEmpty) {
-          return Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-            color: Colors.black38,
-            child: MoleculeUserChatMessagesList(
-              state: state,
-              scrollController: _scrollController,
-              isLoading: state.status == ListStatus.initial && !state.hasReachedMax,
-            ),
-          );
+        switch (state.status) {
+          case ListStatus.failure:
+              return const Center(child: Text("Failed fetching messages"));
+          case ListStatus.initial:
+            return const Center(child: CircularProgressIndicator());
+          case ListStatus.success:
+            if (state.userMessages.isNotEmpty) {
+              return Container(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                color: Colors.black38,
+                child: MoleculeUserChatMessagesList(
+                  state: state,
+                  scrollController: _scrollController,
+                  isLoading: state.status == ListStatus.initial && !state.hasReachedMax,
+                ),
+              );
+            } else{
+              return Center(child: Text('Say hi'));
+            }
+          // default:
+          //   return Center(child: Text('Say hi'));
         }
-
-        // Only show loading indicator if we have no messages at all
-        if (state.status == ListStatus.initial && !state.hasReachedMax) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        return const Center(child: Text('Say hi'));
+        // if (state.status == ListStatus.failure) {
+          
+        // }
       },
     );
   }

@@ -19,6 +19,7 @@ import 'package:madnolia/database/providers/user_db.dart' show UserDb;
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
 import 'package:madnolia/database/services/user-db.service.dart' show getUserDb;
+import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import '../models/chat/message_model.dart';
 
 
@@ -159,7 +160,7 @@ class LocalNotificationsService {
           actions: [
             AndroidNotificationAction(
               message.id,
-              translate("FORM.INPUT.RESPOND"),
+              translate("FORM.INPUT.REPLY"),
               inputs: [
                 AndroidNotificationActionInput(
                   label: translate("MESSAGE"),
@@ -169,7 +170,7 @@ class LocalNotificationsService {
             ),
             AndroidNotificationAction(
               message.id,
-              'Mark as read',
+              translate("FORM.INPUT.MARK_AS_READ"),
               inputs: [
                 AndroidNotificationActionInput(
                   label: translate("MESSAGE"),
@@ -245,7 +246,8 @@ class LocalNotificationsService {
 
       await initializeTranslations();
       final matchDb = await getMatchDb(invitation.match);
-      final image = await imageProviderToBase64(CachedNetworkImageProvider(invitation.img));
+      final userDb = await getUserDb(invitation.user);
+      final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeImage(invitation.img)));
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
       
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
@@ -260,7 +262,7 @@ class LocalNotificationsService {
             styleInformation: BigPictureStyleInformation(
               icon,
               contentTitle: "${translate('NOTIFICATIONS.INVITED_TO')} ${invitation.name}",
-              summaryText: "@${invitation.user}"
+              summaryText: "@${userDb.username}",
             ),
             // styleInformation: BigPictureStyleInformation(bigPicture),
             priority: Priority.high),
@@ -275,6 +277,7 @@ class LocalNotificationsService {
   @pragma("vm:entry-point")
   static Future<void> matchReady(dynamic data) async {
     // To display the notification in device
+    await initializeTranslations();
     try {
       final MatchReady payload = MatchReady.fromJson(data);
       final matchDb = await getMatchDb(payload.match);
@@ -284,14 +287,14 @@ class LocalNotificationsService {
             icon: 'ic_notifications',
             "Channel Id",
             "Main Channel",
-            groupKey: "gfg",             
+            groupKey: "gfg",
             playSound: true,
             timeoutAfter: 1000 * 60 * 5,
             priority: Priority.high),
       );
       await _notificationsPlugin.show(
-        id, "Match ready",
-        "${payload.title} has started",
+        id, translate('NOTIFICATIONS.MATCH_READY'),
+        translate('NOTIFICATIONS.MATCH_STARTED', args: {'name': payload.title}),
         notificationDetails,
         payload: matchDb?.toJson());
     } catch (e) {

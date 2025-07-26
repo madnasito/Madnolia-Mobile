@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 
@@ -11,6 +12,7 @@ class MoleculeMatchesFilterButtons extends StatelessWidget {
     return BlocBuilder<PlayerMatchesBloc, PlayerMatchesState>(
       builder: (context, state) {
         return SegmentedButton(
+          showSelectedIcon: false,
           style: ButtonStyle(
             backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
               // Black background when selected
@@ -37,26 +39,25 @@ class MoleculeMatchesFilterButtons extends StatelessWidget {
           segments: [
             ButtonSegment(
               value: MatchesFilterType.all,
-              label: SizedBox(
-                  width: 50, child: Text('All', textAlign: TextAlign.center)),
+              label: Text(translate('MATCHES.ALL'), textAlign: TextAlign.center)
+              ,
             ),
             ButtonSegment(
               value: MatchesFilterType.created,
-              label: SizedBox(
-                  width: 50,
-                  child: Text('Created', textAlign: TextAlign.center)),
+              label: Text(translate('MATCHES.CREATED'), textAlign: TextAlign.center)
+              ,
             ),
             ButtonSegment(
               value: MatchesFilterType.joined,
-              label: SizedBox(
-                  width: 50,
-                  child: Text('Joined', textAlign: TextAlign.center)),
+              label:  Text(translate('MATCHES.JOINED'), textAlign: TextAlign.center)
+              ,
             ),
           ],
           selected: <MatchesFilterType>{state.selectedType},
           onSelectionChanged: (value) => context
-              .read<PlayerMatchesBloc>()
-              .add(UpdateFilterType(type: value.first)),
+            .read<PlayerMatchesBloc>()
+            .add(UpdateFilterType(type: value.first)
+          ),
         );
       },
     );

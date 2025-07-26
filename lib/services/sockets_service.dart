@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -74,8 +76,10 @@ onStart(ServiceInstance service) async {
 
       if(message.creator == userId) return LocalNotificationsService.deleteRoomMessages(message.conversation);
 
-      if(currentRoom != payload["conversation"] ){
-        LocalNotificationsService.displayRoomMessage(message);
+      if(currentRoom != payload["conversation"] ) {
+        // if(message.text.contains("@$username") &&)
+        if(message.type == MessageType.user){ LocalNotificationsService.displayRoomMessage(message);}
+        else if(message.type == MessageType.match && message.text.contains("@$username")) {LocalNotificationsService.displayRoomMessage(message);}
       }
       
     } catch (e) {
@@ -274,7 +278,7 @@ Future<FlutterBackgroundService> initializeService() async {
       autoStartOnBoot: false,
       notificationChannelId: 'silent_service_channel',
       initialNotificationTitle: 'Madnolia',
-      initialNotificationContent: 'Keeping connections active',
+      initialNotificationContent: translate('UTILS.KEEPING_CONNECTIONS'),
       foregroundServiceNotificationId: 888,
     ),
   );

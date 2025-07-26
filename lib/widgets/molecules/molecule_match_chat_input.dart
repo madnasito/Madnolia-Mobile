@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/message_bloc.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
@@ -74,7 +75,7 @@ class MoleculeMatchChatInput extends StatelessWidget {
       );
     }else{
       return FormButton(
-          text: "Join to match",
+          text: translate("MATCH.JOIN_TO_MATCH"),
           color: Colors.transparent,
           onPressed: () {
             try {
