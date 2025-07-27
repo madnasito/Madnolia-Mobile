@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/pages/auth/recover_password_page.dart';
 import 'package:madnolia/pages/chat/user_chat_page.dart';

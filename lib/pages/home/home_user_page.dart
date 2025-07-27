@@ -77,7 +77,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
               final userBloc = context.watch<UserBloc>().state;
               return ListView.builder(
                 cacheExtent: 9999999,
-                physics: const BouncingScrollPhysics(),
+                physics: const AlwaysScrollableScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 itemCount: userBloc.platforms.length,
                 itemBuilder: (BuildContext context, int platformIndex) {

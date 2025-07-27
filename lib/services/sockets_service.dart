@@ -9,7 +9,6 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
-import 'package:madnolia/services/notification_helper.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 

@@ -80,6 +80,7 @@ class _MatchesPageState extends State<MatchesPage> {
             },
           child: SingleChildScrollView(
             controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
