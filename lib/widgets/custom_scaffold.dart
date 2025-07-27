@@ -159,6 +159,7 @@ class CustomScaffold extends StatelessWidget {
           ),
         ),
       ),
+      drawerEnableOpenDragGesture: false,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         shadowColor: Colors.transparent,
