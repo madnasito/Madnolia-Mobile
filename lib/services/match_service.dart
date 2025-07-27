@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -112,42 +113,42 @@ class MatchService {
 
 
   Future<List<HomeGame>> getGamesMatchesByPlatform({
-    required int platformId,
-    required int page,
-    int limit = 5,
-  }) async {
-    try {
-      final String? token = await _storage.read(key: "token");
-      final url = "$baseUrl/match/platform";
+  required int platformId,
+  required int page,
+  int limit = 5,
+}) async {
+  final token = await _storage.read(key: "token");
+  final baseUrl = dotenv.get("API_URL");
+  
+  return await compute(_fetchGames, {
+    'platformId': platformId,
+    'page': page,
+    'limit': limit,
+    'token': token,
+    'baseUrl': baseUrl,
+  });
+}
 
-      Response response = await dio.get(
-        url,
-        queryParameters: {
-          'platform': platformId,
-          'skip': page,
-          'limit': limit,
-        },
-        options: Options(headers: {"Authorization": "Bearer $token"}),
-      );
+static Future<List<HomeGame>> _fetchGames(Map<String, dynamic> params) async{
+  try {
+    final dio = Dio();
+    final response = await dio.get(
+      '${params['baseUrl']}/match/platform',
+      queryParameters: {
+        'platform': params['platformId'],
+        'skip': params['page'],
+        'limit': params['limit'],
+      },
+      options: Options(headers: {"Authorization": "Bearer ${params['token']}"}),
+    );
 
-      // Proper conversion from List<dynamic> to List<HomeGame>
-      List<HomeGame> games = (response.data as List<dynamic>)
-          .map((e) => HomeGame.fromJson(e as Map<String, dynamic>))
-          .toList();
-
-      return games;
-    } catch (e) {
-      if (e is DioException) {
-        if (e.response?.data is Map) {
-          throw e.response?.data;
-        } else {
-          throw {'message': 'NETWORK_ERROR'};
-        }
-      } else {
-        throw {'message': 'NETWORK_ERROR'};
-      }
-    }
+    return (response.data as List<dynamic>)
+        .map((e) => HomeGame.fromJson(e as Map<String, dynamic>))
+        .toList();
+  } catch (e) {
+    throw Exception('Failed to fetch games');
   }
+}
   Future<Map<String, dynamic>> matchPostRequest(String apiUrl, Map body) async {
     try {
       authenticating = true;
