@@ -103,7 +103,7 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
 
       final updatedMatchesState = LoadedMatches(
         type: currentMatchesState.type,
-        hasReachesMax: data.isEmpty,
+        hasReachesMax: data.isEmpty || data.length < 10,
         status: ListStatus.success,
         matches: [...currentMatchesState.matches, ...data],
       );
