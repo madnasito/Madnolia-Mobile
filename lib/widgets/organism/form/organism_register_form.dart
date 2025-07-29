@@ -92,7 +92,7 @@ class OrganismRegisterForm extends StatelessWidget {
               onPressed:() async {
                  try {
                 setState(() => loading = true);
-                
+                FocusScope.of(context).unfocus();
                 formKey.currentState?.validate();
                 if (!formKey.currentState!.isValid) {
                   setState(() => loading = false);
