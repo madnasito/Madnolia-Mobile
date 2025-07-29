@@ -94,7 +94,13 @@
     "MATCH": {
         "MATCH_UPDATED": "Partida actualizada",
         "ERROR_LOADING": "Error cargando partida",
-        "JOIN_TO_MATCH": "Unirse a la partida"
+        "JOIN_TO_MATCH": "Unirse a la partida",
+        "STATUS": {
+            "WAITING": "En espera",
+            "RUNNING": "En curso",
+            "FINISHED": "Finalizada",
+            "CANCELLED": "Cancelada"
+        }
     },
     "MATCHES": {
         "TITLE": "Partidas",

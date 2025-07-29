@@ -30,16 +30,6 @@ class AtomMatchCard extends StatelessWidget {
       onTap: () => GoRouter.of(context).push('/match/${match.id}'),
       child: MatchCard(
         match: match,
-        bottom: Column(
-          children: [
-            Text(match.title),
-            Text(DateTime.fromMillisecondsSinceEpoch(
-              match.date)
-              .toString()
-              .substring(0, 16)
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/game/game_model.dart';
 
 MatchWithGame matchWithGameFromJson(String str) => MatchWithGame.fromJson(json.decode(str));
@@ -22,7 +23,7 @@ class MatchWithGame {
     List<String> joined;
     bool private;
     bool tournament;
-    int status;
+    MatchStatus status;
 
     MatchWithGame({
         required this.id,
@@ -39,7 +40,29 @@ class MatchWithGame {
         required this.tournament,
     });
 
-    factory MatchWithGame.fromJson(Map<String, dynamic> json) => MatchWithGame(
+    factory MatchWithGame.fromJson(Map<String, dynamic> json) {
+
+      MatchStatus matchStatus;
+
+      switch (json["status"]) {
+        case 0:
+          matchStatus = MatchStatus.waiting;
+          break;
+        case 1:
+          matchStatus = MatchStatus.running;
+          break;
+        case 2:
+          matchStatus = MatchStatus.finished;
+          break;
+        case 3:
+          matchStatus = MatchStatus.cancelled;
+          break;
+        default:
+          matchStatus = MatchStatus.waiting;
+          break;
+      }
+
+      return MatchWithGame(
         id: json["_id"],
         game: Game.fromJson(json["game"]),
         platform: json["platform"],
@@ -50,9 +73,10 @@ class MatchWithGame {
         description: json["description"],
         joined: List<String>.from(json["joined"].map((x) => x)),
         private: json["private"],
-        status: json["status"],
+        status: matchStatus,
         tournament: json["tournament"],
     );
+    } 
 
     Map<String, dynamic> toJson() => {
         "_id": id,

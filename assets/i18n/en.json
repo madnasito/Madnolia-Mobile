@@ -100,12 +100,18 @@
   "MATCH": {
     "MATCH_UPDATED": "Match updated",
     "ERROR_LOADING": "Error loading match",
-    "JOIN_TO_MATCH": "Join to match"
+    "JOIN_TO_MATCH": "Join to match",
+    "STATUS": {
+      "WAITING": "Waiting",
+      "RUNNING": "In progress",
+      "FINISHED": "Finished",
+      "CANCELLED": "Canceled"
+    }
   },
   "MATCHES": {
     "TITLE": "Matches",
     "ALL": "All",
-    "CRAETED": "Created",
+    "CREATED": "Created",
     "JOINED": "Joined"
   },
   "CHAT": {

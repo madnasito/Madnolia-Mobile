@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/models/game/minimal_game_model.dart';
 import 'package:madnolia/models/match/create_match_model.dart';
@@ -346,6 +347,9 @@ class MatchFormView extends StatelessWidget {
                       nameController.clear();
                       matchMinutesCubit.restoreMinutes();
                       matchUsersCubit.restore();
+                      if(!context.mounted) return;
+                      final playerMatches = context.read<PlayerMatchesBloc>();
+                      playerMatches.add(RestoreMatchesState());
                       if (!context.mounted) return;
                       context.goNamed("matches");
                     }
