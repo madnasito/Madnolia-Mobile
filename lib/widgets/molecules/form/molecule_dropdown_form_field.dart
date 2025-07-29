@@ -25,7 +25,7 @@ class MoleculeDropdownFormField extends StatelessWidget {
     return FadeIn(
       delay: Duration(milliseconds: delay),
       child: FormBuilderDropdown(
-        dropdownColor: Colors.black38,
+        dropdownColor: Colors.black54,
         name: name,
         initialValue: initialValue,
         decoration: InputDecoration(
