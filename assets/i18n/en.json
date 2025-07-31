@@ -71,7 +71,9 @@
         "USER": "Not founded user",
         "PASSWORD": "No valid password"
     },
-    "FORGOT_PASSWORD": "Forgot password?"
+    "FORGOT_PASSWORD": "Forgot password?",
+    "SUBTITLE": "Don't have an account?",
+    "SUB_REGISTER": "Register here"
   },
   "CREATE_MATCH":{
       "TITLE": "Select the platform",

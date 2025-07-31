@@ -67,7 +67,9 @@
             "USER": "No se ha encontrado al usuario",
             "PASSWORD": "La contraseña es invalida"
         },
-        "FORGOT_PASSWORD": "¿Olvido la contraseña?"
+        "FORGOT_PASSWORD": "¿Olvido la contraseña?",
+        "SUBTITLE": "¿No tienes una cuenta?",
+        "SUB_REGISTER": "Regístrate aquí"
     },
     "CREATE_MATCH":{
         "TITLE": "Selecciona la plataforma",

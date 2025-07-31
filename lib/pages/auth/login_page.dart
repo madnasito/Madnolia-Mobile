@@ -31,7 +31,17 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 30),
                   GestureDetector(
                     onTap: () => context.pushNamed('recover-password'),
-                    child: FadeIn(delay: const Duration(milliseconds: 350),child: Text(translate("LOGIN.FORGOT_PASSWORD")),))
+                    child: FadeIn(delay: const Duration(milliseconds: 350),child: Text(translate("LOGIN.FORGOT_PASSWORD"), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue), ), )),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    FadeIn(delay: const Duration(milliseconds: 400),child: Text(translate("LOGIN.SUBTITLE"))),
+                    const SizedBox(width: 5),
+                    FadeIn(delay: const Duration(milliseconds: 450),child: GestureDetector(
+                      onTap: () => context.pushNamed('register'),
+                      child: Text(translate("LOGIN.SUB_REGISTER"), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),))),
+                  ],)
                 ],
               ),
             ),
