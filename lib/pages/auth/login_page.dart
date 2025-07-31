@@ -21,10 +21,9 @@ class LoginPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                   const SizedBox(height: 20),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 60),
                   CenterTitleAtom(text: translate("LOGIN.BUTTON"),),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 30),
 
                   const OrganismLoginForm(),
 
@@ -39,7 +38,7 @@ class LoginPage extends StatelessWidget {
                     FadeIn(delay: const Duration(milliseconds: 400),child: Text(translate("LOGIN.SUBTITLE"))),
                     const SizedBox(width: 5),
                     FadeIn(delay: const Duration(milliseconds: 450),child: GestureDetector(
-                      onTap: () => context.pushNamed('register'),
+                      onTap: () => context.goNamed('register'),
                       child: Text(translate("LOGIN.SUB_REGISTER"), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),))),
                   ],)
                 ],

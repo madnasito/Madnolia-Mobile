@@ -1,7 +1,9 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart' show CenterTitleAtom;
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 
@@ -131,7 +133,18 @@ class OrganismRegisterForm extends StatelessWidget {
                 }
               }
               } ),
-          )
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            FadeIn(delay: const Duration(milliseconds: 400),child: Text(translate("REGISTER.SUBTITLE"))),
+            const SizedBox(width: 5),
+            FadeIn(delay: const Duration(milliseconds: 450),child: GestureDetector(
+              onTap: () => context.goNamed('login'),
+              child: Text(translate("REGISTER.SUB_LOGIN"), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),))),
+                      ]
+                      ,)
         ],
       ),
     );
