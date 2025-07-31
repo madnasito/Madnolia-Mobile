@@ -22,7 +22,6 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 children: [
                    const SizedBox(height: 20),
-                  CenterTitleAtom(text: translate("LOGIN.WELCOME"), textStyle: const TextStyle(fontSize: 20),),
                   const SizedBox(height: 50),
                   CenterTitleAtom(text: translate("LOGIN.BUTTON"),),
                   const SizedBox(height: 50),
