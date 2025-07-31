@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImageProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/database/providers/friendship_db.dart';
@@ -31,11 +32,14 @@ class AtomUserChat extends StatelessWidget {
         }
         
         if (friendshipSnapshot.hasError) {
-          return Center(child: Text('Error loading chat: ${friendshipSnapshot.error}'));
+          return Center(
+            child: Text(translate('CHAT.ERRORS.LOADING_CHAT', args: {'error': friendshipSnapshot.error})
+            )
+          );
         }
         
         if (!friendshipSnapshot.hasData) {
-          return const Center(child: Text('No friendship data'));
+          return Center(child: Text(translate('CHAT.ERRORS.NO_DATA')));
         }
 
         final friendship = friendshipSnapshot.data!;
@@ -53,11 +57,11 @@ class AtomUserChat extends StatelessWidget {
             }
             
             if (snapshot.hasError) {
-              return Center(child: Text('Error loading user: ${snapshot.error}'));
+              return Center(child: Text(translate('CHAT.ERRORS.LOADING_USER')));
             }
             
             if (!snapshot.hasData) {
-              return const Center(child: Text('No user data'));
+              return const Center(child: Text('CHAT.ERRORS.NO_USER_DATA'));
             }
 
             final user = snapshot.data!;

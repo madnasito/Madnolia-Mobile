@@ -74,15 +74,15 @@ class _SearchGamePageState extends State<SearchGamePage> {
                 future: getRecomendations(platformId),
                 builder: (BuildContext context, AsyncSnapshot<List<MinimalGame>> snapshot) {
                   if(!snapshot.hasData){
-                    return const Row(
+                    return Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [Text('Loading recomendations '), CircularProgressIndicator()],);
+                      children: [Text(translate('CREATE_MATCH.LOADING_RECOMENDATIONS')), CircularProgressIndicator()],);
                   }else if(snapshot.data!.isNotEmpty){
                     return Expanded(
                       child:  Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text("Recommendations for you", style: TextStyle(fontSize: 15),),
+                        Text(translate("RECOMMENDATIONS.FOR_YOU"), style: TextStyle(fontSize: 15),),
                         const SizedBox(height: 20),
                         Flexible(child: GamesListMolecule(games: snapshot.data!, platform: platformId,)),
                       ],

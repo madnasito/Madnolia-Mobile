@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:math' as math;
 
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,18 +22,36 @@ class ChatsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: 10),
-          CenterTitleAtom(
-            text: translate("CHAT.MESSAGES"), 
-            textStyle: neonTitleText,
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: _ChatListWithUpdates(),
-          ),
-        ],
+      body: CustomMaterialIndicator(
+        autoRebuild: false,
+        onRefresh: () async{
+          final chatsBloc = context.read<ChatsBloc>();
+          chatsBloc.add(RestoreUserChats());
+          chatsBloc.add( UserChatsFetched());
+        },
+        backgroundColor: Colors.white,
+         indicatorBuilder: (context, controller) {
+          return Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: CircularProgressIndicator(
+              color: Colors.lightBlue,
+              value: controller.state.isLoading ? null : math.min(controller.value, 1.0),
+            ),
+          );
+        },
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            CenterTitleAtom(
+              text: translate("CHAT.MESSAGES"), 
+              textStyle: neonTitleText,
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: _ChatListWithUpdates(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -96,7 +116,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
         );
         } else if (state.status == ListStatus.failure && 
                   state.usersChats.isEmpty) {
-          return Center(child: Text(translate('CHAT.LOADING_ERROR')));
+          return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
         } else {
           // Show existing chats even if there was a subsequent error
           return MoleculeUsersChats(usersChats: state.usersChats);

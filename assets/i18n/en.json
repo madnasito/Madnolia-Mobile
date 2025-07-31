@@ -77,6 +77,7 @@
       "TITLE": "Select the platform",
       "DESCRIPTION": "Description",
       "SEARCH_GAME": "Search game",
+      "LOADING_RECOMENDATIONS": "Loading recommendations",
       "SEARCH_RESULTS": "Search's results",
       "EMPTY_SEARCH": "No founded games, please try another name",
       "PLATFORMS_EMPTY": "You have not selected a platform",
@@ -112,13 +113,57 @@
     "TITLE": "Matches",
     "ALL": "All",
     "CREATED": "Created",
-    "JOINED": "Joined"
+    "JOINED": "Joined",
+    "ERRORS": {
+      "LOADING_ERROR": "Error loading matches",
+      "NO_MATCHES": "No matches found"
+    }
+  },
+  "CONNECTIONS": {
+    "TITLE": "Connections",
+    "EMPTY": "No connections",
+    "ERRORS": {
+      "LOADING_ERROR": "Error loading connections",
+      "NO_CONNECTIONS": "No connections found"
+    },
+    "HAVE_A_REQUEST": "You have requested a connection to {name}",
+    "REQUESTS": {
+      "TITLE": "Requests",
+      "ACCEPTED": "Accepted",
+      "ADD": "Add",
+      "REQUESTED": "Requested",
+      "REJECTED": "Rejected",
+      "PENDING": "Pending",
+      "ACCEPT": "Accept",
+      "REJECT": "Reject",
+      "USER_WANTS_TO_CONNECT": "{name} wants to connect with you",
+      "ACCEPT_REQUEST": "Accept request?",
+      "WANT_TO_CANCELL": "Do you want to cancel the request?",
+      "CANCEL": "Cancel request"
+    }
+  },
+  "RECOMMENDATIONS": {
+    "TITLE": "Recommendations",
+    "EMPTY": "No recommendations",
+    "LOADING": "Loading recommendations",
+    "FOR_YOU": "Recommendations for you",
+    "ERRORS": {
+        "LOADING": "Error loading recommendations"
+    }
   },
   "CHAT": {
     "MESSAGES": "Messages",
-    "MESSAGE": "Mensaje",
+    "MESSAGE": "Message",
     "NO_MESSAGES": "No messages",
-    "LOADING_ERROR": "Error loading messages"
+    "SAY_HI_TO": "Say hi to {name}",
+    "SAY_HI": "Say hi",
+    "ERRORS": {
+      "LOADING_ERROR": "Error loading messages",
+      "LOADING_CHAT": "Error loading chat: {error}",
+      "NO_DATA": "No friendship data",
+      "LOADING_USER":"Error loading user",
+      "NO_USER_DATA": "No user data"
+    }
   },
   "GAME":{
       "GAME": "Game",
@@ -153,10 +198,10 @@
         "USERNAME": "Username",
         "EMAIL": "Email",
         "INVITATIONS":{
-            "TITLE": "Accept invitations from:",
+            "ALL": "Accept invitations from:",
             "EVERYONE": "Whatever, i want to play",
             "PARTNERS": "Only my hommies",
-            "NO": "Please, let me alone"
+            "NOBODY": "Please, let me alone"
         },
         "ERRORS":{
             "VERIFY": "Please verify your information",
@@ -198,7 +243,8 @@
       "KEEPING_CONNECTIONS": "Keeping connections active",
       "ACCEPT": "Accept",
       "CANCEL": "Cancel",
-      "REJECT": "Reject"
+      "REJECT": "Reject",
+      "DISMISS": "Dismiss"
   },
   "ALERT": {
     "YOU_SURE": "Are you sure?",

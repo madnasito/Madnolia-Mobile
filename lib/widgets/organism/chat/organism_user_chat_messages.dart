@@ -3,7 +3,9 @@ import 'dart:async' show StreamSubscription;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/database/providers/user_db.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/models/chat/user_messages.body.dart' show UserMessagesBody;
 import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart' show MoleculeUserChatMessagesList;
@@ -65,7 +67,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
 
         switch (state.status) {
           case ListStatus.failure:
-              return const Center(child: Text("Failed fetching messages"));
+              return Center(child: Text(translate("CHAT.ERRORS.LOADING")));
           case ListStatus.initial:
             return const Center(child: CircularProgressIndicator());
           case ListStatus.success:
@@ -80,7 +82,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
                 ),
               );
             } else{
-              return Center(child: Text('Say hi'));
+              return Center(child: Text(translate('CHAT.SAY_HI')));
             }
           // default:
           //   return Center(child: Text('Say hi'));

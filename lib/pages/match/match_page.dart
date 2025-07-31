@@ -1,4 +1,5 @@
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,7 @@ class MatchPage extends StatelessWidget {
                 // final socketBloc = context.watch<SocketsBloc>();
                 return ViewMatch(match: match);
               } else {
-                return const Center(child: Text("Error loading match."));
+                return Center(child: Text(translate("MATCH.ERROR_LOADING")));
               }
             } else {
               return const Center(child: CircularProgressIndicator());

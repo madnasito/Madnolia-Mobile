@@ -296,7 +296,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
     return BlocBuilder<MessageBloc, MessageState>(
       builder: (context, state) {
         if (state.status == ListStatus.failure && state.groupMessages.isEmpty) {
-          return const Center(child: Text("Failed fetching messages"));
+          return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
         }
         if (state.groupMessages.isEmpty && state.hasReachedMax) {
           return const Center(child: Text('Say hi'));

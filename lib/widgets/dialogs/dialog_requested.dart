@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 
 import '../../models/user/simple_user_model.dart';
 
@@ -22,16 +23,16 @@ class DialogRequested extends StatelessWidget {
             backgroundImage: CachedNetworkImageProvider(simpleUser.thumb),
           ),
           const SizedBox(height: 20),
-          Text('You have requested a connection to ${simpleUser.name}', textAlign: TextAlign.center,)
+          Text(translate('CONNECTIONS.HAVE_A_REQUEST', args: {'name': simpleUser.name}), textAlign: TextAlign.center,)
         ],
       ),
-      content: const Text('Do you want to cancell it?', textAlign: TextAlign.center,),
+      content: Text(translate('CONNECTIONS.REQUESTS.WANT_TO_CANCELL'), textAlign: TextAlign.center,),
       actions: [
         TextButton(
           onPressed: () {
             Navigator.pop(context);
           } ,
-          child: const Text('Dismiss'),
+          child: Text(translate('UTILS.DISMISS')),
         ),
           TextButton(
             onPressed: () {
@@ -39,7 +40,7 @@ class DialogRequested extends StatelessWidget {
               backgroundService.invoke('cancel_connection', {'user': simpleUser.id});
               Navigator.pop(context);
               },
-            child: const Text('Cancel request'),
+            child: Text(translate('CONNECTIONS.REQUESTS.CANCEL')),
           ),
       ],
     );

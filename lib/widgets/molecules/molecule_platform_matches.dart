@@ -109,7 +109,7 @@ class MoleculePlatformMatches extends StatelessWidget {
     } else if(platformState.status == PlatformGamesStatus.failure && platformState.games.isEmpty) {
       return Center(child: Text(translate('HOME.ERROR_LOADING_MATCHES')),);
     } else {
-      return Center(child: Text('Error loading games'));
+      return Center(child: Text(translate('HOME.ERROR_LOADING_MATCHES')));
     }
     
     

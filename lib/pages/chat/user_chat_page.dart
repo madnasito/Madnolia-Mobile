@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
@@ -42,7 +43,7 @@ class UserChatPage extends StatelessWidget {
                   ),
                 );
               } else if(snapshot.hasError) {
-                return Center(child: Text("Error loading chat"));
+                return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
               } else {
                 return Center(child: CircularProgressIndicator());
               }

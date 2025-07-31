@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/widgets/dialogs/dialog_pending_request.dart';
 
@@ -26,7 +27,7 @@ class AtomPendingButton extends StatelessWidget {
       children: [
         Icon(Icons.pending_outlined),
         SizedBox(width: 8),
-        Text('Pending')
+        Text(translate('CONNECTIONS.REQUESTS.PENDING'))
         ]
       ,)
     );

@@ -23,7 +23,7 @@ class AtomRequestButton extends StatelessWidget {
       children: [
           Icon(Icons.person_add_alt),
           SizedBox(width: 8),
-          Text('Add')
+          Text('CONNECTIONS.REQUESTS.ADD')
         ]
       )
     );

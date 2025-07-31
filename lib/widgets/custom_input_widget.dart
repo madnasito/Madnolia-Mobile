@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 
 OutlineInputBorder focusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(40),
@@ -82,7 +83,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField(
-      dropdownColor: Colors.black54,
+      dropdownColor: Colors.black87,
       alignment: Alignment.center,
       borderRadius: BorderRadius.circular(20),
       focusColor: Colors.yellow,
@@ -98,19 +99,19 @@ class _DropDownWidgetState extends State<DropDownWidget> {
           border: focusedBorder,
           prefixIconColor: Colors.pink,
           prefixIcon: const Icon(Icons.notifications_active_outlined)),
-      items: const [
+      items: [
         DropdownMenuItem(
             value: "ALL",
             child: Text(
-              "Whatever i want to play",
+              translate('PROFILE.USER_PAGE.INVITATIONS.ALL'),
             )),
         DropdownMenuItem(
           value: "PARTNERS",
-          child: Text("Only hommies"),
+          child: Text(translate('PROFILE.USER_PAGE.INVITATIONS.PARTNERS')),
         ),
         DropdownMenuItem(
           value: "NOBODY",
-          child: Text("Please, let me alone"),
+          child: Text(translate('PROFILE.USER_PAGE.INVITATIONS.NOBODY')),
         )
       ],
       onChanged: (value) => widget.onChanged!(value as String?),

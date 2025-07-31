@@ -188,14 +188,14 @@ class _EditUserViewState extends State<EditUserView> {
                                   (BuildContext context, AsyncSnapshot snapshot) {
                                 if (snapshot.hasData) {
                                   if (snapshot.data == true) {
-                                    return const Center(
+                                    return  Center(
                                       heightFactor: 2,
                                       child: Column(
                                         children: [
                                           CircularProgressIndicator(
                                             color: Colors.lightBlueAccent,
                                           ),
-                                          Text("Updating img")
+                                          Text(translate('PROFILE.USER_PAGE.UPLOADING_IMAGE'), style: TextStyle(color: Colors.white),)
                                         ],
                                       ),
                                     );

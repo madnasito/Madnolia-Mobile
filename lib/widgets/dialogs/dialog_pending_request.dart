@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
+import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/models/user/simple_user_model.dart';
 
 class DialogPendingRequest extends StatelessWidget {
@@ -21,18 +22,18 @@ class DialogPendingRequest extends StatelessWidget {
             backgroundImage: CachedNetworkImageProvider(simpleUser.thumb),
           ),
           const SizedBox(height: 20),
-          Text('${simpleUser.name} wants to connect with you', textAlign: TextAlign.center,)
+          Text(translate('CONNECTIONS.REQUESTS.USER_WANTS_TO_CONNECT', args: {'name': simpleUser.username}), textAlign: TextAlign.center,)
         ],
       ),
-      content: const Text('Accept request?', textAlign: TextAlign.center,),
+      content: Text(translate('CONNECTIONS.REQUESTS.ACCEPT_REQUEST'), textAlign: TextAlign.center,),
       actions: [
         TextButton(
           onPressed: () {
             final backgroundService = FlutterBackgroundService();
             backgroundService.invoke('reject_connection', {'user': simpleUser.id});
-            Navigator.pop(context, 'Cancel');
+            Navigator.pop(context, 'Reject');
           } ,
-          child: const Text('Cancel'),
+          child: Text(translate('CONNECTIONS.REQUESTS.REJECT')),
         ),
           TextButton(
             onPressed: () {
@@ -40,7 +41,7 @@ class DialogPendingRequest extends StatelessWidget {
               backgroundService.invoke('accept_connection', {'user': simpleUser.id});
               Navigator.pop(context, 'OK');
               },
-            child: const Text('Accept'),
+            child: Text(translate('CONNECTIONS.REQUESTS.ACCEPT')),
           ),
       ],
     );

@@ -71,7 +71,9 @@
     },
     "CREATE_MATCH":{
         "TITLE": "Selecciona la plataforma",
+        "DESCRIPTION": "Descripción",
         "SEARCH_GAME": "Buscar juego",
+        "LOADING_RECOMENDATIONS": "Cargando recomendaciones",
         "SEARCH_RESULTS": "Resultados de la busqueda",
         "EMPTY_SEARCH": "No se encontraron juegos, por favor intente con otro nombre",
         "PLATFORMS_EMPTY": "No has seleccionado una plataforma",
@@ -79,7 +81,6 @@
         "SEARCHING": "Buscando",
         "SEARCH_USER": "Invitar compañeros a tu partida",
         "MATCH_NAME": "Nombre de la partida",
-        "DESCRIPTION": "Descripción",
         "INVITEDS": "Invitados",
         "DATE": "Fecha",
         "TIME": "Hora",
@@ -106,13 +107,57 @@
         "TITLE": "Partidas",
         "ALL": "Todas",
         "CREATED": "Creadas",
-        "JOINED": "Ingresadas"
+        "JOINED": "Ingresadas",
+        "ERRORS": {
+            "LOADING_ERROR": "Error cargando partidas",
+            "NO_MATCHES": "No hay partidas"
+        }
+    },
+    "CONNECTIONS": {
+        "TITLE": "Conexiones",
+        "EMPTY": "Sin conexiones",
+        "LOADING": "Cargando conexiones",
+        "ERRORS": {
+            "LOADING": "Error cargando conexiones"
+        },
+        "HAVE_A_REQUEST": "Tienes una solicitud para {name}",
+        "REQUESTS": {
+            "TITLE": "Solicitudes",
+            "ACCEPTED": "Aceptada",
+            "ADD": "Añadir",
+            "REQUESTED": "Solicitada",
+            "REJECTED": "Rechazada",
+            "PENDING": "Pendiente",
+            "ACCEPT": "Aceptar",
+            "REJECT": "Rechazar",
+            "USER_WANTS_TO_CONNECT": "{name} quiere conectar contigo",
+            "ACCEPT_REQUEST": "¿Aceptar solicitud?",
+            "WANT_TO_CANCELL": "¿Deseas cancelar la solicitud?",
+            "CANCEL": "Cancelar solicitud"
+        }
+    },
+    "RECOMMENDATIONS": {
+        "TITLE": "Recomendaciones",
+        "EMPTY": "Sin recomendaciones",
+        "LOADING": "Cargando recomendaciones",
+        "FOR_YOU": "Recomendaciones para ti",
+        "ERRORS": {
+            "LOADING": "Error cargando recomendaciones"
+        }
     },
     "CHAT": {
         "MESSAGES": "Mensajes",
         "MESSAGE": "Mensaje",
         "NO_MESSAGES": "Sin mensajes",
-        "LOADING_ERROR": "Error cargando mensajes"
+        "SAY_HI_TO": "Di hola a {name}",
+        "SAY_HI": "Say hi",
+        "ERRORS": {
+            "LOADING": "Error cargando mensajes",
+            "LOADING_CHAT": "Error cargando el chat: {error}",
+            "NO_DATA": "Sin datos de amistad",
+            "LOADING_USER":"Error cargando usuario",
+            "NO_USER_DATA": "Sin datos del usuario"
+        }
     },
     "GAME":{
         "GAME": "Juego",
@@ -148,9 +193,9 @@
             "EMAIL": "Correo",
             "INVITATIONS":{
                 "TITLE": "Aceptar invitaciondes de:",
-                "EVERYONE": "Lo que sea, quiero jugar",
+                "ALL": "Lo que sea, quiero jugar",
                 "PARTNERS": "Solo colegas",
-                "NO": "Ya, dejame en paz"
+                "NOBODY": "Ya, dejame en paz"
             },
             "ERRORS":{
                 "VERIFY": "Por favor verifica tú información",
@@ -192,7 +237,8 @@
       "KEEPING_CONNECTIONS": "Manteniendo conexiones activas",
       "ACCEPT": "Aceptar",
       "CANCEL": "Cancelar",
-      "REJECT": "Rechazar"
+      "REJECT": "Rechazar",
+      "DISMISS": "Descartar"
     },
     "ALERT": {
         "YOU_SURE": "¿Estás seguro?",
