@@ -1,11 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-
 import '../../../style/form_style.dart';
 
-
-class MoleculeTextField extends StatelessWidget {
+class MoleculeTextField extends StatefulWidget {
   final String name;
   final String label;
   final TextInputType keyboardType;
@@ -19,7 +17,8 @@ class MoleculeTextField extends StatelessWidget {
   final AutovalidateMode autovalidateMode;
   final Function(String?)? onChanged;
   final Function()? onTap;
-  const MoleculeTextField( {
+
+  const MoleculeTextField({
     super.key,
     required this.name,
     required this.label,
@@ -27,39 +26,60 @@ class MoleculeTextField extends StatelessWidget {
     this.icon,
     this.validator,
     this.readOnly = false,
-    this.isPassword = false, this.initialValue,
+    this.isPassword = false,
+    this.initialValue,
     this.delay = 300,
     this.enabled = true,
     this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.onChanged,
-    this.onTap
+    this.onTap,
   });
+
+  @override
+  State<MoleculeTextField> createState() => _MoleculeTextFieldState();
+}
+
+class _MoleculeTextFieldState extends State<MoleculeTextField> {
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
     return FadeIn(
-      delay: Duration(milliseconds: delay),
+      delay: Duration(milliseconds: widget.delay),
       child: FormBuilderTextField(
-        onChanged: onChanged,
-        enabled:enabled ,
-        initialValue: initialValue,
+        onChanged: widget.onChanged,
+        enabled: widget.enabled,
+        initialValue: widget.initialValue,
         autofocus: false,
-        name: name,
-        keyboardType: keyboardType,
-        obscureText: isPassword,
+        name: widget.name,
+        keyboardType: widget.keyboardType,
+        obscureText: widget.isPassword ? _obscureText : false,
         decoration: InputDecoration(
-          prefixIcon: icon != null ? Icon(icon) : null,
-          labelText: label,
+          prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
+          labelText: widget.label,
           disabledBorder: InputBorder.none,
           errorBorder: errorBorder,
           border: defaultBorder,
           focusedErrorBorder: warningBorder,
           focusedBorder: focusedBorder,
+          suffixIcon: widget.isPassword
+              ? IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                )
+              : null,
         ),
-        autovalidateMode: autovalidateMode,
-        validator: validator,
-        onTap: onTap,
-        readOnly: readOnly,
+        autovalidateMode: widget.autovalidateMode,
+        validator: widget.validator,
+        onTap: widget.onTap,
+        readOnly: widget.readOnly,
       ),
     );
   }
