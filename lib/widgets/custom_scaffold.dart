@@ -139,7 +139,7 @@ class CustomScaffold extends StatelessWidget {
                       FriendshipProvider.deleteAll();
                       GoRouter.of(context).pushReplacement("/home");
                     },
-                    child: const Wrap(
+                    child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
                       spacing: 10,
                       children: [
@@ -149,7 +149,7 @@ class CustomScaffold extends StatelessWidget {
                           size: 30,
                         ),
                         Text(
-                          "Logout",
+                          translate('HEADER.LOGOUT'),
                           style: TextStyle(fontSize: 15),
                         )
                       ],
@@ -167,7 +167,13 @@ class CustomScaffold extends StatelessWidget {
         title: IconButton(
             icon: SvgPicture.asset("assets/madnolia-logo.svg",
             width: MediaQuery.of(context).size.width / 11,),
-            onPressed: () => GoRouter.of(context).pushReplacement("/")),
+            onPressed: () {
+              final String? currentRoute = GoRouterState.of(context).fullPath;
+
+              if(currentRoute != '/') GoRouter.of(context).pushReplacement("/");
+            } 
+            )
+            ,
         actions: [
           IconButton(
             onPressed: (){
@@ -203,7 +209,7 @@ class _MenuButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
             shape: const StadiumBorder(),
             foregroundColor: Colors.pink,
-            backgroundColor: const Color.fromARGB(20, 48, 43, 95),
+            backgroundColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             disabledBackgroundColor: Colors.transparent,
             padding: const EdgeInsets.all(0),
@@ -213,7 +219,7 @@ class _MenuButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
           margin: const EdgeInsets.all(5),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(60),
+            borderRadius: BorderRadius.circular(1),
             gradient: startsWithPattern(fullPath!, route)
                 ? const LinearGradient(
                     begin: Alignment.centerLeft,

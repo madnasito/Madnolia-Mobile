@@ -82,7 +82,7 @@ class AppBarOrganism extends StatelessWidget {
                           if(!context.mounted) return;
                           GoRouter.of(context).push("/home");
                         },
-                        child: const Wrap(
+                        child: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           spacing: 10,
                           children: [
@@ -92,7 +92,7 @@ class AppBarOrganism extends StatelessWidget {
                               size: 30,
                             ),
                             Text(
-                              "Logout",
+                              translate('HEADER.LOGOUT'),
                               style: TextStyle(fontSize: 15),
                             )
                           ],
