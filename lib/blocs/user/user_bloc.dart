@@ -28,7 +28,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       if(event is UserLogOut){
         emit(
-          state.copyWith(loadedUser: false, notifications: 0)
+          state.copyWith(loadedUser: false, notifications: 0, platforms: [], username: "", name: "", email: "", id: "", img: "", thumb: "", availability: UserAvailability.everyone)
         );
       }
 
