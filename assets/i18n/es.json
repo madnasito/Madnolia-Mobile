@@ -261,7 +261,8 @@
         "NO_MESSAGE": "No hay mensaje",
         "NOT_VALID_EXTENSION": "Extensión no valida",
         "INVALID_DATE": "Fecha invalida",
-        "REPORT_EXISTS": "Espera \n Ya has reportado a este usuario"
+        "REPORT_EXISTS": "Espera \n Ya has reportado a este usuario",
+        "LOADING_GAME": "Error cargando el juego, vuelva a intentarlo"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verifica tu conexión"

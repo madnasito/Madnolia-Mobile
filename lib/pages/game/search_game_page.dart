@@ -108,7 +108,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
                                       itemBuilder: (BuildContext context, int index) {
                                         return GestureDetector(
                                           onTap: () => setState(() {
-                                            context.go("/new/match", extra: {
+                                            context.push("/new/match", extra: {
                                               "game": snapshot.data[index],
                                               "platformId": platformId
                                             });

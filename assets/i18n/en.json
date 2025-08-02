@@ -267,7 +267,8 @@
         "NO_MESSAGE": "No message",
         "NOT_VALID_EXTENSION": "Not valid extension",
         "INVALID_DATE": "Invalid date",
-        "REPORT_EXISTS": "Wait a minute \n You have reported this user"
+        "REPORT_EXISTS": "Wait a minute \n You have reported this user",
+        "LOADING_GAME": "Error loading game, please try again"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verify your connection"
