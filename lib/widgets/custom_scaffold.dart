@@ -170,7 +170,7 @@ class CustomScaffold extends StatelessWidget {
             onPressed: () {
               final String? currentRoute = GoRouterState.of(context).fullPath;
 
-              if(currentRoute != '/') GoRouter.of(context).pushReplacement("/");
+              if(currentRoute != '/') GoRouter.of(context).push("/");
             } 
             )
             ,
