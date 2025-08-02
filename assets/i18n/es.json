@@ -198,7 +198,7 @@
                 "TITLE": "Aceptar invitaciondes de:",
                 "EVERYONE": "Lo que sea, quiero jugar",
                 "PARTNERS": "Solo colegas",
-                "NOBODY": "Ya, dejame en paz"
+                "NO": "Ya, dejame en paz"
             },
             "ERRORS":{
                 "VERIFY": "Por favor verifica tú información",
@@ -208,7 +208,7 @@
                 "IMG_EXTENSION": "La extensión no es valida, por favor usa: 'JPG', 'JPEG'. 'PNG'",
                 "IMG_UPDATING": "Error actualizando la imagen"
             },
-            "UPLOADING_IMG": "Subiendo la imagen, espere un momento por favor",
+            "UPLOADING_IMAGE": "Subiendo la imagen, espere un momento por favor",
             "UPDATED": "Datos actualizados",
             "UPDATE": "Actualizar",
             "DELETE_ACCOUNT": "Eliminar cuenta",

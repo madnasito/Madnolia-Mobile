@@ -138,7 +138,7 @@ class _EditUserViewState extends State<EditUserView> {
                 Container(
                   margin: const EdgeInsets.all(30),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                           color: const Color.fromARGB(181, 255, 255, 255))),
                   child: GestureDetector(
@@ -170,42 +170,55 @@ class _EditUserViewState extends State<EditUserView> {
                         bloc: userBloc,
                         builder: (context, state) => Stack(
                           children: [
-                            StreamBuilder(
-                              stream: bloc.imgStream,
-                              builder:
-                                  (BuildContext context, AsyncSnapshot snapshot) {
-                                if (snapshot.hasData) {
-                                  return CachedNetworkImage(imageUrl: userBloc.state.img);
-                                } else {
-                                  return const CircularProgressIndicator();
-                                }
-                              },
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10), // Radio muy grande para hacerla circular
+                              child:  StreamBuilder(
+                                  stream: bloc.imgStream,
+                                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      return CachedNetworkImage(
+                                        imageUrl: userBloc.state.img,
+                                        fit: BoxFit.cover, // Asegura que la imagen cubra todo el espacio
+                                      );
+                                    } else {
+                                      return const CircularProgressIndicator();
+                                    }
+                                  },
+                                ),
                             ),
                         
-                            StreamBuilder(
-                              stream: bloc.loadingStream,
-                              builder:
-                                  (BuildContext context, AsyncSnapshot snapshot) {
-                                if (snapshot.hasData) {
-                                  if (snapshot.data == true) {
-                                    return  Center(
-                                      heightFactor: 2,
-                                      child: Column(
-                                        children: [
-                                          CircularProgressIndicator(
-                                            color: Colors.lightBlueAccent,
-                                          ),
-                                          Text(translate('PROFILE.USER_PAGE.UPLOADING_IMAGE'), style: TextStyle(color: Colors.white),)
-                                        ],
-                                      ),
-                                    );
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.black87,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(9),
+                                  bottomRight: Radius.circular(9),
+                                )),
+                              child: StreamBuilder(
+                                stream: bloc.loadingStream,
+                                builder:
+                                    (BuildContext context, AsyncSnapshot snapshot) {
+                                  if (snapshot.hasData) {
+                                    if (snapshot.data == true) {
+                                      return  Center(
+                                        heightFactor: 2,
+                                        child: Column(
+                                          children: [
+                                            CircularProgressIndicator(
+                                              color: Colors.lightBlueAccent,
+                                            ),
+                                            Text(translate('PROFILE.USER_PAGE.UPLOADING_IMAGE'), style: TextStyle(color: Colors.white),)
+                                          ],
+                                        ),
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
                                   } else {
                                     return Container();
                                   }
-                                } else {
-                                  return Container();
-                                }
-                              },
+                                },
+                              ),
                             ),
                           ],
                         ),

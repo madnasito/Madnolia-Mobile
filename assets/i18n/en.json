@@ -214,7 +214,7 @@
             "IMG_EXTENSION": "The extension is not valid, please use: 'JPG', 'PNG', 'JPEG'",
             "IMG_UPDATING": "Error updating the image"
         },
-        "UPLOADING_IMG": "Uploading image, wait a moment please",
+        "UPLOADING_IMAGE": "Uploading image, wait a moment please",
         "UPDATED": "Updated!",
         "UPDATE": "Update",
         "DELETE_ACCOUNT": "Delete account",
