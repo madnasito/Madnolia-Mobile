@@ -262,6 +262,8 @@ class _MenuButton extends StatelessWidget {
 void changeRoute(BuildContext context, String route){
   final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
   if (route != "" && route != currentRouteName) {
-    GoRouter.of(context).pushReplacement(route);
+    // Cerrar el drawer si está abierto
+    Scaffold.of(context).closeDrawer();
+    GoRouter.of(context).push(route);
   }
 }
