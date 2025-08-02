@@ -3,6 +3,8 @@ import 'package:madnolia/widgets/app_page.dart';
 
 // EJEMPLO 1: Página estándar con drawer y todo el layout
 class ExamplePage extends StatelessWidget {
+  const ExamplePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppPage(
@@ -18,6 +20,8 @@ class ExamplePage extends StatelessWidget {
 
 // EJEMPLO 2: Página sin drawer
 class ExamplePageNoDrawer extends StatelessWidget {
+  const ExamplePageNoDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppPageWithoutDrawer(
@@ -34,6 +38,8 @@ class ExamplePageNoDrawer extends StatelessWidget {
 
 // EJEMPLO 3: Página con título personalizado y acciones
 class ExamplePageCustom extends StatelessWidget {
+  const ExamplePageCustom({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppPage(
@@ -64,6 +70,8 @@ class ExamplePageCustom extends StatelessWidget {
 
 // EJEMPLO 4: Página de pantalla completa
 class ExampleFullScreenPage extends StatelessWidget {
+  const ExampleFullScreenPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppPageFullScreen(
@@ -79,6 +87,8 @@ class ExampleFullScreenPage extends StatelessWidget {
 
 // EJEMPLO 5: Página solo con contenido mínimo
 class ExampleMinimalPage extends StatelessWidget {
+  const ExampleMinimalPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AppPageMinimal(
@@ -94,6 +104,8 @@ class ExampleMinimalPage extends StatelessWidget {
 
 // EJEMPLO 6: Conversión de tu CustomScaffold actual
 class ExampleConvertedPage extends StatelessWidget {
+  const ExampleConvertedPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     // En lugar de:

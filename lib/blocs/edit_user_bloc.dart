@@ -37,11 +37,8 @@ class EditUserBloc with Validators {
 
   Future uploadImage(XFile image) async {
     _loadingController.sink.add(true);
-    print(image.name);
     final Map imageUrl = await UploadFileService().uploadImage(image);
     _loadingController.sink.add(false);
-
-    print(imageUrl);
 
     if (imageUrl.containsKey("img")) {
       changeImg(imageUrl["img"]);
