@@ -24,9 +24,13 @@ class OrganismLoginForm extends StatelessWidget {
           label: translate("REGISTER.USERNAME"),
           name: "username",
           icon: Icons.person_2_outlined,
+          onChanged: (value) {
+            final trimmed = value?.replaceAll(' ', '');
+            FormBuilder.of(context)?.fields['username']?.didChange(trimmed);
+          },
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(),
-          ]),
+          ],),
         ),
         const SizedBox(height: 15),
         MoleculeTextField(
