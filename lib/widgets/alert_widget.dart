@@ -7,7 +7,7 @@ void showAlert(BuildContext context, String message) {
       barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.black12,
+          backgroundColor: Colors.black87,
           icon: const Icon(Icons.warning),
           titleTextStyle: const TextStyle(color: Colors.white),
           shape: RoundedRectangleBorder(side: const BorderSide(color: Colors.red, width: 2), borderRadius: BorderRadius.circular(20)),
@@ -25,7 +25,7 @@ void showSuccesfulAlert(BuildContext context, String message) {
       barrierDismissible: true,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.black12,
+          backgroundColor: Colors.black87,
           icon: const Icon(Icons.check_rounded),
           titleTextStyle: const TextStyle(color: Colors.white),
           shape: RoundedRectangleBorder(side: const BorderSide(color: Colors.lightBlue, width: 2), borderRadius: BorderRadius.circular(20)),
