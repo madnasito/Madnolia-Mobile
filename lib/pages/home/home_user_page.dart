@@ -86,7 +86,10 @@ class _HomeUserPageState extends State<HomeUserPage> {
                       kDebugMode ? SizedBox() : const AtomBannerAd(),
                       Container(
                         width: double.infinity,
-                        color: Colors.black45,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+                          color: Colors.black45,
+                        ),
                         child: Wrap(
                           alignment: WrapAlignment.center,
                           crossAxisAlignment: WrapCrossAlignment.center,

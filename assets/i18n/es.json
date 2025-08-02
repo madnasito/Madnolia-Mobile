@@ -196,7 +196,7 @@
             "EMAIL": "Correo",
             "INVITATIONS":{
                 "TITLE": "Aceptar invitaciondes de:",
-                "ALL": "Lo que sea, quiero jugar",
+                "EVERYONE": "Lo que sea, quiero jugar",
                 "PARTNERS": "Solo colegas",
                 "NOBODY": "Ya, dejame en paz"
             },

@@ -72,7 +72,10 @@ class MoleculePlatformMatches extends StatelessWidget {
         return Container(
           margin: const EdgeInsets.only(bottom: 10),
           width: double.maxFinite,
-          color: Colors.black,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.only(bottomRight: Radius.circular(15), bottomLeft: Radius.circular(15))
+          ),
           child: Wrap(
             alignment: WrapAlignment.spaceAround,
             crossAxisAlignment:

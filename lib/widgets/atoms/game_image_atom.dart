@@ -4,32 +4,46 @@ import 'package:flutter/material.dart';
 class AtomGameImage extends StatelessWidget {
   final String name;
   final String? background;
-  const AtomGameImage({super.key, this.name = '', this.background});
+  final double borderRadius; // Nuevo parámetro para personalizar el radio
+
+  const AtomGameImage({
+    super.key, 
+    this.name = '', 
+    this.background,
+    this.borderRadius = 12.0, // Valor por defecto
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-            children: [
-              background == null || background == ""
-                  ? Image.asset("assets/no image.jpg")
-                  // ? Image.network(game.backgroundImage!)
-                  : FadeInImage(
-                    placeholderFit: BoxFit.cover,
-                      fadeInDuration: const Duration(milliseconds: 300),
-                      placeholder: const AssetImage('assets/loading.gif'),
-                      image: CachedNetworkImageProvider(resizeImage(background!)), fit: BoxFit.cover,),
-              name != '' ?
-              Positioned(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius), // Aplicamos bordes redondeados
+      child: Stack(
+        children: [
+          background == null || background == ""
+              ? Image.asset("assets/no image.jpg", fit: BoxFit.cover)
+              : FadeInImage(
+                  placeholderFit: BoxFit.cover,
+                  fadeInDuration: const Duration(milliseconds: 300),
+                  placeholder: const AssetImage('assets/loading.gif'),
+                  image: CachedNetworkImageProvider(resizeImage(background!)), 
+                  fit: BoxFit.cover,
+                ),
+          name != '' 
+              ? Positioned(
                   bottom: 2,
                   left: 2,
                   child: Text(
                     name,
                     style: const TextStyle(
-                        backgroundColor: Colors.black54, fontSize: 15),
-                  )
-                ) : SizedBox()
-            ],
-          );
+                      backgroundColor: Colors.black54, 
+                      fontSize: 15,
+                    ),
+                  ),
+                ) 
+              : const SizedBox(),
+        ],
+      ),
+    );
   }
 }
 
