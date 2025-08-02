@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -17,17 +19,40 @@ class _PlatformIconState extends State<PlatformIcon> {
   Widget build(BuildContext context) {
     final iconSize =
         (widget.platform.size * MediaQuery.of(context).size.width) / 100;
-    return  Padding(
-        padding: EdgeInsets.symmetric(vertical: widget.platform.padding),
-        child: SvgPicture.asset(
-          widget.platform.path,
-          height: iconSize,
-          width: iconSize,
-          colorFilter:
-            (widget.platform.active) 
-              ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
-              : const ColorFilter.mode(Color.fromARGB(172, 109, 109, 109), BlendMode.srcIn)
+    return  Stack(
+      alignment: Alignment.center,
+      children: [
+        Padding(
+            padding: EdgeInsets.symmetric(vertical: widget.platform.padding),
+            child: SvgPicture.asset(
+              widget.platform.path,
+              height: iconSize,
+              width: iconSize,
+              colorFilter:
+                (widget.platform.active) 
+                  ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                  : const ColorFilter.mode(Color.fromARGB(172, 109, 109, 109), BlendMode.srcIn)
+            ),
         ),
+        
+        if(widget.platform.active) Positioned(
+          top: -1,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: widget.platform.padding),
+              child: SvgPicture.asset(
+                widget.platform.path,
+                height: iconSize * 1.01,
+                width: iconSize * 1.01,
+                colorFilter:
+                  (widget.platform.active) 
+                    ? const ColorFilter.mode(Colors.white, BlendMode.srcIn)
+                    : const ColorFilter.mode(Color.fromARGB(172, 109, 109, 109), BlendMode.srcIn)
+              ),
+          ),),
+        )
+      ],
     );
   }
 }

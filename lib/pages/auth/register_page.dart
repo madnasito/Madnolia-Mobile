@@ -32,8 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     final PageController controller =  PageController(
       keepPage: true,);
-    return RegisterProvider(
-      child: Scaffold(
+    return Scaffold(
         body: Background(
           child: SafeArea(
             child: PageView(
@@ -59,7 +58,6 @@ class _RegisterPageState extends State<RegisterPage> {
             )
           )
         ),
-      ),
     );
   }
 

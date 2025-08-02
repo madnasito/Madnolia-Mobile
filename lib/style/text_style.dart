@@ -45,3 +45,24 @@ const TextStyle neonTitleText = TextStyle(
     ),
   ],
 );
+
+const TextStyle neonSubTitleText = TextStyle(
+  fontSize: 15,
+  // fontFamily: "Cyberverse",
+  decoration: TextDecoration.none,
+  fontWeight: FontWeight.normal,
+  shadows: [
+    // Sombra principal para el brillo neón (ajusta el color y blurRadius)
+    Shadow(
+      blurRadius: 2.0,
+      color: Color.fromARGB(169, 0, 255, 255), // Un color cian brillante es un clásico neón
+      offset: Offset(0, 0),
+    ),
+    // Opcional: una segunda sombra más difusa para un mejor efecto
+    Shadow(
+      blurRadius: 4.0,
+      color: Color.fromARGB(158, 0, 255, 255),
+      offset: Offset(0, 0),
+    ),
+  ],
+);

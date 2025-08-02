@@ -182,7 +182,13 @@ class _PlatformsViewState extends State<PlatformsView> {
             child: CenterTitleAtom(text: translate("REGISTER.SELECT_PLATFORMS"),
             textStyle: neonTitleText,),
             ),
-        const SizedBox(height: 40),
+        const SizedBox(height: 20),
+        FadeIn(
+            delay: const Duration(milliseconds: 500),
+            child: CenterTitleAtom(text: translate("REGISTER.SELECT_PLATFORMS_SUBTITLE"),
+            textStyle: neonSubTitleText,),
+            ),
+        const SizedBox(height: 20),
         Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           spacing: 20,

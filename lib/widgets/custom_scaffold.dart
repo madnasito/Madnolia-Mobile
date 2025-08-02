@@ -137,7 +137,7 @@ class CustomScaffold extends StatelessWidget {
                       if(!context.mounted) return;
                       UserProvider.clearTable();
                       FriendshipProvider.deleteAll();
-                      GoRouter.of(context).pushReplacement("/home");
+                      GoRouter.of(context).go("/");
                     },
                     child: Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,

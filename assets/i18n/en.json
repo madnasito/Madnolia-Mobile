@@ -42,7 +42,8 @@
       "SUBTITLE": "Do you have an account?",
       "SUB_LOGIN": " Login here",
       "NEXT": "Next",
-      "TOAST_SIGN_UP": "Great! Thanks for sign up"
+      "TOAST_SIGN_UP": "Great! Thanks for sign up",
+      "SELECT_PLATFORMS_SUBTITLE": "The platforms you select will be highlighted"
   },
   "FORM": {
     "INPUT": {

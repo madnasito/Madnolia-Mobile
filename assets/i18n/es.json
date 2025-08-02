@@ -41,7 +41,8 @@
         "SUBTITLE": "¿Ya tienes una cuenta?",
         "SUB_LOGIN": " Inicia sesión",
         "NEXT": "Siguiente",
-        "TOAST_SIGN_UP": "¡Perfecto! Registro exitoso"
+        "TOAST_SIGN_UP": "¡Perfecto! Registro exitoso",
+        "SELECT_PLATFORMS_SUBTITLE": "Tus plataformas seleccionadas brillarán"
     },
     "FORM": {
         "INPUT": {

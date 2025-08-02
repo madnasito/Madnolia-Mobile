@@ -46,7 +46,8 @@ class _OrganismSelectPlatformState extends State<OrganismSelectPlatform> {
               }
             },
           ),
-        )
+        ),
+        SizedBox(height: 15)
       ],
     );
   }
