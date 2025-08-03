@@ -148,7 +148,7 @@
         "MATCH_CREATED": "¡Partida creada!",
         "DATE_ERROR": "Cree una fecha y hora correctas",
         "TITLE_EMPTY": "Escriba el titulo",
-        "DURATION": "Duración"
+        "DURATION": "Duración: {duration} minutos"
     },
     "MATCH": {
         "MATCH_UPDATED": "Partida actualizada",

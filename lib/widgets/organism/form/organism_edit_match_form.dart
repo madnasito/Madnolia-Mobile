@@ -32,6 +32,10 @@ class OrganismEditMatchForm extends StatelessWidget {
     return MoleculeModalIconButton(
       content: FormBuilder(
           key: formKey,
+          initialValue: {
+            "title": match.title,
+            "description": match.description,
+          },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -46,6 +50,7 @@ class OrganismEditMatchForm extends StatelessWidget {
                   label: translate("CREATE_MATCH.MATCH_NAME"),
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                    FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'}))
                   ]),
                 ),
                 const SizedBox(height: 10),
@@ -108,7 +113,7 @@ class OrganismEditMatchForm extends StatelessWidget {
                   initialValue: match.description,
                   label: translate("CREATE_MATCH.DESCRIPTION"),
                   validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.maxLength(80, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '80'})),
+                    FormBuilderValidators.maxLength(80, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '80'}), checkNullOrEmpty: false),
                   ]),
                 ),
                 const SizedBox(height: 10),
@@ -120,10 +125,17 @@ class OrganismEditMatchForm extends StatelessWidget {
                     try {
                       
                       isLoading = true;
-                      final values = formKey.currentState?.instantValue.values.toList();
+
+                      if (formKey.currentState?.saveAndValidate() == false) {
+                        isLoading = false;
+                        return;
+                      }
+                      
+                      final String name = formKey.currentState?.fields['title']?.value ?? '';
+                      final String description = formKey.currentState?.fields['description']?.value ?? '';
                       final EditMatchModel body = EditMatchModel(
-                        title: values![0].toString(),
-                        description: values[1].toString(),
+                        title: name,
+                        description: description,
                         date: DateTime.parse(dateController.text).millisecondsSinceEpoch
                         );
                       final Map resp = await MatchService().editMatch(match.id, body.toJson());
@@ -134,8 +146,8 @@ class OrganismEditMatchForm extends StatelessWidget {
                       if(!resp.containsKey("_id")) return showErrorServerAlert(context, resp);
 
                       match.date = resp["date"];
-                      match.title = values[0].toString();
-                      match.description =  values[1].toString();
+                      match.title = name;
+                      match.description = description;
 
                       debugPrint(resp.toString());
 

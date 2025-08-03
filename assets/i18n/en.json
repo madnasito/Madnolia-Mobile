@@ -154,7 +154,7 @@
       "UPLOADING_MESSAGE": "The match is creating",
       "ERROR": "Error creating the match",
       "TITLE_EMPTY": "Title is required",
-      "DURATION": "Duration"
+      "DURATION": "Duration: {duration} minutes"
   },
   "MATCH": {
     "MATCH_UPDATED": "Match updated",

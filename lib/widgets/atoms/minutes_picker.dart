@@ -68,7 +68,7 @@ class _MinutesPicker extends State<MinutesPicker> {
           disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(40),
           borderSide: const BorderSide(color: Colors.blue)),
-          hintText: "${translate('CREATE_MATCH.DURATION')}: ${widget.items[selectedItem]} minutes",
+          hintText: translate('CREATE_MATCH.DURATION', args: {'duration': widget.items[selectedItem].toString()}),
           border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(40),
           borderSide: const BorderSide(color: Colors.blue))
