@@ -83,6 +83,7 @@
       "LOADING_RECOMENDATIONS": "Loading recommendations",
       "SEARCH_RESULTS": "Search's results",
       "EMPTY_SEARCH": "No founded games, please try another name",
+      "SEARCH_HINT": "Type a bit more of the title to find your game",
       "PLATFORMS_EMPTY": "You have not selected a platform",
       "ADD_PLATFORMS": "Press here for to add a platform",
       "SEARCHING": "Searching",

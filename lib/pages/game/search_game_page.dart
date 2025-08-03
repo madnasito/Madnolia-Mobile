@@ -119,9 +119,14 @@ class _SearchGamePageState extends State<SearchGamePage> {
                                               bottom: const Text("")),
                                         );
                                       })
-                              : Padding(
+                              : (controller.text.length > 3) ? 
+                              Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Text(translate("CREATE_MATCH.EMPTY_SEARCH"), textAlign: TextAlign.center,)
+                              ) : 
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(translate('CREATE_MATCH.SEARCH_HINT'), textAlign: TextAlign.center,)
                               )
                             );
                         } else {
