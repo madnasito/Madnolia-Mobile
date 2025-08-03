@@ -76,7 +76,7 @@ class _SearchPageState extends State<SearchPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SimpleCustomInput(
-                placeholder: 'Search user',
+                placeholder: translate('SEARCH.SEARCH_USERS'),
                 controller: searchController,
                 iconData: Icons.search,
                 autofocus: true,
@@ -94,6 +94,10 @@ class _SearchPageState extends State<SearchPage> {
                           if (snapshot.hasError || !snapshot.hasData) {
                             return Text(translate('ERRORS.LOCAL.LOADING_USERS'));
                           }
+
+                          if(snapshot.data!.isEmpty) {
+                            return Text(translate('SEARCH.NO_USERS_FOUND'));
+                          } 
                           return OrganismUsersList(users: snapshot.data!);
                         },
                       ),

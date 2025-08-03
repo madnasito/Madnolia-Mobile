@@ -107,6 +107,15 @@
             "CANCELLED": "Cancelada"
         }
     },
+    "SEARCH": {
+        "TITLE": "Buscar",
+        "SEARCH": "Buscar",
+        "SEARCH_USERS": "Buscar usuarios",
+        "NO_RESULTS": "No se encontraron resultados",
+        "ERROR_LOADING": "Error cargando resultados de búsqueda",
+        "SEARCHING": "Buscando...",
+        "NO_USERS_FOUND": "No se encontraron usuarios"
+    },
     "MATCHES": {
         "TITLE": "Partidas",
         "ALL": "Todas",

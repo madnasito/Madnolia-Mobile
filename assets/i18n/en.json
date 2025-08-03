@@ -113,6 +113,15 @@
       "CANCELLED": "Canceled"
     }
   },
+  "SEARCH": {
+    "TITLE": "Search",
+    "SEARCH": "Search",
+    "SEARCH_USERS": "Search users",
+    "NO_RESULTS": "No results found",
+    "ERROR_LOADING": "Error loading search results",
+    "SEARCHING": "Searching...",
+    "NO_USERS_FOUND": "No users found"
+  },
   "MATCHES": {
     "TITLE": "Matches",
     "ALL": "All",

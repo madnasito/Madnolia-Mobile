@@ -280,7 +280,7 @@ void changeRoute(BuildContext context, String route){
   if (route != "" && route != currentRouteName) {
     // Cerrar el drawer si está abierto
     if (Scaffold.of(context).isDrawerOpen) {
-      Navigator.of(context).pop();
+      Scaffold.of(context).closeDrawer();
     }
     GoRouter.of(context).pushReplacement(route);
   }
