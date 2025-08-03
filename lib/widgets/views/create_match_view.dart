@@ -133,7 +133,10 @@ class _SearchGameViewState extends State<SearchGameView> {
                                           bottom: const Text("")),
                                     );
                                   })
-                          : Text(translate("CREATE_MATCH.EMPTY_SEARCH")));
+                          : Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(translate("CREATE_MATCH.EMPTY_SEARCH"), textAlign: TextAlign.center,),
+                          ));
                     } else {
                       return const CircularProgressIndicator();
                     }
