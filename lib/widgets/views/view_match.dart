@@ -216,7 +216,7 @@ class _ViewMatchState extends State<ViewMatch> {
             inputKey: messageKey,
             usersList: usersLists,
             stream: bloc.messageStream,
-            placeholder: "Message",
+            placeholder: translate('CHAT.MESSAGE'),
             onChanged: bloc.changeMessage,
           ),
         ),

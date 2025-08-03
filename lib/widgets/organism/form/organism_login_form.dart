@@ -29,8 +29,8 @@ class OrganismLoginForm extends StatelessWidget {
             FormBuilder.of(context)?.fields['username']?.didChange(trimmed);
           },
           validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(),
-          ],),
+            FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+          ]),
         ),
         const SizedBox(height: 15),
         MoleculeTextField(
@@ -39,8 +39,10 @@ class OrganismLoginForm extends StatelessWidget {
           isPassword: true,
           icon: Icons.lock_outline_rounded,
           validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(),
-            FormBuilderValidators.range(6, 35),
+            FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+            // FormBuilderValidators.range(6, 35, errorText: translate('FORM.VALIDATIONS.INVALID_LENGTH')),
+            FormBuilderValidators.minLength(6, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '6'})),
+            FormBuilderValidators.maxLength(40, errorText: translate('FORM.VALIDATIONS.INVALID_LENGTH')) 
           ]),
         ),
         const SizedBox(height: 15),

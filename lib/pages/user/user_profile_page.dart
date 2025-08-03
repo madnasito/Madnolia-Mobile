@@ -85,7 +85,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                               children: [
                                                 FormBuilderDropdown<ReportType>(
                                                   validator: FormBuilderValidators.compose([
-                                                    FormBuilderValidators.required(),
+                                                    FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
                                                   ]),
                                                   hint: Text(
                                                     translate('REPORTS.SELECT_TYPE'),
@@ -123,8 +123,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                   label: translate('UTILS.DESCRIPTION'),
                                                   icon: Icons.description_outlined,
                                                   validator: FormBuilderValidators.compose([
-                                                    FormBuilderValidators.required(),
-                                                    FormBuilderValidators.maxLength(100)
+                                                    FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                                                    FormBuilderValidators.maxLength(100, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '100'}))
                                                   ]),
                                                 ),
                                                 const SizedBox(height: 20),
@@ -142,7 +142,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                   name: 'media',
                                                   validator: FormBuilderValidators.compose(
                                                     [
-                                                      FormBuilderValidators.required()
+                                                      FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED'))
                                                     ]
                                                   ),
                                                   previewImages: true,

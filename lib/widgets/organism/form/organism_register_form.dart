@@ -37,9 +37,9 @@ class OrganismRegisterForm extends StatelessWidget {
               label: translate("FORM.INPUT.NAME"),
               icon: Icons.abc_rounded,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.minLength(1),
-                FormBuilderValidators.maxLength(20) 
+                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                FormBuilderValidators.minLength(1, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '1'})),
+                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'})) 
               ]),
             ),
           ),
@@ -51,8 +51,9 @@ class OrganismRegisterForm extends StatelessWidget {
               label: translate("FORM.INPUT.USERNAME"),
               icon: Icons.account_circle_outlined,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.username(),
+                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                FormBuilderValidators.username(errorText: translate('FORM.VALIDATIONS.USERNAME_INVALID')),
+                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'})) 
                 // FormBuilderValidators.notEqual(notValidUser)
               ]),
             ),
@@ -66,8 +67,8 @@ class OrganismRegisterForm extends StatelessWidget {
               icon: Icons.email_outlined,
               keyboardType: TextInputType.emailAddress,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.email(),
+                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                FormBuilderValidators.email(errorText: translate('FORM.VALIDATIONS.INVALID_EMAIL')),
                 // FormBuilderValidators.notEqual(notValidEmail)
               ])
             ),
@@ -81,9 +82,9 @@ class OrganismRegisterForm extends StatelessWidget {
               icon: Icons.lock_outline_rounded,
               isPassword: true,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.minLength(1),
-                FormBuilderValidators.maxLength(100) 
+                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                FormBuilderValidators.minLength(6, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '6'})),
+                FormBuilderValidators.maxLength(40, errorText: translate('FORM.VALIDATIONS.INVALID_LENGTH')) 
               ]),
             ),
           ),

@@ -45,7 +45,7 @@ class OrganismEditMatchForm extends StatelessWidget {
                   initialValue: match.title,
                   label: translate("CREATE_MATCH.MATCH_NAME"),
                   validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
+                    FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
                   ]),
                 ),
                 const SizedBox(height: 10),
@@ -108,7 +108,7 @@ class OrganismEditMatchForm extends StatelessWidget {
                   initialValue: match.description,
                   label: translate("CREATE_MATCH.DESCRIPTION"),
                   validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.maxLength(80),
+                    FormBuilderValidators.maxLength(80, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '80'})),
                   ]),
                 ),
                 const SizedBox(height: 10),

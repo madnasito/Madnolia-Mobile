@@ -30,7 +30,7 @@ class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordFor
             label: translate("REGISTER.EMAIL"),
             icon: Icons.email_outlined,
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.email()
+              FormBuilderValidators.email(errorText: translate('FORM.VALIDATIONS.INVALID_EMAIL'))
             ]),
             autovalidateMode: AutovalidateMode.onUnfocus,
           ),

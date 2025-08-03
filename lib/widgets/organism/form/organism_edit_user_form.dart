@@ -48,9 +48,9 @@ class OrganismEditUserForm extends StatelessWidget {
               icon: Icons.abc_rounded,
               initialValue: updateUser.name,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.minLength(1),
-                FormBuilderValidators.maxLength(20) 
+                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                FormBuilderValidators.minLength(1, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '1'})),
+                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'})) 
               ]),
             ),
           ),
@@ -62,8 +62,8 @@ class OrganismEditUserForm extends StatelessWidget {
               icon: Icons.account_circle_outlined,
               initialValue: updateUser.username,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.username(),
+                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                FormBuilderValidators.username(errorText: translate('FORM.VALIDATIONS.USERNAME_INVALID')),
                 // FormBuilderValidators.notEqual(notValidUser)
               ]),
             ),
@@ -77,8 +77,8 @@ class OrganismEditUserForm extends StatelessWidget {
               initialValue: updateUser.email,
               keyboardType: TextInputType.emailAddress,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.email(),
+                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                FormBuilderValidators.email(errorText: translate('FORM.VALIDATIONS.INVALID_EMAIL')),
                 // FormBuilderValidators.notEqual(notValidEmail)
               ])
             ),
