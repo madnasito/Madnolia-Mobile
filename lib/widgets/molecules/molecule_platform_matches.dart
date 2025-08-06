@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/models/platform/platform_games_model.dart';
 
-import '../../models/game/home_game_model.dart';
+import '../../models/game/platform_game.dart';
 import '../match_card_widget.dart';
 
 class MoleculePlatformMatches extends StatelessWidget {
@@ -27,7 +27,7 @@ class MoleculePlatformMatches extends StatelessWidget {
     PlatformGamesModel platformState = platformsGamesBloc.state.platformGames.elementAt(platformIndex);
 
     if(platformState.status == PlatformGamesStatus.initial){
-      platformsGamesBloc.add(PlatformGamesFetched(platformId: platform));
+      // platformsGamesBloc.add(PlatformGamesFetched(platformId: platform));
       return CircularProgressIndicator.adaptive();
     } else if(platformState.status == PlatformGamesStatus.success){
       if(platformState.games.isNotEmpty){
@@ -35,7 +35,7 @@ class MoleculePlatformMatches extends StatelessWidget {
           return CarouselSlider.builder(
             itemCount: platformState.games.length,
             itemBuilder: (BuildContext context, int index, int realIndex) {  
-              final HomeGame game = platformState.games[index];
+              final PlatformGame game = platformState.games[index];
               return GestureDetector(
                 onTap: (){
                   GoRouter.of(context)

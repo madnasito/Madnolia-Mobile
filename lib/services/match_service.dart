@@ -5,9 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:madnolia/models/game/home_game_model.dart';
+import 'package:madnolia/models/game/platform_game.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
+import 'package:madnolia/models/platform/platform_with_game_matches.dart';
 
 
 class MatchService {
@@ -111,8 +112,20 @@ class MatchService {
     }
   }
 
+  Future<List<PlatformWithGameMatches>> getPlatformsWithGameMatches() async {
+    final token = await _storage.read(key: "token");
 
-  Future<List<HomeGame>> getGamesMatchesByPlatform({
+    Response response = await dio.get(
+      '$baseUrl/match/player-games-platforms',
+      options: Options(headers: {"Authorization": "Bearer $token"})
+    );
+
+    return (response.data as List<dynamic>)
+      .map((e) => PlatformWithGameMatches.fromJson(e))
+      .toList();
+  }
+
+  Future<List<PlatformGame>> getGamesMatchesByPlatform({
   required int platformId,
   required int page,
   int limit = 5,
@@ -129,7 +142,7 @@ class MatchService {
   });
 }
 
-static Future<List<HomeGame>> _fetchGames(Map<String, dynamic> params) async{
+  static Future<List<PlatformGame>> _fetchGames(Map<String, dynamic> params) async{
   try {
     final dio = Dio();
     final response = await dio.get(
@@ -143,12 +156,13 @@ static Future<List<HomeGame>> _fetchGames(Map<String, dynamic> params) async{
     );
 
     return (response.data as List<dynamic>)
-        .map((e) => HomeGame.fromJson(e as Map<String, dynamic>))
+        .map((e) => PlatformGame.fromJson(e as Map<String, dynamic>))
         .toList();
   } catch (e) {
     throw Exception('Failed to fetch games');
   }
 }
+  
   Future<Map<String, dynamic>> matchPostRequest(String apiUrl, Map body) async {
     try {
       authenticating = true;

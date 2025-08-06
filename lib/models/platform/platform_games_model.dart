@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:madnolia/models/game/home_game_model.dart';
+import 'package:madnolia/models/game/platform_game.dart';
 
 enum PlatformGamesStatus { initial, loading, success, failure }
 
@@ -14,7 +14,7 @@ String platformGamesModelToJson(PlatformGamesModel data) => json.encode(data.toJ
 
 class PlatformGamesModel {
     int platform;
-    List<HomeGame> games;
+    List<PlatformGame> games;
     int page = 0;
     PlatformGamesStatus status;
     bool hasReachedMax;
@@ -29,7 +29,7 @@ class PlatformGamesModel {
 
     factory PlatformGamesModel.fromJson(Map<String, dynamic> json) => PlatformGamesModel(
         platform: json["platform"],
-        games: List<HomeGame>.from(json["games"].map((x) => x)),
+        games: List<PlatformGame>.from(json["games"].map((x) => x)),
         page: json["page"],
         status: json["status"],
         hasReachedMax: json["hasReachedMax"],
@@ -37,7 +37,7 @@ class PlatformGamesModel {
 
     Map<String, dynamic> toJson() => {
         "platform": platform,
-        "games": List<HomeGame>.from(games.map((x) => x)),
+        "games": List<PlatformGame>.from(games.map((x) => x)),
         "page": page,
         "status": status,
         "hasReachedMax": hasReachedMax,

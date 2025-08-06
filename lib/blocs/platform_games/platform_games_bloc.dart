@@ -23,21 +23,35 @@ class PlatformGamesBloc extends Bloc<PlatformGamesEvent, PlatformGamesState> {
     on<LoadPlatforms>(_loadPlatforms);
 
     on<PlatformGamesFetched>(_onFetchPlatformGames, transformer: throttleDroppable(throttleDuration));
-    // on<PlatformGamesFetched>((event, emit) {
-    // });
 
     on<RestorePlatformsGamesState>(_restoreState);
     on<FetchAllPlatforms>(_fetchAll);
   }
 
-  void _loadPlatforms(LoadPlatforms event, Emitter<PlatformGamesState> emit) {
-    List<PlatformGamesModel> newUserPlatforms = [];
+  Future<void> _loadPlatforms(LoadPlatforms event, Emitter<PlatformGamesState> emit) async {
 
-    for (var id in event.platforms) {
-      newUserPlatforms.add(PlatformGamesModel(platform: id, games: [], page: 0, status: PlatformGamesStatus.initial, hasReachedMax: false));
+    try {
+      
+      List<PlatformGamesModel> newUserPlatforms = [];
+
+      final response = await MatchService().getPlatformsWithGameMatches();
+
+      for (var platform in response) {
+        debugPrint(platform.games.length.toString());
+        newUserPlatforms.add(
+          PlatformGamesModel(
+            platform: platform.platform,
+            games: platform.games,
+            page: 0,
+            status: PlatformGamesStatus.success,
+            hasReachedMax: platform.games.length < 5 ? true: false)
+          );
+      }
+
+      emit(state.copyWith(platformGames: newUserPlatforms));
+    } catch (e) {
+      debugPrint(e.toString());
     }
-
-    emit(state.copyWith(platformGames: newUserPlatforms));
   }
 
   void _fetchAll(FetchAllPlatforms event, Emitter<PlatformGamesState> emit) {

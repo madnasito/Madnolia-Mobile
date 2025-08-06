@@ -4,18 +4,18 @@
 
 import 'dart:convert';
 
-HomeGame homeGameFromJson(String str) => HomeGame.fromJson(json.decode(str));
+PlatformGame homeGameFromJson(String str) => PlatformGame.fromJson(json.decode(str));
 
-String homeGameToJson(HomeGame data) => json.encode(data.toJson());
+String homeGameToJson(PlatformGame data) => json.encode(data.toJson());
 
-class HomeGame {
+class PlatformGame {
     String id;
     int count;
     String name;
     String? background;
     String slug;
 
-    HomeGame({
+    PlatformGame({
         required this.id,
         required this.count,
         required this.name,
@@ -23,7 +23,7 @@ class HomeGame {
         required this.slug,
     });
 
-    factory HomeGame.fromJson(Map<String, dynamic> json) => HomeGame(
+    factory PlatformGame.fromJson(Map<String, dynamic> json) => PlatformGame(
         id: json["_id"],
         count: json["count"],
         name: json["name"],

@@ -138,14 +138,16 @@ class _ViewMatchState extends State<ViewMatch> {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
                 child: SizedBox(
                   width: 90,
-                  child: AtomGameImage(background: resizeImage(widget.match.game.background!)),
-                ),
+                  child: widget.match.game.background != null ? AtomGameImage(
+                    background: resizeImage(widget.match.game.background! 
+                    )
+                  ) : Image.asset("assets/no image.jpg", fit: BoxFit.cover) ),
               ),
               IconButton(onPressed: () async{
                 // final String apiUrl = dotenv.get("SOCKETS_URL");
                 final params = ShareParams(
                   title: translate("SHARE.TITLE"),
-                  uri: Uri.tryParse("https://madnolia.app/match/${widget.match.id}"),
+                  // uri: Uri.tryParse("https://madnolia.app/match/${widget.match.id}"),
                   // subject: "🎮 Let's play ${widget.match.game.name}",
                   text: translate("SHARE.TEXT", args: {
                     "gameName": widget.match.game.name,

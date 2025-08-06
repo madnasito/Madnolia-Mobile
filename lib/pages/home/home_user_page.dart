@@ -74,13 +74,13 @@ class _HomeUserPageState extends State<HomeUserPage> {
                     ),
               );
             } else if (snapshot.hasData) {
-              final userBloc = context.watch<UserBloc>().state;
               return ListView.builder(
                 cacheExtent: 9999999,
                 physics: const AlwaysScrollableScrollPhysics(),
                 scrollDirection: Axis.vertical,
-                itemCount: userBloc.platforms.length,
+                itemCount: platformsGamesBloc.state.platformGames.length,
                 itemBuilder: (BuildContext context, int platformIndex) {
+                  final platformGames = platformsGamesBloc.state.platformGames[platformIndex];
                   return Column(
                     children: [
                       kDebugMode ? SizedBox() : const AtomBannerAd(),
@@ -96,11 +96,11 @@ class _HomeUserPageState extends State<HomeUserPage> {
                           runAlignment: WrapAlignment.center,
                           spacing: 20,
                           children: [
-                            Text(getPlatformInfo(userBloc.platforms[platformIndex]).name),
+                            Text(getPlatformInfo(platformGames.platform).name),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SvgPicture.asset(
-                                getPlatformInfo(userBloc.platforms[platformIndex]).path,
+                                getPlatformInfo(platformGames.platform).path,
                                 width: 90,
                                 colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                               ),
@@ -108,7 +108,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                           ],
                         ),
                       ),
-                      MoleculePlatformMatches(platform: userBloc.platforms[platformIndex])
+                      MoleculePlatformMatches(platform: platformGames.platform)
                     ],
                   );
                 },
