@@ -1,5 +1,4 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
@@ -7,19 +6,15 @@ import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/services/messages_service.dart';
 import 'package:madnolia/services/notifications_service.dart';
-import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
-import 'package:madnolia/widgets/atoms/ads/atom_banner_ad.dart';
-import 'package:madnolia/widgets/molecules/molecule_platform_matches.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/user/user_model.dart';
 import 'package:madnolia/services/user_service.dart';
-// import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/organism/cards/organism_card_platform_matches.dart';
 
 
 class HomeUserPage extends StatefulWidget {  // Changed to StatefulWidget
@@ -81,36 +76,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                 itemCount: platformsGamesBloc.state.platformGames.length,
                 itemBuilder: (BuildContext context, int platformIndex) {
                   final platformGames = platformsGamesBloc.state.platformGames[platformIndex];
-                  return Column(
-                    children: [
-                      kDebugMode ? SizedBox() : const AtomBannerAd(),
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-                          color: Colors.black45,
-                        ),
-                        child: Wrap(
-                          alignment: WrapAlignment.center,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          runAlignment: WrapAlignment.center,
-                          spacing: 20,
-                          children: [
-                            Text(getPlatformInfo(platformGames.platform).name),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SvgPicture.asset(
-                                getPlatformInfo(platformGames.platform).path,
-                                width: 90,
-                                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      MoleculePlatformMatches(platform: platformGames.platform)
-                    ],
-                  );
+                  return OrganismCardPlatformMatches(platformGames: platformGames);
                 },
               );
             }

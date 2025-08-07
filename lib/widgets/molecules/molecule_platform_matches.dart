@@ -74,7 +74,7 @@ class MoleculePlatformMatches extends StatelessWidget {
           width: double.maxFinite,
           decoration: BoxDecoration(
             color: Colors.black,
-            borderRadius: BorderRadius.only(bottomRight: Radius.circular(15), bottomLeft: Radius.circular(15))
+            borderRadius: BorderRadius.only(bottomRight: Radius.circular(15), bottomLeft: Radius.circular(15)),
           ),
           child: Wrap(
             alignment: WrapAlignment.spaceAround,
