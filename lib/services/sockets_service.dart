@@ -11,6 +11,8 @@ import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:socket_io_client/socket_io_client.dart';
+import 'package:firebase_core/firebase_core.dart';
+import '../firebase_options.dart';
 
 
 import '../models/invitation_model.dart' show Invitation;
@@ -19,6 +21,15 @@ import '../models/invitation_model.dart' show Invitation;
 @pragma('vm:entry-point')
 onStart(ServiceInstance service) async {
   debugPrint('Background service starting...');
+  
+  // Initialize Firebase first in the background service
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint('Firebase already initialized or error: $e');
+  }
   
   // Crear el canal de notificaciones INMEDIATAMENTE
   try {

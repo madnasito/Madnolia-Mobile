@@ -1,6 +1,8 @@
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
@@ -24,6 +26,12 @@ import 'package:madnolia/services/local_notifications_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
+  
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
   serviceLocatorInit();
   cubitServiceLocatorInit();
   await BaseDatabaseProvider.database;
