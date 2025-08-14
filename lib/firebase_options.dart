@@ -50,23 +50,22 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static FirebaseOptions android = FirebaseOptions(
-    apiKey: dotenv.get("FIREBASE_API_KEY"),
-    appId: dotenv.get("FIREBASE_APP_ID"),
+  static FirebaseOptions get android => FirebaseOptions(
+    apiKey: dotenv.get("FIREBASE_API_KEY_ANDROID"),
+    appId: dotenv.get("FIREBASE_APP_ID_ANDROID"),
     messagingSenderId: dotenv.get("FIREBASE_MESSAGE_SENDER_ID"),
     projectId: dotenv.get("FIREBASE_PROJECT_ID"),
     databaseURL: dotenv.get("FIREBASE_DATABASE_URL"),
     storageBucket: dotenv.get("FIREBASE_STORAGE_BUCKET"),
   );
 
-  static FirebaseOptions ios = FirebaseOptions(
-    apiKey: dotenv.get("FIREBASE_API_KEY"),
-    appId: dotenv.get("FIREBASE_APP_ID"),
+  static FirebaseOptions get ios => FirebaseOptions(
+    apiKey: dotenv.get("FIREBASE_API_KEY_IOS"),
+    appId: dotenv.get("FIREBASE_APP_ID_IOS"),
     messagingSenderId: dotenv.get("FIREBASE_MESSAGE_SENDER_ID"),
     projectId: dotenv.get("FIREBASE_PROJECT_ID"),
     databaseURL: dotenv.get("FIREBASE_DATABASE_URL"),
     storageBucket: dotenv.get("FIREBASE_STORAGE_BUCKET"),
     iosBundleId: dotenv.get("IOS_BUNDLE_ID"),
   );
-
 }

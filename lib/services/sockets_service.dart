@@ -23,7 +23,14 @@ import '../models/invitation_model.dart' show Invitation;
 onStart(ServiceInstance service) async {
   debugPrint('Background service starting...');
   
-  // Initialize Firebase first in the background service
+  // Load environment variables FIRST before Firebase initialization
+  try {
+    (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod");
+  } catch (e) {
+    debugPrint('Error loading dotenv in background service: $e');
+  }
+  
+  // Initialize Firebase after dotenv is loaded
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -73,10 +80,8 @@ onStart(ServiceInstance service) async {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: "token");
 
-    // Cargar dotenv de forma asíncrona sin bloquear
-    (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
-  
-  final String socketsUrl = dotenv.get("SOCKETS_URL");
+    // dotenv is already loaded at the beginning of the function
+    final String socketsUrl = dotenv.get("SOCKETS_URL");
 
    await FirebaseMessaging.instance.setAutoInitEnabled(true);
 

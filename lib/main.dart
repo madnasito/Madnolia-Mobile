@@ -35,6 +35,13 @@ void main() async {
   cubitServiceLocatorInit();
   await BaseDatabaseProvider.database;
 
+  debugPrint(dotenv.get("FIREBASE_API_KEY_ANDROID"));
+    debugPrint(dotenv.get("FIREBASE_MESSAGE_SENDER_ID"));
+    debugPrint(dotenv.get("FIREBASE_PROJECT_ID"));
+    debugPrint(dotenv.get("FIREBASE_DATABASE_URL"));
+    debugPrint(dotenv.get("FIREBASE_STORAGE_BUCKET"));
+    debugPrint(dotenv.get("IOS_BUNDLE_ID"));
+
   // Use PlatformDispatcher to get the device locale
   Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
       ? const Locale('en') // Fallback if needed
