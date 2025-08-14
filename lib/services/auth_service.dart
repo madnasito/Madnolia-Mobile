@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
+import 'package:madnolia/types/app_lifecycle_state.dart';
 
 class AuthService {
   bool authenticating = false;
@@ -36,6 +37,9 @@ class AuthService {
         
         // Inicializar y iniciar el servicio
         await _initializeAndStartService();
+        
+        // Forzar una verificación inmediata del lifecycle manager
+        await AppLifecycleManager().forceServiceCheck();
         
         return respBody;
       } else {
@@ -81,6 +85,9 @@ class AuthService {
         
         // Inicializar y iniciar el servicio
         await _initializeAndStartService();
+        
+        // Forzar una verificación inmediata del lifecycle manager
+        await AppLifecycleManager().forceServiceCheck();
       }
       return respDecoded;
     } catch (e) {

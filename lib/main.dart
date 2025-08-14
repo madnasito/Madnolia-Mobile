@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:madnolia/types/app_lifecycle_state.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
@@ -91,10 +92,36 @@ void main() async {
   unawaited(MobileAds.instance.initialize());
   MobileAds.instance.initialize();
 
-  runApp(LocalizedApp(delegate, const MyApp()));
+  // Inicializar el observer del ciclo de vida
+  AppLifecycleManager().initialize();
+
+  runApp(LocalizedApp(delegate, const AppWrapper()));
 }
 
  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+/// Wrapper para manejar correctamente el ciclo de vida de la aplicación
+class AppWrapper extends StatefulWidget {
+  const AppWrapper({super.key});
+
+  @override
+  State<AppWrapper> createState() => _AppWrapperState();
+}
+
+class _AppWrapperState extends State<AppWrapper> {
+  @override
+  void dispose() {
+    // Limpiar los recursos del AppLifecycleManager
+    AppLifecycleManager().dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const MyApp();
+  }
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key}); 
 

@@ -96,7 +96,6 @@ class FirebaseMessagingService {
     // Escuchar cambios en el token
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
       debugPrint('FCM Token refreshed: $fcmToken');
-      // TODO: Enviar el nuevo token al servidor
     });
 
     // Manejar mensajes cuando la app está en foreground
