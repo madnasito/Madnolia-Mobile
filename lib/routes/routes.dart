@@ -1,5 +1,4 @@
 
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/pages/auth/recover_password_page.dart';
@@ -203,31 +202,6 @@ Future<String?> getToken() async {
     final token = await storage.read(key: "token");
 
     if(token == null) throw 'No token';
-
-    final notificationSettings = await FirebaseMessaging.instance.requestPermission(provisional: true);
-    await FirebaseMessaging.instance.setAutoInitEnabled(true);
-
-    // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
-    final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    debugPrint('FCM Token: $fcmToken');
-    debugPrint('APNS Token: $apnsToken');
-    if (apnsToken != null) {
-    // APNS token is available, make FCM plugin API requests...
-    }
-
-    FirebaseMessaging.instance.onTokenRefresh
-    .listen((fcmToken) {
-      debugPrint('New FCM token: $fcmToken');
-      // TODO: If necessary send token to application server.
-
-      // Note: This callback is fired at each app startup and whenever a new
-      // token is generated.
-    })
-    .onError((err) {
-      debugPrint('Error getting FCM token: $err');
-      // Error getting token.
-    });
 
     return token;
   } catch (e) {

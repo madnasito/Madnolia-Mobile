@@ -27,16 +27,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
   
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // Load environment variables first
+  (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
+  
   
   serviceLocatorInit();
   cubitServiceLocatorInit();
   await BaseDatabaseProvider.database;
-
-  (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
 
   // Use PlatformDispatcher to get the device locale
   Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
@@ -52,6 +49,19 @@ void main() async {
     supportedLocales: supportedLangs,
   );
 
+  // Initialize Firebase after dotenv is loaded
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    if (e.toString().contains('duplicate-app')) {
+      debugPrint('Firebase already initialized');
+    } else {
+      rethrow;
+    }
+  }
+  
   try {
     if(await getToken() is String) {
       // Initialize notifications first with improved Android 12+ support  

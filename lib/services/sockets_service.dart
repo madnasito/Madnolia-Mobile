@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -57,28 +58,61 @@ onStart(ServiceInstance service) async {
   // Pequeño delay para asegurar que el canal esté creado
   await Future.delayed(const Duration(milliseconds: 500));
   
-  // CRÍTICO: Establecer como foreground service después del delay
-  if (service is AndroidServiceInstance) {
-    try {
-      service.setAsForegroundService();
-      debugPrint('Service set as foreground successfully');
-    } catch (e) {
-      debugPrint('Error setting service as foreground: $e');
-      // Continuar sin modo foreground si falla
-    }
-  }
+  // // CRÍTICO: Establecer como foreground service después del delay
+  // if (service is AndroidServiceInstance) {
+  //   try {
+  //     service.setAsForegroundService();
+  //     debugPrint('Service set as foreground successfully');
+  //   } catch (e) {
+  //     debugPrint('Error setting service as foreground: $e');
+  //     // Continuar sin modo foreground si falla
+  //   }
+  // }
   
   try {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: "token");
-
-    debugPrint('Background service starting in foreground mode with token');
 
     // Cargar dotenv de forma asíncrona sin bloquear
     (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
   
   final String socketsUrl = dotenv.get("SOCKETS_URL");
 
+   await FirebaseMessaging.instance.setAutoInitEnabled(true);
+
+    await FirebaseMessaging.instance.requestPermission(provisional: true);
+    await FirebaseMessaging.instance.setAutoInitEnabled(true);
+
+    // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
+    final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    debugPrint('FCM Token: $fcmToken');
+    debugPrint('APNS Token: $apnsToken');
+    if (apnsToken != null) {
+    // APNS token is available, make FCM plugin API requests...
+    }
+
+    FirebaseMessaging.instance.onTokenRefresh
+    .listen((fcmToken) {
+      debugPrint('New FCM token: $fcmToken');
+      // TODO: If necessary send token to application server.
+
+      // Note: This callback is fired at each app startup and whenever a new
+      // token is generated.
+    })
+    .onError((err) {
+      debugPrint('Error getting FCM token: $err');
+      // Error getting token.
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      debugPrint('Received a message while in the foreground!');
+      debugPrint('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        debugPrint('Message also contained a notification: ${message.notification}');
+      }
+    });
   final Socket socket = io(
     socketsUrl,
     OptionBuilder()
@@ -86,7 +120,7 @@ onStart(ServiceInstance service) async {
       .enableReconnection()
       .disableForceNew()
       .setAuth({"token": token})
-      .setExtraHeaders({"token": token})
+      .setExtraHeaders({"fcm_token": fcmToken})
       .build(),
   );
 
