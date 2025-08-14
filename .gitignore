@@ -33,7 +33,7 @@ migrate_working_dir/
 /build/
 /assets/*.env.*
 
-/android/app/google-services.json
+/android/google-services.json
 # Symbolication related
 app.*.symbols
 
@@ -48,3 +48,13 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+# Firebase configuration files
+/android/app/google-services.json
+/ios/Runner/GoogleService-Info.plist
+/ios/firebase_app_id_file.json
+
+# Key files
+/android/key.properties
+/android/keystore.jks
+/ios/Runner/Config.xcconfig
