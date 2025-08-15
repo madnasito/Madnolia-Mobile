@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:madnolia/services/firebase_messaging_service.dart';
 import 'firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/types/app_lifecycle_state.dart';
@@ -60,8 +61,12 @@ void main() async {
   // Initialize Firebase after dotenv is loaded
   try {
     await Firebase.initializeApp(
+      name: 'Madnolia',
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    
+    // Inicializar servicios de notificación
+    await FirebaseMessagingService.initialize();
   } catch (e) {
     if (e.toString().contains('duplicate-app')) {
       debugPrint('Firebase already initialized');

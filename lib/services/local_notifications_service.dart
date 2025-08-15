@@ -86,6 +86,7 @@ class LocalNotificationsService {
     const String groupChannelDescription = 'Messages channel';
     String groupKey = message.conversation;
 
+    debugPrint('Displaying message: ${message.text}');
     // Agregar el nuevo mensaje a la lista
     bool messageAdded = false;
     

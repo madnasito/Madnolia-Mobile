@@ -34,6 +34,7 @@ migrate_working_dir/
 /assets/*.env.*
 
 /android/google-services.json
+/android/app/google-services.json
 # Symbolication related
 app.*.symbols
 
