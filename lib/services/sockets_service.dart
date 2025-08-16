@@ -69,17 +69,6 @@ onStart(ServiceInstance service) async {
   // Pequeño delay para asegurar que el canal esté creado
   await Future.delayed(const Duration(milliseconds: 500));
   
-  // // CRÍTICO: Establecer como foreground service después del delay
-  // if (service is AndroidServiceInstance) {
-  //   try {
-  //     service.setAsForegroundService();
-  //     debugPrint('Service set as foreground successfully');
-  //   } catch (e) {
-  //     debugPrint('Error setting service as foreground: $e');
-  //     // Continuar sin modo foreground si falla
-  //   }
-  // }
-  
   try {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: "token");

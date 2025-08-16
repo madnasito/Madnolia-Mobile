@@ -16,6 +16,7 @@ import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/database/providers/match_db.dart';
 import 'package:madnolia/database/providers/user_db.dart' show UserDb;
+import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
 import 'package:madnolia/database/services/user-db.service.dart' show getUserDb;
@@ -369,24 +370,38 @@ class LocalNotificationsService {
   static Future<void> notificationTapBackground(NotificationResponse notificationResponse) async {
     if(notificationResponse.input != null) {
       try {
+
+        await initializeTranslations();
         final ChatMessage message = chatMessageFromJson(notificationResponse.payload!);
 
         final backgroundService = FlutterBackgroundService();
 
-        backgroundService.invoke(
-          'new_message',
-          CreateMessage(
-            conversation: message.conversation,
-            text: notificationResponse.input.toString(),
-            type: message.type)
-          .toJson()
-        );
+        if(await backgroundService.isRunning() == false){
 
-        // Get current user info
-        // const storage = FlutterSecureStorage();
-        // String? myUserId = await storage.read(key: "userId");
-        // final currentUser = await getUserDb(myUserId!);
-        // final currentUserImage = await imageProviderToUint8List(CachedNetworkImageProvider(currentUser.thumb));
+          await initializeService();  
+          // Inicializar y iniciar el servicio
+          startBackgroundService();
+          
+          backgroundService.on('connected_socket').listen((data) {
+                backgroundService.invoke(
+              'new_message',
+              CreateMessage(
+                conversation: message.conversation,
+                text: notificationResponse.input.toString(),
+                type: message.type)
+              .toJson()
+            );    
+          });
+        }else {
+          backgroundService.invoke(
+            'new_message',
+            CreateMessage(
+              conversation: message.conversation,
+              text: notificationResponse.input.toString(),
+              type: message.type)
+            .toJson()
+          );
+        }
         
         await deleteRoomMessages(message.conversation);
       } catch (e) {
