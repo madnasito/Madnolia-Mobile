@@ -164,7 +164,7 @@ class LocalNotificationsService {
               translate("FORM.INPUT.REPLY"),
               inputs: [
                 AndroidNotificationActionInput(
-                  label: translate("MESSAGE"),
+                  label: translate("CHAT.MESSAGE"),
                   allowFreeFormInput: true,
                 ),
               ],
