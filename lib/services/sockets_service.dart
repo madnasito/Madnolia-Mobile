@@ -271,6 +271,8 @@ onStart(ServiceInstance service) async {
     currentRoom = "";
   });
 
+  service.on("logout").listen((onData) => socket.emit("logout"));
+
   service.on("off_new_player_to_match").listen((onData) => socket.emit("off_new_player_to_match"));
 
   service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));

@@ -64,14 +64,9 @@ class CustomScaffold extends StatelessWidget {
               ),
               Column(
                 mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                spacing: 5,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 230),
-                  // _MenuButton(
-                  //   icon: Icons.gamepad_outlined,
-                  //   title: "Platforms",
-                  //   route: "/platforms",
-                  // ),
                   _MenuButton(
                     icon: Icon(Icons.bolt_outlined, size: 40,color: Colors.white),
                     title: translate("HEADER.MATCH"),
@@ -115,7 +110,7 @@ class CustomScaffold extends StatelessWidget {
                       icon: Icon(Icons.person_outline_outlined, size: 40, color: Colors.white),
                       title: translate("HEADER.PROFILE"),
                       route: "/me"),
-                  const SizedBox(height: 230),
+
                 ],
               ),
               Positioned(
@@ -123,6 +118,7 @@ class CustomScaffold extends StatelessWidget {
                   left: 20,
                   child: GestureDetector(
                     onTap: () async {
+                      backgroundService.invoke('logout');
                       final chatsBloc = context.read<ChatsBloc>();
                       final matchesBloc = context.read<PlayerMatchesBloc>();
                       userBloc.logOutUser();
