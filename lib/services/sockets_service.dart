@@ -233,6 +233,8 @@ onStart(ServiceInstance service) async {
   
   service.on("update_username").listen((onData) => username = onData?["username"]);
 
+  service.on('match_created').listen((onData) => socket.emit('match_created', onData?['id']));
+
   service.on('is_socket_connected').listen((data) => service.invoke('socket_status', {'connected': socket.connected}));
 
   service.on("stop").listen((event) {

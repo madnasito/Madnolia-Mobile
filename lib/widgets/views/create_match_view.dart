@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -367,6 +368,8 @@ class MatchFormView extends StatelessWidget {
                         playerMatches.add(RestoreMatchesState());
                         if (!context.mounted) return;
                         formKey.currentState?.reset();
+                        final backgroundService = FlutterBackgroundService();
+                        backgroundService.invoke('match_created', {'id': resp['_id']});
                         context.goNamed("matches");
                       }
                     } catch (e) {
