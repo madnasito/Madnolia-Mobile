@@ -21,6 +21,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/database/providers/db_provider.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,14 +34,11 @@ void main() async {
   serviceLocatorInit();
   cubitServiceLocatorInit();
   await BaseDatabaseProvider.database;
-
-  debugPrint(dotenv.get("FIREBASE_API_KEY_ANDROID"));
-    debugPrint(dotenv.get("FIREBASE_MESSAGE_SENDER_ID"));
-    debugPrint(dotenv.get("FIREBASE_PROJECT_ID"));
-    debugPrint(dotenv.get("FIREBASE_DATABASE_URL"));
-    debugPrint(dotenv.get("FIREBASE_STORAGE_BUCKET"));
-    debugPrint(dotenv.get("IOS_BUNDLE_ID"));
-
+// Force Portrait Mode
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   // Use PlatformDispatcher to get the device locale
   Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
       ? const Locale('en') // Fallback if needed
