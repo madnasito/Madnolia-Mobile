@@ -3,6 +3,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/models/chat/message_model.dart';
+import 'package:madnolia/models/invitation_model.dart';
+import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import '../firebase_options.dart';
 
@@ -42,16 +44,27 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 /// Mostrar notificación local para mensajes recibidos en background
 Future<void> _showNotification(RemoteMessage message) async {
 
-  debugPrint(message.data.toString());
-  debugPrint(message.data['type']);
-  switch (message.data['type']) {
-    case 'chat_message':
-      final ChatMessage chatMessage = chatMessageFromJson(message.data['data']);
-      debugPrint(chatMessage.id);
-      await LocalNotificationsService.displayRoomMessage(chatMessage);
-      break;
-    default:
-      debugPrint('Unknow type');
+  try {  
+    debugPrint(message.data.toString());
+    debugPrint(message.data['type']);
+    switch (message.data['type']) {
+      case 'chat_message':
+        final ChatMessage chatMessage = chatMessageFromJson(message.data['data']);
+        debugPrint(chatMessage.id);
+        await LocalNotificationsService.displayRoomMessage(chatMessage);
+        break;
+      case 'match_ready':
+        final MatchReady payload = matchReadyFromJson(message.data['data']);
+        await LocalNotificationsService.displayMatchReady(payload);
+        break;
+      case 'invitation':
+        final Invitation invitation = invitationFromJson(message.data['data']);
+        await LocalNotificationsService.displayInvitation(invitation);
+      default:
+        debugPrint('Unknow type');
+    }
+  } catch (e) {
+    debugPrint(e.toString());
   }
 }
 

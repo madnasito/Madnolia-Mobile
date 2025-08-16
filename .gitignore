@@ -38,6 +38,8 @@ migrate_working_dir/
 # Symbolication related
 app.*.symbols
 
+./firebase.json
+
 # Obfuscation related
 app.*.map.json
 

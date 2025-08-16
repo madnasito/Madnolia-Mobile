@@ -59,21 +59,21 @@ void main() async {
   );
 
   // Initialize Firebase after dotenv is loaded
-  try {
-    await Firebase.initializeApp(
-      name: 'Madnolia',
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+  // try {
+  //   await Firebase.initializeApp(
+  //     name: 'Madnolia',
+  //     options: DefaultFirebaseOptions.currentPlatform,
+  //   );
     
-    // Inicializar servicios de notificación
-    await FirebaseMessagingService.initialize();
-  } catch (e) {
-    if (e.toString().contains('duplicate-app')) {
-      debugPrint('Firebase already initialized');
-    } else {
-      rethrow;
-    }
-  }
+  //   // Inicializar servicios de notificación
+  //   await FirebaseMessagingService.initialize();
+  // } catch (e) {
+  //   if (e.toString().contains('duplicate-app')) {
+  //     debugPrint('Firebase already initialized');
+  //   } else {
+  //     rethrow;
+  //   }
+  // }
   
   try {
     if(await getToken() is String) {

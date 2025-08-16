@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/message_model.dart';
+import 'package:madnolia/models/match/match_ready_model.dart' show MatchReady;
 import 'package:madnolia/services/firebase_messaging_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -88,7 +89,7 @@ onStart(ServiceInstance service) async {
 
    await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-    await FirebaseMessaging.instance.requestPermission(provisional: true);
+    // await FirebaseMessaging.instance.requestPermission(provisional: true);
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
     // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
@@ -196,8 +197,15 @@ onStart(ServiceInstance service) async {
   socket.on("match_ready", (data) async {
       debugPrint("NOW ON BACKGROUND");
       debugPrint(data.toString());
-      
-      LocalNotificationsService.matchReady(data);
+
+      try {
+        
+        final MatchReady payload = MatchReady.fromJson(data);
+        
+        LocalNotificationsService.displayMatchReady(payload);
+      } catch (e) {
+        debugPrint(e.toString());
+      }
       // Send match ready event to UI (if app is in foreground)
       // if (window.isActive) {
       //   // Create a method to send data to the UI (e.g., using a Stream or Provider)

@@ -276,11 +276,10 @@ class LocalNotificationsService {
   }
 
   @pragma("vm:entry-point")
-  static Future<void> matchReady(dynamic data) async {
+  static Future<void> displayMatchReady(MatchReady payload) async {
     // To display the notification in device
     await initializeTranslations();
     try {
-      final MatchReady payload = MatchReady.fromJson(data);
       final matchDb = await getMatchDb(payload.match);
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails = const NotificationDetails(
