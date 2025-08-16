@@ -126,16 +126,16 @@ onStart(ServiceInstance service) async {
   String? userId = await storage.read(key: "userId");
   
   // Setup periodic keepalive to prevent service termination
-  Timer.periodic(const Duration(minutes: 1), (timer) async {
-    try {
-      service.invoke('keepAlive', {'timestamp': DateTime.now().millisecondsSinceEpoch});
-      final activeNotifications = await LocalNotificationsService.getActiveNotifications('madnolia_background');
-      if(activeNotifications.isNotEmpty) LocalNotificationsService.deleteNotification(activeNotifications[0].id!);
-      debugPrint('Service keepalive: ${DateTime.now()}');
-    } catch (e) {
-      debugPrint('Keepalive error: $e');
-    }
-  });
+  // Timer.periodic(const Duration(minutes: 1), (timer) async {
+  //   try {
+  //     service.invoke('keepAlive', {'timestamp': DateTime.now().millisecondsSinceEpoch});
+  //     final activeNotifications = await LocalNotificationsService.getActiveNotifications('madnolia_background');
+  //     if(activeNotifications.isNotEmpty) LocalNotificationsService.deleteNotification(activeNotifications[0].id!);
+  //     debugPrint('Service keepalive: ${DateTime.now()}');
+  //   } catch (e) {
+  //     debugPrint('Keepalive error: $e');
+  //   }
+  // });
 
   socket.onConnect((_) async {
 
@@ -232,6 +232,8 @@ onStart(ServiceInstance service) async {
   });
   
   service.on("update_username").listen((onData) => username = onData?["username"]);
+
+  service.on('is_socket_connected').listen((data) => service.invoke('socket_status', {'connected': socket.connected}));
 
   service.on("stop").listen((event) {
       socket.disconnect(); // Disconnect when the service stops

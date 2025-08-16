@@ -370,67 +370,64 @@ class LocalNotificationsService {
   static Future<void> notificationTapBackground(NotificationResponse notificationResponse) async {
     if(notificationResponse.input != null) {
       try {
-
         await initializeTranslations();
-        final ChatMessage message = chatMessageFromJson(notificationResponse.payload!);
+        final message = chatMessageFromJson(notificationResponse.payload!);
+        final service = FlutterBackgroundService();
+        final isRunning = await service.isRunning();
 
-        final backgroundService = FlutterBackgroundService();
+        // Preparar el mensaje a enviar
+        final messageData = CreateMessage(
+          conversation: message.conversation,
+          text: notificationResponse.input.toString(),
+          type: message.type
+        ).toJson();
 
-        if(await backgroundService.isRunning() == false){
-
-          await initializeService();  
-          // Inicializar y iniciar el servicio
-          startBackgroundService();
-          
-          backgroundService.on('connected_socket').listen((data) {
-                backgroundService.invoke(
-              'new_message',
-              CreateMessage(
-                conversation: message.conversation,
-                text: notificationResponse.input.toString(),
-                type: message.type)
-              .toJson()
-            );    
-          });
-        }else {
-          backgroundService.invoke(
-            'new_message',
-            CreateMessage(
-              conversation: message.conversation,
-              text: notificationResponse.input.toString(),
-              type: message.type)
-            .toJson()
-          );
+        if (!isRunning) {
+          await _startServiceAndSendMessage(service, messageData);
+        } else {
+          await _sendMessage(service, messageData);
         }
-        
-        await deleteRoomMessages(message.conversation);
+
+        deleteRoomMessages(message.conversation);
       } catch (e) {
-        debugPrint(e.toString());
+        debugPrint("Error in notificationTapBackground: $e");
       }
     }
-
   }
 
-  @pragma("vm:entry-point")
-  static deleteNotification(int id) {
-    debugPrint('Deleting notification with id $id');
-    _notificationsPlugin.cancel(id);
+  static Future<void> _startServiceAndSendMessage(
+    FlutterBackgroundService service, 
+    Map<String, dynamic> messageData,
+  ) async {
+    await initializeService();
+    startBackgroundService();
+    
+    // Esperar por conexión con timeout
+    final completer = Completer<void>();
+    final subscription = service.on('connected_socket').listen((_) {
+      if (!completer.isCompleted) {
+        service.invoke('new_message', messageData);
+        completer.complete();
+      }
+    });
+    
+    // Timeout después de 10 segundos
+    Timer(const Duration(seconds: 10), () {
+      if (!completer.isCompleted) {
+        subscription.cancel();
+        completer.completeError(TimeoutException("Socket connection timeout"));
+      }
+    });
+    
+    await completer.future;
   }
 
-  @pragma("vm:entry-point")
-  static Future<List<ActiveNotification>> getActiveNotifications(String channelId) async {
-    final List<ActiveNotification> activeNotifications =
-        await _notificationsPlugin.getActiveNotifications();
-
-    if (activeNotifications.isNotEmpty) {
-      
-      return activeNotifications.where((notification) => notification.channelId == channelId).toList();
-    } else {
-      debugPrint('There are not active notifications');
-      return [];
-    }
+  static Future<void> _sendMessage(
+    FlutterBackgroundService backgroundService, 
+    Map<String, dynamic> messageData,
+  ) async {
+    backgroundService.invoke('new_message', messageData);
   }
-
   @pragma("vm:entry-point")
   static Future<void> deleteAllNotifications() async {
     try {

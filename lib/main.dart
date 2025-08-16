@@ -1,9 +1,6 @@
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:madnolia/services/firebase_messaging_service.dart';
-import 'firebase_options.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/types/app_lifecycle_state.dart';
 import 'package:madnolia/blocs/blocs.dart';
