@@ -161,8 +161,11 @@ onStart(ServiceInstance service) async {
 
       if(currentRoom != payload["conversation"] ) {
         // if(message.text.contains("@$username") &&)
+        
+        final mentionRegex = RegExp(r'(^|\s)@' + RegExp.escape(username) + r'(\s|$)');
+
         if(message.type == MessageType.user){ LocalNotificationsService.displayRoomMessage(message);}
-        else if(message.type == MessageType.match && message.text.contains("@$username")) {LocalNotificationsService.displayRoomMessage(message);}
+        else if(message.type == MessageType.match && mentionRegex.hasMatch(message.text)) {LocalNotificationsService.displayRoomMessage(message);}
       }
       
     } catch (e) {

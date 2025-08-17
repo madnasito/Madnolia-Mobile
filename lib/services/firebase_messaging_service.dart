@@ -53,11 +53,21 @@ Future<void> _showNotification(RemoteMessage message) async {
       case 'chat_message':
         final ChatMessage chatMessage = chatMessageFromJson(message.data['data']);
         debugPrint(chatMessage.id);
+
+        const storage = FlutterSecureStorage();
+
+        String? userId = await storage.read(key: 'userId');
         
-        if(chatMessage.type == MessageType.group){
-          const storage = FlutterSecureStorage();
+        if ((chatMessage.type == MessageType.match || chatMessage.type == MessageType.group) && 
+            chatMessage.creator != userId) {
           String? username = await storage.read(key: 'username');
-          if(!chatMessage.text.contains('@$username')) return;
+          
+          if (username == null) return;
+          
+          // Regular expression to get the mention as a full word
+          final mentionRegex = RegExp(r'(^|\s)@' + RegExp.escape(username) + r'(\s|$)');
+          
+          if (!mentionRegex.hasMatch(chatMessage.text)) return;
         }
         await LocalNotificationsService.displayRoomMessage(chatMessage);
         break;
