@@ -231,7 +231,10 @@ onStart(ServiceInstance service) async {
     debugPrint(event.toString());
   });
   
-  service.on("update_username").listen((onData) => username = onData?["username"]);
+  service.on("update_username").listen((onData) {
+    username = onData?["username"];
+    storage.write(key: 'username', value: username);
+  });
 
   service.on('match_created').listen((onData) => socket.emit('match_created', onData?['id']));
 

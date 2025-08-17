@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
@@ -52,7 +53,12 @@ Future<void> _showNotification(RemoteMessage message) async {
       case 'chat_message':
         final ChatMessage chatMessage = chatMessageFromJson(message.data['data']);
         debugPrint(chatMessage.id);
-        // if(chatMessage.type == MessageType.group && chatMessage.text.contains('@'))
+        
+        if(chatMessage.type == MessageType.group){
+          const storage = FlutterSecureStorage();
+          String? username = await storage.read(key: 'username');
+          if(!chatMessage.text.contains('@$username')) return;
+        }
         await LocalNotificationsService.displayRoomMessage(chatMessage);
         break;
       case 'match_ready':
