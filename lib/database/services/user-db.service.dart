@@ -5,30 +5,23 @@ import 'package:madnolia/services/user_service.dart' show UserService;
 
 Future<UserDb> getUserDb(String id) async {
   try {
-    // Obtener usuario de la base de datos local
-    // await UserProvider.clearTable();
-    final existingUser  = await UserProvider.getUser(id);
     final now = DateTime.now();
+    final existingUser = await UserProvider.getUser(id);
     
-    // Si el usuario existe y fue actualizado hace menos de una hora, devolverlo
-    if (existingUser != null && 
-        now.difference(existingUser.lastUpdated).inHours < 1) {
+    // Return cached user if recent
+    if (existingUser != null && now.difference(existingUser.lastUpdated).inHours < 1) {
       return existingUser;
     }
     
-    // Si no existe o necesita actualización, obtener del servicio
+    // Fetch fresh data
     final userInfo = await UserService().getUserInfoById(id);
     final userDb = UserDb.fromMap({
       ...userInfo,
-      columnLastUpdated: now.millisecondsSinceEpoch, // Actualizar timestamp
+      columnLastUpdated: now.millisecondsSinceEpoch,
     });
     
-    // Insertar o actualizar en la base de datos
-    if (existingUser == null) {
-      await UserProvider.insertUser(userDb);
-    } else {
-      await UserProvider.updateUser(userDb);
-    }
+    // Always use update - safer than trying to decide insert/update
+    await UserProvider.updateUser(userDb);
     
     return userDb;
   } catch (e) {

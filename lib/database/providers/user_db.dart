@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:madnolia/database/providers/db_provider.dart' show BaseDatabaseProvider;
 import 'package:madnolia/enums/connection-status.enum.dart';
+import 'package:sqflite/sqflite.dart';
 
 final String tableUser = 'users';
 final String columnId = '_id';
@@ -79,7 +80,11 @@ class UserDb {
 class UserProvider {
   static Future<UserDb> insertUser(UserDb user) async {
     final db = await BaseDatabaseProvider.database;
-    await db.insert(tableUser, user.toMap());
+    await db.insert(
+      tableUser, 
+      user.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace, // This will replace on conflict
+    );
     return user;
   }
 
