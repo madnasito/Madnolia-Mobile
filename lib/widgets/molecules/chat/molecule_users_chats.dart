@@ -15,7 +15,7 @@ class MoleculeUsersChats extends StatelessWidget {
     messageBloc.add(UpdateUnreadUserChatCount(value: -messageBloc.state.unreadUserChats));
     return ListView.builder(
       padding: const EdgeInsets.all(0),
-      physics: const BouncingScrollPhysics(),
+      physics: const AlwaysScrollableScrollPhysics(),
       itemCount: usersChats.length,
       itemBuilder: (BuildContext context, int index) => 
         AtomUserChat(userChat: usersChats[index]),

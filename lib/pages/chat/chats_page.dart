@@ -112,11 +112,17 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
         } else if (state.status == ListStatus.success) {
          return (state.usersChats.isNotEmpty) 
           ? MoleculeUsersChats(usersChats: state.usersChats)
-          : Center(child: Text(translate('CHAT.NO_MESSAGES'))
-        );
+          : SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Center(child: Text(translate('CHAT.NO_MESSAGES'))
+                    ),
+          );
         } else if (state.status == ListStatus.failure && 
                   state.usersChats.isEmpty) {
-          return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
+          return SingleChildScrollView(
+            
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Center(child: Text(translate('CHAT.ERRORS.LOADING'))));
         } else {
           // Show existing chats even if there was a subsequent error
           return MoleculeUsersChats(usersChats: state.usersChats);
