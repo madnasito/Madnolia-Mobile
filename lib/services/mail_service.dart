@@ -7,7 +7,7 @@ class MailService {
 
   Future restorePassword(String email) async {
     try {
-      final url = "$baseUrl/mail/reset-password";
+      final url = "$baseUrl/auth/recover-password-email";
       final Map<String, String> body = {"email": email };
       final resp = await Dio().get(url, data: body);
       return resp.data;
