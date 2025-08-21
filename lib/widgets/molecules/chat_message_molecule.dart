@@ -25,6 +25,7 @@ class MyMessageMolecule extends StatelessWidget {
         children: [
           Flexible(
             child: Container(
+              margin: EdgeInsets.only(bottom: mainMessage ? 4 : 2),
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
@@ -52,7 +53,8 @@ class MyMessageMolecule extends StatelessWidget {
             ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 5),
+            // margin: const EdgeInsets.symmetric(horizontal: 5),
+            margin: EdgeInsets.only(bottom: mainMessage ? 4 : 2, left: 2),
             child: CircleAvatar(
                 backgroundImage: mainMessage ?  CachedNetworkImageProvider(user.thumb) : null,
                 backgroundColor: Colors.transparent,
@@ -80,13 +82,14 @@ class NotMyMessageMolecule extends StatelessWidget {
                 GestureDetector(
                   // onTap: () => context.pushReplacement('/user/${user?.id}'),
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    margin: EdgeInsets.only(left: 2, right: 4, bottom: mainMessage ? 4 : 2 ),
                     child: CircleAvatar(backgroundImage: mainMessage ? CachedNetworkImageProvider(user!.thumb) : null,
                     backgroundColor: Colors.transparent,)
                   ),
                 ),
                 Flexible(
                   child: Container(
+                    margin: EdgeInsets.only(bottom: 2),
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
