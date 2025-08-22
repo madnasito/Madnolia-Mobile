@@ -301,7 +301,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
           return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
         }
         if (state.groupMessages.isEmpty && state.hasReachedMax) {
-          return const Center(child: Text('Say hi'));
+          return Center(child: Text(translate('CHAT.SAY_HI')));
         }
 
         if (state.status == ListStatus.initial && state.groupMessages.isEmpty) {
