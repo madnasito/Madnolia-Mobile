@@ -74,9 +74,11 @@ class _SearchGamePageState extends State<SearchGamePage> {
                 future: getRecomendations(platformId),
                 builder: (BuildContext context, AsyncSnapshot<List<MinimalGame>> snapshot) {
                   if(!snapshot.hasData){
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [Text(translate('CREATE_MATCH.LOADING_RECOMENDATIONS')), CircularProgressIndicator()],);
+                    return Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [Text(translate('CREATE_MATCH.LOADING_RECOMENDATIONS')), CircularProgressIndicator()],),
+                    );
                   }else if(snapshot.data!.isNotEmpty){
                     return Expanded(
                       child:  Column(
@@ -84,11 +86,25 @@ class _SearchGamePageState extends State<SearchGamePage> {
                       children: [
                         Text(translate("RECOMMENDATIONS.FOR_YOU"), style: TextStyle(fontSize: 15),),
                         const SizedBox(height: 20),
-                        Flexible(child: GamesListMolecule(games: snapshot.data!, platform: platformId,)),
+                        Flexible(child: GamesListMolecule(
+                          games: snapshot.data!,
+                          platform: platformId)
+                        ),
                       ],
                     )
                     );
-                  }else {
+                  } else if(snapshot.data!.isEmpty) {
+                    return Expanded(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
+                          child: Text(translate('RECOMMENDATIONS.EMPTY'),
+                          textAlign: TextAlign.center
+                          )
+                        ),
+                      ),
+                    );
+                  } else {
                     return Container();
                   }
                 }

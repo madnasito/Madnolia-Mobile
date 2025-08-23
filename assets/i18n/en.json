@@ -211,7 +211,7 @@
   },
   "RECOMMENDATIONS": {
     "TITLE": "Recommendations",
-    "EMPTY": "No recommendations",
+    "EMPTY": "You haven't created any match for this playform yet \nSearch a game to create one!",
     "LOADING": "Loading recommendations",
     "FOR_YOU": "Recommendations for you",
     "ERRORS": {

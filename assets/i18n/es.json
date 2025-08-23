@@ -205,7 +205,7 @@
     },
     "RECOMMENDATIONS": {
         "TITLE": "Recomendaciones",
-        "EMPTY": "Sin recomendaciones",
+        "EMPTY": "Aun no has creado una partida para esta plataforma \n Busca un juego para crear una",
         "LOADING": "Cargando recomendaciones",
         "FOR_YOU": "Recomendaciones para ti",
         "ERRORS": {
