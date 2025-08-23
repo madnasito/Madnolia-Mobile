@@ -15,6 +15,7 @@ class MoleculeTextField extends StatefulWidget {
   final bool enabled;
   final bool readOnly;
   final AutovalidateMode autovalidateMode;
+  final EdgeInsetsGeometry? contentPadding;
   final Function(String?)? onChanged;
   final Function()? onTap;
 
@@ -25,6 +26,7 @@ class MoleculeTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.icon,
     this.validator,
+    this.contentPadding,
     this.readOnly = false,
     this.isPassword = false,
     this.initialValue,
@@ -55,6 +57,7 @@ class _MoleculeTextFieldState extends State<MoleculeTextField> {
         keyboardType: widget.keyboardType,
         obscureText: widget.isPassword ? _obscureText : false,
         decoration: InputDecoration(
+          contentPadding: widget.contentPadding,
           prefixIcon: widget.icon != null ? Icon(widget.icon) : null,
           labelText: widget.label,
           disabledBorder: InputBorder.none,

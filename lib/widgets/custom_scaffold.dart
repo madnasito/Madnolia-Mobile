@@ -4,15 +4,10 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/blocs/chats/chats_bloc.dart';
-import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
-import 'package:madnolia/database/providers/friendship_db.dart';
-import 'package:madnolia/database/providers/user_db.dart';
-import 'package:madnolia/services/sockets_service.dart';
+import 'package:madnolia/utils/logout.dart';
 import 'package:madnolia/widgets/background.dart';
 
 // import 'package:madnolia/widgets/form_button.dart';
@@ -118,21 +113,7 @@ class CustomScaffold extends StatelessWidget {
                   left: 20,
                   child: GestureDetector(
                     onTap: () async {
-                      backgroundService.invoke('logout');
-                      final chatsBloc = context.read<ChatsBloc>();
-                      final matchesBloc = context.read<PlayerMatchesBloc>();
-                      userBloc.logOutUser();
-                      messageBloc.add(RestoreState());
-                      matchesBloc.add(RestoreMatchesState());
-                      chatsBloc.add(RestoreUserChats());
-                      backgroundService.invoke("delete_all_notifications");
-                      // backgroundService.invoke("stop");
-                      stopBackgroundService();
-                      const storage = FlutterSecureStorage();
-                      await storage.delete(key: "token");
-                      if(!context.mounted) return;
-                      UserProvider.clearTable();
-                      FriendshipProvider.deleteAll();
+                      logoutApp(context);
                       GoRouter.of(context).goNamed("home");
                     },
                     child: Wrap(

@@ -85,5 +85,9 @@ class MatchProvider {
         : null;
   }
 
+  static Future<int> deleteAll() async {
+    final db = await BaseDatabaseProvider.database;
+    return await db.delete(tableMatch);
+  }
   // Other match-specific operations...
 }

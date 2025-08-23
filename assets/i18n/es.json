@@ -262,7 +262,7 @@
                 "TITLE": "Aceptar invitaciondes de:",
                 "EVERYONE": "Lo que sea, quiero jugar",
                 "PARTNERS": "Solo colegas",
-                "NO": "Ya, dejame en paz"
+                "NOBODY": "Ya, dejame en paz"
             },
             "ERRORS":{
                 "VERIFY": "Por favor verifica tú información",

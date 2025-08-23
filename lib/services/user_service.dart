@@ -116,20 +116,22 @@ class UserService {
     }
   }
 
-  Future<Map<String, dynamic>> deleteUser() async {
+  Future<Map<String, dynamic>> deleteUser(String password) async {
     try {
       final String? token = await _storage.read(key: "token");
 
       final url = "$baseUrl/super/user";
 
-      final response = await dio.delete(url, options: Options(headers:  {"Authorization": "Bearer $token"}));
-
-      await _storage.deleteAll();
+      final response = await dio.delete(url,
+        data: {
+          'password': password
+        },
+       options: Options(headers:  {"Authorization": "Bearer $token"}));
 
       return response.data;
     } catch (e) {
       debugPrint(e.toString());
-      throw Exception(e);
+      rethrow;
     }
   }
 }
