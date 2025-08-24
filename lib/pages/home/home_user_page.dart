@@ -6,6 +6,7 @@ import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/services/messages_service.dart';
 import 'package:madnolia/services/notifications_service.dart';
+import 'package:madnolia/utils/logout.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,8 +26,6 @@ class HomeUserPage extends StatefulWidget {  // Changed to StatefulWidget
 }
 
 class _HomeUserPageState extends State<HomeUserPage> {
-  int _retryCount = 0;
-  final int _maxRetries = 3;
   late Future<dynamic> _loadInfoFuture;
 
   @override
@@ -36,12 +35,9 @@ class _HomeUserPageState extends State<HomeUserPage> {
   }
 
   void _retryLoadInfo() {
-    if (_retryCount < _maxRetries) {
       setState(() {
-        _retryCount++;
         _loadInfoFuture = _loadInfo(context);
       });
-    }
   }
 
   @override
@@ -89,7 +85,6 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
   Future<dynamic> _loadInfo(BuildContext context) async {
     try {
-      debugPrint('Loading info... Attempt ${_retryCount + 1}/$_maxRetries');
       await LocalNotificationsService.initialize();
       if (!context.mounted) return null;
 
@@ -104,9 +99,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
         showErrorServerAlert(context, userInfo);
         throw Exception("Server error");
       } else if (userInfo.containsKey("message")) {
-        await storage.delete(key: "token");
-        userBloc.logOutUser();
         if (!context.mounted) return null;
+        logoutApp(context);
         context.go("/home");
         return null;
       }
