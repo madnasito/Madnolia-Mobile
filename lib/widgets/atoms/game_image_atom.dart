@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -32,11 +34,17 @@ class AtomGameImage extends StatelessWidget {
               ? Positioned(
                   bottom: 2,
                   left: 2,
-                  child: Text(
-                    name,
-                    style: const TextStyle(
-                      backgroundColor: Colors.black54, 
-                      fontSize: 15,
+                  child: Container(
+                    padding: EdgeInsets.all(1),
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(5)
+                    ),
+                    child: Text(
+                      name,
+                      style: const TextStyle (
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 ) 
