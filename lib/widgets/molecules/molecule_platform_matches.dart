@@ -55,7 +55,7 @@ class MoleculePlatformMatches extends StatelessWidget {
             options: CarouselOptions(
               enableInfiniteScroll: platformState.hasReachedMax,
               aspectRatio: 1.262,
-              enlargeFactor: 0.1,
+              enlargeFactor: 0.2,
               viewportFraction: 0.9,
               disableCenter: true,
               enlargeCenterPage: true,

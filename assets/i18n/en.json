@@ -268,7 +268,7 @@
             "ALL": "Accept invitations from:",
             "EVERYONE": "Whatever, i want to play",
             "PARTNERS": "Only my hommies",
-            "NOBODY": "Please, let me alone"
+            "NO": "Please, let me alone"
         },
         "ERRORS":{
             "VERIFY": "Please verify your information",

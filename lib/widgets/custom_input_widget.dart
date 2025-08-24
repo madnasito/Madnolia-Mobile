@@ -111,7 +111,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
         ),
         DropdownMenuItem(
           value: "NOBODY",
-          child: Text(translate('PROFILE.USER_PAGE.INVITATIONS.NOBODY')),
+          child: Text(translate('PROFILE.USER_PAGE.INVITATIONS.NO')),
         )
       ],
       onChanged: (value) => widget.onChanged!(value as String?),
