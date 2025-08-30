@@ -157,7 +157,7 @@ onStart(ServiceInstance service) async {
 
       ChatMessage message = ChatMessage.fromJson(payload);
 
-      if(message.creator == userId) return LocalNotificationsService.deleteRoomMessages(message.conversation);
+      // if(message.creator == userId) return LocalNotificationsService.deleteRoomMessages(message.conversation);
 
       if(currentRoom != payload["conversation"] ) {
         // if(message.text.contains("@$username") &&)

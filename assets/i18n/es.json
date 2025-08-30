@@ -305,7 +305,8 @@
       "ACCEPT": "Aceptar",
       "CANCEL": "Cancelar",
       "REJECT": "Rechazar",
-      "DISMISS": "Descartar"
+      "DISMISS": "Descartar",
+      "YOU": "Tu"
     },
     "ALERT": {
         "YOU_SURE": "¿Estás seguro?",

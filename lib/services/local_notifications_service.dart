@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
@@ -16,6 +17,7 @@ import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/database/providers/match_db.dart';
 import 'package:madnolia/database/providers/user_db.dart' show UserDb;
+import 'package:madnolia/services/friendship_service.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
@@ -80,56 +82,71 @@ class LocalNotificationsService {
 
   @pragma("vm:entry-point")
   static Future<void> displayRoomMessage(ChatMessage message) async {
-  try {
-    await initializeTranslations();
-    const String groupChannelId = 'messages';
-    const String groupChannelName = 'Messages';
-    const String groupChannelDescription = 'Messages channel';
-    String groupKey = message.conversation;
+    try {
+      await initializeTranslations();
+      const String groupChannelId = 'messages';
+      const String groupChannelName = 'Messages';
+      const String groupChannelDescription = 'Messages channel';
+      const String groupKey = 'all_chat_messages'; // Clave de grupo unificada
 
-    debugPrint('Displaying message: ${message.text}');
-    // Agregar el nuevo mensaje a la lista
-    bool messageAdded = false;
-    
-    for (var group in _roomMessages) {
-      final List<ChatMessage> chat;
-      if(group[0].conversation == message.conversation) {
-        group.add(message);
-        messageAdded = true;
-        chat = group;
-        _roomMessages.remove(group);
-        _roomMessages.add(chat);
+      List<ChatMessage> targetGroup;
+      int groupIndex = _roomMessages.indexWhere((group) => 
+          group.isNotEmpty && group.first.conversation == message.conversation);
+
+      if (groupIndex != -1) {
+        targetGroup = _roomMessages[groupIndex];
+        targetGroup.add(message);
+      } else {
+        targetGroup = [message];
+        _roomMessages.add(targetGroup);
       }
 
-    }
-    
-    if(!messageAdded) {
-      _roomMessages.add([message]);
-    }
+      int notificationId = message.conversation.hashCode;
 
-    
+      // --- LÓGICA DE TÍTULO Y DEPURACIÓN ---
+      const storage = FlutterSecureStorage();
+      final currentUserId = await storage.read(key: "userId");
+      if (currentUserId == null) {
+        debugPrint("Notification Error: currentUserId is null. Aborting.");
+        return;
+      }
 
-    // Procesar cada grupo de mensajes
-    for (var i = 0; i < _roomMessages.length; i++) {
-      final currentGroup = _roomMessages[i];
-      // final roomId = currentGroup[0].conversation;
-      final firstMessage = currentGroup[0];
+      debugPrint("--- Notification Title Debug ---");
+      debugPrint("Current User ID: $currentUserId");
+      debugPrint("Incoming Message Creator ID: ${message.creator}");
 
-      // Obtener información del match usando el mensaje correspondiente al grupo actual
-      final title = firstMessage.type == MessageType.match ? ( await getMatchDb(firstMessage.conversation))?.title : (await getUserDb(firstMessage.creator)).name;
+      String? title;
+      if (message.type == MessageType.match) {
+        title = (await getMatchDb(message.conversation))?.title;
+        debugPrint("Message type is Match. Title: $title");
+      } else {
+        debugPrint("Message type is User. Calculating other user's name...");
+        final friendship = await FriendshipService().getFriendshipById(message.conversation);
+        final otherUserId = friendship.user1 == currentUserId ? friendship.user2 : friendship.user1;
+        debugPrint("Found Other User ID: $otherUserId");
+        final otherUser = await getUserDb(otherUserId);
+        title = otherUser.name;
+        debugPrint("Calculated Title (Other User's Name): $title");
+      }
+      debugPrint("--- End Notification Title Debug ---");
+      // --- FIN LÓGICA DE TÍTULO ---
 
-
-
-      // Pre-cargar datos de todos los usuarios en este grupo
-      final userIds = currentGroup.map((msg) => msg.creator).toSet();
+      final userIds = targetGroup.map((msg) => msg.creator).toSet();
       final userData = <String, UserDb>{};
-      
       for (final userId in userIds) {
         userData[userId] = await getUserDb(userId);
       }
 
-      // Crear mensajes de notificación con los remitentes correctos
-      List<Message> notiMessages = await Future.wait(currentGroup.map((msg) async{
+      final currentUserDb = await getUserDb(currentUserId);
+      final currentUserImage = await getRoundedImageBytes(CachedNetworkImageProvider(currentUserDb.thumb));
+
+      final Person me = Person(
+        key: currentUserDb.id,
+        name: translate("UTILS.YOU"),
+        icon: ByteArrayAndroidIcon(currentUserImage),
+      );
+
+      List<Message> notiMessages = await Future.wait(targetGroup.map((msg) async {
         final user = userData[msg.creator]!;
         final image = await getRoundedImageBytes(CachedNetworkImageProvider(user.thumb));
         return Message(
@@ -138,21 +155,22 @@ class LocalNotificationsService {
           Person(
             name: user.name,
             bot: false,
-            icon: ByteArrayAndroidIcon(image) // Opcional: mostrar avatar
+            icon: ByteArrayAndroidIcon(image),
+            key: user.id
           )
         );
-      }).toList()) ;
+      }).toList());
 
-      // Persona principal de la notificación (el último remitente)
-      final lastSender = userData[currentGroup.last.creator]!;
-      final image = await imageProviderToUint8List(CachedNetworkImageProvider(lastSender.thumb));
+      final lastSender = await getUserDb(message.creator);
+      final image = await getRoundedImageBytes(CachedNetworkImageProvider(lastSender.thumb));
       
       NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
-          groupKey: groupKey,
           groupChannelId,
           groupChannelName,
           channelDescription: groupChannelDescription,
+          groupKey: groupKey,
+          setAsGroupSummary: false,
           importance: Importance.high,
           icon: 'ic_notifications',
           priority: Priority.high,
@@ -163,32 +181,16 @@ class LocalNotificationsService {
             AndroidNotificationAction(
               message.id,
               translate("FORM.INPUT.REPLY"),
-              inputs: [
-                AndroidNotificationActionInput(
-                  label: translate("CHAT.MESSAGE"),
-                  allowFreeFormInput: true,
-                ),
-              ],
+              inputs: [AndroidNotificationActionInput(label: translate("CHAT.MESSAGE"), allowFreeFormInput: true)],
             ),
             AndroidNotificationAction(
               message.id,
               translate("FORM.INPUT.MARK_AS_READ"),
-              inputs: [
-                AndroidNotificationActionInput(
-                  label: translate("MESSAGE"),
-                  allowFreeFormInput: false,
-                ),
-              ],
             )
           ],
           styleInformation: MessagingStyleInformation(
-            Person(
-              name: message.type != MessageType.user ? lastSender.username : lastSender.name,
-              bot: false,
-              icon: ByteArrayAndroidIcon(image),
-              key: lastSender.id // Identificador único
-            ),
-            groupConversation: message.type == MessageType.user ? false : true,
+            me,
+            groupConversation: _roomMessages.length > 1,
             conversationTitle: title,
             messages: notiMessages,
           ),
@@ -196,49 +198,62 @@ class LocalNotificationsService {
       );
 
       await _notificationsPlugin.show(
-        i,
+        notificationId,
         null,
         null, 
         notificationDetails,
         payload: chatMessageToJson(message),
       );
+
+      if (_roomMessages.length > 1) {
+        final int summaryId = -1;
+        
+        List<String> summaryLines = [];
+        for (var group in _roomMessages) {
+          if (group.isNotEmpty) {
+            // Corrección: Asegurarse de obtener el título correcto para cada grupo en el resumen
+            String? chatTitle;
+            if (group.first.type == MessageType.match) {
+              chatTitle = (await getMatchDb(group.first.conversation))?.title ?? 'Match';
+            } else {
+              final friendship = await FriendshipService().getFriendshipById(group.first.conversation);
+              final otherUserId = friendship.user1 == currentUserId ? friendship.user2 : friendship.user1;
+              chatTitle = (await getUserDb(otherUserId)).name;
+            }
+            summaryLines.add('${group.length} new message(s) in "$chatTitle"');
+          }
+        }
+
+        final inboxStyleInformation = InboxStyleInformation(
+          summaryLines,
+          contentTitle: '${_roomMessages.length} chats with new messages',
+          summaryText: '${_roomMessages.fold(0, (sum, group) => sum + group.length)} new messages',
+        );
+
+        final notificationSummaryDetails = NotificationDetails(
+          android: AndroidNotificationDetails(
+            groupChannelId, 
+            groupChannelName,
+            channelDescription: groupChannelDescription,
+            styleInformation: inboxStyleInformation,
+            groupKey: groupKey,
+            setAsGroupSummary: true,
+            icon: 'ic_notifications',
+          ),
+        );
+        
+        await _notificationsPlugin.show(
+          summaryId,
+          '${_roomMessages.length} chats',
+          '${_roomMessages.fold(0, (sum, group) => sum + group.length)} new messages',
+          notificationSummaryDetails
+        );
+      }
+
+    } catch (e) {
+      debugPrint('Error en displayMessage: $e');
     }
-
-    // Notificación resumen (sin cambios)
-    final inboxStyleInformation = InboxStyleInformation(
-      [],
-      contentTitle: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
-      summaryText: '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
-    );
-
-    final userDb = await getUserDb(message.creator);
-
-    final image = await getRoundedImageBytes(CachedNetworkImageProvider(userDb.thumb));
-
-    final notificationSummaryDetails = NotificationDetails(
-      android: AndroidNotificationDetails(
-        groupChannelId, 
-        groupChannelName,
-        channelDescription: groupChannelDescription,
-        styleInformation: inboxStyleInformation,
-        groupKey: groupKey,
-        setAsGroupSummary: true,
-        icon: 'ic_notifications',
-        largeIcon: ByteArrayAndroidBitmap(image)
-      ),
-    );
-    
-    await _notificationsPlugin.show(
-      -1, 
-      '${_roomMessages.length} ${translate("CHAT.MESSAGES")}',
-      null,
-      notificationSummaryDetails
-    );
-
-  } catch (e) {
-    debugPrint('Error en displayMessage: $e');
   }
-}
 
   @pragma("vm:entry-point")
   static Future<void> displayInvitation(Invitation invitation) async {
@@ -305,7 +320,7 @@ class LocalNotificationsService {
   }
 
   @pragma("vm:entry-point")
-  static void onDidReceiveNotificationResponse(details) async {
+  static void onDidReceiveNotificationResponse(NotificationResponse details) async {
 
       // _roomMessages.clear();
       // _userMessages.clear();
@@ -322,7 +337,14 @@ class LocalNotificationsService {
         final context = navigatorKey.currentContext;
         switch (message.type) {
           case MessageType.user:
-            final UserDb userDb = await getUserDb(message.creator);
+            UserDb userDb = await getUserDb(message.creator);
+            const storage = FlutterSecureStorage();
+
+            if(userDb.id == await storage.read(key: "userId")) {
+              final friendship = await FriendshipService().getFriendshipById(message.conversation);
+              userDb = await getUserDb(friendship.user1 == userDb.id ? friendship.user2 : friendship.user1);
+            }
+            
             final ChatUser chatUser = ChatUser(id: userDb.id, name: userDb.name, thumb: userDb.thumb, username: userDb.username);
             if(context!.mounted) GoRouter.of(context).pushNamed("user-chat", extra: chatUser);
             break;
@@ -388,7 +410,7 @@ class LocalNotificationsService {
           await _sendMessage(service, messageData);
         }
 
-        deleteRoomMessages(message.conversation);
+        // deleteRoomMessages(message.conversation);
       } catch (e) {
         debugPrint("Error in notificationTapBackground: $e");
       }

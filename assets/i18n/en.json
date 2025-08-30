@@ -311,7 +311,8 @@
       "ACCEPT": "Accept",
       "CANCEL": "Cancel",
       "REJECT": "Reject",
-      "DISMISS": "Dismiss"
+      "DISMISS": "Dismiss",
+      "YOU": "You"
   },
   "ALERT": {
     "YOU_SURE": "Are you sure?",
