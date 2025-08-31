@@ -21,7 +21,7 @@ import 'package:madnolia/services/friendship_service.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
-import 'package:madnolia/database/services/user-db.service.dart' show getUserDb;
+import 'package:madnolia/database/services/user-db.service.dart' show getUserByFriendshipDb, getUserDb;
 import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import '../models/chat/message_model.dart';
 
@@ -121,11 +121,8 @@ class LocalNotificationsService {
         debugPrint("Message type is Match. Title: $title");
       } else {
         debugPrint("Message type is User. Calculating other user's name...");
-        final friendship = await FriendshipService().getFriendshipById(message.conversation);
-        final otherUserId = friendship.user1 == currentUserId ? friendship.user2 : friendship.user1;
-        debugPrint("Found Other User ID: $otherUserId");
-        final otherUser = await getUserDb(otherUserId);
-        title = otherUser.name;
+        final otherUser = await getUserByFriendshipDb(message.conversation);
+        title = otherUser?.name;
         debugPrint("Calculated Title (Other User's Name): $title");
       }
       debugPrint("--- End Notification Title Debug ---");
@@ -216,9 +213,8 @@ class LocalNotificationsService {
             if (group.first.type == MessageType.match) {
               chatTitle = (await getMatchDb(group.first.conversation))?.title ?? 'Match';
             } else {
-              final friendship = await FriendshipService().getFriendshipById(group.first.conversation);
-              final otherUserId = friendship.user1 == currentUserId ? friendship.user2 : friendship.user1;
-              chatTitle = (await getUserDb(otherUserId)).name;
+              final otherUserId = await getUserByFriendshipDb(group.first.conversation);
+              chatTitle = otherUserId?.name;
             }
             summaryLines.add('${group.length} new message(s) in "$chatTitle"');
           }
@@ -341,8 +337,7 @@ class LocalNotificationsService {
             const storage = FlutterSecureStorage();
 
             if(userDb.id == await storage.read(key: "userId")) {
-              final friendship = await FriendshipService().getFriendshipById(message.conversation);
-              userDb = await getUserDb(friendship.user1 == userDb.id ? friendship.user2 : friendship.user1);
+              userDb = await getUserByFriendshipDb(message.conversation) ?? userDb;
             }
             
             final ChatUser chatUser = ChatUser(id: userDb.id, name: userDb.name, thumb: userDb.thumb, username: userDb.username);
@@ -405,9 +400,8 @@ static Future<void> _updateSummaryNotification() async {
                 if (group.first.type == MessageType.match) {
                     chatTitle = (await getMatchDb(group.first.conversation))?.title ?? 'Match';
                 } else {
-                    final friendship = await FriendshipService().getFriendshipById(group.first.conversation);
-                    final otherUserId = friendship.user1 == currentUserId ? friendship.user2 : friendship.user1;
-                    chatTitle = (await getUserDb(otherUserId)).name;
+                    final otherUserId = await getUserByFriendshipDb(group.first.conversation);
+                    chatTitle = otherUserId?.name;
                 }
                 summaryLines.add('${group.length} new message(s) in "$chatTitle"');
             }

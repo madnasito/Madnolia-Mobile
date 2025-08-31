@@ -23,10 +23,12 @@ final String columnUser2 = 'user2';
 final String columnStatus = 'status';
 final String columnCreatedAt = 'createdAt';
 
+final String columnFriendshipId = 'friendshipId';
+
 abstract class BaseDatabaseProvider {
   static Database? _database;
   static final _lock = Lock();
-  static const _databaseVersion = 1; // Incrementado por la nueva tabla
+  static const _databaseVersion = 2; // Incrementado por la nueva tabla
 
   static Future<Database> get database async {
     await _lock.synchronized(() async {
@@ -49,6 +51,13 @@ abstract class BaseDatabaseProvider {
         await _createMatchTable(db);
         await _createFriendshipTable(db);
       },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('''
+            ALTER TABLE $tableUser ADD COLUMN $columnFriendshipId TEXT
+          ''');
+        }
+      },
     );
   }
 
@@ -60,7 +69,8 @@ abstract class BaseDatabaseProvider {
         $columnUsername TEXT NOT NULL,
         $columnThumb TEXT NOT NULL,
         $columnConnection INTEGER NOT NULL,
-        $columnLastUpdated INTEGER NOT NULL
+        $columnLastUpdated INTEGER NOT NULL,
+        $columnFriendshipId TEXT
       )
     ''');
     await db.execute('''

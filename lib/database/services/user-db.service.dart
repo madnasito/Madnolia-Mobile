@@ -29,3 +29,12 @@ Future<UserDb> getUserDb(String id) async {
     rethrow;
   }
 }
+
+Future<UserDb?> getUserByFriendshipDb(String friendshipId) async {
+  try {
+    return await UserProvider.getUserByFriendship(friendshipId);
+  } catch (e) {
+    debugPrint('Error in getUserByFriendshipDb: $e');
+    return null;
+  }
+}

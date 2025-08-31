@@ -1,6 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/database/providers/db_provider.dart' show BaseDatabaseProvider;
+import 'package:madnolia/database/services/user-db.service.dart';
 import 'package:madnolia/enums/connection-status.enum.dart';
+import 'package:madnolia/services/friendship_service.dart';
 import 'package:sqflite/sqflite.dart';
 
 final String tableUser = 'users';
@@ -10,6 +14,7 @@ final String columnUsername = 'username';
 final String columnThumb = 'thumb';
 final String columnConnection = 'connection';
 final String columnLastUpdated = 'last_updated'; // Nuevo campo añadido
+final String columnFriendshipId = 'friendshipId';
 
 class UserDb {
   String id;
@@ -18,6 +23,7 @@ class UserDb {
   String thumb;
   ConnectionStatus connection;
   DateTime lastUpdated; // Nuevo campo añadido
+  String? friendshipId;
 
   UserDb({
     required this.id,
@@ -26,6 +32,7 @@ class UserDb {
     required this.thumb,
     required this.connection,
     required this.lastUpdated, // Nuevo campo añadido
+    this.friendshipId
   });
 
   Map<String, dynamic> toMap() {
@@ -36,6 +43,7 @@ class UserDb {
       columnThumb: thumb,
       columnConnection: connection.index,
       columnLastUpdated: lastUpdated.millisecondsSinceEpoch, // Guardamos como timestamp
+      columnFriendshipId: friendshipId
     };
   }
 
@@ -69,6 +77,7 @@ class UserDb {
       thumb: map[columnThumb],
       connection: connectionStatus,
       lastUpdated: DateTime.fromMillisecondsSinceEpoch(map[columnLastUpdated] ?? 0), // Parseamos el timestamp
+      friendshipId: map[columnFriendshipId]
     );
   }
 
@@ -115,5 +124,39 @@ class UserProvider {
       where: '$columnId = ?',
       whereArgs: [user.id],
     );
+  }
+
+  static Future<UserDb?> getUserByFriendship(String friendshipId) async {
+    final db = await BaseDatabaseProvider.database;
+    List<Map> maps = await db.query(
+      tableUser,
+      where: '$columnFriendshipId = ?',
+      whereArgs: [friendshipId],
+      limit: 1,
+    );
+
+    if (maps.isNotEmpty) {
+      return UserDb.fromMap(maps.first as Map<String, dynamic>);
+    } else {
+      // User not found, so fetch friendship, get other user, save and return
+      try {
+        final friendship = await FriendshipService().getFriendshipById(friendshipId);
+        const storage = FlutterSecureStorage();
+        final currentUserId = await storage.read(key: "userId");
+        final otherUserId = friendship.user1 == currentUserId ? friendship.user2 : friendship.user1;
+
+        // Now get the user data, which will fetch and save it to the DB
+        UserDb user = await getUserDb(otherUserId);
+
+        // Update the user with the friendshipId
+        user.friendshipId = friendshipId;
+        await updateUser(user);
+
+        return user;
+      } catch (e) {
+        debugPrint("Error in getUserByFriendship: $e");
+        rethrow;
+      }
+    }
   }
 }
