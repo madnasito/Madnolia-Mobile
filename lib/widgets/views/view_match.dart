@@ -173,14 +173,14 @@ class _ViewMatchState extends State<ViewMatch> {
     final userState = userBloc.state;
     final GlobalKey<FlutterMentionsState> messageKey = GlobalKey();
 
-    if (!socketConnected) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
-          child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION")),
-        ),
-      );
-    }
+    // if (!socketConnected) {
+    //   return Center(
+    //     child: Padding(
+    //       padding: const EdgeInsets.symmetric(vertical: 7),
+    //       child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION")),
+    //     ),
+    //   );
+    // }
 
     final isOwnerOrMember = userState.id == widget.match.user.id || 
         widget.match.joined.any((e) => userState.id == e.id) || 
@@ -200,10 +200,10 @@ class _ViewMatchState extends State<ViewMatch> {
       );
     }
 
-    return _buildMessageInput(bloc, messageKey);
+    return _buildMessageInput(bloc, messageKey, socketConnected);
   }
 
-  Widget _buildMessageInput(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey) {
+  Widget _buildMessageInput(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey, bool socketConnected) {
     final screenWidth = MediaQuery.of(context).size.width;
 
     final List<ChatUser> usersLists = widget.match.joined.where((member) => member.id != userBloc.state.id).toList();
@@ -225,7 +225,7 @@ class _ViewMatchState extends State<ViewMatch> {
         Container(
           margin: const EdgeInsets.only(bottom: 8),
           child: ElevatedButton(
-            onPressed: () => _handleSubmit(bloc, messageKey),
+            onPressed: () => _handleSubmit(bloc, messageKey, socketConnected),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shape: const StadiumBorder(),
@@ -234,12 +234,16 @@ class _ViewMatchState extends State<ViewMatch> {
             child: const Icon(Icons.send_outlined),
           ),
         ),
+        socketConnected ? Container() :  Container(
+          width: double.infinity,
+          margin: const EdgeInsets.only(bottom: 8),
+          child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION", ), textAlign: TextAlign.center,))
       ],
     );
   }
 
-  void _handleSubmit(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey) {
-    if (bloc.message.isEmpty) return;
+  void _handleSubmit(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey, socketConnected) {
+    if (bloc.message.isEmpty || !socketConnected) return;
     backgroundService.invoke(
       "new_message", 
       {"text": bloc.message, "conversation": widget.match.id, "type": 2}

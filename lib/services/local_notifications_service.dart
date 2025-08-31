@@ -17,7 +17,6 @@ import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/database/providers/match_db.dart';
 import 'package:madnolia/database/providers/user_db.dart' show UserDb;
-import 'package:madnolia/services/friendship_service.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
