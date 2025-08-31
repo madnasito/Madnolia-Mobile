@@ -358,35 +358,89 @@ class LocalNotificationsService {
   }
 
   @pragma("vm:entry-point")
-  static Future<void> deleteRoomMessages(String room) async {
+static Future<void> deleteRoomMessages(String room) async {
     try {
-      debugPrint('Delete messages of room $room');
-      // 1. Eliminar de la lista en memoria
-      _roomMessages.removeWhere((group) => group.isNotEmpty && group[0].conversation == room);
-      
-      // 2. Cancelar todas las notificaciones del grupo
-      final activeMessages = await _notificationsPlugin.getActiveNotifications();
-
-      // Only log if there are active messages to avoid spam
-      if (activeMessages.isNotEmpty) {
-        debugPrint('Found ${activeMessages.length} active notifications');
-      }
-      
-      for (final notification in activeMessages) {
-        // Cancelar tanto mensajes individuales como el resumen
-        if (notification.channelId == 'messages') {
-          await _notificationsPlugin.cancel(notification.id!);
+        debugPrint('Delete messages of room $room');
+        
+        // 1. Eliminar de la lista en memoria
+        _roomMessages.removeWhere((group) => 
+            group.isNotEmpty && group.first.conversation == room);
+        
+        // 2. Obtener ID específico para esta sala
+        int roomNotificationId = room.hashCode;
+        
+        // 3. Cancelar solo la notificación específica de esta sala
+        await _notificationsPlugin.cancel(roomNotificationId);
+        
+        // 4. Si hay más grupos activos, actualizar el resumen
+        if (_roomMessages.isNotEmpty) {
+            await _updateSummaryNotification();
+        } else {
+            // 5. Si no hay más grupos, cancelar el resumen también
+            await _notificationsPlugin.cancel(-1); // ID del resumen
         }
-      }
-      
-      // 3. Cancelar específicamente la notificación de resumen
-      await _notificationsPlugin.cancel(0); // ID usado para el resumen
-      
-      debugPrint('Notificaciones eliminadas para la sala: $room');
+        
+        debugPrint('Notificaciones eliminadas para la sala: $room');
     } catch (e) {
-      debugPrint('Error al eliminar notificaciones: $e');
+        debugPrint('Error al eliminar notificaciones: $e');
     }
-  }
+}
+
+// Método auxiliar para actualizar el resumen
+static Future<void> _updateSummaryNotification() async {
+    try {
+        const storage = FlutterSecureStorage();
+        final currentUserId = await storage.read(key: "userId");
+        if (currentUserId == null) return;
+        
+        const String groupChannelId = 'messages';
+        const String groupChannelName = 'Messages';
+        const String groupChannelDescription = 'Messages channel';
+        const String groupKey = 'all_chat_messages';
+        
+        List<String> summaryLines = [];
+        for (var group in _roomMessages) {
+            if (group.isNotEmpty) {
+                String? chatTitle;
+                if (group.first.type == MessageType.match) {
+                    chatTitle = (await getMatchDb(group.first.conversation))?.title ?? 'Match';
+                } else {
+                    final friendship = await FriendshipService().getFriendshipById(group.first.conversation);
+                    final otherUserId = friendship.user1 == currentUserId ? friendship.user2 : friendship.user1;
+                    chatTitle = (await getUserDb(otherUserId)).name;
+                }
+                summaryLines.add('${group.length} new message(s) in "$chatTitle"');
+            }
+        }
+
+        final inboxStyleInformation = InboxStyleInformation(
+            summaryLines,
+            contentTitle: '${_roomMessages.length} chats with new messages',
+            summaryText: '${_roomMessages.fold(0, (sum, group) => sum + group.length)} new messages',
+        );
+
+        final notificationSummaryDetails = NotificationDetails(
+            android: AndroidNotificationDetails(
+                groupChannelId, 
+                groupChannelName,
+                channelDescription: groupChannelDescription,
+                styleInformation: inboxStyleInformation,
+                groupKey: groupKey,
+                setAsGroupSummary: true,
+                icon: 'ic_notifications',
+            ),
+        );
+        
+        await _notificationsPlugin.show(
+            -1, // ID fijo para el resumen
+            '${_roomMessages.length} chats',
+            '${_roomMessages.fold(0, (sum, group) => sum + group.length)} new messages',
+            notificationSummaryDetails
+        );
+    } catch (e) {
+        debugPrint('Error updating summary: $e');
+    }
+}
 
   @pragma("vm:entry-point")
   static Future<void> notificationTapBackground(NotificationResponse notificationResponse) async {
