@@ -40,8 +40,6 @@ class OrganismLoginForm extends StatelessWidget {
           icon: Icons.lock_outline_rounded,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
-            // FormBuilderValidators.range(6, 35, errorText: translate('FORM.VALIDATIONS.INVALID_LENGTH')),
-            FormBuilderValidators.minLength(6, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '6'})),
             FormBuilderValidators.maxLength(40, errorText: translate('FORM.VALIDATIONS.INVALID_LENGTH')) 
           ]),
         ),
