@@ -21,7 +21,13 @@ class LoginPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  const SizedBox(height: 60),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () => Navigator.of(context).maybePop(),
+                    ),
+                  ),
                   CenterTitleAtom(text: translate("LOGIN.BUTTON"),),
                   const SizedBox(height: 30),
 

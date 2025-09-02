@@ -26,7 +26,6 @@ class OrganismRegisterForm extends StatelessWidget {
       key: formKey,
       child: Column(
         children: [
-          const SizedBox(height: 50),
           CenterTitleAtom(text: translate("REGISTER.TITLE")),
           const SizedBox(height: 40),
           Padding(

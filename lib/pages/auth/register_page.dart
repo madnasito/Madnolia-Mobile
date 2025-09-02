@@ -1,4 +1,3 @@
-
 import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter/material.dart';
 
@@ -47,9 +46,25 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SingleChildScrollView(
-                      child: OrganismRegisterForm(registerModel: widget.registerModel, controller: controller, changeScroll: (value) => canScroll = value)
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4.0, left: 0.0),
+                            child: IconButton(
+                              icon: const Icon(Icons.arrow_back, color: Colors.white),
+                              onPressed: () => Navigator.of(context).maybePop(),
+                            ),
+                          ),
+                          OrganismRegisterForm(
+                            registerModel: widget.registerModel,
+                            controller: controller,
+                            changeScroll: (value) => canScroll = value,
+                          ),
+                        ],
+                      ),
                     ),
-                  )
+                  ),
                 ),
                 FadeIn(child: SingleChildScrollView(
                   child: OrganismSelectPlatform(registerModel: widget.registerModel)
