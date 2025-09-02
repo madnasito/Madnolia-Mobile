@@ -14,6 +14,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/user/user_model.dart';
 import 'package:madnolia/services/user_service.dart';
+import 'package:madnolia/widgets/atoms/buttons/common/atom_create_match_button.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/organism/cards/organism_card_platform_matches.dart';
 
@@ -40,17 +41,16 @@ class _HomeUserPageState extends State<HomeUserPage> {
       });
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
-    
     final platformsGamesBloc = context.watch<PlatformGamesBloc>();
-    
+
     return CustomScaffold(
       body: CustomMaterialIndicator(
         autoRebuild: false,
         onRefresh: () async {
           platformsGamesBloc.add(RestorePlatformsGamesState());
-          _retryLoadInfo(); // Also retry when manually refreshing
+          _retryLoadInfo();
         },
         child: FutureBuilder(
           future: _loadInfoFuture,
@@ -60,20 +60,55 @@ class _HomeUserPageState extends State<HomeUserPage> {
             } else if (snapshot.hasError || snapshot.data == null) {
               return Center(
                 child: ElevatedButton(
-                      onPressed: _retryLoadInfo,
-                      child: Text(translate('UTILS.RELOAD')),
-                    ),
+                  onPressed: _retryLoadInfo,
+                  child: Text(translate('UTILS.RELOAD')),
+                ),
               );
             } else if (snapshot.hasData) {
-              return ListView.builder(
-                cacheExtent: 9999999,
-                physics: const AlwaysScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                itemCount: platformsGamesBloc.state.platformGames.length,
-                itemBuilder: (BuildContext context, int platformIndex) {
-                  final platformGames = platformsGamesBloc.state.platformGames[platformIndex];
-                  return OrganismCardPlatformMatches(platformGames: platformGames);
-                },
+              int matchesCount = 0;
+
+              for (var platform in platformsGamesBloc.state.platformGames) {
+                matchesCount += platform.games.length;
+              }
+
+              if (matchesCount == 0 && platformsGamesBloc.state.platformGames.isNotEmpty) {
+                return SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.3), // Espacio para centrar verticalmente
+                        Text(
+                          translate('HOME.NO_MATCHES'),
+                          style: TextStyle(color: Colors.grey),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 20),
+                        AtomCreateMatchButton(),
+                        SizedBox(height: MediaQuery.of(context).size.height * 0.3), // Espacio para permitir scroll
+                      ],
+                    ),
+                  ),
+                );
+              }
+
+              // Lista con el botón al final
+              return ListView(
+                physics: AlwaysScrollableScrollPhysics(),
+                children: [
+                  // Lista de plataformas y partidos
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: platformsGamesBloc.state.platformGames.length,
+                    itemBuilder: (BuildContext context, int platformIndex) {
+                      final platformGames = platformsGamesBloc.state.platformGames[platformIndex];
+                      return OrganismCardPlatformMatches(platformGames: platformGames);
+                    },
+                  ),
+                ],
               );
             }
             return const Placeholder();
@@ -82,6 +117,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       ),
     );
   }
+
 
   Future<dynamic> _loadInfo(BuildContext context) async {
     try {

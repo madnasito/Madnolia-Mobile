@@ -85,7 +85,7 @@ class MoleculePlatformMatches extends StatelessWidget {
             direction: Axis.vertical,
             children: [
               Text(
-                "${translate("HOME.NO_MATCHES")} ",
+                "${translate("HOME.NO_MATCHES_FOR")} ",
                 style:
                     const TextStyle(color: Colors.grey),
               ),
@@ -115,12 +115,10 @@ class MoleculePlatformMatches extends StatelessWidget {
       return Center(child: Text(translate('HOME.ERROR_LOADING_MATCHES')));
     }
     
-    
-    
   }
   String _getMatchesTranslation(int amount){
       if(amount == 0) {
-        return translate('HOME.NO_MATCHES');
+        return translate('HOME.NO_MATCHES_FOR');
       } else if(amount == 1) {return "$amount ${translate('HOME.MATCH')}";}
 
       else {return "$amount ${translate('HOME.MATCHES')}";}

@@ -18,7 +18,8 @@
         "MATCH": "Partida creada",
         "MATCHES": "Partidas creadas",
         "CREATE": "Crea una aquí",
-        "NO_MATCHES": "Sin partidas",
+        "NO_MATCHES": "Aun no hay alguna partida creada",
+        "NO_MATCHES_FOR": "Sin partidas",
         "ERROR_LOADING_MATCHES": "Error cargando partidas"
     },
     "REGISTER":{

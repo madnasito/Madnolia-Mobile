@@ -13,9 +13,10 @@ class OrganismCardPlatformMatches extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(platformGames.games.isEmpty) return SizedBox();
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.white24, width: 1),
         borderRadius: BorderRadius.circular(15),
