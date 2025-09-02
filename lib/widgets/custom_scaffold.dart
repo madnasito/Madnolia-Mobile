@@ -9,6 +9,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/utils/logout.dart';
 import 'package:madnolia/widgets/background.dart';
+import 'dart:ui';
 
 // import 'package:madnolia/widgets/form_button.dart';
 
@@ -32,108 +33,121 @@ class CustomScaffold extends StatelessWidget {
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
-        backgroundColor: const Color.fromARGB(96, 9, 4, 24),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              GestureDetector(
-                onTap: () => GoRouter.of(context).pushReplacement("/me/edit"),
-                child: Wrap(
-                  spacing: 10,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    const SizedBox(width: 0),
-                    CircleAvatar(
-                      backgroundImage:
-                          CachedNetworkImageProvider(userBloc.state.img),
-                      minRadius: 40,
-                      maxRadius: 50,
-                      backgroundColor: Colors.white,
-                    ),
-                    Text(
-                      userBloc.state.name,
-                      style: const TextStyle(fontSize: 20),
-                    )
-                  ],
+        backgroundColor: Colors.transparent, // Cambia a transparente
+        child: Stack(
+          children: [
+            // Fondo con blur
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  color: Colors.black54, // Color semitransparente
                 ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                spacing: 5,
-                mainAxisAlignment: MainAxisAlignment.center,
+            ),
+            SafeArea(
+              child: Stack(
                 children: [
-                  _MenuButton(
-                    icon: Icon(Icons.bolt_outlined, size: 40,color: Colors.white),
-                    title: translate("HEADER.MATCH"),
-                    route: "/new",
-                  ),
-                  _MenuButton(
-                    icon: Icon(CupertinoIcons.gamecontroller, size: 40, color: Colors.white),
-                    title: translate('MATCHES.TITLE'),
-                    route: "/matches",
-                  ),
-                  _MenuButton(
-                    icon: userBloc.state.notifications == 0 ? Icon(Icons.notifications_none_rounded,size: 40, color: Colors.white ) : Stack(
-                      alignment: Alignment.center,
-                      children: [
-                      Icon(Icons.notifications_active_rounded,size: 40, color: Colors.pink ),
-                      Text(userBloc.state.notifications > 9 ? '9+' : userBloc.state.notifications.toString(), style: TextStyle(color: Colors.white, fontSize: 14))
-                    ] 
-                    ),
-                    title:
-                        translate("HEADER.NOTIFICATIONS"),
-                    route: "/notifications",
-                  ),
-                  _MenuButton(
-                    icon: messageBloc.state.unreadUserChats == 0 ? Icon(Icons.chat_bubble_outline_rounded,size: 40, color: Colors.white ) : Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(Icons.chat_bubble_rounded,size: 40, color: Colors.pink ),
-                        Positioned(
-                          bottom: 12,
-                          child: Text(messageBloc.state.unreadUserChats > 9 ? '9+' : messageBloc.state.unreadUserChats.toString(), style: TextStyle(color: Colors.white, fontSize: 14)))
-                      ] 
-                    ),
-                    title: "Chat",
-                    route: "/chat",
-                  ),
-                  // _MenuButton(
-                  //     icon: Icons.groups_2_outlined,
-                  //     title: translate("HEADER.PROFILE"),
-                  //     route: "/user"),
-                  _MenuButton(
-                      icon: Icon(Icons.person_outline_outlined, size: 40, color: Colors.white),
-                      title: translate("HEADER.PROFILE"),
-                      route: "/me"),
-
-                ],
-              ),
-              Positioned(
-                  bottom: 30,
-                  left: 20,
-                  child: GestureDetector(
-                    onTap: () async {
-                      logoutApp(context);
-                      GoRouter.of(context).goNamed("home");
-                    },
+                  GestureDetector(
+                    onTap: () => GoRouter.of(context).pushReplacement("/me/edit"),
                     child: Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
                       spacing: 10,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Icon(
-                          Icons.power_settings_new,
-                          color: Colors.red,
-                          size: 30,
+                        const SizedBox(width: 0),
+                        CircleAvatar(
+                          backgroundImage:
+                              CachedNetworkImageProvider(userBloc.state.img),
+                          minRadius: 40,
+                          maxRadius: 50,
+                          backgroundColor: Colors.white,
                         ),
                         Text(
-                          translate('HEADER.LOGOUT'),
-                          style: TextStyle(fontSize: 15),
+                          userBloc.state.name,
+                          style: const TextStyle(fontSize: 20),
                         )
                       ],
                     ),
-                  ))
-            ],
-          ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    spacing: 5,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _MenuButton(
+                        icon: Icon(Icons.bolt_outlined, size: 40,color: Colors.white),
+                        title: translate("HEADER.MATCH"),
+                        route: "/new",
+                      ),
+                      _MenuButton(
+                        icon: Icon(CupertinoIcons.gamecontroller, size: 40, color: Colors.white),
+                        title: translate('MATCHES.TITLE'),
+                        route: "/matches",
+                      ),
+                      _MenuButton(
+                        icon: userBloc.state.notifications == 0 ? Icon(Icons.notifications_none_rounded,size: 40, color: Colors.white ) : Stack(
+                          alignment: Alignment.center,
+                          children: [
+                          Icon(Icons.notifications_active_rounded,size: 40, color: Colors.pink ),
+                          Text(userBloc.state.notifications > 9 ? '9+' : userBloc.state.notifications.toString(), style: TextStyle(color: Colors.white, fontSize: 14))
+                        ] 
+                        ),
+                        title:
+                            translate("HEADER.NOTIFICATIONS"),
+                        route: "/notifications",
+                      ),
+                      _MenuButton(
+                        icon: messageBloc.state.unreadUserChats == 0 ? Icon(Icons.chat_bubble_outline_rounded,size: 40, color: Colors.white ) : Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Icon(Icons.chat_bubble_rounded,size: 40, color: Colors.pink ),
+                            Positioned(
+                              bottom: 12,
+                              child: Text(messageBloc.state.unreadUserChats > 9 ? '9+' : messageBloc.state.unreadUserChats.toString(), style: TextStyle(color: Colors.white, fontSize: 14)))
+                          ] 
+                        ),
+                        title: "Chat",
+                        route: "/chat",
+                      ),
+                      // _MenuButton(
+                      //     icon: Icons.groups_2_outlined,
+                      //     title: translate("HEADER.PROFILE"),
+                      //     route: "/user"),
+                      _MenuButton(
+                          icon: Icon(Icons.person_outline_outlined, size: 40, color: Colors.white),
+                          title: translate("HEADER.PROFILE"),
+                          route: "/me"),
+
+                    ],
+                  ),
+                  Positioned(
+                      bottom: 30,
+                      left: 20,
+                      child: GestureDetector(
+                        onTap: () async {
+                          logoutApp(context);
+                          GoRouter.of(context).goNamed("home");
+                        },
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 10,
+                          children: [
+                            Icon(
+                              Icons.power_settings_new,
+                              color: Colors.red,
+                              size: 30,
+                            ),
+                            Text(
+                              translate('HEADER.LOGOUT'),
+                              style: TextStyle(fontSize: 15),
+                            )
+                          ],
+                        ),
+                      ))
+                ],
+              ),
+            ),
+          ],
         ),
       ),
       drawerEnableOpenDragGesture: false,
