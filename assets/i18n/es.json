@@ -328,7 +328,8 @@
         "NOT_VALID_EXTENSION": "Extensión no valida",
         "INVALID_DATE": "Fecha invalida",
         "REPORT_EXISTS": "Espera \n Ya has reportado a este usuario",
-        "LOADING_GAME": "Error cargando el juego, vuelva a intentarlo"
+        "LOADING_GAME": "Error cargando el juego, vuelva a intentarlo",
+        "EMAIL_DATE_LIMIT": "Debe esperar al menos 15 dias para poder actualizar su correo"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verifica tu conexión"

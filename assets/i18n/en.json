@@ -266,7 +266,7 @@
         "USERNAME": "Username",
         "EMAIL": "Email",
         "INVITATIONS":{
-            "ALL": "Accept invitations from:",
+            "TITLE": "Accept invitations from:",
             "EVERYONE": "Whatever, i want to play",
             "PARTNERS": "Only my hommies",
             "NO": "Please, let me alone"
@@ -334,7 +334,8 @@
         "NOT_VALID_EXTENSION": "Not valid extension",
         "INVALID_DATE": "Invalid date",
         "REPORT_EXISTS": "Wait a minute \n You have reported this user",
-        "LOADING_GAME": "Error loading game, please try again"
+        "LOADING_GAME": "Error loading game, please try again",
+        "EMAIL_DATE_LIMIT": "You must wait at least 15 days to update your email"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verify your connection"

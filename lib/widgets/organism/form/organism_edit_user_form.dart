@@ -103,8 +103,7 @@ class OrganismEditUserForm extends StatelessWidget {
               // color: const Color(0xFF00FFFF), // Mismo color del brillo para consistencia
               // size: 22,
             ),
-            const SizedBox(width: 12), // Espacio entre el ícono y el texto
-            // Texto con el estilo neón que definimos
+            const SizedBox(width: 12), 
             Text(
               translate('PROFILE.USER_PAGE.INVITATIONS.${option.name.toUpperCase()}')
             ),

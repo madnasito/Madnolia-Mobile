@@ -230,13 +230,16 @@ class _EditUserViewState extends State<EditUserView> {
                       )),
                 ),
                 const SizedBox(height: 20),
-                OrganismEditUserForm(
-                  updateUser: UpdateUser(
-                    name: nameController.text,
-                    username: usernameController.text,
-                    email: emailController.text,
-                    availability: userAvailability
-                  )
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: OrganismEditUserForm(
+                    updateUser: UpdateUser(
+                      name: nameController.text,
+                      username: usernameController.text,
+                      email: emailController.text,
+                      availability: userAvailability
+                    )
+                  ),
                 ),
                 const SizedBox(height: 20),
                 MaterialButton(
