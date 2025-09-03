@@ -38,9 +38,9 @@ class _PlatformIconState extends State<PlatformIcon> {
         if(widget.platform.active) Positioned(
           top: -1,
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: widget.platform.padding),
+              padding: EdgeInsets.symmetric(vertical: widget.platform.padding, horizontal: 10),
               child: SvgPicture.asset(
                 widget.platform.path,
                 height: iconSize * 1.01,

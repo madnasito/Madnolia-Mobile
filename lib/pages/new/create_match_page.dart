@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +55,7 @@ class _NewPageState extends State<NewPage> {
                   delay: const Duration(seconds: 1),
                   child: Column(
                     children: [
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 10),
                       ...userPlatforms(),
                       const SizedBox(height: 70),
                     ],
@@ -146,25 +149,131 @@ class _NewPageState extends State<NewPage> {
       Platform(
           id: 4,
           active: userBloc.state.platforms.contains(4) ? true : false,
-          path: "assets/platforms/pc.svg",
-          size: 30, padding: 20),
+          path: "assets/platforms/pc_2.svg",
+          size: 20, padding: 20),
       Platform(
           id: 21,
           active: userBloc.state.platforms.contains(21) ? true : false,
-          path: "assets/platforms/smartphone.svg",
-          size: 30, padding: 20)
+          path: "assets/platforms/mobile.svg",
+          size: 20, padding: 20)
     ];
     return platforms
         .map((item) => FadeIn(
             child: item.active
-                ? GestureDetector(
+                ? Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: NeonPlatformButton(
+                    platform: item,
                     onTap: () {
-                      // widget.selectedPlatform = item.id;
-                      // setState(() {});
-                      context.push("/search_game", extra: item.id);
-                    },
-                    child: PlatformIcon(platform: item))
+                        // widget.selectedPlatform = item.id;
+                        // setState(() {});
+                        context.push("/search_game", extra: item.id);
+                      },
+                      sizeMultiplier: 0.6
+                    ),
+                )
                 : Container()))
         .toList();
   }
 }
+
+class NeonPlatformButton extends StatelessWidget {
+  final Platform platform;
+  final VoidCallback onTap;
+  final double sizeMultiplier;
+
+  const NeonPlatformButton({
+    super.key,
+    required this.platform,
+    required this.onTap,
+    this.sizeMultiplier = 0.8,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final iconSize = (platform.size * MediaQuery.of(context).size.width) / 100 * sizeMultiplier;
+    final baseNeonColor = _getPlatformColor(platform.id);
+    
+    return ElevatedButton(
+      onPressed: onTap,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        foregroundColor: baseNeonColor,
+        padding: EdgeInsets.zero,
+        
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(22), // Menos redondeado que un círculo
+          side: BorderSide(
+            color: baseNeonColor.withValues(alpha: 0.7),
+            width: 1.5,
+          ),
+        ),
+        // elevation: 0,
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: baseNeonColor.withValues(alpha: 0.3),
+              blurRadius: 8.0,
+              spreadRadius: 1.0,
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              padding: EdgeInsets.all(20),
+              child: SvgPicture.asset(
+                platform.path,
+                height: iconSize,
+                colorFilter: ColorFilter.mode(
+                  Color.lerp(baseNeonColor, Colors.white, 0.6)!, // 60% blanco, 40% color neón
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Color _getPlatformColor(int platformId) {
+    // Asignar colores neón según la plataforma
+    switch (platformId) {
+      case 4: // PC
+        return const Color.fromARGB(255, 64, 255, 255); // Cian neón
+      case 7: // Nintendo Switch
+      case 8: // Nintendo 3DS
+      case 9: // Nintendo DS
+      case 10: // Nintendo WiiU
+      case 11: // Nintendo Wii
+        return const Color.fromARGB(255, 255, 45, 136); // Rosa neón
+      case 14: // Xbox 360
+      case 1: // Xbox One
+      case 186: // Xbox Series
+        return const Color.fromARGB(255, 48, 255, 131); // Verde neón
+      case 15: // PlayStation 2
+      case 16: // PlayStation 3
+      case 18: // PlayStation 4
+      case 187: // PlayStation 5
+      case 17: // PlayStation Portable
+      case 19: // PlayStation Vita
+        return const Color.fromARGB(255, 56, 135, 255); // Azul neón
+      case 21: // Smartphone
+        return const Color.fromARGB(255, 255, 255, 52); // Amarillo neón
+      default:
+        return const Color(0xFFFFFFFF); // Blanco neón por defecto
+    }
+  }
+}
+
