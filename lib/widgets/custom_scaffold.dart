@@ -46,27 +46,31 @@ class CustomScaffold extends StatelessWidget {
               ),
             ),
             SafeArea(
-              child: Stack(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
-                    onTap: () => GoRouter.of(context).pushReplacement("/me/edit"),
-                    child: Wrap(
-                      spacing: 10,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        const SizedBox(width: 0),
-                        CircleAvatar(
-                          backgroundImage:
-                              CachedNetworkImageProvider(userBloc.state.img),
-                          minRadius: 40,
-                          maxRadius: 50,
-                          backgroundColor: Colors.white,
-                        ),
-                        Text(
-                          userBloc.state.name,
-                          style: const TextStyle(fontSize: 20),
-                        )
-                      ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 25, top: 10),
+                    child: GestureDetector(
+                            onTap: () => GoRouter.of(context).pushReplacement("/me/edit"),
+                            child: Wrap(
+                              spacing: 10,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage:
+                                      CachedNetworkImageProvider(userBloc.state.img),
+                                  minRadius: 40,
+                                  maxRadius: 50,
+                                  backgroundColor: Colors.white,
+                                ),
+                                Text(
+                                  userBloc.state.name,
+                                  style: const TextStyle(fontSize: 20, color: Colors.white),
+                                )
+                              ],
+                            ),
                     ),
                   ),
                   Column(
@@ -120,31 +124,34 @@ class CustomScaffold extends StatelessWidget {
 
                     ],
                   ),
-                  Positioned(
-                      bottom: 30,
-                      left: 20,
-                      child: GestureDetector(
+                  Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          margin: const EdgeInsets.all(5),
+          child: 
+                  GestureDetector(
                         onTap: () async {
                           logoutApp(context);
                           GoRouter.of(context).goNamed("home");
                         },
-                        child: Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          spacing: 10,
+                        child: Row(
                           children: [
-                            Icon(
-                              Icons.power_settings_new,
-                              color: Colors.red,
-                              size: 30,
+                            const SizedBox(
+                              width: 40,
+                              child: Icon(
+                                Icons.power_settings_new,
+                                color: Colors.red,
+                                size: 40,
+                              ),
                             ),
+                            const SizedBox(width: 10),
                             Text(
                               translate('HEADER.LOGOUT'),
-                              style: TextStyle(fontSize: 15),
+                              style: const TextStyle(fontSize: 15, color: Colors.white),
                             )
                           ],
                         ),
-                      ))
-                ],
+                      )
+               ) ],
               ),
             ),
           ],
@@ -228,9 +235,10 @@ class _MenuButton extends StatelessWidget {
           ),
           child: Row(
             children: [
-              icon,
+              SizedBox(width: 40, child: icon),
+              const SizedBox(width: 10),
               Text(
-                "     $title",
+                title,
                 style: const TextStyle(color: Colors.white),
               )
             ],

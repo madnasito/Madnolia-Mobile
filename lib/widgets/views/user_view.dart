@@ -163,6 +163,7 @@ class _EditUserViewState extends State<EditUserView> {
                           CroppedFile? croppedFile = await ImageCropper().cropImage(
                               sourcePath: picker.path,
                               aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+                              compressFormat: ImageCompressFormat.jpg,
                               uiSettings: [
                                 AndroidUiSettings(
                                   toolbarColor: Colors.black,
