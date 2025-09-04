@@ -5,8 +5,6 @@ import 'package:http_parser/http_parser.dart' as http;
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:image_picker/image_picker.dart';
-
 import 'package:mime_type/mime_type.dart';
 
 class UploadFileService {
