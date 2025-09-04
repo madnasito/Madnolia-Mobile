@@ -35,9 +35,9 @@ class EditUserBloc with Validators {
   Function(String) get changeImg => _imgController.sink.add;
   Function(String) get changeThumb => _thumbController.sink.add;
 
-  Future uploadImage(XFile image) async {
+  Future uploadImage(String path) async {
     _loadingController.sink.add(true);
-    final Map imageUrl = await UploadFileService().uploadImage(image);
+    final Map imageUrl = await UploadFileService().uploadImage(path);
     _loadingController.sink.add(false);
 
     if (imageUrl.containsKey("img")) {

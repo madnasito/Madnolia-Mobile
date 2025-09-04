@@ -23,6 +23,7 @@ import 'package:toast/toast.dart';
 
 import '../../models/user/user_model.dart';
 import '../../services/user_service.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 class UserMainView extends StatelessWidget {
   const UserMainView({super.key});
@@ -157,16 +158,47 @@ class _EditUserViewState extends State<EditUserView> {
                             .pickImage(source: ImageSource.gallery);
 
                         if (picker != null) {
-                          final resp = await bloc.uploadImage(picker);
-                          if (resp.containsKey("img")) {
-                            userBloc.updateImages(resp["img"], resp["thumb"]);
-                            setState(() {
-                              
-                            });
-                          }else{
-                            if (!context.mounted) return;
-                            showErrorServerAlert(context, {"message": "NETWORK_ERROR"});
-                          }
+
+
+                          CroppedFile? croppedFile = await ImageCropper().cropImage(
+                              sourcePath: picker.path,
+                              aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+                              uiSettings: [
+                                AndroidUiSettings(
+                                  toolbarColor: Colors.black,
+                                  toolbarWidgetColor: Colors.white,
+                                  initAspectRatio: CropAspectRatioPreset.original,
+                                  cropStyle: CropStyle.circle,
+                                  showCropGrid: false,
+                                  hideBottomControls: true,
+                                  
+                                ),
+                                IOSUiSettings(
+                                  title: translate('PROFILE.USER_PAGE.CROP_IMAGE'),
+                                  aspectRatioLockEnabled: true,
+                                ),
+                              ],
+
+                              // aspectRatioPresets: [
+                              //   CropAspectRatioPreset.square,
+                              //   CropAspectRatioPreset.ratio3x2,
+                              //   CropAspectRatioPreset.original,
+                              //   CropAspectRatioPreset.ratio4x3,
+                              //   CropAspectRatioPreset.ratio16x9
+                              // ],
+                            );
+                            if(croppedFile?.path != null){
+                              final resp = await bloc.uploadImage(croppedFile!.path);
+                              if (resp.containsKey("img")) {
+                                userBloc.updateImages(resp["img"], resp["thumb"]);
+                                setState(() {
+                                  
+                                });
+                              }else{
+                                if (!context.mounted) return;
+                                showErrorServerAlert(context, {"message": "NETWORK_ERROR"});
+                              }
+                            }
                         }
 
                         uploadingImage = false;

@@ -12,7 +12,7 @@ import 'package:mime_type/mime_type.dart';
 class UploadFileService {
   final storage = const FlutterSecureStorage();
 
-  Future uploadImage(XFile image) async {
+  Future uploadImage(String path) async {
     try {
       
       final String apiUrl = dotenv.get("API_URL");
@@ -20,12 +20,12 @@ class UploadFileService {
       final String? token = await storage.read(key: "token");
       final url = Uri.parse("$apiUrl/user/update-img");
 
-      final mimeType = mime(image.path)?.split('/'); // image/jpeg
+      final mimeType = mime(path)?.split('/'); // image/jpeg
 
 
       final imageUploadRequest = http.MultipartRequest("POST", url);
 
-      final file = await http.MultipartFile.fromPath("img", image.path,
+      final file = await http.MultipartFile.fromPath("img", path,
           contentType: http.MediaType(mimeType![0], mimeType[1]));
 
       imageUploadRequest.files.add(file);
