@@ -255,6 +255,11 @@
             "TITLE": "Mis partidas",
             "EMPTY": "Aun no has creado una partida"
         },
+        "AVAILABILITY": {
+            "EVERYONE": "Disponible",
+            "PARTNERS": "Solo colegas",
+            "NO": "No molestar"
+        },
         "USER_PAGE":{
             "NAME": "Nombre",
             "USERNAME": "Nombre de usuario",

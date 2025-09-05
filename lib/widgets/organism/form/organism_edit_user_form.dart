@@ -7,6 +7,7 @@ import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/enums/user-availability.enum.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
+import 'package:madnolia/utils/get_availability_data.dart';
 import 'package:madnolia/widgets/alert_widget.dart' show showErrorServerAlert;
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_dropdown_form_field.dart';
@@ -19,17 +20,6 @@ class OrganismEditUserForm extends StatelessWidget {
 
   final UpdateUser updateUser;
   const OrganismEditUserForm({super.key, required this.updateUser});
-
-  IconData _getIconForAvailability(UserAvailability availability) {
-  switch (availability) {
-    case UserAvailability.everyone: // Asumiendo que uno de tus options.name es 'available'
-      return Icons.check_circle_outline;
-    case UserAvailability.partners: // Asumiendo que tienes 'friendsOnly'
-      return Icons.group_outlined;
-    case UserAvailability.no: // Asumiendo que tienes 'doNotDisturb'
-      return Icons.do_not_disturb_on_outlined;
-  }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +89,7 @@ class OrganismEditUserForm extends StatelessWidget {
           children: [
             // Icono específico para cada opción
             Icon(
-              _getIconForAvailability(option),
+              getIconForAvailability(option),
               // color: const Color(0xFF00FFFF), // Mismo color del brillo para consistencia
               // size: 22,
             ),

@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/utils/get_availability_data.dart';
 import 'package:madnolia/utils/logout.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'dart:ui';
@@ -29,7 +30,8 @@ class CustomScaffold extends StatelessWidget {
       if(onData?['user'] == userBloc.state.id) userBloc.updateNotifications(userBloc.state.notifications + 1);
     });
     backgroundService.on("invitation").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
-    
+    final userAvailability = userBloc.state.availability;
+    print(translate("PROFILE.AVAILABILITY.${userAvailability.name.toUpperCase()}"));
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
@@ -51,12 +53,13 @@ class CustomScaffold extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 25, top: 10),
+                    padding: const EdgeInsets.only(left: 25, top: 15),
                     child: GestureDetector(
                             onTap: () => GoRouter.of(context).pushReplacement("/me/edit"),
-                            child: Wrap(
+                            child: Row(
                               spacing: 10,
-                              crossAxisAlignment: WrapCrossAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 CircleAvatar(
                                   backgroundImage:
@@ -65,10 +68,30 @@ class CustomScaffold extends StatelessWidget {
                                   maxRadius: 50,
                                   backgroundColor: Colors.white,
                                 ),
-                                Text(
-                                  userBloc.state.name,
-                                  style: const TextStyle(fontSize: 20, color: Colors.white),
-                                )
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  spacing: 8,
+                                  children: [
+                                    Text(
+                                      userBloc.state.name,
+                                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Row(
+                                      spacing: 8,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(getIconForAvailability(userAvailability), color: getColorForAvailability(userAvailability), size: 15,),
+                                        Text(
+                                          translate("PROFILE.AVAILABILITY.${userAvailability.name.toUpperCase()}"),
+                                          style: const TextStyle(fontSize: 15, color: Colors.white),
+                                        ),
+                                      ],
+                                    )
+                                    
+                                  ],
+                                ),
                               ],
                             ),
                     ),

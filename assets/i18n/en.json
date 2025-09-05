@@ -261,6 +261,11 @@
           "TITLE": "My matches",
           "EMPTY": "You haven't created a match yet"
       },
+      "AVAILABILITY": {
+        "EVERYONE": "Available",
+        "PARTNERS": "Partners Only",
+        "NO": "Unavailable"
+      },
       "USER_PAGE":{
         "NAME": "Name",
         "USERNAME": "Username",
