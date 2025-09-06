@@ -144,123 +144,133 @@ class _EditUserViewState extends State<EditUserView> {
                 Container(
                   margin: const EdgeInsets.all(30),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: const Color.fromARGB(181, 255, 255, 255))),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: const Color.fromARGB(181, 255, 255, 255)),
+                  ),
                   child: GestureDetector(
-                      onTap: () async {
-                        if(uploadingImage) {
-                          return;
-                        }
+                    onTap: () async {
+                      if (uploadingImage) {
+                        return;
+                      }
+                      uploadingImage = true;
+                      final picker = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-                        uploadingImage = true;
-                        final picker = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery);
-
-                        if (picker != null) {
-
-
-                          CroppedFile? croppedFile = await ImageCropper().cropImage(
-                              sourcePath: picker.path,
-                              aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-                              compressFormat: ImageCompressFormat.jpg,
-                              uiSettings: [
-                                AndroidUiSettings(
-                                  toolbarColor: Colors.black,
-                                  toolbarWidgetColor: Colors.white,
-                                  initAspectRatio: CropAspectRatioPreset.original,
-                                  cropStyle: CropStyle.circle,
-                                  showCropGrid: false,
-                                  hideBottomControls: true,
-                                  
-                                ),
-                                IOSUiSettings(
-                                  title: translate('PROFILE.USER_PAGE.CROP_IMAGE'),
-                                  aspectRatioLockEnabled: true,
-                                ),
-                              ],
-
-                              // aspectRatioPresets: [
-                              //   CropAspectRatioPreset.square,
-                              //   CropAspectRatioPreset.ratio3x2,
-                              //   CropAspectRatioPreset.original,
-                              //   CropAspectRatioPreset.ratio4x3,
-                              //   CropAspectRatioPreset.ratio16x9
-                              // ],
-                            );
-                            if(croppedFile?.path != null){
-                              final resp = await bloc.uploadImage(croppedFile!.path);
-                              if (resp.containsKey("img")) {
-                                userBloc.updateImages(resp["img"], resp["thumb"]);
-                                setState(() {
-                                  
-                                });
-                              }else{
-                                if (!context.mounted) return;
-                                showErrorServerAlert(context, {"message": "NETWORK_ERROR"});
-                              }
-                            }
-                        }
-
-                        uploadingImage = false;
-                      },
-                      child: BlocBuilder(
-                        bloc: userBloc,
-                        builder: (context, state) => Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10), // Radio muy grande para hacerla circular
-                              child:  StreamBuilder(
-                                  stream: bloc.imgStream,
-                                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                                    if (snapshot.hasData) {
-                                      return CachedNetworkImage(
-                                        imageUrl: userBloc.state.img,
-                                        fit: BoxFit.cover, // Asegura que la imagen cubra todo el espacio
-                                      );
-                                    } else {
-                                      return const CircularProgressIndicator();
-                                    }
-                                  },
-                                ),
+                      if (picker != null) {
+                        CroppedFile? croppedFile = await ImageCropper().cropImage(
+                          sourcePath: picker.path,
+                          aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+                          compressFormat: ImageCompressFormat.jpg,
+                          uiSettings: [
+                            AndroidUiSettings(
+                              toolbarColor: Colors.black,
+                              toolbarWidgetColor: Colors.white,
+                              initAspectRatio: CropAspectRatioPreset.original,
+                              cropStyle: CropStyle.circle,
+                              showCropGrid: false,
+                              hideBottomControls: true,
                             ),
-                        
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black87,
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(9),
-                                  bottomRight: Radius.circular(9),
-                                )),
+                            IOSUiSettings(
+                              title: translate('PROFILE.USER_PAGE.CROP_IMAGE'),
+                              aspectRatioLockEnabled: true,
+                            ),
+                          ],
+                        );
+                        if (croppedFile?.path != null) {
+                          final resp = await bloc.uploadImage(croppedFile!.path);
+                          // print(resp);
+                          if (resp.containsKey("img")) {
+                            userBloc.updateImages(resp["thumb"], resp["img"]);
+                          } else {
+                            if (!context.mounted) return;
+                            showErrorServerAlert(context, {"message": "NETWORK_ERROR"});
+                          }
+                        }
+                      }
+                      uploadingImage = false;
+                    },
+                    child: BlocBuilder(
+                      bloc: userBloc,
+                      builder: (context, state) => Stack(
+                        children: [
+                          // Contenedor con relación de aspecto 1:1
+                          AspectRatio(
+                            aspectRatio: 1, // Esto fuerza la relación 1:1
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
                               child: StreamBuilder(
-                                stream: bloc.loadingStream,
-                                builder:
-                                    (BuildContext context, AsyncSnapshot snapshot) {
+                                stream: bloc.imgStream,
+                                builder: (BuildContext context, AsyncSnapshot snapshot) {
                                   if (snapshot.hasData) {
-                                    if (snapshot.data == true) {
-                                      return  Center(
-                                        heightFactor: 2,
-                                        child: Column(
-                                          children: [
-                                            CircularProgressIndicator(
-                                              color: Colors.lightBlueAccent,
-                                            ),
-                                            Text(translate('PROFILE.USER_PAGE.UPLOADING_IMAGE'), style: TextStyle(color: Colors.white),)
-                                          ],
+                                    return CachedNetworkImage(
+                                      imageUrl: userBloc.state.img,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Container(
+                                        color: Colors.grey[300],
+                                        child: const Icon(
+                                          Icons.person,
+                                          size: 60,
+                                          color: Colors.grey,
                                         ),
-                                      );
-                                    } else {
-                                      return Container();
-                                    }
+                                      ),
+                                      errorWidget: (context, url, error) => Container(
+                                        color: Colors.grey[300],
+                                        child: const Icon(
+                                          Icons.error_outline,
+                                          size: 60,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    );
                                   } else {
-                                    return Container();
+                                    return Container(
+                                      color: Colors.grey[300],
+                                      child: const Icon(
+                                        Icons.person,
+                                        size: 60,
+                                        color: Colors.grey,
+                                      ),
+                                    );
                                   }
                                 },
                               ),
                             ),
-                          ],
-                        ),
-                      )),
+                          ),
+                          
+                          // Overlay para mostrar el progreso de carga
+                          StreamBuilder(
+                            stream: bloc.loadingStream,
+                            builder: (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasData && snapshot.data == true) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black54,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const CircularProgressIndicator(
+                                          color: Colors.lightBlueAccent,
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Text(
+                                          translate('PROFILE.USER_PAGE.UPLOADING_IMAGE'),
+                                          style: const TextStyle(color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Padding(
@@ -290,7 +300,7 @@ class _EditUserViewState extends State<EditUserView> {
                             children: [
                               CircleAvatar(
                                 radius: 40,
-                                backgroundImage: CachedNetworkImageProvider(userBloc.state.thumb),
+                                backgroundImage: CachedNetworkImageProvider(userBloc.state.img),
                               ),
                               const SizedBox(height: 20),
                               Text('@${userBloc.state.username}', textAlign: TextAlign.center),
