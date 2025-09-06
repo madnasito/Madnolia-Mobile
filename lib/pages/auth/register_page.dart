@@ -37,7 +37,8 @@ class _RegisterPageState extends State<RegisterPage> {
             child: PageView(
               allowImplicitScrolling: true,
               onPageChanged: (value) {
-                if(!canScroll) controller.animateToPage(0, duration: Duration(milliseconds: 500), curve: Curves.bounceIn);
+                if(!canScroll) controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Easing.linear);
+                
               },
               controller: controller,
               children: [

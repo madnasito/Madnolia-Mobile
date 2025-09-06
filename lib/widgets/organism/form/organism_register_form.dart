@@ -16,12 +16,19 @@ class OrganismRegisterForm extends StatelessWidget {
   final RegisterModel registerModel;
   final PageController controller;
   final void Function(bool) changeScroll;
-  const OrganismRegisterForm({super.key, required this.registerModel, required this.controller, required this.changeScroll});
+  
+  const OrganismRegisterForm({
+    super.key, 
+    required this.registerModel, 
+    required this.controller, 
+    required this.changeScroll
+  });
 
   @override
   Widget build(BuildContext context) {
     bool loading = false;
     final formKey = GlobalKey<FormBuilderState>();
+    
     return FormBuilder(
       key: formKey,
       child: Column(
@@ -45,7 +52,7 @@ class OrganismRegisterForm extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
-              onChanged: (value) => changeScroll(false),
+              // onChanged: (value) => changeScroll(false),
               name: "username",
               label: translate("FORM.INPUT.USERNAME"),
               icon: Icons.account_circle_outlined,
@@ -87,52 +94,59 @@ class OrganismRegisterForm extends StatelessWidget {
               ]),
             ),
           ),
+            
           StatefulBuilder(
-            builder: (context, setState) =>  MoleculeFormButton(
+            builder: (context, setState) => MoleculeFormButton(
               text: translate("REGISTER.NEXT"),
               isLoading: loading,
-              onPressed:() async {
-                 try {
-                setState(() => loading = true);
-                FocusScope.of(context).unfocus();
-                formKey.currentState?.validate();
-                if (!formKey.currentState!.isValid) {
-                  setState(() => loading = false);
-                  return;
-                }
+              onPressed: () async {
+                try {
+                  setState(() => loading = true);
+                  FocusScope.of(context).unfocus();
+                  formKey.currentState?.validate();
+                  
+                  // Valida el formulario
+                  if (!formKey.currentState!.validate()) {
+                    setState(() => loading = false);
+                    changeScroll(false); // Mantiene scroll deshabilitado
+                    return;
+                  }
 
-                final String name = formKey.currentState!.fields['name']?.transformedValue;
-                final String username = formKey.currentState!.fields['username']?.transformedValue;
-                final String email = formKey.currentState!.fields['email']?.transformedValue;
-                final String password = formKey.currentState!.fields['password']?.transformedValue;
+                  final String name = formKey.currentState!.fields['name']?.value;
+                  final String username = formKey.currentState!.fields['username']?.value;
+                  final String email = formKey.currentState!.fields['email']?.value;
+                  final String password = formKey.currentState!.fields['password']?.value;
 
-                final resp = await AuthService().verifyUser(username, email);
+                  final resp = await AuthService().verifyUser(username, email);
 
-                if (resp.containsKey("message") && context.mounted) {
-                  changeScroll(false);
-                  showErrorServerAlert(context, resp);
-                } else {
-                  changeScroll(true);
-                  registerModel.name = name;
-                  registerModel.email = email;
-                  registerModel.password = password;
-                  registerModel.username = username;
-                  controller.animateToPage(
-                    1,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.bounceIn,
-                  );
+                  if (resp.containsKey("message") && context.mounted) {
+                    changeScroll(false); // Deshabilita scroll si hay error
+                    showErrorServerAlert(context, resp);
+                  } else {
+                    changeScroll(true); // Habilita scroll si es exitoso
+                    registerModel.name = name;
+                    registerModel.email = email;
+                    registerModel.password = password;
+                    registerModel.username = username;
+                    
+                    controller.animateToPage(
+                      1,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    changeScroll(false);
+                    showAlert(context, e.toString());
+                  }
+                } finally {
+                  if (context.mounted) {
+                    setState(() => loading = false);
+                  }
                 }
-              } catch (e) {
-                if (context.mounted) {
-                  showAlert(context, e.toString());
-                }
-              } finally {
-                if (context.mounted) {
-                  setState(() => loading = false);
-                }
-              }
-              } ),
+              },
+            ),
           ),
           const SizedBox(height: 20),
           Row(

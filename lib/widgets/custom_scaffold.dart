@@ -31,7 +31,6 @@ class CustomScaffold extends StatelessWidget {
     });
     backgroundService.on("invitation").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
     final userAvailability = userBloc.state.availability;
-    print(translate("PROFILE.AVAILABILITY.${userAvailability.name.toUpperCase()}"));
     return Scaffold(
       drawer: Drawer(
         surfaceTintColor: Colors.pink,
