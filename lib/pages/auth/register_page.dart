@@ -68,7 +68,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 FadeIn(child: SingleChildScrollView(
-                  child: OrganismSelectPlatform(registerModel: widget.registerModel)
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                       Padding(
+                            padding: const EdgeInsets.only(top: 12.0, left: 8.0),
+                            child: IconButton(
+                              icon: const Icon(Icons.arrow_back, color: Colors.white),
+                              onPressed: () => controller.animateToPage(0, duration: Duration(milliseconds: 300), curve: Easing.linear),
+                            ),
+                          ),
+                      OrganismSelectPlatform(registerModel: widget.registerModel),
+                    ],
+                  )
                 ))
               ],
             )
