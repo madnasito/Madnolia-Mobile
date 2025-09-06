@@ -212,14 +212,22 @@ class _EditUserViewState extends State<EditUserView> {
                                           color: Colors.grey,
                                         ),
                                       ),
-                                      errorWidget: (context, url, error) => Container(
-                                        color: Colors.grey[300],
-                                        child: const Icon(
-                                          Icons.error_outline,
-                                          size: 60,
-                                          color: Colors.red,
-                                        ),
-                                      ),
+                                      errorWidget: (context, url, error) {
+                                        return Container(
+                                          color: Colors.grey[300],
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.error_outline,
+                                                size: 60,
+                                                color: Colors.red,
+                                              ),
+                                              Text(translate('ERRORS.SERVER.IMAGE_DATA'), style: TextStyle(color: Colors.red),)
+                                            ],
+                                          ),
+                                        );
+                                      } ,
                                     );
                                   } else {
                                     return Container(

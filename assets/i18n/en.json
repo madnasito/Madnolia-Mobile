@@ -340,7 +340,8 @@
         "INVALID_DATE": "Invalid date",
         "REPORT_EXISTS": "Wait a minute \n You have reported this user",
         "LOADING_GAME": "Error loading game, please try again",
-        "EMAIL_DATE_LIMIT": "You must wait at least 15 days to update your email"
+        "EMAIL_DATE_LIMIT": "You must wait at least 15 days to update your email",
+        "IMAGE_DATA": "There is a problem with the image data \n Please, try another image"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verify your connection"
