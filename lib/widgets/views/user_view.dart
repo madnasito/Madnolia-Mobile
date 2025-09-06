@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:http/http.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -213,6 +214,7 @@ class _EditUserViewState extends State<EditUserView> {
                                         ),
                                       ),
                                       errorWidget: (context, url, error) {
+                                        
                                         return Container(
                                           color: Colors.grey[300],
                                           child: Column(
@@ -223,7 +225,7 @@ class _EditUserViewState extends State<EditUserView> {
                                                 size: 60,
                                                 color: Colors.red,
                                               ),
-                                              Text(translate('ERRORS.SERVER.IMAGE_DATA'), style: TextStyle(color: Colors.red),)
+                                              error is ClientException ? SizedBox() : Text(translate('ERRORS.SERVER.IMAGE_DATA'), style: TextStyle(color: Colors.red),)
                                             ],
                                           ),
                                         );
