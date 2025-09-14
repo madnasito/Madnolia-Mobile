@@ -5,6 +5,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:madnolia/models/game/game_model.dart';
+import 'package:madnolia/models/game/minimal_game_model.dart';
+import 'package:madnolia/services/match_service.dart';
+import 'package:madnolia/services/rawg_service.dart';
 
 class GamesService {
   final _storage = const FlutterSecureStorage();
@@ -54,5 +57,17 @@ class GamesService {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  static Future getGames({required String title, required String platform}) async {
+    return RawgService().searchGame(game: title, platform: platform);
+  }
+
+  static Future<List<MinimalGame>> getRecomendations(int platform) async {
+    final List resp = await MatchService().getGamesRecomendations(platform);
+
+    final games = resp.map((e) => MinimalGame.fromJson(e)).toList();
+
+    return games;
   }
 }

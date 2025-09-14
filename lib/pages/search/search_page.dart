@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/services/user_service.dart';
-import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/organism/organism_users_list.dart';
 
 import '../../models/user/simple_user_model.dart' show SimpleUser;
+import '../../widgets/atoms/input/atom_search_input.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -75,11 +75,9 @@ class _SearchPageState extends State<SearchPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SimpleCustomInput(
+              AtomSearchInput(
                 placeholder: translate('SEARCH.SEARCH_USERS'),
-                controller: searchController,
-                iconData: Icons.search,
-                autofocus: true,
+                searchController: searchController,
                 onChanged: _onSearchChanged,
               ),
               const SizedBox(height: 20),

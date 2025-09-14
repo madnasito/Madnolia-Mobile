@@ -1,17 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/widgets/custom_input_widget.dart';
+import 'package:madnolia/widgets/atoms/input/atom_search_input.dart';
 import 'package:madnolia/widgets/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/lists/games_list_molecule.dart';
 
 import '../../models/game/minimal_game_model.dart';
-import '../../services/match_service.dart';
-import '../../services/rawg_service.dart';
 import '../../widgets/match_card_widget.dart';
+import '../../services/games_service.dart';
 
 class SearchGamePage extends StatefulWidget {
   const SearchGamePage({super.key});
@@ -49,9 +47,8 @@ class _SearchGamePageState extends State<SearchGamePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: SimpleCustomInput(
-                  iconData: CupertinoIcons.search,
-                  controller: controller,
+                child: AtomSearchInput(
+                  searchController: controller,
                   placeholder:
                       translate("CREATE_MATCH.SEARCH_GAME"),
                   onChanged: (value) async {
@@ -71,7 +68,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
                 height: 20,
               ),
               (controller.text.isEmpty) ? FutureBuilder(
-                future: getRecomendations(platformId),
+                future: GamesService.getRecomendations(platformId),
                 builder: (BuildContext context, AsyncSnapshot<List<MinimalGame>> snapshot) {
                   if(!snapshot.hasData){
                     return Center(
@@ -111,7 +108,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
               ) : Container(),
               (counter == 0 && controller.text.isNotEmpty)
                   ? FutureBuilder(
-                      future: getGames(
+                      future: GamesService.getGames(
                           title: controller.text.toString(),
                           platform: "$platformId"),
                       builder:
@@ -155,17 +152,5 @@ class _SearchGamePageState extends State<SearchGamePage> {
           ),
       
     );
-  }
-
-  Future getGames({required String title, required String platform}) async {
-    return RawgService().searchGame(game: title, platform: platform);
-  }
-
-  Future<List<MinimalGame>> getRecomendations(int platform) async {
-    final List resp = await MatchService().getGamesRecomendations(platform);
-
-    final games = resp.map((e) => MinimalGame.fromJson(e)).toList();
-
-    return games;
   }
 }
