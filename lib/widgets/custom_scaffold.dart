@@ -1,18 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/utils/get_availability_data.dart';
-import 'package:madnolia/utils/logout.dart';
 import 'package:madnolia/widgets/background.dart';
-import 'dart:ui';
-
-// import 'package:madnolia/widgets/form_button.dart';
+import 'package:madnolia/widgets/molecules/buttons/atom_menu_button.dart' show changeRoute;
+import 'package:madnolia/widgets/organism/menu/organism_drawer.dart';
 
 class CustomScaffold extends StatelessWidget {
   final Widget body;
@@ -22,7 +16,6 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     
     final userBloc = context.read<UserBloc>();
-    final messageBloc = context.read<MessageBloc>();
     
     final backgroundService = FlutterBackgroundService();
 
@@ -30,155 +23,8 @@ class CustomScaffold extends StatelessWidget {
       if(onData?['user'] == userBloc.state.id) userBloc.updateNotifications(userBloc.state.notifications + 1);
     });
     backgroundService.on("invitation").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
-    final userAvailability = userBloc.state.availability;
     return Scaffold(
-      drawer: Drawer(
-        surfaceTintColor: Colors.pink,
-        backgroundColor: Colors.transparent, // Cambia a transparente
-        child: Stack(
-          children: [
-            // Fondo con blur
-            Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: Container(
-                  color: Colors.black54, // Color semitransparente
-                ),
-              ),
-            ),
-            SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 25, top: 15),
-                    child: GestureDetector(
-                            onTap: () => GoRouter.of(context).pushReplacement("/me/edit"),
-                            child: Row(
-                              spacing: 10,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage:
-                                      CachedNetworkImageProvider(userBloc.state.img),
-                                  minRadius: 40,
-                                  maxRadius: 50,
-                                  backgroundColor: Colors.white,
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  spacing: 8,
-                                  children: [
-                                    Text(
-                                      userBloc.state.name,
-                                      style: const TextStyle(fontSize: 20, color: Colors.white),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    Row(
-                                      spacing: 8,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(getIconForAvailability(userAvailability), color: getColorForAvailability(userAvailability), size: 15,),
-                                        Text(
-                                          translate("PROFILE.AVAILABILITY.${userAvailability.name.toUpperCase()}"),
-                                          style: const TextStyle(fontSize: 15, color: Colors.white),
-                                        ),
-                                      ],
-                                    )
-                                    
-                                  ],
-                                ),
-                              ],
-                            ),
-                    ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    spacing: 5,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _MenuButton(
-                        icon: Icon(Icons.bolt_outlined, size: 40,color: Colors.white),
-                        title: translate("HEADER.MATCH"),
-                        route: "/new",
-                      ),
-                      _MenuButton(
-                        icon: Icon(CupertinoIcons.gamecontroller, size: 40, color: Colors.white),
-                        title: translate('MATCHES.TITLE'),
-                        route: "/matches",
-                      ),
-                      _MenuButton(
-                        icon: userBloc.state.notifications == 0 ? Icon(Icons.notifications_none_rounded,size: 40, color: Colors.white ) : Stack(
-                          alignment: Alignment.center,
-                          children: [
-                          Icon(Icons.notifications_active_rounded,size: 40, color: Colors.pink ),
-                          Text(userBloc.state.notifications > 9 ? '9+' : userBloc.state.notifications.toString(), style: TextStyle(color: Colors.white, fontSize: 14))
-                        ] 
-                        ),
-                        title:
-                            translate("HEADER.NOTIFICATIONS"),
-                        route: "/notifications",
-                      ),
-                      _MenuButton(
-                        icon: messageBloc.state.unreadUserChats == 0 ? Icon(Icons.chat_bubble_outline_rounded,size: 40, color: Colors.white ) : Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(Icons.chat_bubble_rounded,size: 40, color: Colors.pink ),
-                            Positioned(
-                              bottom: 12,
-                              child: Text(messageBloc.state.unreadUserChats > 9 ? '9+' : messageBloc.state.unreadUserChats.toString(), style: TextStyle(color: Colors.white, fontSize: 14)))
-                          ] 
-                        ),
-                        title: "Chat",
-                        route: "/chat",
-                      ),
-                      // _MenuButton(
-                      //     icon: Icons.groups_2_outlined,
-                      //     title: translate("HEADER.PROFILE"),
-                      //     route: "/user"),
-                      _MenuButton(
-                          icon: Icon(Icons.person_outline_outlined, size: 40, color: Colors.white),
-                          title: translate("HEADER.PROFILE"),
-                          route: "/me"),
-
-                    ],
-                  ),
-                  Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          margin: const EdgeInsets.all(5),
-          child: 
-                  GestureDetector(
-                        onTap: () async {
-                          logoutApp(context);
-                          GoRouter.of(context).goNamed("home");
-                        },
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 40,
-                              child: Icon(
-                                Icons.power_settings_new,
-                                color: Colors.red,
-                                size: 40,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              translate('HEADER.LOGOUT'),
-                              style: const TextStyle(fontSize: 15, color: Colors.white),
-                            )
-                          ],
-                        ),
-                      )
-               ) ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      drawer: OrganismDrawer(),
       drawerEnableOpenDragGesture: false,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
@@ -212,82 +58,4 @@ class CustomScaffold extends StatelessWidget {
   }
 }
 
-class _MenuButton extends StatelessWidget {
-  final Widget icon;
-  final String title;
-  final String route;
-  const _MenuButton(
-      {required this.icon, required this.title, required this.route});
 
-  @override
-  Widget build(BuildContext context) {
-    final fullPath = GoRouterState.of(context).fullPath;
-    return ElevatedButton(
-        onPressed: () {
-          changeRoute(context, route);
-        },
-        style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-            foregroundColor: Colors.pink,
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            disabledBackgroundColor: Colors.transparent,
-            padding: const EdgeInsets.all(0),
-            shadowColor: Colors.transparent,
-            elevation: 0),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          margin: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(1),
-            gradient: startsWithPattern(fullPath!, route)
-                ? const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                        Color.fromRGBO(255, 31, 75, 0),
-                        Color.fromRGBO(255, 31, 75, 0.5),
-                        Color.fromRGBO(255, 31, 75, 0.7),
-                        Color.fromRGBO(255, 31, 75, 1),
-                        Color.fromRGBO(255, 31, 75, 0.7),
-                        Color.fromRGBO(255, 31, 75, 0.5),
-                        Color.fromRGBO(255, 31, 75, 0),
-                      ])
-                : null,
-          ),
-          child: Row(
-            children: [
-              SizedBox(width: 40, child: icon),
-              const SizedBox(width: 10),
-              Text(
-                title,
-                style: const TextStyle(color: Colors.white),
-              )
-            ],
-          ),
-        ));
-  }
-
-  bool startsWithPattern(String input, String pattern) {
-    // Escapa el patrón para que sea seguro usarlo en una expresión regular
-    String escapedPattern = RegExp.escape(pattern);
-    
-    // Crea una expresión regular que verifica si el string comienza con el patrón
-    RegExp regExp = RegExp('^$escapedPattern');
-
-    // Verifica si el input coincide con la expresión regular
-    return regExp.hasMatch(input);
-  }
-
-}
-void changeRoute(BuildContext context, String route){
-  final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
-  if (route != "" && route != currentRouteName) {
-    // Cerrar el drawer si está abierto
-    final scaffoldState = Scaffold.maybeOf(context);
-    if (scaffoldState != null && scaffoldState.isDrawerOpen) {
-      scaffoldState.closeDrawer();
-    }
-    GoRouter.of(context).pushReplacement(route);
-  }
-}
