@@ -35,7 +35,6 @@ class _ViewMatchState extends State<ViewMatch> {
   late UserBloc userBloc;
   late final FlutterBackgroundService backgroundService;
   
-  // Añade estas variables para manejar las suscripciones
   StreamSubscription? _newPlayerSubscription;
   StreamSubscription? _addedToMatchSubscription;
   StreamSubscription? _socketDisconnectedSubscription;

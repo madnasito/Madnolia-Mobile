@@ -227,7 +227,7 @@
     "SAY_HI": "Say hi",
     "ERRORS": {
       "LOADING_ERROR": "Error loading messages",
-      "LOADING_CHAT": "Error loading chat: {error}",
+      "LOADING_CHAT": "Error loading chat",
       "NO_DATA": "No friendship data",
       "LOADING_USER":"Error loading user",
       "NO_USER_DATA": "No user data"

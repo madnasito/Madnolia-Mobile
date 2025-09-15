@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart' show debugPrint;
 import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/database/providers/friendship_db.dart';
@@ -65,6 +66,7 @@ class FriendshipService {
 
       return friendshipInfo;
     } catch (e) {
+      debugPrint(e.toString());
       rethrow;
     }
 

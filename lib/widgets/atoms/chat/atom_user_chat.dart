@@ -33,7 +33,7 @@ class AtomUserChat extends StatelessWidget {
         
         if (friendshipSnapshot.hasError) {
           return Center(
-            child: Text(translate('CHAT.ERRORS.LOADING_CHAT', args: {'error': friendshipSnapshot.error})
+            child: Text(translate('CHAT.ERRORS.LOADING_CHAT', /* args: {'error': friendshipSnapshot.error}*/)
             )
           );
         }
