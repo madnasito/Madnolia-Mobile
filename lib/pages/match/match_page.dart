@@ -1,4 +1,3 @@
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/services/match_service.dart';
@@ -7,15 +6,12 @@ import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/views/view_match.dart';
 
 class MatchPage extends StatelessWidget {
-
   final String id;
 
   const MatchPage({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
-    final service = FlutterBackgroundService();
-    service.invoke("look");
     return CustomScaffold(
       body: FutureBuilder(
           future: MatchService().getFullMatch(id),
