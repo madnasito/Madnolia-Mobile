@@ -7,7 +7,7 @@ import 'package:madnolia/widgets/atoms/game_image_atom.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';

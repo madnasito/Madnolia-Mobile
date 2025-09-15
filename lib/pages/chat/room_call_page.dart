@@ -4,7 +4,7 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/widgets/atoms/atom_user_call.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 const cellRed = Color(0xffc73232);
 const cellMustard = Color(0xffd7aa22);

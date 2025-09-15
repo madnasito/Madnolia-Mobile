@@ -14,7 +14,7 @@ import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_users_chats.dart';
 
-import '../../widgets/custom_scaffold.dart';
+import '../../widgets/scaffolds/custom_scaffold.dart';
 
 class ChatsPage extends StatelessWidget {
   const ChatsPage({super.key});

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/atoms/input/atom_search_input.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/lists/games_list_molecule.dart';
 
 import '../../models/game/minimal_game_model.dart';

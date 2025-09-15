@@ -15,7 +15,7 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/user/user_model.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/atoms/buttons/common/atom_create_match_button.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/organism/cards/organism_card_platform_matches.dart';
 
 

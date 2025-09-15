@@ -7,7 +7,7 @@ import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/services/friendship_service.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_chat_input.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_user_header.dart' show MoleculeUserHeader;
 import 'package:madnolia/widgets/organism/chat/organism_user_chat_messages.dart';

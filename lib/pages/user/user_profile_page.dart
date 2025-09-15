@@ -11,7 +11,7 @@ import 'package:madnolia/services/reports_service.dart';
 import 'package:madnolia/style/form_style.dart';
 import 'package:madnolia/database/services/user-db.service.dart';
 import 'package:madnolia/widgets/alert_widget.dart' show showErrorServerAlert, showSuccesfulAlert;
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_connection_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
 import 'package:flutter_translate/flutter_translate.dart';

@@ -14,7 +14,7 @@ import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 
 
 
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 import '../../widgets/platform_icon_widget.dart';
 

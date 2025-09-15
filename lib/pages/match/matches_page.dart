@@ -8,7 +8,7 @@ import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_matches_filter_buttons.dart';
 import 'package:madnolia/widgets/organism/organism_load_matches.dart' show OrganismLoadMatches;
 

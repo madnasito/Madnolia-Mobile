@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/services/user_service.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/organism/organism_users_list.dart';
 
 import '../../models/user/simple_user_model.dart' show SimpleUser;

@@ -10,7 +10,7 @@ import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/notifications/atom_invitation_notification.dart';
 import 'package:madnolia/widgets/atoms/notifications/atom_request_notification.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});

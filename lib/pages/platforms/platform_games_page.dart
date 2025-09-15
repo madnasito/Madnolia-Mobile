@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:madnolia/services/rawg_service.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 class PlatformGames extends StatelessWidget {
   final String id;

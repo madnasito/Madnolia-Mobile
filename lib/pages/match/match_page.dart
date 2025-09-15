@@ -3,7 +3,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:flutter/material.dart';
-import 'package:madnolia/widgets/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/views/view_match.dart';
 
 class MatchPage extends StatelessWidget {
