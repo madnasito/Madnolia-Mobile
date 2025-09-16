@@ -2,11 +2,11 @@ import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:madnolia/widgets/platform_icon_widget.dart' show Platform;
+import 'package:madnolia/models/platform/platform_icon_model.dart';
 
 
 class AtomNeonPlatformButton extends StatelessWidget {
-  final Platform platform;
+  final PlatformIconModel platform;
   final VoidCallback onTap;
   final double sizeMultiplier;
 

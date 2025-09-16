@@ -1,6 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/models/platform/platform_icon_model.dart';
 import 'package:madnolia/widgets/platform_icon_widget.dart';
 
 import '../blocs/user/user_bloc.dart';
@@ -71,87 +72,87 @@ class PlatformInfo {
 
 List<Widget> usserPlatforms(BuildContext context, void Function()? onTap) {
     final userBloc = context.watch<UserBloc>();
-    List<Platform> platforms = [
-      Platform(
+    List<PlatformIconModel> platforms = [
+      PlatformIconModel(
           id: 17,
           path: "assets/platforms/playstation_portable.svg",
           active: userBloc.state.platforms.contains(17) ? true : false,
           size: 20, padding: 10),
-      Platform(
+      PlatformIconModel(
           id: 15,
           path: "assets/platforms/playstation_2.svg",
           active: userBloc.state.platforms.contains(15) ? true : false,
           size: 20, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 16,
           path: "assets/platforms/playstation_3.svg",
           active: userBloc.state.platforms.contains(16) ? true : false,
           size: 20, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 18,
           path: "assets/platforms/playstation_4.svg",
           active: userBloc.state.platforms.contains(18) ? true : false,
           size: 20, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 187,
           path: "assets/platforms/playstation_5.svg",
           active: userBloc.state.platforms.contains(187) ? true : false,
           size: 20, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 19,
           path: "assets/platforms/playstation_vita.svg",
           active: userBloc.state.platforms.contains(19) ? true : false,
           size: 20, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 9,
           active: userBloc.state.platforms.contains(9) ? true : false,
           path: "assets/platforms/nintendo_ds.svg",
           size: 20,
           padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 8,
           active: userBloc.state.platforms.contains(8) ? true : false,
           path: "assets/platforms/nintendo_3ds.svg",
           size: 20,
           padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 11,
           active: userBloc.state.platforms.contains(11) ? true : false,
           path: "assets/platforms/nintendo_wii.svg",
           size: 20,
           padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 10,
           active: userBloc.state.platforms.contains(10) ? true : false,
           path: "assets/platforms/nintendo_wiiu.svg",
           size: 20,
           padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 7,
           active: userBloc.state.platforms.contains(7) ? true : false,
           path: "assets/platforms/nintendo_switch.svg",
           size: 20, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 14,
           active: userBloc.state.platforms.contains(14) ? true : false,
           path: "assets/platforms/xbox_360.svg",
           size: 20, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 1,
           active: userBloc.state.platforms.contains(1) ? true : false,
           path: "assets/platforms/xbox_one.svg",
           size: 20, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 186,
           active: userBloc.state.platforms.contains(186) ? true : false,
           path: "assets/platforms/xbox_series.svg",
           size: 20, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 4,
           active: userBloc.state.platforms.contains(4) ? true : false,
           path: "assets/platforms/pc.svg",
           size: 30, padding: 20),
-      Platform(
+      PlatformIconModel(
           id: 21,
           active: userBloc.state.platforms.contains(21) ? true : false,
           path: "assets/platforms/smartphone.svg",

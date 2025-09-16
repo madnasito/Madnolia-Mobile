@@ -2,11 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:madnolia/models/platform/platform_icon_model.dart';
 
 bool active = false;
 
 class PlatformIcon extends StatefulWidget {
-  final Platform platform;
+  final PlatformIconModel platform;
 
   const PlatformIcon({super.key, required this.platform});
 
@@ -55,21 +56,4 @@ class _PlatformIconState extends State<PlatformIcon> {
       ],
     );
   }
-}
-
-class Platform {
-  int id;
-  String path;
-  bool active;
-  int size;
-  double padding;
-  Color background = Colors.white;
-
-  Platform(
-      {required this.id,
-      required this.path,
-      required this.active,
-      required this.size,
-      this.background = Colors.white,
-      this.padding = 0});
 }

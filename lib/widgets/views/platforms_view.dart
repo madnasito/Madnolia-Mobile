@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter_svg/svg.dart';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/models/platform/platform_icon_model.dart';
 import 'package:madnolia/style/text_style.dart';
+import 'package:madnolia/utils/platforms/platforms_util.dart';
+import 'package:madnolia/widgets/atoms/buttons/icon/atom_father_platform_icon.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 
 import 'package:madnolia/widgets/platform_icon_widget.dart';
 
 
 class PlatformsView extends StatefulWidget {
-  final List platforms;
+  final List<int> platforms;
   const PlatformsView({super.key, required this.platforms});
 
   @override
@@ -23,145 +24,25 @@ class PlatformsView extends StatefulWidget {
 
 class _PlatformsViewState extends State<PlatformsView> {
   int currentFather = 0;
-  List<Platform> fatherPlatforms = [
-    Platform(
-        id: 1,
-        path: "assets/platforms/nintendo.svg",
-        active: false,
-        size: 25,
-        background: const Color(0xffed1c24)),
-    Platform(
-        id: 2,
-        path: "assets/platforms/playstation.svg",
-        active: false,
-        size: 25,
-        background: Colors.blue),
-    Platform(
-        id: 3,
-        path: "assets/platforms/xbox.svg",
-        active: false,
-        size: 25,
-        background: Colors.green),
-  ];
+  
+  List<PlatformIconModel> fatherPlatforms = getFatherPlatforms();
 
-  late List<Platform> playstationItems;
+  late List<PlatformIconModel> playstationItems;
 
-  late List<Platform> nintendoItems;
+  late List<PlatformIconModel> nintendoItems;
 
-  late List<Platform> xboxItems;
+  late List<PlatformIconModel> xboxItems;
 
-  late List<Platform> otherItems;
+  late List<PlatformIconModel> otherItems;
   @override
   void initState() {
-    playstationItems = [
-      Platform(
-          id: 17,
-          path: "assets/platforms/playstation_portable.svg",
-          active: widget.platforms.contains(17) ? true : false,
-          size: 20),
-      Platform(
-          id: 15,
-          path: "assets/platforms/playstation_2.svg",
-          active: widget.platforms.contains(15) ? true : false,
-          size: 20, padding: 20),
-      Platform(
-          id: 16,
-          path: "assets/platforms/playstation_3.svg",
-          active: widget.platforms.contains(16) ? true : false,
-          size: 20, padding: 20),
-      Platform(
-          id: 18,
-          path: "assets/platforms/playstation_4.svg",
-          active: widget.platforms.contains(18) ? true : false,
-          size: 20, padding: 20),
-      Platform(
-          id: 187,
-          path: "assets/platforms/playstation_5.svg",
-          active: widget.platforms.contains(187) ? true : false,
-          size: 20, padding: 20),
-      Platform(
-          id: 19,
-          path: "assets/platforms/playstation_vita.svg",
-          active: widget.platforms.contains(19) ? true : false,
-          size: 20, padding: 20),
-    ];
+    playstationItems = getPlaystationChildren(widget.platforms);
 
-    nintendoItems = [
-      Platform(
-          id: 9,
-          active: widget.platforms.contains(9) ? true : false,
-          path: "assets/platforms/nintendo_ds.svg",
-          size: 20,
-          padding: 10),
-      Platform(
-          id: 8,
-          active: widget.platforms.contains(8) ? true : false,
-          path: "assets/platforms/nintendo_3ds.svg",
-          size: 20,
-          padding: 20),
-      Platform(
-          id: 11,
-          active: widget.platforms.contains(11) ? true : false,
-          path: "assets/platforms/nintendo_wii.svg",
-          size: 20,
-          padding: 20),
-      Platform(
-          id: 10,
-          active: widget.platforms.contains(10) ? true : false,
-          path: "assets/platforms/nintendo_wiiu.svg",
-          size: 20,
-          padding: 20),
-      Platform(
-          id: 7,
-          active: widget.platforms.contains(7) ? true : false,
-          path: "assets/platforms/nintendo_switch.svg",
-          size: 20,
-          padding:20)
-    ];
+    nintendoItems = getNintendoChildren(widget.platforms);
 
-    xboxItems = [
-      // Platform(active: false, path: "assets/platforms/xbox_360.svg", size: 70),
-      Platform(
-          id: 1,
-          active: widget.platforms.contains(1) ? true : false,
-          path: "assets/platforms/xbox_one.svg",
-          size: 20),
-      Platform(
-          id: 186,
-          active: widget.platforms.contains(186) ? true : false,
-          path: "assets/platforms/xbox_series.svg",
-          size: 20)
-    ];
+    xboxItems = getXboxChildren(widget.platforms);
 
-    xboxItems = [
-      Platform(
-          id: 14,
-          active: widget.platforms.contains(186) ? true : false,
-          path: "assets/platforms/xbox_360.svg",
-          size: 20, padding: 15),
-      Platform(
-          id: 1,
-          active: widget.platforms.contains(1) ? true : false,
-          path: "assets/platforms/xbox_one.svg",
-          size: 20, padding: 15),
-      Platform(
-          id: 186,
-          active: widget.platforms.contains(186) ? true : false,
-          path: "assets/platforms/xbox_series.svg",
-          size: 20, padding: 15)
-    ];
-    otherItems = [
-      Platform(
-          id: 4,
-          path: "assets/platforms/pc.svg",
-          active: widget.platforms.contains(4) ? true : false,
-          size: 25),
-      Platform(
-          id: 21,
-          path: "assets/platforms/smartphone.svg",
-          active: widget.platforms.contains(21) ? true : false,
-          size: 25),
-    ];
+    otherItems = getOthersPlatforms(widget.platforms);
     super.initState();
   }
 
@@ -231,7 +112,7 @@ class _PlatformsViewState extends State<PlatformsView> {
     }
   }
 
-  List<Widget> _fatherToMap(List<Platform> list) {
+  List<Widget> _fatherToMap(List<PlatformIconModel> list) {
     return list
         .map((item) => FadeIn(
             delay: const Duration(milliseconds: 700),
@@ -254,14 +135,14 @@ class _PlatformsViewState extends State<PlatformsView> {
 
                 setState(() {});
               },
-              child: FatherPlatformIcon(
+              child: AtomFatherPlatformIcon(
                 platform: item,
               ),
             )))
         .toList();
   }
 
-  List<Widget> _toMap(List<Platform> list) {
+  List<Widget> _toMap(List<PlatformIconModel> list) {
     return list
         .map((item) => FadeIn(
             child: GestureDetector(
@@ -288,46 +169,5 @@ class _PlatformsViewState extends State<PlatformsView> {
                 },
                 child: PlatformIcon(platform: item))))
         .toList();
-  }
-}
-
-class FatherPlatformIcon extends StatefulWidget {
-  final Platform platform;
-
-  const FatherPlatformIcon({
-    super.key,
-    required this.platform,
-  });
-
-  @override
-  State<FatherPlatformIcon> createState() => _FatherPlatformIcon();
-}
-
-class _FatherPlatformIcon extends State<FatherPlatformIcon> {
-  @override
-  Widget build(BuildContext context) {
-    final iconSize =
-        (widget.platform.size * MediaQuery.of(context).size.width) / 100;
-    return Container(
-      padding: const EdgeInsets.all(2),
-      width: iconSize,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(40),
-        border: Border.all(
-            color: Colors.black,
-            width: 2,
-            style:
-                widget.platform.active ? BorderStyle.solid : BorderStyle.none),
-        color: widget.platform.active
-            ? widget.platform.background
-            : Colors.transparent,
-      ),
-      child: SvgPicture.asset(
-        widget.platform.path,
-        height: iconSize,
-        width: iconSize,
-        colorFilter: (widget.platform.active) ? const ColorFilter.mode(Colors.white, BlendMode.srcIn): const ColorFilter.mode(Color.fromARGB(172, 109, 109, 109), BlendMode.srcIn),
-      ),
-    );
   }
 }
