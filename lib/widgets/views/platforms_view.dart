@@ -18,8 +18,6 @@ class PlatformsView extends StatefulWidget {
 
   @override
   State<PlatformsView> createState() => _PlatformsViewState();
-  
-
 }
 
 class _PlatformsViewState extends State<PlatformsView> {
