@@ -1,55 +1,40 @@
 import 'package:madnolia/blocs/validators.dart';
-import 'package:madnolia/services/upload_service.dart';
+import 'package:madnolia/models/user/update_profile_picture_response.dart';
+// import 'package:madnolia/services/upload_service.dart';
+import 'package:madnolia/services/user_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class EditUserBloc with Validators {
-  final _nameController = BehaviorSubject<String>();
-  final _usernameController = BehaviorSubject<String>();
-  final _emailController = BehaviorSubject<String>();
+  
+  
   final _imgController = BehaviorSubject<String>();
-  final _thumbController = BehaviorSubject<String>();
-
   final _loadingController = BehaviorSubject<bool>();
+  final _loadingPercentageController = BehaviorSubject<int>();
 
   // Get STREAM data
-  Stream<String> get nameStream =>
-      _nameController.stream.transform(validateName);
-  Stream<String> get usernameStream =>
-      _usernameController.stream.transform(validateUsername);
-  Stream<String> get emailStream =>
-      _emailController.stream.transform(validateEmail);
-
   Stream<String> get imgStream => _imgController.stream;
-  Stream<String> get thumbStream => _thumbController.stream;
-
   Stream<bool> get loadingStream => _loadingController.stream;
-
-  Stream<bool> get userValidStream => CombineLatestStream.combine3(
-      nameStream, usernameStream, emailStream, (n, u, e) => true);
+  Stream<int> get loadingPercentage => _loadingPercentageController.stream;
 
   // Update values
-  Function(String) get changeName => _nameController.sink.add;
-  Function(String) get changeUsername => _usernameController.sink.add;
-  Function(String) get changeEmail => _emailController.sink.add;
   Function(String) get changeImg => _imgController.sink.add;
-  Function(String) get changeThumb => _thumbController.sink.add;
+  Function(int) get changePercentaje => _loadingPercentageController.sink.add;
 
-  Future uploadImage(String path) async {
-    _loadingController.sink.add(true);
-    final Map imageUrl = await UploadFileService().uploadImage(path);
-    _loadingController.sink.add(false);
-
-    if (imageUrl.containsKey("img")) {
-      changeImg(imageUrl["img"]);
-      changeThumb(imageUrl["thumb"]);
+  Future<UpdateProfilePictureResponse> uploadImage(String path) async {
+    try {
+      _loadingController.sink.add(true);
+      _loadingPercentageController.sink.add(0);
+      final imageUrl = await UserService().updateProfilePicture(path, changePercentaje);
+      _loadingController.sink.add(false);
+      _loadingPercentageController.sink.add(0);
+      return imageUrl;
+    } catch (e) {
+      _loadingController.sink.add(false);
+      _loadingPercentageController.sink.add(0);
+      rethrow;
     }
-
-    return imageUrl;
   }
 
-  String get name => _nameController.value;
-  String get email => _emailController.value;
-  String get username => _usernameController.value;
   String get img => _imgController.value;
-  String get thumb => _thumbController.value;
+  int get percentage => _loadingPercentageController.value;
 }

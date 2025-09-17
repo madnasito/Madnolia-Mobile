@@ -2,7 +2,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:flutter/material.dart';
-import 'package:madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:intl/intl.dart';
 
 class GameCard extends StatelessWidget {

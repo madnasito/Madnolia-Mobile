@@ -18,7 +18,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           name: user.name,
           email: user.email,
           id: user.id,
-          img: user.img,
+          image: user.image,
           thumb: user.thumb,
           platforms: user.platforms,
           username: user.username,
@@ -28,15 +28,15 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
       if(event is UserLogOut){
         emit(
-          state.copyWith(loadedUser: false, notifications: 0, platforms: [], username: "", name: "", email: "", id: "", img: "", thumb: "", availability: UserAvailability.everyone)
+          state.copyWith(loadedUser: false, notifications: 0, platforms: [], username: "", name: "", email: "", id: "", image: "", thumb: "", availability: UserAvailability.everyone)
         );
       }
 
-      if( event is UserUpdateImg){
+      if( event is UserUpdateImage){
         emit(
           state.copyWith(
-            img: event.img,
-            thumb: event.thumbImg
+            image: event.image,
+            thumb: event.thumbImage
           )
         );
       }
@@ -56,8 +56,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     add(UserLoadInfo(userModel: user));
   }
 
-  void updateImages(String thumbImg, String img){
-    add(UserUpdateImg(thumbImg: thumbImg, img: img));
+  void updateImages(String thumbImage, String image){
+    add(UserUpdateImage(thumbImage: thumbImage, image: image));
   }
 
   void updateChatRoom(String room) => add(UserUpdateChatRoom(chatRoom: room));

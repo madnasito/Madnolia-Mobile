@@ -52,23 +52,6 @@ void main() async {
     fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
     supportedLocales: supportedLangs,
   );
-
-  // Initialize Firebase after dotenv is loaded
-  // try {
-  //   await Firebase.initializeApp(
-  //     name: 'Madnolia',
-  //     options: DefaultFirebaseOptions.currentPlatform,
-  //   );
-    
-  //   // Inicializar servicios de notificación
-  //   await FirebaseMessagingService.initialize();
-  // } catch (e) {
-  //   if (e.toString().contains('duplicate-app')) {
-  //     debugPrint('Firebase already initialized');
-  //   } else {
-  //     rethrow;
-  //   }
-  // }
   
   try {
     if(await getToken() is String) {

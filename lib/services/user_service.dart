@@ -1,13 +1,13 @@
 import 'dart:convert';
-import 'package:dio/dio.dart' show Dio, DioException, Options, Response;
+import 'package:dio/dio.dart' show Dio, DioException, FormData, MultipartFile, Options, Response;
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:madnolia/models/user/update_profile_picture_response.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/models/user/user_model.dart';
-
 
 class UserService {
   bool authenticating = false;
@@ -53,6 +53,35 @@ class UserService {
       }else {
         throw {'message': 'NETWORK_ERROR'};
       }
+    }
+  }
+
+  Future<UpdateProfilePictureResponse> updateProfilePicture(String path, Function (int) updatePercentage) async {
+    try {
+      Response response;
+
+      final String? token = await _storage.read(key: "token");
+      
+      final data = FormData.fromMap({
+        'image': await MultipartFile.fromFile(path),
+      });
+
+      response = await dio.post(
+        "$baseUrl/user/update-img",
+        data: data,
+        options: Options(headers:  {"Authorization": "Bearer $token"}),
+        onSendProgress: (int sent, int total) {
+          final percentage = (sent / total * 100).round();
+          updatePercentage(percentage);
+          debugPrint('${sent / 1024} ${total / 1024}');
+        },
+      );
+
+      return UpdateProfilePictureResponse.fromJson(response.data);
+
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;  
     }
   }
 

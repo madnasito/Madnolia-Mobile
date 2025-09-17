@@ -3,7 +3,7 @@ import 'package:madnolia/models/game/game_model.dart';
 import 'package:madnolia/models/match/minimal_match_model.dart';
 import 'package:madnolia/services/games_service.dart';
 import 'package:madnolia/services/match_service.dart';
-import 'package:madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 

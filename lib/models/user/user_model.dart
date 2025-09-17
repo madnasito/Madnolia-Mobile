@@ -16,7 +16,7 @@ class User {
     String username;
     String email;
     List<int> platforms;
-    String img;
+    String image;
     String thumb;
     // List<String> games;
     int notifications;
@@ -28,7 +28,7 @@ class User {
         required this.username,
         required this.email,
         required this.platforms,
-        required this.img,
+        required this.image,
         required this.thumb,
         // required this.games,
         required this.notifications,
@@ -58,7 +58,7 @@ class User {
         username: json["username"],
         email: json["email"],
         platforms: List<int>.from(json["platforms"].map((x) => x)),
-        img: json["img"],
+        image: json["image"],
         thumb: json["thumb"],
         // games: List<String>.from(json["games"].map((x) => x)),
         notifications: json["notifications"],
@@ -72,7 +72,7 @@ class User {
         "username": username,
         "email": email,
         "platforms": List<dynamic>.from(platforms.map((x) => x)),
-        "img": img,
+        "image": image,
         "thumb": thumb,
         // "games": List<dynamic>.from(games.map((x) => x)),
         "notifications": notifications,

@@ -11,7 +11,7 @@ import 'package:madnolia/models/game/minimal_game_model.dart';
 import 'package:madnolia/models/match/create_match_model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/minutes_picker.dart';
-import 'package:madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
 import 'package:madnolia/widgets/molecules/lists/games_list_molecule.dart';

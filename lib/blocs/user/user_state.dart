@@ -6,7 +6,7 @@ class UserState extends Equatable {
   final String email;
   final String username;
   final List<int> platforms;
-  final String img;
+  final String image;
   final String thumb;
   final String id;
   final UserAvailability availability;
@@ -19,7 +19,7 @@ class UserState extends Equatable {
     this.email = "",
     this.username = "",
     this.platforms = const [],
-    this.img = "",
+    this.image = "",
     this.thumb = "",
     this.id = "",
     this.availability = UserAvailability.everyone,
@@ -32,7 +32,7 @@ class UserState extends Equatable {
     String? email,
     String? username,
     List<int>? platforms,
-    String? img,
+    String? image,
     String? thumb,
     String? id,
     bool? loadedUser,
@@ -44,7 +44,7 @@ class UserState extends Equatable {
     email: email ?? this.email,
     username: username ?? this.username,
     platforms: platforms ?? this.platforms,
-    img: img ?? this.img,
+    image: image ?? this.image,
     thumb: thumb ?? this.thumb,
     id: id ?? this.id,
     loadedUser: loadedUser ?? this.loadedUser,
@@ -55,6 +55,6 @@ class UserState extends Equatable {
   
   @override
   List<Object> get props => [
-    name, email, username, platforms, img, thumb, id, loadedUser, availability, chatRoom, notifications
+    name, email, username, platforms, image, thumb, id, loadedUser, availability, chatRoom, notifications
   ];
 }

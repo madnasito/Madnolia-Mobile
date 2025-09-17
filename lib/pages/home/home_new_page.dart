@@ -4,7 +4,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/style/button_style.dart';
 import 'package:madnolia/style/text_style.dart';
-import 'package:madnolia/widgets/atoms/animated_logo_atom.dart';
+import 'package:madnolia/widgets/atoms/media/animated_logo_atom.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/molecules/buttons/text_button_molecule.dart';

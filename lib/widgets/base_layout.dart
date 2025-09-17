@@ -83,7 +83,7 @@ class BaseLayout extends StatelessWidget {
                   const SizedBox(width: 0),
                   CircleAvatar(
                     backgroundImage:
-                        CachedNetworkImageProvider(userBloc.state.img),
+                        CachedNetworkImageProvider(userBloc.state.image),
                     minRadius: 40,
                     maxRadius: 50,
                     backgroundColor: Colors.white,

@@ -14,11 +14,11 @@ class UserLoadInfo extends UserEvent {
 
 class UserLogOut extends UserEvent {}
 
-class UserUpdateImg extends UserEvent {
-  final String thumbImg;
-  final String img;
+class UserUpdateImage extends UserEvent {
+  final String thumbImage;
+  final String image;
 
-  const UserUpdateImg({required this.thumbImg, required this.img});
+  const UserUpdateImage({required this.thumbImage, required this.image});
 }
 
 class UserUpdateChatRoom extends UserEvent {

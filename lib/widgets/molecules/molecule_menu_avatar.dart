@@ -22,7 +22,7 @@ class MoleculeMenuAvatar extends StatelessWidget {
           children: [
             CircleAvatar(
               backgroundImage:
-                  CachedNetworkImageProvider(userBloc.state.img),
+                  CachedNetworkImageProvider(userBloc.state.image),
               minRadius: 40,
               maxRadius: 50,
               backgroundColor: Colors.white,

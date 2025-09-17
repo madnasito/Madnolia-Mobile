@@ -128,7 +128,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final messageBloc = context.read<MessageBloc>();
       final platformsGamesBloc = context.read<PlatformGamesBloc>();
       const storage = FlutterSecureStorage();
-      final Map<String, dynamic> userInfo = await UserService().getUserInfo();      
+      final Map<String, dynamic> userInfo = await UserService().getUserInfo();
 
       if (userInfo.containsKey("error")) {
         if (!context.mounted) return null;

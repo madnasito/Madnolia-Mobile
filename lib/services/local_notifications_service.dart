@@ -21,7 +21,7 @@ import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
 import 'package:madnolia/database/services/user-db.service.dart' show getUserByFriendshipDb, getUserDb;
-import 'package:madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import '../models/chat/message_model.dart';
 
 

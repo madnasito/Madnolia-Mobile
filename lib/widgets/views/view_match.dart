@@ -12,7 +12,7 @@ import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
-import 'package:madnolia/widgets/atoms/game_image_atom.dart';
+import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
