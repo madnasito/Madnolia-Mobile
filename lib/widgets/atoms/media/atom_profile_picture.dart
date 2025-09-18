@@ -127,7 +127,7 @@ class AtomProfilePicture extends StatelessWidget {
                     return Positioned.fill(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.7),
+                          color: Colors.black87,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Center(
@@ -144,7 +144,7 @@ class AtomProfilePicture extends StatelessWidget {
                                     child: CircularProgressIndicator(
                                       value: percentage / 100,
                                       strokeWidth: 6,
-                                      backgroundColor: Colors.white.withOpacity(0.3),
+                                      backgroundColor: Colors.white30,
                                       valueColor: const AlwaysStoppedAnimation<Color>(Colors.lightBlueAccent),
                                     ),
                                   ),

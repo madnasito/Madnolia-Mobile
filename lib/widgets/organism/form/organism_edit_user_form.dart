@@ -18,14 +18,22 @@ import '../../../services/user_service.dart' show UserService;
 
 class OrganismEditUserForm extends StatelessWidget {
 
-  final UpdateUser updateUser;
-  const OrganismEditUserForm({super.key, required this.updateUser});
+  
+  const OrganismEditUserForm({super.key});
 
   @override
   Widget build(BuildContext context) {
     bool loading = false;
     final formKey = GlobalKey<FormBuilderState>();
     final availabilityOptions = [UserAvailability.everyone, UserAvailability.partners, UserAvailability.no];
+    final userBloc = context.read<UserBloc>();
+    ToastContext().init(context);
+    final nameController = TextEditingController(text: userBloc.state.name);
+    final usernameController =
+        TextEditingController(text: userBloc.state.username);
+    final emailController =
+        TextEditingController(text: userBloc.state.email);
+    final userAvailability = userBloc.state.availability;
     return FormBuilder(
       key: formKey,
       child: Column(
@@ -36,7 +44,7 @@ class OrganismEditUserForm extends StatelessWidget {
               name: "name",
               label: translate("FORM.INPUT.NAME"),
               icon: Icons.abc_rounded,
-              initialValue: updateUser.name,
+              initialValue: nameController.text,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
                 FormBuilderValidators.minLength(1, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '1'})),
@@ -50,7 +58,7 @@ class OrganismEditUserForm extends StatelessWidget {
               name: "username",
               label: translate("FORM.INPUT.USERNAME"),
               icon: Icons.account_circle_outlined,
-              initialValue: updateUser.username,
+              initialValue: usernameController.text,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
                 FormBuilderValidators.username(errorText: translate('FORM.VALIDATIONS.USERNAME_INVALID')),
@@ -64,7 +72,7 @@ class OrganismEditUserForm extends StatelessWidget {
               name: "email",
               label: translate("FORM.INPUT.EMAIL"),
               icon: Icons.email_outlined,
-              initialValue: updateUser.email,
+              initialValue: emailController.text,
               keyboardType: TextInputType.emailAddress,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
@@ -101,7 +109,7 @@ class OrganismEditUserForm extends StatelessWidget {
         ),
       );
     }).toList(),
-    initialValue: updateUser.availability,
+    initialValue: userAvailability,
   ),
 ),
 
