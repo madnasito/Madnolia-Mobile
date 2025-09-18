@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,14 +6,12 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
-import 'package:madnolia/models/game/minimal_game_model.dart';
 import 'package:madnolia/models/match/create_match_model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/minutes_picker.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
-import 'package:madnolia/widgets/molecules/lists/games_list_molecule.dart';
 import 'package:madnolia/widgets/search_user_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,145 +21,12 @@ import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/utils/platforms.dart';
 // import 'package:flutter/services.dart';
 
-import 'package:madnolia/widgets/match_card_widget.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:toast/toast.dart';
 
-import '../../main.dart';
 import '../../models/game_model.dart';
-import '../../services/rawg_service.dart';
 import '../custom_input_widget.dart';
 
-class SearchGameView extends StatefulWidget {
-  final int platformId;
-  const SearchGameView({super.key, required this.platformId});
-
-  @override
-  State<SearchGameView> createState() => _SearchGameViewState();
-}
-
-class _SearchGameViewState extends State<SearchGameView> {
-  late int counter;
-  late TextEditingController controller;
-  @override
-  void initState() {
-    counter = 0;
-    controller = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    counter = 0;
-    // game = null;
-    final context = navigatorKey.currentContext;
-    final matchUsersCubit = context?.watch<MatchUsersCubit>();
-    matchUsersCubit?.restore();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    
-    return Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SimpleCustomInput(
-              iconData: CupertinoIcons.search,
-              controller: controller,
-              placeholder:
-                  translate("CREATE_MATCH.SEARCH_GAME"),
-              onChanged: (value) async {
-                counter++;
-                Timer(
-                  const Duration(seconds: 1),
-                  () {
-                    counter--;
-                    setState(() {});
-                  },
-                );
-              },
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          (controller.text.isEmpty) ? FutureBuilder(
-            future: getRecomendations(widget.platformId),
-            builder: (BuildContext context, AsyncSnapshot<List<MinimalGame>> snapshot) {
-              if(!snapshot.hasData){
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [Text(translate('RECOMMENDATIONS.LOADING')), CircularProgressIndicator()],);
-              }else if(snapshot.data!.isNotEmpty){
-                return Expanded(
-                  child:  Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(translate('RECOMMENDATIONS.FOR_YOU'), style: TextStyle(fontSize: 15),),
-                    const SizedBox(height: 20),
-                    Flexible(child: GamesListMolecule(games: snapshot.data!, platform: widget.platformId,)),
-                  ],
-                )
-                );
-              }else {
-                return Container();
-              }
-            }
-          ) : Container(),
-          (counter == 0 && controller.text.isNotEmpty)
-              ? FutureBuilder(
-                  future: getGames(
-                      title: controller.text.toString(),
-                      platform: "${widget.platformId}"),
-                  builder:
-                      (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                    if (snapshot.hasData) {
-                      return Flexible(
-                          child: snapshot.data.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      onTap: () => setState(() {
-                                        context.go("/new/match", extra: {
-                                          "game": snapshot.data[index],
-                                          "platformId": widget.platformId
-                                        });
-                                      }),
-                                      child:  GameCard(
-                                          background: snapshot.data[index].backgroundImage,
-                                          name: snapshot.data[index].name,
-                                          bottom: const Text("")),
-                                    );
-                                  })
-                          : Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Text(translate("CREATE_MATCH.EMPTY_SEARCH"), textAlign: TextAlign.center,),
-                          ));
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  },
-                )
-              : const Text(""),
-        ],
-      );
-  }
-
-  Future getGames({required String title, required String platform}) async {
-    return RawgService().searchGame(game: title, platform: platform);
-  }
-
-  Future<List<MinimalGame>> getRecomendations(int platform) async {
-    final List resp = await MatchService().getGamesRecomendations(platform);
-
-    final games = resp.map((e) => MinimalGame.fromJson(e)).toList();
-
-    return games;
-  }
-}
 final dateController = TextEditingController();
 
 final formKey = GlobalKey<FormBuilderState>();

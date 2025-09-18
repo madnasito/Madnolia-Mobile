@@ -9,7 +9,7 @@ class AtomCreateMatchButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
       onPressed: () {
-        GoRouter.of(context).pushReplacement('/new');
+        GoRouter.of(context).push('/new');
       },
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       shape: StadiumBorder(side: BorderSide(color: Colors.lightBlueAccent, width: 1)),

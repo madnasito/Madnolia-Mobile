@@ -19,7 +19,7 @@ class GamesListMolecule extends StatelessWidget {
       return GestureDetector(
         onTap: onTap ?? ()  {
           final gameMatch = Game(name: game.name, backgroundImage: game.background, id: game.gameId);
-          context.go("/new/match",
+          context.push("/new/match",
           extra: {
             "game": gameMatch,
             "platformId": platform
