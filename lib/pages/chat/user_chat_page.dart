@@ -33,7 +33,7 @@ class UserChatPage extends StatelessWidget {
                   child: Column(
                     children: [
                       GestureDetector(
-                        onTap: () => GoRouter.of(context).pushReplacement("/user/${chatUser.id}"),
+                        onTap: () => GoRouter.of(context).push("/user/${chatUser.id}"),
                         child: MoleculeUserHeader(user: chatUser)),
                       Expanded(child: OrganismUserChatMessages(id: snapshot.data!.id, user: chatUser.id)),
                       const SizedBox(height: 3),

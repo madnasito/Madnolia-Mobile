@@ -280,15 +280,15 @@ class AtomUserPFP extends StatelessWidget {
             userThumb,
           ),
         ),
-        Container(
-          padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.green,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.grey[900]!, width: 2),
-          ),
-          child: Icon(Icons.circle, size: 12, color: Colors.white),
-        ),
+        // Container(
+        //   padding: EdgeInsets.all(5),
+        //   decoration: BoxDecoration(
+        //     color: Colors.green,
+        //     shape: BoxShape.circle,
+        //     border: Border.all(color: Colors.grey[900]!, width: 2),
+        //   ),
+        //   child: Icon(Icons.circle, size: 12, color: Colors.white),
+        // ),
       ],
     );
   }
