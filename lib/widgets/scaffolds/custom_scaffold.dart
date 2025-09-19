@@ -15,7 +15,7 @@ class CustomScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     
-    final userBloc = context.read<UserBloc>();
+    final userBloc = context.watch<UserBloc>();
     
     final backgroundService = FlutterBackgroundService();
 
@@ -27,6 +27,16 @@ class CustomScaffold extends StatelessWidget {
       drawer: OrganismDrawer(),
       drawerEnableOpenDragGesture: false,
       appBar: AppBar(
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: userBloc.state.loadedUser ? () {
+                Scaffold.of(context).openDrawer();
+              } : null,
+            );
+          }
+        ),
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         shadowColor: Colors.transparent,
         centerTitle: true,
