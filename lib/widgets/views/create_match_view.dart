@@ -88,7 +88,7 @@ class MatchFormView extends StatelessWidget {
                   initialDate: DateTime.now(),
                   firstDate: DateTime.now(),
                   lastDate: DateTime.now().add(
-                    const Duration(days: 365),
+                    const Duration(days: 120),
                   ),
                   is24HourMode: false,
                   theme: ThemeData.dark(useMaterial3: true),
@@ -113,15 +113,7 @@ class MatchFormView extends StatelessWidget {
                     );
                   },
                   transitionDuration: const Duration(milliseconds: 200),
-                  barrierDismissible: true,
-                  selectableDayPredicate: (dateTime) {
-                    // Disable 25th Feb 2023
-                    if (dateTime == DateTime(2023, 2, 25)) {
-                      return false;
-                    } else {
-                      return true;
-                    }
-                  },
+                  barrierDismissible: true
                 );
         
                 dateController.text = dateTime != null
@@ -153,16 +145,17 @@ class MatchFormView extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 15,
-                children: [
-                  // Icon(Icons.gamepad_outlined),
-                  SvgPicture.asset(
-                    platformInfo.path,
-                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                    width: 110,
-                  ),
-                ]),
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 15,
+              children: [
+                // Icon(Icons.gamepad_outlined),
+                SvgPicture.asset(
+                  platformInfo.path,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  width: 110,
+                ),
+              ]
+            ),
             const SizedBox(height: 20),
             Text(userState.name, style: const TextStyle(fontSize: 10)),
             const SizedBox(height: 10),
@@ -212,39 +205,38 @@ class MatchFormView extends StatelessWidget {
                       if (!context.mounted) return;
                       return showErrorServerAlert(context, resp);
                     } else {
-                      Toast.show(
+                        Toast.show(
                           translate("CREATE_MATCH.MATCH_CREATED"),
                           gravity: 100,
                           border: Border.all(color: Colors.blueAccent),
                           textStyle: const TextStyle(fontSize: 18),
-                          duration: 3);
-                      dateController.clear();
-                      matchMinutesCubit.restoreMinutes();
-                      matchUsersCubit.restore();
-                      if(!context.mounted) return;
-                      final playerMatches = context.read<PlayerMatchesBloc>();
-                      playerMatches.add(RestoreMatchesState());
-                      if (!context.mounted) return;
-                      formKey.currentState?.reset();
-                      final backgroundService = FlutterBackgroundService();
-                      backgroundService.invoke('match_created', {'id': resp['_id']});
-                      context.goNamed("matches");
-                    }
-                  } catch (e) {
-                    if (context.mounted) showAlert(context, e.toString());
-                  } finally{
-                    setState(() => uploading = false);
-                  }
+                          duration: 3
+                        );
+                        dateController.clear();
+                        matchMinutesCubit.restoreMinutes();
+                        matchUsersCubit.restore();
+                        if(!context.mounted) return;
+                        final playerMatches = context.read<PlayerMatchesBloc>();
+                        playerMatches.add(RestoreMatchesState());
+                        if (!context.mounted) return;
+                        formKey.currentState?.reset();
+                        final backgroundService = FlutterBackgroundService();
+                        backgroundService.invoke('match_created', {'id': resp['_id']});
+                        context.goNamed("matches");
+                      }
+                      } catch (e) {
+                        if (context.mounted) showAlert(context, e.toString());
+                      } finally{
+                        setState(() => uploading = false);
+                      }
                   
-                  }
+                    }
+                  )
                 )
-            )
-            
                 ],
               ),
             ),
             const SizedBox(height: 15),
-            
           ],
         ),
       ),
