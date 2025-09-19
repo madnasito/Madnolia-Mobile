@@ -311,18 +311,47 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
           return const Center(child: CircularProgressIndicator());
         }
         
-        return _buildMessageList(state);
+        return BuildMessageList(scrollController: _scrollController, state: state);
 
       },
     );
   }
-  Widget _buildMessageList(MessageState state) {
+ 
 
-  return Container(
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _messageBloc.add(RestoreState());
+    _messageSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_isBottom) {
+      _messageBloc.add(GroupMessageFetched(roomId: widget.room));
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    return _scrollController.offset >= (_scrollController.position.maxScrollExtent * 0.9);
+  }
+}
+
+class BuildMessageList extends StatelessWidget {
+
+  final MessageState state;
+  final ScrollController scrollController;
+  const BuildMessageList({super.key, required this.state, required this.scrollController});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
     color: Colors.black38,
     child: ListView.builder(
-      controller: _scrollController,
+      controller: scrollController,
       cacheExtent: 99999,
       reverse: true,
       addAutomaticKeepAlives: true,
@@ -344,25 +373,5 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
       },
     ),
   );
-}
-
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    _messageBloc.add(RestoreState());
-    _messageSubscription?.cancel();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    if (_isBottom) {
-      _messageBloc.add(GroupMessageFetched(roomId: widget.room));
-    }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    return _scrollController.offset >= (_scrollController.position.maxScrollExtent * 0.9);
   }
 }
