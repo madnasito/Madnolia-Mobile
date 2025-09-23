@@ -8,7 +8,7 @@ final class MessageState extends Equatable {
   final int unreadUserChats;
   final List<ChatMessage> userMessages;
   final List<ChatMessage> groupMessages;
-  final List<UserDb> users;
+  final List<UserData> users;
   final bool hasReachedMax;
 
   const MessageState({
@@ -16,7 +16,7 @@ final class MessageState extends Equatable {
     this.unreadUserChats = 0,
     this.userMessages = const <ChatMessage>[],
     this.groupMessages = const <ChatMessage>[],
-    this.users = const <UserDb>[],
+    this.users = const <UserData>[],
     this.hasReachedMax = false, 
   });
 
@@ -26,7 +26,7 @@ final class MessageState extends Equatable {
     int? unreadUserChats,
     List<ChatMessage>? userMessages,
     List<ChatMessage>? groupMessages,
-    List<UserDb>? users,
+    List<UserData>? users,
     bool? hasReachedMax,
   }) {
     return MessageState(

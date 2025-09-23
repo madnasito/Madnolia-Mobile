@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/models/user/simple_user_model.dart';
+import 'package:madnolia/database/drift/database.dart';
 import 'package:madnolia/widgets/dialogs/dialog_requested.dart' show DialogRequested;
 
 class AtomRequestedButton extends StatelessWidget {
 
-  final SimpleUser simpleUser;
+  final UserData userData;
   
-  const AtomRequestedButton({super.key, required this.simpleUser});
+  const AtomRequestedButton({super.key, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class AtomRequestedButton extends StatelessWidget {
       context: context,
       barrierDismissible: true,
       builder: (context) {
-        return DialogRequested(simpleUser: simpleUser);
+        return DialogRequested(userData: userData);
       });
     },
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 30),

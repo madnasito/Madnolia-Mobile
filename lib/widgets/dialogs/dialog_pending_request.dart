@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/models/user/simple_user_model.dart';
+import 'package:madnolia/database/drift/database.dart';
 
 class DialogPendingRequest extends StatelessWidget {
-  final SimpleUser simpleUser;
-  const DialogPendingRequest({super.key, required this.simpleUser});
+  final UserData userData;
+  const DialogPendingRequest({super.key, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,10 @@ class DialogPendingRequest extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 40,
-            backgroundImage: CachedNetworkImageProvider(simpleUser.thumb),
+            backgroundImage: CachedNetworkImageProvider(userData.thumb),
           ),
           const SizedBox(height: 20),
-          Text(translate('CONNECTIONS.REQUESTS.USER_WANTS_TO_CONNECT', args: {'name': simpleUser.username}), textAlign: TextAlign.center,)
+          Text(translate('CONNECTIONS.REQUESTS.USER_WANTS_TO_CONNECT', args: {'name': userData.username}), textAlign: TextAlign.center,)
         ],
       ),
       content: Text(translate('CONNECTIONS.REQUESTS.ACCEPT_REQUEST'), textAlign: TextAlign.center,),
@@ -30,7 +30,7 @@ class DialogPendingRequest extends StatelessWidget {
         TextButton(
           onPressed: () {
             final backgroundService = FlutterBackgroundService();
-            backgroundService.invoke('reject_connection', {'user': simpleUser.id});
+            backgroundService.invoke('reject_connection', {'user': userData.id});
             Navigator.pop(context, 'Reject');
           } ,
           child: Text(translate('CONNECTIONS.REQUESTS.REJECT')),
@@ -38,7 +38,7 @@ class DialogPendingRequest extends StatelessWidget {
           TextButton(
             onPressed: () {
               final backgroundService = FlutterBackgroundService();
-              backgroundService.invoke('accept_connection', {'user': simpleUser.id});
+              backgroundService.invoke('accept_connection', {'user': userData.id});
               Navigator.pop(context, 'OK');
               },
             child: Text(translate('CONNECTIONS.REQUESTS.ACCEPT')),

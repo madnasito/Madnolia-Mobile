@@ -1,12 +1,12 @@
   import 'package:flutter/material.dart';
-import 'package:madnolia/models/user/simple_user_model.dart';
+import 'package:madnolia/database/drift/database.dart';
 import 'package:madnolia/widgets/dialogs/dialog_requested.dart';
 
 class AtomRequestedIconButton extends StatelessWidget {
 
-  final SimpleUser simpleUser;
+  final UserData userData;
 
-  const AtomRequestedIconButton({super.key, required this.simpleUser});
+  const AtomRequestedIconButton({super.key, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class AtomRequestedIconButton extends StatelessWidget {
       context: context,
       barrierDismissible: true,
       builder: (context) {
-        return DialogRequested(simpleUser: simpleUser);
+        return DialogRequested(userData: userData);
       });
     }, icon: const Icon(Icons.check_outlined));
   }

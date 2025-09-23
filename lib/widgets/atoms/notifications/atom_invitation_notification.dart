@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/database/drift/users/user.services.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
-import 'package:madnolia/database/services/user-db.service.dart';
 import 'package:madnolia/services/notifications_service.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 
@@ -14,8 +14,9 @@ class AtomInvitationNotification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userDbServices = UserDbServices();
     return FutureBuilder(
-      future: getUserDb(notification.sender),
+      future: userDbServices.getUserById(notification.sender),
       builder: (context, snapshot) {
         if(snapshot.hasData){ 
           return Dismissible(

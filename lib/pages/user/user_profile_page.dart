@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/drift/users/user.services.dart';
 import 'package:madnolia/enums/report-type.enum.dart';
 import 'package:madnolia/models/reports/upload-report.model.dart';
-import 'package:madnolia/models/user/simple_user_model.dart';
-import 'package:madnolia/database/providers/user_db.dart';
 import 'package:madnolia/services/reports_service.dart';
 import 'package:madnolia/style/form_style.dart';
-import 'package:madnolia/database/services/user-db.service.dart';
 import 'package:madnolia/widgets/alert_widget.dart' show showErrorServerAlert, showSuccesfulAlert;
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_connection_button.dart';
@@ -31,18 +30,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userDbServices = UserDbServices();
     return CustomScaffold(
       body: FutureBuilder(
-        future: getUserDb(widget.id),
-        builder: (BuildContext context, AsyncSnapshot<UserDb> snapshot) {
+        future: userDbServices.getUserById(widget.id),
+        builder: (BuildContext context, AsyncSnapshot<UserData> snapshot) {
           if (snapshot.hasData) {
-            final SimpleUser user = simpleUserFromJson(snapshot.data!.toJson());
+            final UserData user = snapshot.data!;
             return SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   MoleculeProfileHeader(user: user),
-                  MoleculeConnectionButton(simpleUser: user),
+                  MoleculeConnectionButton(userData: user),
                   MaterialButton(
                     onPressed: () {
                       showDialog(
@@ -296,7 +296,7 @@ class AtomUserPFP extends StatelessWidget {
 
 class MoleculeProfileHeader extends StatelessWidget {
 
-  final SimpleUser user;
+  final UserData user;
   const MoleculeProfileHeader({super.key, required this.user});
 
   @override

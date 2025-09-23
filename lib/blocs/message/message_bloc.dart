@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' show droppable;
 import 'package:equatable/equatable.dart';
+import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/drift/users/user.services.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
-import 'package:madnolia/database/providers/user_db.dart' show UserDb;
 import 'package:madnolia/services/messages_service.dart';
-import 'package:madnolia/database/services/user-db.service.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../enums/list_status.enum.dart' show ListStatus;
@@ -73,15 +73,17 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         }
         
         List<String> users = [];
-        List<UserDb> chatUsers = [];
+        List<UserData> chatUsers = [];
         chatUsers.addAll(state.users);
 
         users = messages.map((e) => e.creator).toList();
 
         users = users.toSet().toList();
 
+        final userDbServices = UserDbServices();
+
         for (var id in users) {        
-          final newChatUser = await getUserDb(id);
+          final newChatUser = await userDbServices.getUserById(id);
           if(!chatUsers.contains(newChatUser)) chatUsers.add(newChatUser);
         }
 
@@ -116,10 +118,13 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   void _addRoomMessage( AddRoomMessage event, Emitter<MessageState> emit ) async {
 
-    List<UserDb> chatUsers = [];
+    List<UserData> chatUsers = [];
     chatUsers.addAll(state.users);
 
-    final userDb = await getUserDb(event.message.creator);
+    final userDbServices = UserDbServices();
+
+
+    final userDb = await userDbServices.getUserById(event.message.creator);
     if(!chatUsers.contains(userDb)) chatUsers.add(userDb);
 
     emit(

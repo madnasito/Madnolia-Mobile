@@ -92,6 +92,9 @@ dependencies:
   firebase_core: ^4.0.0
   firebase_messaging: ^16.0.0
   image_cropper: ^9.1.0
+  drift: ^2.28.1
+  drift_flutter: ^0.2.6
+  path_provider: ^2.1.5
 
 dependency_overrides:
   intl: ^0.19.0
@@ -106,6 +109,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  drift_dev: ^2.28.2
+  build_runner: ^2.7.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

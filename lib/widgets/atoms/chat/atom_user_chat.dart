@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/drift/users/user.services.dart';
 import 'package:madnolia/database/providers/friendship_db.dart';
-import 'package:madnolia/database/providers/user_db.dart';
 import 'package:madnolia/database/services/friendship-db.service.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
-import 'package:madnolia/database/services/user-db.service.dart';
 
 
 class AtomUserChat extends StatelessWidget {
@@ -46,11 +46,11 @@ class AtomUserChat extends StatelessWidget {
         final userId = context.read<UserBloc>().state.id;
         final String notMe = friendship.user1 == userId ? friendship.user2 : friendship.user1;
 
-
+        final userDbServices = UserDbServices();
         // Segundo FutureBuilder para obtener los datos del usuario
-        return FutureBuilder<UserDb>(
-          future: getUserDb(notMe),
-          builder: (context, AsyncSnapshot<UserDb> snapshot) {
+        return FutureBuilder<UserData>(
+          future: userDbServices.getUserById(notMe),
+          builder: (context, AsyncSnapshot<UserData> snapshot) {
             // Manejo de estados del segundo FutureBuilder
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());

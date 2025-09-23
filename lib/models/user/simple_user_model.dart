@@ -5,6 +5,8 @@
 import 'dart:convert';
 import 'package:madnolia/enums/connection-status.enum.dart';
 
+import '../../database/drift/database.dart';
+
 SimpleUser simpleUserFromJson(String str) => SimpleUser.fromJson(json.decode(str));
 
 String simpleUserToJson(SimpleUser data) => json.encode(data.toJson());
@@ -64,4 +66,14 @@ class SimpleUser {
     "thumb": thumb,
     "connection": connection.index, // Send the index of the enum value
   };
+
+  factory SimpleUser.fromUserData(UserData userData) {
+    return SimpleUser(
+      id: userData.id,
+      name: userData.name,
+      username: userData.username,
+      thumb: userData.thumb,
+      connection: userData.connection,
+    );
+  }
 }

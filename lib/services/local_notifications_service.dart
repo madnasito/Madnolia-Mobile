@@ -8,6 +8,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/drift/users/user.services.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
@@ -16,11 +18,9 @@ import 'package:madnolia/models/invitation_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/database/providers/match_db.dart';
-import 'package:madnolia/database/providers/user_db.dart' show UserDb;
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
-import 'package:madnolia/database/services/user-db.service.dart' show getUserByFriendshipDb, getUserDb;
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import '../models/chat/message_model.dart';
 
@@ -120,20 +120,21 @@ class LocalNotificationsService {
         debugPrint("Message type is Match. Title: $title");
       } else {
         debugPrint("Message type is User. Calculating other user's name...");
-        final otherUser = await getUserByFriendshipDb(message.conversation);
+        final otherUser = await UserDbServices().getUserByFriendship(message.conversation);
         title = otherUser?.name;
         debugPrint("Calculated Title (Other User's Name): $title");
       }
       debugPrint("--- End Notification Title Debug ---");
       // --- FIN LÓGICA DE TÍTULO ---
 
+      final userDbServices = UserDbServices();
       final userIds = targetGroup.map((msg) => msg.creator).toSet();
-      final userData = <String, UserDb>{};
+      final userData = <String, UserData>{};
       for (final userId in userIds) {
-        userData[userId] = await getUserDb(userId);
+        userData[userId] = await userDbServices.getUserById(userId);
       }
 
-      final currentUserDb = await getUserDb(currentUserId);
+      final currentUserDb = await userDbServices.getUserById(currentUserId);
       final currentUserImage = await getRoundedImageBytes(CachedNetworkImageProvider(currentUserDb.thumb));
 
       final Person me = Person(
@@ -157,7 +158,7 @@ class LocalNotificationsService {
         );
       }).toList());
 
-      final lastSender = await getUserDb(message.creator);
+      final lastSender = await userDbServices.getUserById(message.creator);
       final image = await getRoundedImageBytes(CachedNetworkImageProvider(lastSender.thumb));
       
       NotificationDetails notificationDetails = NotificationDetails(
@@ -212,7 +213,7 @@ class LocalNotificationsService {
             if (group.first.type == MessageType.match) {
               chatTitle = (await getMatchDb(group.first.conversation))?.title ?? 'Match';
             } else {
-              final otherUserId = await getUserByFriendshipDb(group.first.conversation);
+              final otherUserId = await userDbServices.getUserByFriendship(group.first.conversation);
               chatTitle = otherUserId?.name;
             }
             summaryLines.add('${group.length} new message(s) in "$chatTitle"');
@@ -258,7 +259,8 @@ class LocalNotificationsService {
 
       await initializeTranslations();
       final matchDb = await getMatchDb(invitation.match);
-      final userDb = await getUserDb(invitation.user);
+      final userDbServices = UserDbServices();
+      final userDb = await userDbServices.getUserById(invitation.user);
       final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeImage(invitation.img)));
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
       
@@ -319,6 +321,8 @@ class LocalNotificationsService {
 
       // _roomMessages.clear();
       // _userMessages.clear();
+
+      final userDbServices = UserDbServices();
       try {
         MinimalMatchDb matchDb = MinimalMatchDb.fromJson(details.payload!);
         final context = navigatorKey.currentContext;
@@ -332,11 +336,11 @@ class LocalNotificationsService {
         final context = navigatorKey.currentContext;
         switch (message.type) {
           case MessageType.user:
-            UserDb userDb = await getUserDb(message.creator);
+            UserData userDb = await userDbServices.getUserById(message.creator);
             const storage = FlutterSecureStorage();
 
             if(userDb.id == await storage.read(key: "userId")) {
-              userDb = await getUserByFriendshipDb(message.conversation) ?? userDb;
+              userDb = await userDbServices.getUserByFriendship(message.conversation) ?? userDb;
             }
             
             final ChatUser chatUser = ChatUser(id: userDb.id, name: userDb.name, thumb: userDb.thumb, username: userDb.username);
@@ -391,6 +395,7 @@ static Future<void> _updateSummaryNotification() async {
         const String groupChannelName = 'Messages';
         const String groupChannelDescription = 'Messages channel';
         const String groupKey = 'all_chat_messages';
+        final userDbServices = UserDbServices();
         
         List<String> summaryLines = [];
         for (var group in _roomMessages) {
@@ -399,7 +404,7 @@ static Future<void> _updateSummaryNotification() async {
                 if (group.first.type == MessageType.match) {
                     chatTitle = (await getMatchDb(group.first.conversation))?.title ?? 'Match';
                 } else {
-                    final otherUserId = await getUserByFriendshipDb(group.first.conversation);
+                    final otherUserId = await userDbServices.getUserByFriendship(group.first.conversation);
                     chatTitle = otherUserId?.name;
                 }
                 summaryLines.add('${group.length} new message(s) in "$chatTitle"');

@@ -2,6 +2,7 @@ import 'dart:async' show StreamSubscription;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:madnolia/database/drift/database.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +18,6 @@ import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
-import '../../database/providers/user_db.dart' show UserDb;
 
 import '../../models/match/full_match.model.dart';
 
@@ -265,7 +265,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   late final MessageBloc _messageBloc;
   late final FlutterBackgroundService _backgroundService;
   StreamSubscription? _messageSubscription;
-  late List<UserDb> chatUsers;
+  late List<UserData> chatUsers;
 
   @override
   void initState() {
@@ -359,7 +359,7 @@ class BuildMessageList extends StatelessWidget {
       itemBuilder: (context, index) {
         
         final message = state.groupMessages[index];
-        UserDb user = state.users.firstWhere((user) => message.creator == user.id);
+        UserData user = state.users.firstWhere((user) => message.creator == user.id);
 
 
         final isMainMessage = index == 0 || 

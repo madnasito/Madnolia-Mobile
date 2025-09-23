@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart' show CachedNetwo
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/database/drift/users/user.services.dart';
 import 'package:madnolia/enums/connection-status.enum.dart' show ConnectionStatus;
 import 'package:madnolia/models/notification/notification_model.dart';
 import 'package:madnolia/models/user/simple_user_model.dart' show SimpleUser;
-import 'package:madnolia/database/services/user-db.service.dart';
 
 class AtomRequestNotification extends StatelessWidget {
 
@@ -14,8 +14,9 @@ class AtomRequestNotification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userDbServices = UserDbServices();
     return FutureBuilder(
-      future: getUserDb(notification.sender),
+      future: userDbServices.getUserById(notification.sender),
       builder: (context, snapshot) {
         if(snapshot.hasData){
           return  Container(

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart' show Dio, DioException, FormData, MultipartFile, Options, Response;
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/models/user/update_profile_picture_response.dart';
 import 'package:madnolia/models/user/update_user_model.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +19,23 @@ class UserService {
 
   Future getUserInfo() => userGetRequest("user/info");
 
-  Future getUserInfoById(String id) => userGetRequest("user/info/$id");
+  // Future getUserInfoById(String id) => userGetRequest("user/info/$id");
+
+  Future<SimpleUser> getUserInfoById(String id)  async {
+    try {
+      Response response;
+
+      final String? token = await _storage.read(key: "token");
+
+      debugPrint('Getting user info: $id');
+
+      response = await dio.get('$baseUrl/user/info/$id', options: Options(headers:  {"Authorization": "Bearer $token"}));
+
+      return SimpleUser.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Future getPartners() => userGetRequest("get_partners");
 

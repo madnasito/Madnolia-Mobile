@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/database/drift/database.dart';
 
-import '../../models/user/simple_user_model.dart';
 
 class DialogRequested extends StatelessWidget {
-  final SimpleUser simpleUser;
-  const DialogRequested({super.key, required this.simpleUser});
+  final UserData userData;
+  const DialogRequested({super.key, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +20,10 @@ class DialogRequested extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 40,
-            backgroundImage: CachedNetworkImageProvider(simpleUser.thumb),
+            backgroundImage: CachedNetworkImageProvider(userData.thumb),
           ),
           const SizedBox(height: 20),
-          Text(translate('CONNECTIONS.HAVE_A_REQUEST', args: {'name': simpleUser.name}), textAlign: TextAlign.center,)
+          Text(translate('CONNECTIONS.HAVE_A_REQUEST', args: {'name': userData.name}), textAlign: TextAlign.center,)
         ],
       ),
       content: Text(translate('CONNECTIONS.REQUESTS.WANT_TO_CANCELL'), textAlign: TextAlign.center,),
@@ -37,7 +37,7 @@ class DialogRequested extends StatelessWidget {
           TextButton(
             onPressed: () {
               final backgroundService = FlutterBackgroundService();
-              backgroundService.invoke('cancel_connection', {'user': simpleUser.id});
+              backgroundService.invoke('cancel_connection', {'user': userData.id});
               Navigator.pop(context);
               },
             child: Text(translate('CONNECTIONS.REQUESTS.CANCEL')),

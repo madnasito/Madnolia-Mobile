@@ -2,12 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/providers/user_db.dart';
+import 'package:madnolia/database/drift/database.dart';
 // import 'package:madnolia/utils/user_db_util.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl;
 
 class MyMessageMolecule extends StatelessWidget {
-  final UserDb user;
+  final UserData user;
   final String text;
   final bool mainMessage;
   
@@ -74,7 +74,7 @@ class MyMessageMolecule extends StatelessWidget {
 }
 
 class NotMyMessageMolecule extends StatelessWidget {
-  final UserDb? user;
+  final UserData? user;
   final String text;
   final bool mainMessage;
   

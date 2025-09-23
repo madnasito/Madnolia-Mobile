@@ -1,5 +1,5 @@
 import 'package:madnolia/blocs/blocs.dart';
-import 'package:madnolia/database/providers/user_db.dart';
+import 'package:madnolia/database/drift/database.dart';
 import 'package:madnolia/widgets/molecules/chat_message_molecule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GroupChatMessageOrganism extends StatefulWidget {
   final String text;
-  final UserDb user;
+  final UserData user;
   final bool mainMessage;
 
   const GroupChatMessageOrganism(

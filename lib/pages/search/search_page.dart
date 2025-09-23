@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/database/drift/database.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/organism/organism_users_list.dart';
@@ -96,7 +97,7 @@ class _SearchPageState extends State<SearchPage> {
                           if(snapshot.data!.isEmpty) {
                             return Text(translate('SEARCH.NO_USERS_FOUND'));
                           } 
-                          return OrganismUsersList(users: snapshot.data!);
+                          return OrganismUsersList(users: snapshot.data!.map((e) => UserData.fromJson(e.toJson())).toList());
                         },
                       ),
                     )

@@ -10,8 +10,8 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
+import 'package:madnolia/database/drift/users/user.services.dart';
 import 'package:madnolia/database/providers/friendship_db.dart';
-import 'package:madnolia/database/providers/user_db.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/widgets/background.dart';
 
@@ -149,6 +149,7 @@ class BaseLayout extends StatelessWidget {
                   onTap: () async {
                     final chatsBloc = context.read<ChatsBloc>();
                     final matchesBloc = context.read<PlayerMatchesBloc>();
+                    final userDbServices = UserDbServices();
                     userBloc.logOutUser();
                     messageBloc.add(RestoreState());
                     matchesBloc.add(RestoreMatchesState());
@@ -159,7 +160,7 @@ class BaseLayout extends StatelessWidget {
                     const storage = FlutterSecureStorage();
                     await storage.delete(key: "token");
                     if(!context.mounted) return;
-                    UserProvider.clearTable();
+                    userDbServices.deleteUsers();
                     FriendshipProvider.deleteAll();
                     GoRouter.of(context).go("/");
                   },
