@@ -9,9 +9,9 @@ class UserDbServices {
 
   final database = AppDatabase.instance;
 
-  Future<int> createOrUpdateUser(UserCompanion user) {
+  Future<int> createOrUpdateUser(UserCompanion user) async {
     try {
-      return database.into(database.user).insertOnConflictUpdate(user);
+      return await database.into(database.user).insertOnConflictUpdate(user);
     } catch (e) {
       rethrow;
     }

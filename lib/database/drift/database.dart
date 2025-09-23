@@ -5,6 +5,7 @@ import 'package:madnolia/database/drift/friendship/friendship.schema.dart';
 import 'package:madnolia/database/drift/match/match.schema.dart';
 
 import '../../enums/connection-status.enum.dart';
+import '../../enums/friendship-status.enum.dart';
 
 part 'database.g.dart';
 

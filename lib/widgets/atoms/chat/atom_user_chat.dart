@@ -5,9 +5,8 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/drift/friendship/frienship.services.dart';
 import 'package:madnolia/database/drift/users/user.services.dart';
-import 'package:madnolia/database/providers/friendship_db.dart';
-import 'package:madnolia/database/services/friendship-db.service.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
@@ -23,9 +22,10 @@ class AtomUserChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<FriendshipDb>(
-      future: FriendshipService().getFriendship(userChat.id),
-      builder: (BuildContext context, AsyncSnapshot<FriendshipDb> friendshipSnapshot) {
+    final friendshipDbServices = FriendshipDbService();
+    return FutureBuilder<FriendshipData>(
+      future: friendshipDbServices.getFriendshipById(userChat.id),
+      builder: (BuildContext context, AsyncSnapshot<FriendshipData> friendshipSnapshot) {
         // Manejo de estados del primer FutureBuilder
         if (friendshipSnapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

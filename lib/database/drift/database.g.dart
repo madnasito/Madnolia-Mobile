@@ -417,11 +417,11 @@ class $FriendshipTable extends Friendship
   late final GeneratedColumn<String> user2 = GeneratedColumn<String>(
       'user2', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
-  late final GeneratedColumn<int> status = GeneratedColumn<int>(
-      'status', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumnWithTypeConverter<FriendshipStatus, int> status =
+      GeneratedColumn<int>('status', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<FriendshipStatus>($FriendshipTable.$converterstatus);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -466,12 +466,6 @@ class $FriendshipTable extends Friendship
     } else if (isInserting) {
       context.missing(_user2Meta);
     }
-    if (data.containsKey('status')) {
-      context.handle(_statusMeta,
-          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
-    } else if (isInserting) {
-      context.missing(_statusMeta);
-    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -499,8 +493,9 @@ class $FriendshipTable extends Friendship
           .read(DriftSqlType.string, data['${effectivePrefix}user1'])!,
       user2: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}user2'])!,
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}status'])!,
+      status: $FriendshipTable.$converterstatus.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}status'])!),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       lastUpdated: attachedDatabase.typeMapping
@@ -512,13 +507,16 @@ class $FriendshipTable extends Friendship
   $FriendshipTable createAlias(String alias) {
     return $FriendshipTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<FriendshipStatus, int, int> $converterstatus =
+      const EnumIndexConverter<FriendshipStatus>(FriendshipStatus.values);
 }
 
 class FriendshipData extends DataClass implements Insertable<FriendshipData> {
   final String id;
   final String user1;
   final String user2;
-  final int status;
+  final FriendshipStatus status;
   final DateTime createdAt;
   final DateTime lastUpdated;
   const FriendshipData(
@@ -534,7 +532,10 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
     map['id'] = Variable<String>(id);
     map['user1'] = Variable<String>(user1);
     map['user2'] = Variable<String>(user2);
-    map['status'] = Variable<int>(status);
+    {
+      map['status'] =
+          Variable<int>($FriendshipTable.$converterstatus.toSql(status));
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['last_updated'] = Variable<DateTime>(lastUpdated);
     return map;
@@ -558,7 +559,8 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
       id: serializer.fromJson<String>(json['id']),
       user1: serializer.fromJson<String>(json['user1']),
       user2: serializer.fromJson<String>(json['user2']),
-      status: serializer.fromJson<int>(json['status']),
+      status: $FriendshipTable.$converterstatus
+          .fromJson(serializer.fromJson<int>(json['status'])),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
     );
@@ -570,7 +572,8 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
       'id': serializer.toJson<String>(id),
       'user1': serializer.toJson<String>(user1),
       'user2': serializer.toJson<String>(user2),
-      'status': serializer.toJson<int>(status),
+      'status': serializer
+          .toJson<int>($FriendshipTable.$converterstatus.toJson(status)),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
     };
@@ -580,7 +583,7 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
           {String? id,
           String? user1,
           String? user2,
-          int? status,
+          FriendshipStatus? status,
           DateTime? createdAt,
           DateTime? lastUpdated}) =>
       FriendshipData(
@@ -635,7 +638,7 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
   final Value<String> id;
   final Value<String> user1;
   final Value<String> user2;
-  final Value<int> status;
+  final Value<FriendshipStatus> status;
   final Value<DateTime> createdAt;
   final Value<DateTime> lastUpdated;
   final Value<int> rowid;
@@ -652,7 +655,7 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
     required String id,
     required String user1,
     required String user2,
-    required int status,
+    required FriendshipStatus status,
     required DateTime createdAt,
     this.lastUpdated = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -685,7 +688,7 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
       {Value<String>? id,
       Value<String>? user1,
       Value<String>? user2,
-      Value<int>? status,
+      Value<FriendshipStatus>? status,
       Value<DateTime>? createdAt,
       Value<DateTime>? lastUpdated,
       Value<int>? rowid}) {
@@ -713,7 +716,8 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
       map['user2'] = Variable<String>(user2.value);
     }
     if (status.present) {
-      map['status'] = Variable<int>(status.value);
+      map['status'] =
+          Variable<int>($FriendshipTable.$converterstatus.toSql(status.value));
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -1221,7 +1225,7 @@ typedef $$FriendshipTableCreateCompanionBuilder = FriendshipCompanion Function({
   required String id,
   required String user1,
   required String user2,
-  required int status,
+  required FriendshipStatus status,
   required DateTime createdAt,
   Value<DateTime> lastUpdated,
   Value<int> rowid,
@@ -1230,7 +1234,7 @@ typedef $$FriendshipTableUpdateCompanionBuilder = FriendshipCompanion Function({
   Value<String> id,
   Value<String> user1,
   Value<String> user2,
-  Value<int> status,
+  Value<FriendshipStatus> status,
   Value<DateTime> createdAt,
   Value<DateTime> lastUpdated,
   Value<int> rowid,
@@ -1254,8 +1258,10 @@ class $$FriendshipTableFilterComposer
   ColumnFilters<String> get user2 => $composableBuilder(
       column: $table.user2, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get status => $composableBuilder(
-      column: $table.status, builder: (column) => ColumnFilters(column));
+  ColumnWithTypeConverterFilters<FriendshipStatus, FriendshipStatus, int>
+      get status => $composableBuilder(
+          column: $table.status,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
@@ -1310,7 +1316,7 @@ class $$FriendshipTableAnnotationComposer
   GeneratedColumn<String> get user2 =>
       $composableBuilder(column: $table.user2, builder: (column) => column);
 
-  GeneratedColumn<int> get status =>
+  GeneratedColumnWithTypeConverter<FriendshipStatus, int> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
@@ -1349,7 +1355,7 @@ class $$FriendshipTableTableManager extends RootTableManager<
             Value<String> id = const Value.absent(),
             Value<String> user1 = const Value.absent(),
             Value<String> user2 = const Value.absent(),
-            Value<int> status = const Value.absent(),
+            Value<FriendshipStatus> status = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> lastUpdated = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -1367,7 +1373,7 @@ class $$FriendshipTableTableManager extends RootTableManager<
             required String id,
             required String user1,
             required String user2,
-            required int status,
+            required FriendshipStatus status,
             required DateTime createdAt,
             Value<DateTime> lastUpdated = const Value.absent(),
             Value<int> rowid = const Value.absent(),
