@@ -13,12 +13,12 @@ class MoleculeUserPlatformsButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userBloc = context.watch<UserBloc>();
-
+    final userPlatforms = getUserPlatoforms(userBloc.state);
     return ListView.builder(
       dragStartBehavior: DragStartBehavior.start,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: userBloc.state.platforms.length,
+      itemCount: userPlatforms.length,
       itemBuilder: (BuildContext context, int index) {
         return FadeIn(
           child: Padding(
@@ -26,9 +26,9 @@ class MoleculeUserPlatformsButtons extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               child: AtomNeonPlatformButton(
-                platform: getUserPlatoforms(userBloc.state)[index],
+                platform: userPlatforms[index],
                 onTap: () {
-                  context.push("/search_game", extra: getUserPlatoforms(userBloc.state)[index].id);
+                  context.push("/search_game", extra: userPlatforms[index].id);
                 },
                 sizeMultiplier: 0.6,
               ),
