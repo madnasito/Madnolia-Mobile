@@ -9,7 +9,7 @@ import 'package:madnolia/enums/message_type.enum.dart';
 
 class ChatMessage {
     String id;
-    ChatListStatus status;
+    ChatMessageStatus status;
     String text;
     MessageType type;
     String conversation;
@@ -28,7 +28,7 @@ class ChatMessage {
 
     factory ChatMessage.fromJson(Map<String, dynamic> json) {
       MessageType messageType;
-      ChatListStatus messageStatus;
+      ChatMessageStatus messageStatus;
       
       switch (json["type"]) {
         case 0:
@@ -47,19 +47,19 @@ class ChatMessage {
 
       switch (json["status"]) {
         case 0:
-          messageStatus = ChatListStatus.sent;
+          messageStatus = ChatMessageStatus.sent;
           break;
         case 1:
-          messageStatus = ChatListStatus.delivered;
+          messageStatus = ChatMessageStatus.delivered;
           break;
         case 2:
-          messageStatus = ChatListStatus.read;
+          messageStatus = ChatMessageStatus.read;
           break;
         case 3:
-          messageStatus = ChatListStatus.deleted;
+          messageStatus = ChatMessageStatus.deleted;
           break;
         default:
-          messageStatus = ChatListStatus.sent;
+          messageStatus = ChatMessageStatus.sent;
           break;
       }
       
