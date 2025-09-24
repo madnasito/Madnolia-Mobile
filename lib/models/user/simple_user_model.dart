@@ -5,7 +5,7 @@
 import 'dart:convert';
 import 'package:madnolia/enums/connection-status.enum.dart';
 
-import '../../database/drift/database.dart';
+import '../../database/database.dart';
 
 SimpleUser simpleUserFromJson(String str) => SimpleUser.fromJson(json.decode(str));
 

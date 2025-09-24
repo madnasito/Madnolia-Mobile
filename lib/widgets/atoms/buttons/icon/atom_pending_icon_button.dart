@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/database.dart';
 import 'package:madnolia/widgets/dialogs/dialog_pending_request.dart';
 
 class AtomPendingIconButton extends StatelessWidget {

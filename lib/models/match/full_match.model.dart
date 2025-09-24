@@ -22,7 +22,7 @@ class FullMatch {
     String title;
     List<ChatUser> joined;
     bool private;
-    bool tournament;
+    String? tournament;
     int status;
 
     FullMatch({

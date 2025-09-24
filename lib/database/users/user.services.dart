@@ -1,9 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart' show debugPrint;
-import 'package:madnolia/database/drift/database.dart';
-import 'package:madnolia/database/drift/users/user.schema.dart';
+import 'package:madnolia/database/database.dart';
+import 'package:madnolia/database/users/user.schema.dart';
 
-import '../../../services/user_service.dart';
+import '../../services/user_service.dart';
 
 class UserDbServices {
 
@@ -56,13 +56,6 @@ class UserDbServices {
       debugPrint('Error in getUserByFriendship: $e');
       return null;
     }
-  }
-
-  Future<User> updateUser(User user) async {
-    // This method should probably update the user in the database.
-    // The current implementation is just returning the user.
-    // I will leave it as it is for now as it is not part of the request.
-    return user;
   }
 
   Future<int> deleteUsers() async {

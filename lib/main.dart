@@ -18,7 +18,6 @@ import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:madnolia/database/providers/db_provider.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +32,6 @@ void main() async {
   
   serviceLocatorInit();
   cubitServiceLocatorInit();
-  await BaseDatabaseProvider.database;
 // Force Portrait Mode
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

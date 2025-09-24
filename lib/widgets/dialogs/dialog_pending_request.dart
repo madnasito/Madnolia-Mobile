@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/database.dart';
 
 class DialogPendingRequest extends StatelessWidget {
   final UserData userData;

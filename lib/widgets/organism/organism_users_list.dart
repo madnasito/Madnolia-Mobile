@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImageProvider;
 import 'package:flutter/material.dart';
-import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/database.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_icon_connection_button.dart' show MoleculeConnectionIconButton;
 
 class OrganismUsersList extends StatelessWidget {

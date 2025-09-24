@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart' show CachedNetwo
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/drift/users/user.services.dart';
+import 'package:madnolia/database/users/user.services.dart';
 import 'package:madnolia/enums/connection-status.enum.dart' show ConnectionStatus;
 import 'package:madnolia/models/notification/notification_model.dart';
 import 'package:madnolia/models/user/simple_user_model.dart' show SimpleUser;

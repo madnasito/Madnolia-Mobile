@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/connection-status.enum.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/widgets/atoms/buttons/common/atom_pending_button.dart';

@@ -9,6 +9,7 @@ import 'package:madnolia/models/game/platform_game.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:madnolia/models/platform/platform_with_game_matches.dart';
+import '../models/match/match_model.dart';
 
 
 class MatchService {
@@ -21,7 +22,17 @@ class MatchService {
   final dio = Dio();
 
   // Getting the match
-  Future getMatch(String id) => matchGetRequest("info/$id");
+  // Future getMatch(String id) => matchGetRequest("info/$id");
+
+  Future<Match> getMatch(String id) async{
+    try {
+      final response = await dio.get('$baseUrl/match/info/$id');
+
+      return Match.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Future<List<MatchWithGame>> getMatches(MatchesFilter payload) async {
 

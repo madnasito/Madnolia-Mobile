@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 
-import '../../../enums/friendship-status.enum.dart';
+import '../../enums/friendship-status.enum.dart';
 
 class Friendship extends Table {
   TextColumn get id => text()();

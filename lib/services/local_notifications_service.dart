@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +9,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/database/drift/database.dart';
-import 'package:madnolia/database/drift/users/user.services.dart';
+import 'package:madnolia/database/database.dart';
+import 'package:madnolia/database/match/match.services.dart';
+import 'package:madnolia/database/users/user.services.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
@@ -17,10 +19,8 @@ import 'package:madnolia/models/invitation_model.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/routes/routes.dart';
-import 'package:madnolia/database/providers/match_db.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
-import 'package:madnolia/utils/match_db_util.dart' show getMatchDb;
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import '../models/chat/message_model.dart';
 
@@ -83,6 +83,7 @@ class LocalNotificationsService {
   static Future<void> displayRoomMessage(ChatMessage message) async {
     try {
       await initializeTranslations();
+      final matchDbServices = MatchDbServices();
       const String groupChannelId = 'messages';
       const String groupChannelName = 'Messages';
       const String groupChannelDescription = 'Messages channel';
@@ -116,7 +117,7 @@ class LocalNotificationsService {
 
       String? title;
       if (message.type == MessageType.match) {
-        title = (await getMatchDb(message.conversation))?.title;
+        title = (await matchDbServices.getMatchById(message.conversation)).title;
         debugPrint("Message type is Match. Title: $title");
       } else {
         debugPrint("Message type is User. Calculating other user's name...");
@@ -211,7 +212,7 @@ class LocalNotificationsService {
             // Corrección: Asegurarse de obtener el título correcto para cada grupo en el resumen
             String? chatTitle;
             if (group.first.type == MessageType.match) {
-              chatTitle = (await getMatchDb(group.first.conversation))?.title ?? 'Match';
+              chatTitle = (await matchDbServices.getMatchById(group.first.conversation)).title;
             } else {
               final otherUserId = await userDbServices.getUserByFriendship(group.first.conversation);
               chatTitle = otherUserId?.name;
@@ -258,7 +259,8 @@ class LocalNotificationsService {
     try {
 
       await initializeTranslations();
-      final matchDb = await getMatchDb(invitation.match);
+      final matchDbServices = MatchDbServices();
+      final matchDb = await matchDbServices.getMatchById(invitation.match);
       final userDbServices = UserDbServices();
       final userDb = await userDbServices.getUserById(invitation.user);
       final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeImage(invitation.img)));
@@ -281,7 +283,7 @@ class LocalNotificationsService {
             // styleInformation: BigPictureStyleInformation(bigPicture),
             priority: Priority.high),
       );
-      await _notificationsPlugin.show(id, null, null, notificationDetails, payload: matchDb?.toJson());
+      await _notificationsPlugin.show(id, null, null, notificationDetails, payload: json.encode(matchDb.toJson()));
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -293,7 +295,8 @@ class LocalNotificationsService {
     // To display the notification in device
     await initializeTranslations();
     try {
-      final matchDb = await getMatchDb(payload.match);
+      final matchDbServices = MatchDbServices();
+      final matchDb = await matchDbServices.getMatchById(payload.match);
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails = const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -309,7 +312,7 @@ class LocalNotificationsService {
         id, translate('NOTIFICATIONS.MATCH_READY'),
         translate('NOTIFICATIONS.MATCH_STARTED', args: {'name': payload.title}),
         notificationDetails,
-        payload: matchDb?.toJson());
+        payload: json.encode(matchDb.toJson()));
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -324,7 +327,7 @@ class LocalNotificationsService {
 
       final userDbServices = UserDbServices();
       try {
-        MinimalMatchDb matchDb = MinimalMatchDb.fromJson(details.payload!);
+        MatchData matchDb = MatchData.fromJson(json.decode(details.payload!));
         final context = navigatorKey.currentContext;
         GoRouter.of(context!).push("/match/${matchDb.id}");
       } catch (e) {
@@ -396,13 +399,14 @@ static Future<void> _updateSummaryNotification() async {
         const String groupChannelDescription = 'Messages channel';
         const String groupKey = 'all_chat_messages';
         final userDbServices = UserDbServices();
+        final matchDbServices = MatchDbServices();
         
         List<String> summaryLines = [];
         for (var group in _roomMessages) {
             if (group.isNotEmpty) {
                 String? chatTitle;
                 if (group.first.type == MessageType.match) {
-                    chatTitle = (await getMatchDb(group.first.conversation))?.title ?? 'Match';
+                    chatTitle = (await matchDbServices.getMatchById(group.first.conversation)).title;
                 } else {
                     final otherUserId = await userDbServices.getUserByFriendship(group.first.conversation);
                     chatTitle = otherUserId?.name;

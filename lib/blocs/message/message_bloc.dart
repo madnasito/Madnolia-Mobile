@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' show droppable;
 import 'package:equatable/equatable.dart';
-import 'package:madnolia/database/drift/database.dart';
-import 'package:madnolia/database/drift/users/user.services.dart';
+import 'package:madnolia/database/database.dart';
+import 'package:madnolia/database/users/user.services.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/services/messages_service.dart';

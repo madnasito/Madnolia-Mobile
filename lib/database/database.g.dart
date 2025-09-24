@@ -756,24 +756,89 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _gameMeta = const VerificationMeta('game');
+  @override
+  late final GeneratedColumn<String> game = GeneratedColumn<String>(
+      'game', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _platformMeta =
-      const VerificationMeta('platform');
   @override
-  late final GeneratedColumn<int> platform = GeneratedColumn<int>(
-      'platform', aliasedName, false,
-      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumnWithTypeConverter<PlatformId, int> platform =
+      GeneratedColumn<int>('platform', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<PlatformId>($MatchTable.$converterplatform);
   static const VerificationMeta _dateMeta = const VerificationMeta('date');
   @override
   late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
       'date', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _userMeta = const VerificationMeta('user');
   @override
-  List<GeneratedColumn> get $columns => [id, title, platform, date];
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _durationMeta =
+      const VerificationMeta('duration');
+  @override
+  late final GeneratedColumn<int> duration = GeneratedColumn<int>(
+      'duration', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _privateMeta =
+      const VerificationMeta('private');
+  @override
+  late final GeneratedColumn<bool> private = GeneratedColumn<bool>(
+      'private', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("private" IN (0, 1))'));
+  static const VerificationMeta _tournamentMeta =
+      const VerificationMeta('tournament');
+  @override
+  late final GeneratedColumn<String> tournament = GeneratedColumn<String>(
+      'tournament', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  late final GeneratedColumnWithTypeConverter<MatchStatus, int> status =
+      GeneratedColumn<int>('status', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<MatchStatus>($MatchTable.$converterstatus);
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String> joined =
+      GeneratedColumn<String>('joined', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<String>>($MatchTable.$converterjoined);
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String> inviteds =
+      GeneratedColumn<String>('inviteds', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<String>>($MatchTable.$converterinviteds);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        game,
+        title,
+        platform,
+        date,
+        user,
+        description,
+        duration,
+        private,
+        tournament,
+        status,
+        joined,
+        inviteds
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -789,23 +854,55 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
     } else if (isInserting) {
       context.missing(_idMeta);
     }
+    if (data.containsKey('game')) {
+      context.handle(
+          _gameMeta, game.isAcceptableOrUnknown(data['game']!, _gameMeta));
+    } else if (isInserting) {
+      context.missing(_gameMeta);
+    }
     if (data.containsKey('title')) {
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
-    if (data.containsKey('platform')) {
-      context.handle(_platformMeta,
-          platform.isAcceptableOrUnknown(data['platform']!, _platformMeta));
-    } else if (isInserting) {
-      context.missing(_platformMeta);
-    }
     if (data.containsKey('date')) {
       context.handle(
           _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
     } else if (isInserting) {
       context.missing(_dateMeta);
+    }
+    if (data.containsKey('user')) {
+      context.handle(
+          _userMeta, user.isAcceptableOrUnknown(data['user']!, _userMeta));
+    } else if (isInserting) {
+      context.missing(_userMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('duration')) {
+      context.handle(_durationMeta,
+          duration.isAcceptableOrUnknown(data['duration']!, _durationMeta));
+    } else if (isInserting) {
+      context.missing(_durationMeta);
+    }
+    if (data.containsKey('private')) {
+      context.handle(_privateMeta,
+          private.isAcceptableOrUnknown(data['private']!, _privateMeta));
+    } else if (isInserting) {
+      context.missing(_privateMeta);
+    }
+    if (data.containsKey('tournament')) {
+      context.handle(
+          _tournamentMeta,
+          tournament.isAcceptableOrUnknown(
+              data['tournament']!, _tournamentMeta));
     }
     return context;
   }
@@ -818,12 +915,32 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
     return MatchData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      game: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}game'])!,
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
-      platform: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}platform'])!,
+      platform: $MatchTable.$converterplatform.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}platform'])!),
       date: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user'])!,
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      duration: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}duration'])!,
+      private: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}private'])!,
+      tournament: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tournament']),
+      status: $MatchTable.$converterstatus.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}status'])!),
+      joined: $MatchTable.$converterjoined.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}joined'])!),
+      inviteds: $MatchTable.$converterinviteds.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}inviteds'])!),
     );
   }
 
@@ -831,34 +948,94 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
   $MatchTable createAlias(String alias) {
     return $MatchTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<PlatformId, int, int> $converterplatform =
+      const EnumIndexConverter<PlatformId>(PlatformId.values);
+  static JsonTypeConverter2<MatchStatus, int, int> $converterstatus =
+      const EnumIndexConverter<MatchStatus>(MatchStatus.values);
+  static TypeConverter<List<String>, String> $converterjoined =
+      const StringListConverter();
+  static TypeConverter<List<String>, String> $converterinviteds =
+      const StringListConverter();
 }
 
 class MatchData extends DataClass implements Insertable<MatchData> {
   final String id;
+  final String game;
   final String title;
-  final int platform;
+  final PlatformId platform;
   final DateTime date;
+  final String user;
+  final String description;
+  final int duration;
+  final bool private;
+  final String? tournament;
+  final MatchStatus status;
+  final List<String> joined;
+  final List<String> inviteds;
   const MatchData(
       {required this.id,
+      required this.game,
       required this.title,
       required this.platform,
-      required this.date});
+      required this.date,
+      required this.user,
+      required this.description,
+      required this.duration,
+      required this.private,
+      this.tournament,
+      required this.status,
+      required this.joined,
+      required this.inviteds});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    map['game'] = Variable<String>(game);
     map['title'] = Variable<String>(title);
-    map['platform'] = Variable<int>(platform);
+    {
+      map['platform'] =
+          Variable<int>($MatchTable.$converterplatform.toSql(platform));
+    }
     map['date'] = Variable<DateTime>(date);
+    map['user'] = Variable<String>(user);
+    map['description'] = Variable<String>(description);
+    map['duration'] = Variable<int>(duration);
+    map['private'] = Variable<bool>(private);
+    if (!nullToAbsent || tournament != null) {
+      map['tournament'] = Variable<String>(tournament);
+    }
+    {
+      map['status'] = Variable<int>($MatchTable.$converterstatus.toSql(status));
+    }
+    {
+      map['joined'] =
+          Variable<String>($MatchTable.$converterjoined.toSql(joined));
+    }
+    {
+      map['inviteds'] =
+          Variable<String>($MatchTable.$converterinviteds.toSql(inviteds));
+    }
     return map;
   }
 
   MatchCompanion toCompanion(bool nullToAbsent) {
     return MatchCompanion(
       id: Value(id),
+      game: Value(game),
       title: Value(title),
       platform: Value(platform),
       date: Value(date),
+      user: Value(user),
+      description: Value(description),
+      duration: Value(duration),
+      private: Value(private),
+      tournament: tournament == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tournament),
+      status: Value(status),
+      joined: Value(joined),
+      inviteds: Value(inviteds),
     );
   }
 
@@ -867,9 +1044,20 @@ class MatchData extends DataClass implements Insertable<MatchData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MatchData(
       id: serializer.fromJson<String>(json['id']),
+      game: serializer.fromJson<String>(json['game']),
       title: serializer.fromJson<String>(json['title']),
-      platform: serializer.fromJson<int>(json['platform']),
+      platform: $MatchTable.$converterplatform
+          .fromJson(serializer.fromJson<int>(json['platform'])),
       date: serializer.fromJson<DateTime>(json['date']),
+      user: serializer.fromJson<String>(json['user']),
+      description: serializer.fromJson<String>(json['description']),
+      duration: serializer.fromJson<int>(json['duration']),
+      private: serializer.fromJson<bool>(json['private']),
+      tournament: serializer.fromJson<String?>(json['tournament']),
+      status: $MatchTable.$converterstatus
+          .fromJson(serializer.fromJson<int>(json['status'])),
+      joined: serializer.fromJson<List<String>>(json['joined']),
+      inviteds: serializer.fromJson<List<String>>(json['inviteds']),
     );
   }
   @override
@@ -877,26 +1065,69 @@ class MatchData extends DataClass implements Insertable<MatchData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'game': serializer.toJson<String>(game),
       'title': serializer.toJson<String>(title),
-      'platform': serializer.toJson<int>(platform),
+      'platform': serializer
+          .toJson<int>($MatchTable.$converterplatform.toJson(platform)),
       'date': serializer.toJson<DateTime>(date),
+      'user': serializer.toJson<String>(user),
+      'description': serializer.toJson<String>(description),
+      'duration': serializer.toJson<int>(duration),
+      'private': serializer.toJson<bool>(private),
+      'tournament': serializer.toJson<String?>(tournament),
+      'status':
+          serializer.toJson<int>($MatchTable.$converterstatus.toJson(status)),
+      'joined': serializer.toJson<List<String>>(joined),
+      'inviteds': serializer.toJson<List<String>>(inviteds),
     };
   }
 
   MatchData copyWith(
-          {String? id, String? title, int? platform, DateTime? date}) =>
+          {String? id,
+          String? game,
+          String? title,
+          PlatformId? platform,
+          DateTime? date,
+          String? user,
+          String? description,
+          int? duration,
+          bool? private,
+          Value<String?> tournament = const Value.absent(),
+          MatchStatus? status,
+          List<String>? joined,
+          List<String>? inviteds}) =>
       MatchData(
         id: id ?? this.id,
+        game: game ?? this.game,
         title: title ?? this.title,
         platform: platform ?? this.platform,
         date: date ?? this.date,
+        user: user ?? this.user,
+        description: description ?? this.description,
+        duration: duration ?? this.duration,
+        private: private ?? this.private,
+        tournament: tournament.present ? tournament.value : this.tournament,
+        status: status ?? this.status,
+        joined: joined ?? this.joined,
+        inviteds: inviteds ?? this.inviteds,
       );
   MatchData copyWithCompanion(MatchCompanion data) {
     return MatchData(
       id: data.id.present ? data.id.value : this.id,
+      game: data.game.present ? data.game.value : this.game,
       title: data.title.present ? data.title.value : this.title,
       platform: data.platform.present ? data.platform.value : this.platform,
       date: data.date.present ? data.date.value : this.date,
+      user: data.user.present ? data.user.value : this.user,
+      description:
+          data.description.present ? data.description.value : this.description,
+      duration: data.duration.present ? data.duration.value : this.duration,
+      private: data.private.present ? data.private.value : this.private,
+      tournament:
+          data.tournament.present ? data.tournament.value : this.tournament,
+      status: data.status.present ? data.status.value : this.status,
+      joined: data.joined.present ? data.joined.value : this.joined,
+      inviteds: data.inviteds.present ? data.inviteds.value : this.inviteds,
     );
   }
 
@@ -904,75 +1135,165 @@ class MatchData extends DataClass implements Insertable<MatchData> {
   String toString() {
     return (StringBuffer('MatchData(')
           ..write('id: $id, ')
+          ..write('game: $game, ')
           ..write('title: $title, ')
           ..write('platform: $platform, ')
-          ..write('date: $date')
+          ..write('date: $date, ')
+          ..write('user: $user, ')
+          ..write('description: $description, ')
+          ..write('duration: $duration, ')
+          ..write('private: $private, ')
+          ..write('tournament: $tournament, ')
+          ..write('status: $status, ')
+          ..write('joined: $joined, ')
+          ..write('inviteds: $inviteds')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title, platform, date);
+  int get hashCode => Object.hash(id, game, title, platform, date, user,
+      description, duration, private, tournament, status, joined, inviteds);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MatchData &&
           other.id == this.id &&
+          other.game == this.game &&
           other.title == this.title &&
           other.platform == this.platform &&
-          other.date == this.date);
+          other.date == this.date &&
+          other.user == this.user &&
+          other.description == this.description &&
+          other.duration == this.duration &&
+          other.private == this.private &&
+          other.tournament == this.tournament &&
+          other.status == this.status &&
+          other.joined == this.joined &&
+          other.inviteds == this.inviteds);
 }
 
 class MatchCompanion extends UpdateCompanion<MatchData> {
   final Value<String> id;
+  final Value<String> game;
   final Value<String> title;
-  final Value<int> platform;
+  final Value<PlatformId> platform;
   final Value<DateTime> date;
+  final Value<String> user;
+  final Value<String> description;
+  final Value<int> duration;
+  final Value<bool> private;
+  final Value<String?> tournament;
+  final Value<MatchStatus> status;
+  final Value<List<String>> joined;
+  final Value<List<String>> inviteds;
   final Value<int> rowid;
   const MatchCompanion({
     this.id = const Value.absent(),
+    this.game = const Value.absent(),
     this.title = const Value.absent(),
     this.platform = const Value.absent(),
     this.date = const Value.absent(),
+    this.user = const Value.absent(),
+    this.description = const Value.absent(),
+    this.duration = const Value.absent(),
+    this.private = const Value.absent(),
+    this.tournament = const Value.absent(),
+    this.status = const Value.absent(),
+    this.joined = const Value.absent(),
+    this.inviteds = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MatchCompanion.insert({
     required String id,
+    required String game,
     required String title,
-    required int platform,
+    required PlatformId platform,
     required DateTime date,
+    required String user,
+    required String description,
+    required int duration,
+    required bool private,
+    this.tournament = const Value.absent(),
+    required MatchStatus status,
+    required List<String> joined,
+    required List<String> inviteds,
     this.rowid = const Value.absent(),
   })  : id = Value(id),
+        game = Value(game),
         title = Value(title),
         platform = Value(platform),
-        date = Value(date);
+        date = Value(date),
+        user = Value(user),
+        description = Value(description),
+        duration = Value(duration),
+        private = Value(private),
+        status = Value(status),
+        joined = Value(joined),
+        inviteds = Value(inviteds);
   static Insertable<MatchData> custom({
     Expression<String>? id,
+    Expression<String>? game,
     Expression<String>? title,
     Expression<int>? platform,
     Expression<DateTime>? date,
+    Expression<String>? user,
+    Expression<String>? description,
+    Expression<int>? duration,
+    Expression<bool>? private,
+    Expression<String>? tournament,
+    Expression<int>? status,
+    Expression<String>? joined,
+    Expression<String>? inviteds,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (game != null) 'game': game,
       if (title != null) 'title': title,
       if (platform != null) 'platform': platform,
       if (date != null) 'date': date,
+      if (user != null) 'user': user,
+      if (description != null) 'description': description,
+      if (duration != null) 'duration': duration,
+      if (private != null) 'private': private,
+      if (tournament != null) 'tournament': tournament,
+      if (status != null) 'status': status,
+      if (joined != null) 'joined': joined,
+      if (inviteds != null) 'inviteds': inviteds,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   MatchCompanion copyWith(
       {Value<String>? id,
+      Value<String>? game,
       Value<String>? title,
-      Value<int>? platform,
+      Value<PlatformId>? platform,
       Value<DateTime>? date,
+      Value<String>? user,
+      Value<String>? description,
+      Value<int>? duration,
+      Value<bool>? private,
+      Value<String?>? tournament,
+      Value<MatchStatus>? status,
+      Value<List<String>>? joined,
+      Value<List<String>>? inviteds,
       Value<int>? rowid}) {
     return MatchCompanion(
       id: id ?? this.id,
+      game: game ?? this.game,
       title: title ?? this.title,
       platform: platform ?? this.platform,
       date: date ?? this.date,
+      user: user ?? this.user,
+      description: description ?? this.description,
+      duration: duration ?? this.duration,
+      private: private ?? this.private,
+      tournament: tournament ?? this.tournament,
+      status: status ?? this.status,
+      joined: joined ?? this.joined,
+      inviteds: inviteds ?? this.inviteds,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -983,14 +1304,45 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
+    if (game.present) {
+      map['game'] = Variable<String>(game.value);
+    }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
     if (platform.present) {
-      map['platform'] = Variable<int>(platform.value);
+      map['platform'] =
+          Variable<int>($MatchTable.$converterplatform.toSql(platform.value));
     }
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
+    }
+    if (user.present) {
+      map['user'] = Variable<String>(user.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (duration.present) {
+      map['duration'] = Variable<int>(duration.value);
+    }
+    if (private.present) {
+      map['private'] = Variable<bool>(private.value);
+    }
+    if (tournament.present) {
+      map['tournament'] = Variable<String>(tournament.value);
+    }
+    if (status.present) {
+      map['status'] =
+          Variable<int>($MatchTable.$converterstatus.toSql(status.value));
+    }
+    if (joined.present) {
+      map['joined'] =
+          Variable<String>($MatchTable.$converterjoined.toSql(joined.value));
+    }
+    if (inviteds.present) {
+      map['inviteds'] = Variable<String>(
+          $MatchTable.$converterinviteds.toSql(inviteds.value));
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -1002,9 +1354,18 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
   String toString() {
     return (StringBuffer('MatchCompanion(')
           ..write('id: $id, ')
+          ..write('game: $game, ')
           ..write('title: $title, ')
           ..write('platform: $platform, ')
           ..write('date: $date, ')
+          ..write('user: $user, ')
+          ..write('description: $description, ')
+          ..write('duration: $duration, ')
+          ..write('private: $private, ')
+          ..write('tournament: $tournament, ')
+          ..write('status: $status, ')
+          ..write('joined: $joined, ')
+          ..write('inviteds: $inviteds, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1411,16 +1772,34 @@ typedef $$FriendshipTableProcessedTableManager = ProcessedTableManager<
     PrefetchHooks Function()>;
 typedef $$MatchTableCreateCompanionBuilder = MatchCompanion Function({
   required String id,
+  required String game,
   required String title,
-  required int platform,
+  required PlatformId platform,
   required DateTime date,
+  required String user,
+  required String description,
+  required int duration,
+  required bool private,
+  Value<String?> tournament,
+  required MatchStatus status,
+  required List<String> joined,
+  required List<String> inviteds,
   Value<int> rowid,
 });
 typedef $$MatchTableUpdateCompanionBuilder = MatchCompanion Function({
   Value<String> id,
+  Value<String> game,
   Value<String> title,
-  Value<int> platform,
+  Value<PlatformId> platform,
   Value<DateTime> date,
+  Value<String> user,
+  Value<String> description,
+  Value<int> duration,
+  Value<bool> private,
+  Value<String?> tournament,
+  Value<MatchStatus> status,
+  Value<List<String>> joined,
+  Value<List<String>> inviteds,
   Value<int> rowid,
 });
 
@@ -1435,14 +1814,49 @@ class $$MatchTableFilterComposer extends Composer<_$AppDatabase, $MatchTable> {
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<String> get game => $composableBuilder(
+      column: $table.game, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<String> get title => $composableBuilder(
       column: $table.title, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get platform => $composableBuilder(
-      column: $table.platform, builder: (column) => ColumnFilters(column));
+  ColumnWithTypeConverterFilters<PlatformId, PlatformId, int> get platform =>
+      $composableBuilder(
+          column: $table.platform,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 
   ColumnFilters<DateTime> get date => $composableBuilder(
       column: $table.date, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get user => $composableBuilder(
+      column: $table.user, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get duration => $composableBuilder(
+      column: $table.duration, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get private => $composableBuilder(
+      column: $table.private, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get tournament => $composableBuilder(
+      column: $table.tournament, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<MatchStatus, MatchStatus, int> get status =>
+      $composableBuilder(
+          column: $table.status,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+      get joined => $composableBuilder(
+          column: $table.joined,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+      get inviteds => $composableBuilder(
+          column: $table.inviteds,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 }
 
 class $$MatchTableOrderingComposer
@@ -1457,6 +1871,9 @@ class $$MatchTableOrderingComposer
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get game => $composableBuilder(
+      column: $table.game, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get title => $composableBuilder(
       column: $table.title, builder: (column) => ColumnOrderings(column));
 
@@ -1465,6 +1882,30 @@ class $$MatchTableOrderingComposer
 
   ColumnOrderings<DateTime> get date => $composableBuilder(
       column: $table.date, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get user => $composableBuilder(
+      column: $table.user, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get duration => $composableBuilder(
+      column: $table.duration, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get private => $composableBuilder(
+      column: $table.private, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get tournament => $composableBuilder(
+      column: $table.tournament, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get status => $composableBuilder(
+      column: $table.status, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get joined => $composableBuilder(
+      column: $table.joined, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get inviteds => $composableBuilder(
+      column: $table.inviteds, builder: (column) => ColumnOrderings(column));
 }
 
 class $$MatchTableAnnotationComposer
@@ -1479,14 +1920,41 @@ class $$MatchTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
+  GeneratedColumn<String> get game =>
+      $composableBuilder(column: $table.game, builder: (column) => column);
+
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
 
-  GeneratedColumn<int> get platform =>
+  GeneratedColumnWithTypeConverter<PlatformId, int> get platform =>
       $composableBuilder(column: $table.platform, builder: (column) => column);
 
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<String> get user =>
+      $composableBuilder(column: $table.user, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<int> get duration =>
+      $composableBuilder(column: $table.duration, builder: (column) => column);
+
+  GeneratedColumn<bool> get private =>
+      $composableBuilder(column: $table.private, builder: (column) => column);
+
+  GeneratedColumn<String> get tournament => $composableBuilder(
+      column: $table.tournament, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<MatchStatus, int> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<String>, String> get joined =>
+      $composableBuilder(column: $table.joined, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<String>, String> get inviteds =>
+      $composableBuilder(column: $table.inviteds, builder: (column) => column);
 }
 
 class $$MatchTableTableManager extends RootTableManager<
@@ -1513,30 +1981,66 @@ class $$MatchTableTableManager extends RootTableManager<
               $$MatchTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
+            Value<String> game = const Value.absent(),
             Value<String> title = const Value.absent(),
-            Value<int> platform = const Value.absent(),
+            Value<PlatformId> platform = const Value.absent(),
             Value<DateTime> date = const Value.absent(),
+            Value<String> user = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<int> duration = const Value.absent(),
+            Value<bool> private = const Value.absent(),
+            Value<String?> tournament = const Value.absent(),
+            Value<MatchStatus> status = const Value.absent(),
+            Value<List<String>> joined = const Value.absent(),
+            Value<List<String>> inviteds = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MatchCompanion(
             id: id,
+            game: game,
             title: title,
             platform: platform,
             date: date,
+            user: user,
+            description: description,
+            duration: duration,
+            private: private,
+            tournament: tournament,
+            status: status,
+            joined: joined,
+            inviteds: inviteds,
             rowid: rowid,
           ),
           createCompanionCallback: ({
             required String id,
+            required String game,
             required String title,
-            required int platform,
+            required PlatformId platform,
             required DateTime date,
+            required String user,
+            required String description,
+            required int duration,
+            required bool private,
+            Value<String?> tournament = const Value.absent(),
+            required MatchStatus status,
+            required List<String> joined,
+            required List<String> inviteds,
             Value<int> rowid = const Value.absent(),
           }) =>
               MatchCompanion.insert(
             id: id,
+            game: game,
             title: title,
             platform: platform,
             date: date,
+            user: user,
+            description: description,
+            duration: duration,
+            private: private,
+            tournament: tournament,
+            status: status,
+            joined: joined,
+            inviteds: inviteds,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

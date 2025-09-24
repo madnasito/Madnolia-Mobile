@@ -47,4 +47,8 @@ class FriendshipDbService {
       rethrow;
     }
   }
+
+  Future<int> deleteFriendships() async {
+    return await database.managers.friendship.delete();
+  }
 }

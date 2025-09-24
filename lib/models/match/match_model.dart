@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+import 'package:madnolia/enums/match-status.enum.dart';
+
+import '../../enums/platforms_id.enum.dart';
+
 Match matchFromJson(String str) => Match.fromJson(json.decode(str));
 
 String matchToJson(Match data) => json.encode(data.toJson());
@@ -7,7 +11,7 @@ String matchToJson(Match data) => json.encode(data.toJson());
 class Match {
     String id;
     String game;
-    int platform;
+    PlatformId platform;
     int date;
     String user;
     List<String> inviteds;
@@ -16,8 +20,8 @@ class Match {
     int duration;
     List<String> joined;
     bool private;
-    bool tournament;
-    int status;
+    String? tournament;
+    MatchStatus status;
 
     Match({
         required this.id,
@@ -35,7 +39,29 @@ class Match {
         required this.status
     });
 
-    factory Match.fromJson(Map<String, dynamic> json) => Match(
+    factory Match.fromJson(Map<String, dynamic> json) {
+
+      MatchStatus matchStatus;
+
+      switch (json["status"]) {
+        case 0:
+          matchStatus = MatchStatus.waiting;
+          break;
+        case 1:
+          matchStatus = MatchStatus.running;
+          break;
+        case 2:
+          matchStatus = MatchStatus.finished;
+          break;
+        case 3:
+          matchStatus = MatchStatus.cancelled;
+          break;
+        default:
+          matchStatus = MatchStatus.waiting;
+          break;
+      }
+
+      return Match(
         id: json["_id"],
         game: json["game"],
         platform: json["platform"],
@@ -48,9 +74,10 @@ class Match {
         joined: List<String>.from(json["joined"].map((x) => x)),
         private: json["private"],
         tournament: json["tournament"],
-        status: json["status"]
-    );
+        status: matchStatus
+      );
 
+    } 
     Map<String, dynamic> toJson() => {
         "_id": id,
         "game": game,

@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:madnolia/database/drift/database.dart';
+import 'package:madnolia/database/database.dart';
 import 'package:madnolia/models/user/simple_user_model.dart';
-import '../../../enums/connection-status.enum.dart';
+import '../../enums/connection-status.enum.dart';
 
 class User extends Table {
   TextColumn get id => text()();

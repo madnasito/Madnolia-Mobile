@@ -22,7 +22,7 @@ class MatchWithGame {
     String title;
     List<String> joined;
     bool private;
-    bool tournament;
+    String? tournament;
     MatchStatus status;
 
     MatchWithGame({
