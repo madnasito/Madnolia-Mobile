@@ -1,8 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/users/user.schema.dart';
-
 import '../../services/user_service.dart';
 
 class UserDbServices {

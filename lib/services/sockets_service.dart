@@ -165,7 +165,7 @@ onStart(ServiceInstance service) async {
         final mentionRegex = RegExp(r'(^|\s)@' + RegExp.escape(username) + r'(\s|$)');
 
         if(message.type == MessageType.user){ LocalNotificationsService.displayRoomMessage(message);}
-        else if(message.type == MessageType.match && mentionRegex.hasMatch(message.text)) {LocalNotificationsService.displayRoomMessage(message);}
+        else if(message.type == MessageType.match) {LocalNotificationsService.displayRoomMessage(message);}
       }
       
     } catch (e) {

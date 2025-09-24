@@ -8,6 +8,7 @@ import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/database/friendship/frienship.services.dart';
+import 'package:madnolia/database/match/match.services.dart';
 import 'package:madnolia/database/users/user.services.dart';
 import 'package:madnolia/services/sockets_service.dart';
 
@@ -29,10 +30,10 @@ logoutApp(BuildContext context) async {
   chatsBloc.add(RestoreUserChats());
   platformGamesBloc.add(RestorePlatformsGamesState());
   userDbServices.deleteUsers();
+  MatchDbServices().deleteMatches();
   friendshipDbService.deleteFriendships();
   if(!context.mounted) return;
   stopBackgroundService();
-  // MatchProvider.deleteAll();
   await storage.deleteAll();
   
 }

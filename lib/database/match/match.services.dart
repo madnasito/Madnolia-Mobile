@@ -27,6 +27,8 @@ class MatchDbServices {
       final matchCompanion = MatchCompanion(
         id: Value(matchInfo.id),
         game: Value(matchInfo.game),
+        user: Value(matchInfo.user),
+        date: Value(DateTime.fromMillisecondsSinceEpoch(matchInfo.date)),
         title: Value(matchInfo.title),
         platform: Value(matchInfo.platform),
         description: Value(matchInfo.description),

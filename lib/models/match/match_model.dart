@@ -64,7 +64,7 @@ class Match {
       return Match(
         id: json["_id"],
         game: json["game"],
-        platform: json["platform"],
+        platform: PlatformId.values.firstWhere((e) => e.id == json["platform"]),
         date: json["date"],
         user: json["user"],
         inviteds: List<String>.from(json["inviteds"].map((x) => x)),
@@ -81,7 +81,7 @@ class Match {
     Map<String, dynamic> toJson() => {
         "_id": id,
         "game": game,
-        "platform": platform,
+        "platform": platform.id,
         "date": date,
         "user": user,
         "inviteds": List<dynamic>.from(inviteds.map((x) => x)),
