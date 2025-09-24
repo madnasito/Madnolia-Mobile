@@ -17,11 +17,11 @@ class OrganismCardPlatformMatches extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 3),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white24, width: 1),
-        borderRadius: BorderRadius.circular(15),
-        color: Colors.black45
-      ),
+      // decoration: BoxDecoration(
+      //   border: Border.all(color: Colors.white24, width: 1),
+      //   borderRadius: BorderRadius.circular(15),
+      //   color: Colors.black45
+      // ),
       child: Column(
         children: [
           kDebugMode ? SizedBox() : const AtomBannerAd(),
