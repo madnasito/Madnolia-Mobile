@@ -46,10 +46,10 @@ class _AtomIndividualMessageState extends State<AtomIndividualMessage>
     return VisibilityDetector(
       key: Key(widget.message.id),
       onVisibilityChanged: (info) {
-        if(info.visibleFraction > 0 && widget.message.status == ChatListStatus.sent && widget.message.creator != myId) {
+        if(info.visibleFraction > 0 && widget.message.status == ChatMessageStatus.sent && widget.message.creator != myId) {
           debugPrint('${widget.message.text}: ${widget.message.status}');
-          backgroundService.invoke('update_recipient_status', {'id': widget.message.id, 'status': ChatListStatus.read.index});
-          chatsBloc.add(UpdateRecipientStatus(messageId: widget.message.id, status: ChatListStatus.read));
+          backgroundService.invoke('update_recipient_status', {'id': widget.message.id, 'status': ChatMessageStatus.read.index});
+          chatsBloc.add(UpdateRecipientStatus(messageId: widget.message.id, status: ChatMessageStatus.read));
         }
       },
       child: Align(

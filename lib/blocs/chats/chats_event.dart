@@ -26,6 +26,6 @@ class ReadChat extends ChatsEvent {
 
 class UpdateRecipientStatus extends ChatsEvent {
   final String messageId;
-  final ChatListStatus status;
+  final ChatMessageStatus status;
   const UpdateRecipientStatus({ required this.messageId, required this.status });
 }

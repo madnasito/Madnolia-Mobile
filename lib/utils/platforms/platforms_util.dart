@@ -62,35 +62,30 @@ List<PlatformIconModel> getPlaystationChildren(List<int> selectedPlatforms){
 List<PlatformIconModel> getNintendoChildren(List<int> selectedPlatforms) {
   return [
       PlatformIconModel(
-          id: 17,
-          path: "assets/platforms/playstation_portable.svg",
-          active: selectedPlatforms.contains(17) ? true : false,
+          id: 9,
+          path: "assets/platforms/nintendo_ds.svg",
+          active: selectedPlatforms.contains(9) ? true : false,
           size: 20),
       PlatformIconModel(
-          id: 15,
-          path: "assets/platforms/playstation_2.svg",
-          active: selectedPlatforms.contains(15) ? true : false,
+          id: 8,
+          path: "assets/platforms/nintendo_3ds.svg",
+          active: selectedPlatforms.contains(8) ? true : false,
           size: 20, padding: 20),
       PlatformIconModel(
-          id: 16,
-          path: "assets/platforms/playstation_3.svg",
-          active: selectedPlatforms.contains(16) ? true : false,
+          id: 11,
+          path: "assets/platforms/nintendo_wii.svg",
+          active: selectedPlatforms.contains(11) ? true : false,
           size: 20, padding: 20),
       PlatformIconModel(
-          id: 18,
-          path: "assets/platforms/playstation_4.svg",
-          active: selectedPlatforms.contains(18) ? true : false,
+          id: 10,
+          path: "assets/platforms/nintendo_wiiu.svg",
+          active: selectedPlatforms.contains(10) ? true : false,
           size: 20, padding: 20),
       PlatformIconModel(
-          id: 187,
-          path: "assets/platforms/playstation_5.svg",
-          active: selectedPlatforms.contains(187) ? true : false,
-          size: 20, padding: 20),
-      PlatformIconModel(
-          id: 19,
-          path: "assets/platforms/playstation_vita.svg",
-          active: selectedPlatforms.contains(19) ? true : false,
-          size: 20, padding: 20),
+          id: 70,
+          path: "assets/platforms/nintendo_switch.svg",
+          active: selectedPlatforms.contains(70) ? true : false,
+          size: 20, padding: 20)
     ];
 }
 

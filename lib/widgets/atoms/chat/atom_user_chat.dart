@@ -114,6 +114,6 @@ class AtomUserChat extends StatelessWidget {
   }
 
   bool iReadThat(String notMyId) {
-    return userChat.message.status == ChatListStatus.sent && userChat.message.creator == notMyId;
+    return userChat.message.status == ChatMessageStatus.sent && userChat.message.creator == notMyId;
   }
 }
