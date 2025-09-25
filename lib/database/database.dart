@@ -8,7 +8,7 @@ import '../enums/connection-status.enum.dart';
 import '../enums/friendship-status.enum.dart';
 import '../enums/match-status.enum.dart';
 import '../enums/platforms_id.enum.dart';
-import '../utils/string_list_converter_drift.dart';
+import 'utils/string_list_converter.dart';
 
 part 'database.g.dart';
 

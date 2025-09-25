@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/platforms_id.enum.dart';
 
-import '../../utils/string_list_converter_drift.dart';
+import '../utils/string_list_converter.dart';
 
 class Match extends Table {
   TextColumn get id => text()();
@@ -16,8 +16,6 @@ class Match extends Table {
   BoolColumn get private => boolean()();
   TextColumn get tournament  => text().nullable()();
   IntColumn get status => intEnum<MatchStatus>()();
-
-  // Nuevos campos: listas de String codificadas como JSON
   TextColumn get joined => text().map(const StringListConverter())();
   TextColumn get inviteds => text().map(const StringListConverter())();
 
