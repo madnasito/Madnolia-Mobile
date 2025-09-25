@@ -1,13 +1,14 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:madnolia/database/users/user.schema.dart';
-import 'package:madnolia/database/friendship/friendship.schema.dart';
+import 'package:madnolia/database/friendships/friendship.schema.dart';
 import 'package:madnolia/database/match/match.schema.dart';
 
 import '../enums/connection-status.enum.dart';
 import '../enums/friendship-status.enum.dart';
 import '../enums/match-status.enum.dart';
 import '../enums/platforms_id.enum.dart';
+import '../utils/string_list_converter_drift.dart';
 
 part 'database.g.dart';
 

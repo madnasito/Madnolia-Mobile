@@ -3,6 +3,7 @@ import 'package:madnolia/database/database.dart';
 import 'package:madnolia/models/user/simple_user_model.dart';
 import '../../enums/connection-status.enum.dart';
 
+
 class User extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();

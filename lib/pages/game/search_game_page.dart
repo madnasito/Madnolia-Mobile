@@ -94,7 +94,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
                     return Expanded(
                       child: Center(
                         child: Padding(
-                          padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Text(translate('RECOMMENDATIONS.EMPTY'),
                           textAlign: TextAlign.center
                           )

@@ -1,8 +1,8 @@
-import 'dart:convert';
-
 import 'package:drift/drift.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/platforms_id.enum.dart';
+
+import '../../utils/string_list_converter_drift.dart';
 
 class Match extends Table {
   TextColumn get id => text()();
@@ -23,20 +23,4 @@ class Match extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
-}
-
-// Conversor para listas de String <-> JSON
-class StringListConverter extends TypeConverter<List<String>, String> {
-  const StringListConverter();
-
-  @override
-  List<String> fromSql(String fromDb) {
-    if (fromDb.isEmpty) return [];
-    return List<String>.from(jsonDecode(fromDb));
-  }
-
-  @override
-  String toSql(List<String> value) {
-    return jsonEncode(value);
-  }
 }

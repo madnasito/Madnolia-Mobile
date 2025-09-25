@@ -5,7 +5,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/friendship/frienship.services.dart';
+import 'package:madnolia/database/friendships/frienship.services.dart';
 import 'package:madnolia/database/users/user.services.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/models/chat/user_chat_model.dart';

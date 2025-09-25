@@ -68,7 +68,7 @@ class AtomProfilePicture extends StatelessWidget {
               AspectRatio(
                 aspectRatio: 1,
                 child: ClipRRect(
-                  borderRadius: BorderRadiusGeometry.circular(10),
+                  borderRadius: BorderRadius.circular(10),
                   child: StreamBuilder(
                     stream: userStream.imgStream,
                     builder:
