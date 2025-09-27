@@ -9,6 +9,7 @@ class User extends Table {
   TextColumn get name => text()();
   TextColumn get username => text()();
   TextColumn get thumb => text()();
+  TextColumn get image => text()();
   IntColumn get connection => intEnum<ConnectionStatus>()();
   DateTimeColumn get lastUpdated => dateTime().withDefault(currentDateAndTime)(); 
   TextColumn get friendshipId => text().nullable()();
@@ -30,6 +31,7 @@ extension SimpleUserToUserCompanion on SimpleUser {
       name: Value(name),
       username: Value(username),
       thumb: Value(thumb),
+      image: Value(image),
       connection: Value(connection),
       lastUpdated: Value(lastUpdated ?? DateTime.now()),
       friendshipId: Value(friendshipId),
@@ -49,6 +51,7 @@ extension SimpleUserToUserData on SimpleUser {
       name: name,
       username: username,
       thumb: thumb,
+      image: image,
       connection: connection,
       lastUpdated: lastUpdated ?? DateTime.now(),
       friendshipId: friendshipId,

@@ -29,6 +29,11 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
   late final GeneratedColumn<String> thumb = GeneratedColumn<String>(
       'thumb', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _imageMeta = const VerificationMeta('image');
+  @override
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   @override
   late final GeneratedColumnWithTypeConverter<ConnectionStatus, int>
       connection = GeneratedColumn<int>('connection', aliasedName, false,
@@ -50,7 +55,7 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
       type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, name, username, thumb, connection, lastUpdated, friendshipId];
+      [id, name, username, thumb, image, connection, lastUpdated, friendshipId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -84,6 +89,12 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
     } else if (isInserting) {
       context.missing(_thumbMeta);
     }
+    if (data.containsKey('image')) {
+      context.handle(
+          _imageMeta, image.isAcceptableOrUnknown(data['image']!, _imageMeta));
+    } else if (isInserting) {
+      context.missing(_imageMeta);
+    }
     if (data.containsKey('last_updated')) {
       context.handle(
           _lastUpdatedMeta,
@@ -113,6 +124,8 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
           .read(DriftSqlType.string, data['${effectivePrefix}username'])!,
       thumb: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}thumb'])!,
+      image: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image'])!,
       connection: $UserTable.$converterconnection.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}connection'])!),
@@ -137,6 +150,7 @@ class UserData extends DataClass implements Insertable<UserData> {
   final String name;
   final String username;
   final String thumb;
+  final String image;
   final ConnectionStatus connection;
   final DateTime lastUpdated;
   final String? friendshipId;
@@ -145,6 +159,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       required this.name,
       required this.username,
       required this.thumb,
+      required this.image,
       required this.connection,
       required this.lastUpdated,
       this.friendshipId});
@@ -155,6 +170,7 @@ class UserData extends DataClass implements Insertable<UserData> {
     map['name'] = Variable<String>(name);
     map['username'] = Variable<String>(username);
     map['thumb'] = Variable<String>(thumb);
+    map['image'] = Variable<String>(image);
     {
       map['connection'] =
           Variable<int>($UserTable.$converterconnection.toSql(connection));
@@ -172,6 +188,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       name: Value(name),
       username: Value(username),
       thumb: Value(thumb),
+      image: Value(image),
       connection: Value(connection),
       lastUpdated: Value(lastUpdated),
       friendshipId: friendshipId == null && nullToAbsent
@@ -188,6 +205,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       name: serializer.fromJson<String>(json['name']),
       username: serializer.fromJson<String>(json['username']),
       thumb: serializer.fromJson<String>(json['thumb']),
+      image: serializer.fromJson<String>(json['image']),
       connection: $UserTable.$converterconnection
           .fromJson(serializer.fromJson<int>(json['connection'])),
       lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
@@ -202,6 +220,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       'name': serializer.toJson<String>(name),
       'username': serializer.toJson<String>(username),
       'thumb': serializer.toJson<String>(thumb),
+      'image': serializer.toJson<String>(image),
       'connection': serializer
           .toJson<int>($UserTable.$converterconnection.toJson(connection)),
       'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
@@ -214,6 +233,7 @@ class UserData extends DataClass implements Insertable<UserData> {
           String? name,
           String? username,
           String? thumb,
+          String? image,
           ConnectionStatus? connection,
           DateTime? lastUpdated,
           Value<String?> friendshipId = const Value.absent()}) =>
@@ -222,6 +242,7 @@ class UserData extends DataClass implements Insertable<UserData> {
         name: name ?? this.name,
         username: username ?? this.username,
         thumb: thumb ?? this.thumb,
+        image: image ?? this.image,
         connection: connection ?? this.connection,
         lastUpdated: lastUpdated ?? this.lastUpdated,
         friendshipId:
@@ -233,6 +254,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       name: data.name.present ? data.name.value : this.name,
       username: data.username.present ? data.username.value : this.username,
       thumb: data.thumb.present ? data.thumb.value : this.thumb,
+      image: data.image.present ? data.image.value : this.image,
       connection:
           data.connection.present ? data.connection.value : this.connection,
       lastUpdated:
@@ -250,6 +272,7 @@ class UserData extends DataClass implements Insertable<UserData> {
           ..write('name: $name, ')
           ..write('username: $username, ')
           ..write('thumb: $thumb, ')
+          ..write('image: $image, ')
           ..write('connection: $connection, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('friendshipId: $friendshipId')
@@ -259,7 +282,7 @@ class UserData extends DataClass implements Insertable<UserData> {
 
   @override
   int get hashCode => Object.hash(
-      id, name, username, thumb, connection, lastUpdated, friendshipId);
+      id, name, username, thumb, image, connection, lastUpdated, friendshipId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -268,6 +291,7 @@ class UserData extends DataClass implements Insertable<UserData> {
           other.name == this.name &&
           other.username == this.username &&
           other.thumb == this.thumb &&
+          other.image == this.image &&
           other.connection == this.connection &&
           other.lastUpdated == this.lastUpdated &&
           other.friendshipId == this.friendshipId);
@@ -278,6 +302,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
   final Value<String> name;
   final Value<String> username;
   final Value<String> thumb;
+  final Value<String> image;
   final Value<ConnectionStatus> connection;
   final Value<DateTime> lastUpdated;
   final Value<String?> friendshipId;
@@ -287,6 +312,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
     this.name = const Value.absent(),
     this.username = const Value.absent(),
     this.thumb = const Value.absent(),
+    this.image = const Value.absent(),
     this.connection = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.friendshipId = const Value.absent(),
@@ -297,6 +323,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
     required String name,
     required String username,
     required String thumb,
+    required String image,
     required ConnectionStatus connection,
     this.lastUpdated = const Value.absent(),
     this.friendshipId = const Value.absent(),
@@ -305,12 +332,14 @@ class UserCompanion extends UpdateCompanion<UserData> {
         name = Value(name),
         username = Value(username),
         thumb = Value(thumb),
+        image = Value(image),
         connection = Value(connection);
   static Insertable<UserData> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? username,
     Expression<String>? thumb,
+    Expression<String>? image,
     Expression<int>? connection,
     Expression<DateTime>? lastUpdated,
     Expression<String>? friendshipId,
@@ -321,6 +350,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
       if (name != null) 'name': name,
       if (username != null) 'username': username,
       if (thumb != null) 'thumb': thumb,
+      if (image != null) 'image': image,
       if (connection != null) 'connection': connection,
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (friendshipId != null) 'friendship_id': friendshipId,
@@ -333,6 +363,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
       Value<String>? name,
       Value<String>? username,
       Value<String>? thumb,
+      Value<String>? image,
       Value<ConnectionStatus>? connection,
       Value<DateTime>? lastUpdated,
       Value<String?>? friendshipId,
@@ -342,6 +373,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
       name: name ?? this.name,
       username: username ?? this.username,
       thumb: thumb ?? this.thumb,
+      image: image ?? this.image,
       connection: connection ?? this.connection,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       friendshipId: friendshipId ?? this.friendshipId,
@@ -363,6 +395,9 @@ class UserCompanion extends UpdateCompanion<UserData> {
     }
     if (thumb.present) {
       map['thumb'] = Variable<String>(thumb.value);
+    }
+    if (image.present) {
+      map['image'] = Variable<String>(image.value);
     }
     if (connection.present) {
       map['connection'] = Variable<int>(
@@ -387,6 +422,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
           ..write('name: $name, ')
           ..write('username: $username, ')
           ..write('thumb: $thumb, ')
+          ..write('image: $image, ')
           ..write('connection: $connection, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('friendshipId: $friendshipId, ')
@@ -407,16 +443,14 @@ class $FriendshipTable extends Friendship
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _user1Meta = const VerificationMeta('user1');
+  static const VerificationMeta _userMeta = const VerificationMeta('user');
   @override
-  late final GeneratedColumn<String> user1 = GeneratedColumn<String>(
-      'user1', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _user2Meta = const VerificationMeta('user2');
-  @override
-  late final GeneratedColumn<String> user2 = GeneratedColumn<String>(
-      'user2', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<String> user = GeneratedColumn<String>(
+      'user', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES user (id)'));
   @override
   late final GeneratedColumnWithTypeConverter<FriendshipStatus, int> status =
       GeneratedColumn<int>('status', aliasedName, false,
@@ -438,7 +472,7 @@ class $FriendshipTable extends Friendship
       defaultValue: currentDateAndTime);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, user1, user2, status, createdAt, lastUpdated];
+      [id, user, status, createdAt, lastUpdated];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -454,17 +488,11 @@ class $FriendshipTable extends Friendship
     } else if (isInserting) {
       context.missing(_idMeta);
     }
-    if (data.containsKey('user1')) {
+    if (data.containsKey('user')) {
       context.handle(
-          _user1Meta, user1.isAcceptableOrUnknown(data['user1']!, _user1Meta));
+          _userMeta, user.isAcceptableOrUnknown(data['user']!, _userMeta));
     } else if (isInserting) {
-      context.missing(_user1Meta);
-    }
-    if (data.containsKey('user2')) {
-      context.handle(
-          _user2Meta, user2.isAcceptableOrUnknown(data['user2']!, _user2Meta));
-    } else if (isInserting) {
-      context.missing(_user2Meta);
+      context.missing(_userMeta);
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -489,10 +517,8 @@ class $FriendshipTable extends Friendship
     return FriendshipData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      user1: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user1'])!,
-      user2: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user2'])!,
+      user: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}user'])!,
       status: $FriendshipTable.$converterstatus.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}status'])!),
@@ -514,15 +540,13 @@ class $FriendshipTable extends Friendship
 
 class FriendshipData extends DataClass implements Insertable<FriendshipData> {
   final String id;
-  final String user1;
-  final String user2;
+  final String user;
   final FriendshipStatus status;
   final DateTime createdAt;
   final DateTime lastUpdated;
   const FriendshipData(
       {required this.id,
-      required this.user1,
-      required this.user2,
+      required this.user,
       required this.status,
       required this.createdAt,
       required this.lastUpdated});
@@ -530,8 +554,7 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    map['user1'] = Variable<String>(user1);
-    map['user2'] = Variable<String>(user2);
+    map['user'] = Variable<String>(user);
     {
       map['status'] =
           Variable<int>($FriendshipTable.$converterstatus.toSql(status));
@@ -544,8 +567,7 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
   FriendshipCompanion toCompanion(bool nullToAbsent) {
     return FriendshipCompanion(
       id: Value(id),
-      user1: Value(user1),
-      user2: Value(user2),
+      user: Value(user),
       status: Value(status),
       createdAt: Value(createdAt),
       lastUpdated: Value(lastUpdated),
@@ -557,8 +579,7 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FriendshipData(
       id: serializer.fromJson<String>(json['id']),
-      user1: serializer.fromJson<String>(json['user1']),
-      user2: serializer.fromJson<String>(json['user2']),
+      user: serializer.fromJson<String>(json['user']),
       status: $FriendshipTable.$converterstatus
           .fromJson(serializer.fromJson<int>(json['status'])),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -570,8 +591,7 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'user1': serializer.toJson<String>(user1),
-      'user2': serializer.toJson<String>(user2),
+      'user': serializer.toJson<String>(user),
       'status': serializer
           .toJson<int>($FriendshipTable.$converterstatus.toJson(status)),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -581,15 +601,13 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
 
   FriendshipData copyWith(
           {String? id,
-          String? user1,
-          String? user2,
+          String? user,
           FriendshipStatus? status,
           DateTime? createdAt,
           DateTime? lastUpdated}) =>
       FriendshipData(
         id: id ?? this.id,
-        user1: user1 ?? this.user1,
-        user2: user2 ?? this.user2,
+        user: user ?? this.user,
         status: status ?? this.status,
         createdAt: createdAt ?? this.createdAt,
         lastUpdated: lastUpdated ?? this.lastUpdated,
@@ -597,8 +615,7 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
   FriendshipData copyWithCompanion(FriendshipCompanion data) {
     return FriendshipData(
       id: data.id.present ? data.id.value : this.id,
-      user1: data.user1.present ? data.user1.value : this.user1,
-      user2: data.user2.present ? data.user2.value : this.user2,
+      user: data.user.present ? data.user.value : this.user,
       status: data.status.present ? data.status.value : this.status,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       lastUpdated:
@@ -610,8 +627,7 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
   String toString() {
     return (StringBuffer('FriendshipData(')
           ..write('id: $id, ')
-          ..write('user1: $user1, ')
-          ..write('user2: $user2, ')
+          ..write('user: $user, ')
           ..write('status: $status, ')
           ..write('createdAt: $createdAt, ')
           ..write('lastUpdated: $lastUpdated')
@@ -620,15 +636,13 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, user1, user2, status, createdAt, lastUpdated);
+  int get hashCode => Object.hash(id, user, status, createdAt, lastUpdated);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FriendshipData &&
           other.id == this.id &&
-          other.user1 == this.user1 &&
-          other.user2 == this.user2 &&
+          other.user == this.user &&
           other.status == this.status &&
           other.createdAt == this.createdAt &&
           other.lastUpdated == this.lastUpdated);
@@ -636,16 +650,14 @@ class FriendshipData extends DataClass implements Insertable<FriendshipData> {
 
 class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
   final Value<String> id;
-  final Value<String> user1;
-  final Value<String> user2;
+  final Value<String> user;
   final Value<FriendshipStatus> status;
   final Value<DateTime> createdAt;
   final Value<DateTime> lastUpdated;
   final Value<int> rowid;
   const FriendshipCompanion({
     this.id = const Value.absent(),
-    this.user1 = const Value.absent(),
-    this.user2 = const Value.absent(),
+    this.user = const Value.absent(),
     this.status = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.lastUpdated = const Value.absent(),
@@ -653,21 +665,18 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
   });
   FriendshipCompanion.insert({
     required String id,
-    required String user1,
-    required String user2,
+    required String user,
     required FriendshipStatus status,
     required DateTime createdAt,
     this.lastUpdated = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
-        user1 = Value(user1),
-        user2 = Value(user2),
+        user = Value(user),
         status = Value(status),
         createdAt = Value(createdAt);
   static Insertable<FriendshipData> custom({
     Expression<String>? id,
-    Expression<String>? user1,
-    Expression<String>? user2,
+    Expression<String>? user,
     Expression<int>? status,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? lastUpdated,
@@ -675,8 +684,7 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (user1 != null) 'user1': user1,
-      if (user2 != null) 'user2': user2,
+      if (user != null) 'user': user,
       if (status != null) 'status': status,
       if (createdAt != null) 'created_at': createdAt,
       if (lastUpdated != null) 'last_updated': lastUpdated,
@@ -686,16 +694,14 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
 
   FriendshipCompanion copyWith(
       {Value<String>? id,
-      Value<String>? user1,
-      Value<String>? user2,
+      Value<String>? user,
       Value<FriendshipStatus>? status,
       Value<DateTime>? createdAt,
       Value<DateTime>? lastUpdated,
       Value<int>? rowid}) {
     return FriendshipCompanion(
       id: id ?? this.id,
-      user1: user1 ?? this.user1,
-      user2: user2 ?? this.user2,
+      user: user ?? this.user,
       status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
       lastUpdated: lastUpdated ?? this.lastUpdated,
@@ -709,11 +715,8 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
-    if (user1.present) {
-      map['user1'] = Variable<String>(user1.value);
-    }
-    if (user2.present) {
-      map['user2'] = Variable<String>(user2.value);
+    if (user.present) {
+      map['user'] = Variable<String>(user.value);
     }
     if (status.present) {
       map['status'] =
@@ -735,8 +738,7 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
   String toString() {
     return (StringBuffer('FriendshipCompanion(')
           ..write('id: $id, ')
-          ..write('user1: $user1, ')
-          ..write('user2: $user2, ')
+          ..write('user: $user, ')
           ..write('status: $status, ')
           ..write('createdAt: $createdAt, ')
           ..write('lastUpdated: $lastUpdated, ')
@@ -1390,6 +1392,7 @@ typedef $$UserTableCreateCompanionBuilder = UserCompanion Function({
   required String name,
   required String username,
   required String thumb,
+  required String image,
   required ConnectionStatus connection,
   Value<DateTime> lastUpdated,
   Value<String?> friendshipId,
@@ -1400,11 +1403,31 @@ typedef $$UserTableUpdateCompanionBuilder = UserCompanion Function({
   Value<String> name,
   Value<String> username,
   Value<String> thumb,
+  Value<String> image,
   Value<ConnectionStatus> connection,
   Value<DateTime> lastUpdated,
   Value<String?> friendshipId,
   Value<int> rowid,
 });
+
+final class $$UserTableReferences
+    extends BaseReferences<_$AppDatabase, $UserTable, UserData> {
+  $$UserTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$FriendshipTable, List<FriendshipData>>
+      _friendshipRefsTable(_$AppDatabase db) =>
+          MultiTypedResultKey.fromTable(db.friendship,
+              aliasName: $_aliasNameGenerator(db.user.id, db.friendship.user));
+
+  $$FriendshipTableProcessedTableManager get friendshipRefs {
+    final manager = $$FriendshipTableTableManager($_db, $_db.friendship)
+        .filter((f) => f.user.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_friendshipRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
 
 class $$UserTableFilterComposer extends Composer<_$AppDatabase, $UserTable> {
   $$UserTableFilterComposer({
@@ -1426,6 +1449,9 @@ class $$UserTableFilterComposer extends Composer<_$AppDatabase, $UserTable> {
   ColumnFilters<String> get thumb => $composableBuilder(
       column: $table.thumb, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<String> get image => $composableBuilder(
+      column: $table.image, builder: (column) => ColumnFilters(column));
+
   ColumnWithTypeConverterFilters<ConnectionStatus, ConnectionStatus, int>
       get connection => $composableBuilder(
           column: $table.connection,
@@ -1436,6 +1462,27 @@ class $$UserTableFilterComposer extends Composer<_$AppDatabase, $UserTable> {
 
   ColumnFilters<String> get friendshipId => $composableBuilder(
       column: $table.friendshipId, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> friendshipRefs(
+      Expression<bool> Function($$FriendshipTableFilterComposer f) f) {
+    final $$FriendshipTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.friendship,
+        getReferencedColumn: (t) => t.user,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$FriendshipTableFilterComposer(
+              $db: $db,
+              $table: $db.friendship,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$UserTableOrderingComposer extends Composer<_$AppDatabase, $UserTable> {
@@ -1457,6 +1504,9 @@ class $$UserTableOrderingComposer extends Composer<_$AppDatabase, $UserTable> {
 
   ColumnOrderings<String> get thumb => $composableBuilder(
       column: $table.thumb, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get image => $composableBuilder(
+      column: $table.image, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<int> get connection => $composableBuilder(
       column: $table.connection, builder: (column) => ColumnOrderings(column));
@@ -1490,6 +1540,9 @@ class $$UserTableAnnotationComposer
   GeneratedColumn<String> get thumb =>
       $composableBuilder(column: $table.thumb, builder: (column) => column);
 
+  GeneratedColumn<String> get image =>
+      $composableBuilder(column: $table.image, builder: (column) => column);
+
   GeneratedColumnWithTypeConverter<ConnectionStatus, int> get connection =>
       $composableBuilder(
           column: $table.connection, builder: (column) => column);
@@ -1499,6 +1552,27 @@ class $$UserTableAnnotationComposer
 
   GeneratedColumn<String> get friendshipId => $composableBuilder(
       column: $table.friendshipId, builder: (column) => column);
+
+  Expression<T> friendshipRefs<T extends Object>(
+      Expression<T> Function($$FriendshipTableAnnotationComposer a) f) {
+    final $$FriendshipTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.friendship,
+        getReferencedColumn: (t) => t.user,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$FriendshipTableAnnotationComposer(
+              $db: $db,
+              $table: $db.friendship,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$UserTableTableManager extends RootTableManager<
@@ -1510,9 +1584,9 @@ class $$UserTableTableManager extends RootTableManager<
     $$UserTableAnnotationComposer,
     $$UserTableCreateCompanionBuilder,
     $$UserTableUpdateCompanionBuilder,
-    (UserData, BaseReferences<_$AppDatabase, $UserTable, UserData>),
+    (UserData, $$UserTableReferences),
     UserData,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function({bool friendshipRefs})> {
   $$UserTableTableManager(_$AppDatabase db, $UserTable table)
       : super(TableManagerState(
           db: db,
@@ -1528,6 +1602,7 @@ class $$UserTableTableManager extends RootTableManager<
             Value<String> name = const Value.absent(),
             Value<String> username = const Value.absent(),
             Value<String> thumb = const Value.absent(),
+            Value<String> image = const Value.absent(),
             Value<ConnectionStatus> connection = const Value.absent(),
             Value<DateTime> lastUpdated = const Value.absent(),
             Value<String?> friendshipId = const Value.absent(),
@@ -1538,6 +1613,7 @@ class $$UserTableTableManager extends RootTableManager<
             name: name,
             username: username,
             thumb: thumb,
+            image: image,
             connection: connection,
             lastUpdated: lastUpdated,
             friendshipId: friendshipId,
@@ -1548,6 +1624,7 @@ class $$UserTableTableManager extends RootTableManager<
             required String name,
             required String username,
             required String thumb,
+            required String image,
             required ConnectionStatus connection,
             Value<DateTime> lastUpdated = const Value.absent(),
             Value<String?> friendshipId = const Value.absent(),
@@ -1558,15 +1635,39 @@ class $$UserTableTableManager extends RootTableManager<
             name: name,
             username: username,
             thumb: thumb,
+            image: image,
             connection: connection,
             lastUpdated: lastUpdated,
             friendshipId: friendshipId,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) =>
+                  (e.readTable(table), $$UserTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({friendshipRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (friendshipRefs) db.friendship],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (friendshipRefs)
+                    await $_getPrefetchedData<UserData, $UserTable,
+                            FriendshipData>(
+                        currentTable: table,
+                        referencedTable:
+                            $$UserTableReferences._friendshipRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UserTableReferences(db, table, p0).friendshipRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) =>
+                                referencedItems.where((e) => e.user == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
         ));
 }
 
@@ -1579,13 +1680,12 @@ typedef $$UserTableProcessedTableManager = ProcessedTableManager<
     $$UserTableAnnotationComposer,
     $$UserTableCreateCompanionBuilder,
     $$UserTableUpdateCompanionBuilder,
-    (UserData, BaseReferences<_$AppDatabase, $UserTable, UserData>),
+    (UserData, $$UserTableReferences),
     UserData,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function({bool friendshipRefs})>;
 typedef $$FriendshipTableCreateCompanionBuilder = FriendshipCompanion Function({
   required String id,
-  required String user1,
-  required String user2,
+  required String user,
   required FriendshipStatus status,
   required DateTime createdAt,
   Value<DateTime> lastUpdated,
@@ -1593,13 +1693,31 @@ typedef $$FriendshipTableCreateCompanionBuilder = FriendshipCompanion Function({
 });
 typedef $$FriendshipTableUpdateCompanionBuilder = FriendshipCompanion Function({
   Value<String> id,
-  Value<String> user1,
-  Value<String> user2,
+  Value<String> user,
   Value<FriendshipStatus> status,
   Value<DateTime> createdAt,
   Value<DateTime> lastUpdated,
   Value<int> rowid,
 });
+
+final class $$FriendshipTableReferences
+    extends BaseReferences<_$AppDatabase, $FriendshipTable, FriendshipData> {
+  $$FriendshipTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UserTable _userTable(_$AppDatabase db) =>
+      db.user.createAlias($_aliasNameGenerator(db.friendship.user, db.user.id));
+
+  $$UserTableProcessedTableManager get user {
+    final $_column = $_itemColumn<String>('user')!;
+
+    final manager = $$UserTableTableManager($_db, $_db.user)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
 
 class $$FriendshipTableFilterComposer
     extends Composer<_$AppDatabase, $FriendshipTable> {
@@ -1613,12 +1731,6 @@ class $$FriendshipTableFilterComposer
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get user1 => $composableBuilder(
-      column: $table.user1, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get user2 => $composableBuilder(
-      column: $table.user2, builder: (column) => ColumnFilters(column));
-
   ColumnWithTypeConverterFilters<FriendshipStatus, FriendshipStatus, int>
       get status => $composableBuilder(
           column: $table.status,
@@ -1629,6 +1741,26 @@ class $$FriendshipTableFilterComposer
 
   ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
+
+  $$UserTableFilterComposer get user {
+    final $$UserTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.user,
+        referencedTable: $db.user,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UserTableFilterComposer(
+              $db: $db,
+              $table: $db.user,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$FriendshipTableOrderingComposer
@@ -1643,12 +1775,6 @@ class $$FriendshipTableOrderingComposer
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get user1 => $composableBuilder(
-      column: $table.user1, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get user2 => $composableBuilder(
-      column: $table.user2, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<int> get status => $composableBuilder(
       column: $table.status, builder: (column) => ColumnOrderings(column));
 
@@ -1657,6 +1783,26 @@ class $$FriendshipTableOrderingComposer
 
   ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
+
+  $$UserTableOrderingComposer get user {
+    final $$UserTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.user,
+        referencedTable: $db.user,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UserTableOrderingComposer(
+              $db: $db,
+              $table: $db.user,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$FriendshipTableAnnotationComposer
@@ -1671,12 +1817,6 @@ class $$FriendshipTableAnnotationComposer
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get user1 =>
-      $composableBuilder(column: $table.user1, builder: (column) => column);
-
-  GeneratedColumn<String> get user2 =>
-      $composableBuilder(column: $table.user2, builder: (column) => column);
-
   GeneratedColumnWithTypeConverter<FriendshipStatus, int> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
 
@@ -1685,6 +1825,26 @@ class $$FriendshipTableAnnotationComposer
 
   GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => column);
+
+  $$UserTableAnnotationComposer get user {
+    final $$UserTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.user,
+        referencedTable: $db.user,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UserTableAnnotationComposer(
+              $db: $db,
+              $table: $db.user,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$FriendshipTableTableManager extends RootTableManager<
@@ -1696,12 +1856,9 @@ class $$FriendshipTableTableManager extends RootTableManager<
     $$FriendshipTableAnnotationComposer,
     $$FriendshipTableCreateCompanionBuilder,
     $$FriendshipTableUpdateCompanionBuilder,
-    (
-      FriendshipData,
-      BaseReferences<_$AppDatabase, $FriendshipTable, FriendshipData>
-    ),
+    (FriendshipData, $$FriendshipTableReferences),
     FriendshipData,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function({bool user})> {
   $$FriendshipTableTableManager(_$AppDatabase db, $FriendshipTable table)
       : super(TableManagerState(
           db: db,
@@ -1714,8 +1871,7 @@ class $$FriendshipTableTableManager extends RootTableManager<
               $$FriendshipTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
-            Value<String> user1 = const Value.absent(),
-            Value<String> user2 = const Value.absent(),
+            Value<String> user = const Value.absent(),
             Value<FriendshipStatus> status = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> lastUpdated = const Value.absent(),
@@ -1723,8 +1879,7 @@ class $$FriendshipTableTableManager extends RootTableManager<
           }) =>
               FriendshipCompanion(
             id: id,
-            user1: user1,
-            user2: user2,
+            user: user,
             status: status,
             createdAt: createdAt,
             lastUpdated: lastUpdated,
@@ -1732,8 +1887,7 @@ class $$FriendshipTableTableManager extends RootTableManager<
           ),
           createCompanionCallback: ({
             required String id,
-            required String user1,
-            required String user2,
+            required String user,
             required FriendshipStatus status,
             required DateTime createdAt,
             Value<DateTime> lastUpdated = const Value.absent(),
@@ -1741,17 +1895,52 @@ class $$FriendshipTableTableManager extends RootTableManager<
           }) =>
               FriendshipCompanion.insert(
             id: id,
-            user1: user1,
-            user2: user2,
+            user: user,
             status: status,
             createdAt: createdAt,
             lastUpdated: lastUpdated,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) => (
+                    e.readTable(table),
+                    $$FriendshipTableReferences(db, table, e)
+                  ))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({user = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (user) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.user,
+                    referencedTable: $$FriendshipTableReferences._userTable(db),
+                    referencedColumn:
+                        $$FriendshipTableReferences._userTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ));
 }
 
@@ -1764,12 +1953,9 @@ typedef $$FriendshipTableProcessedTableManager = ProcessedTableManager<
     $$FriendshipTableAnnotationComposer,
     $$FriendshipTableCreateCompanionBuilder,
     $$FriendshipTableUpdateCompanionBuilder,
-    (
-      FriendshipData,
-      BaseReferences<_$AppDatabase, $FriendshipTable, FriendshipData>
-    ),
+    (FriendshipData, $$FriendshipTableReferences),
     FriendshipData,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function({bool user})>;
 typedef $$MatchTableCreateCompanionBuilder = MatchCompanion Function({
   required String id,
   required String game,

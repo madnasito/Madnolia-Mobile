@@ -1,9 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImageProvider;
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/friendships/frienship.services.dart';
 import 'package:madnolia/database/users/user.services.dart';
@@ -43,8 +41,7 @@ class AtomUserChat extends StatelessWidget {
         }
 
         final friendship = friendshipSnapshot.data!;
-        final userId = context.read<UserBloc>().state.id;
-        final String notMe = friendship.user1 == userId ? friendship.user2 : friendship.user1;
+        final String notMe = friendship.user;
 
         final userDbServices = UserDbServices();
         // Segundo FutureBuilder para obtener los datos del usuario

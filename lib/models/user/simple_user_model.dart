@@ -16,6 +16,7 @@ class SimpleUser {
   String name;
   String username;
   String thumb;
+  String image;
   ConnectionStatus connection;
 
   SimpleUser({
@@ -23,6 +24,7 @@ class SimpleUser {
     required this.name,
     required this.username,
     required this.thumb,
+    required this.image,
     required this.connection,
   });
 
@@ -55,6 +57,7 @@ class SimpleUser {
       name: json["name"],
       username: json["username"],
       thumb: json["thumb"],
+      image: json["iamge"],
       connection: connectionStatus,
     );
   }
@@ -64,6 +67,7 @@ class SimpleUser {
     "name": name,
     "username": username,
     "thumb": thumb,
+    "image": image,
     "connection": connection.index, // Send the index of the enum value
   };
 
@@ -73,6 +77,7 @@ class SimpleUser {
       name: userData.name,
       username: userData.username,
       thumb: userData.thumb,
+      image: userData.image,
       connection: userData.connection,
     );
   }

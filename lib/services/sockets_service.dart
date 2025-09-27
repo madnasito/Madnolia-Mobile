@@ -241,6 +241,8 @@ onStart(ServiceInstance service) async {
 
   service.on('match_created').listen((onData) => socket.emit('match_created', onData?['id']));
 
+  service.on('join_to_match').listen((onData) => socket.emit('join_to_match', onData?['match']));
+
   service.on('is_socket_connected').listen((data) => service.invoke('socket_status', {'connected': socket.connected}));
 
   service.on("stop").listen((event) {

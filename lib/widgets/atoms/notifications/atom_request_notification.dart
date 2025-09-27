@@ -40,7 +40,7 @@ class AtomRequestNotification extends StatelessWidget {
               context: context,
               barrierDismissible: true,
               builder: (context) {
-                final SimpleUser simpleUser = SimpleUser(id: notification.path, name: notification.title, username: snapshot.data!.username, thumb: notification.thumb, connection: ConnectionStatus.requestReceived);
+                final SimpleUser simpleUser = SimpleUser(id: notification.path, name: notification.title,image: snapshot.data!.image,  username: snapshot.data!.username, thumb: notification.thumb, connection: ConnectionStatus.requestReceived);
                 return AlertDialog(
                   actionsAlignment: MainAxisAlignment.center,
                   contentPadding:  EdgeInsets.only(bottom: 10, top: 20),

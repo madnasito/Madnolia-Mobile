@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/services/friendship_service.dart';
 
 import '../database.dart';
@@ -20,10 +21,13 @@ class FriendshipDbService {
 
       final friendshipInfo = await friendshipService.getFriendshipById(id);
 
+      final storage = const FlutterSecureStorage();
+      final String? userId = await storage.read(key: "userId");
+      final String notMe = friendshipInfo.user1 == userId ? friendshipInfo.user2 : friendshipInfo.user1;
+
       final friendshipCompanion = FriendshipCompanion(
         id: Value(friendshipInfo.id),
-        user1: Value(friendshipInfo.user1),
-        user2: Value(friendshipInfo.user2),
+        user: Value(notMe),
         createdAt: Value(friendshipInfo.createdAt),
         status: Value(friendshipInfo.status),
         lastUpdated: Value(now)
