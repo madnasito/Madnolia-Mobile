@@ -11,6 +11,7 @@ class UserDbServices {
     try {
       return await database.into(database.user).insertOnConflictUpdate(user);
     } catch (e) {
+      debugPrint('Error in createOrUpdateUser: $e');
       rethrow;
     }
   }
@@ -31,10 +32,10 @@ class UserDbServices {
       
       final userCompanion = UserCompanion(
         id: Value(userInfo.id),
+        image: Value(userInfo.image),
         name: Value(userInfo.name),
         username: Value(userInfo.username),
         thumb: Value(userInfo.thumb),
-        connection: Value(userInfo.connection),
         lastUpdated: Value(now),
       );
 
@@ -43,13 +44,15 @@ class UserDbServices {
       final user = await (database.select(database.user)..where((user) => user.id.equals(id))).getSingle();
       return user;
     } catch (e) {
+      debugPrint('Error in getUserById: $e');
       rethrow;
     }
   }
 
   Future<UserData?> getUserByFriendship(String friendshipId) async {
     try {
-      return await (database.select(database.user)..where((user) => user.friendshipId.equals(friendshipId))).getSingleOrNull();
+      final friendship = await (database.select(database.friendship)..where((f) => f.id.equals(friendshipId))).getSingle();
+      return await getUserById(friendship.user);
     } catch (e) {
       debugPrint('Error in getUserByFriendship: $e');
       return null;

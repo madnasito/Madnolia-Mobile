@@ -2,10 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart' show CachedNetwo
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/users/user.services.dart';
-import 'package:madnolia/enums/connection-status.enum.dart' show ConnectionStatus;
 import 'package:madnolia/models/notification/notification_model.dart';
-import 'package:madnolia/models/user/simple_user_model.dart' show SimpleUser;
 
 class AtomRequestNotification extends StatelessWidget {
 
@@ -40,7 +39,7 @@ class AtomRequestNotification extends StatelessWidget {
               context: context,
               barrierDismissible: true,
               builder: (context) {
-                final SimpleUser simpleUser = SimpleUser(id: notification.path, name: notification.title,image: snapshot.data!.image,  username: snapshot.data!.username, thumb: notification.thumb, connection: ConnectionStatus.requestReceived);
+                final UserData simpleUser = snapshot.data!;
                 return AlertDialog(
                   actionsAlignment: MainAxisAlignment.center,
                   contentPadding:  EdgeInsets.only(bottom: 10, top: 20),

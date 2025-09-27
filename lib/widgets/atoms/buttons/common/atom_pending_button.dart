@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/database.dart';
+import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/widgets/dialogs/dialog_pending_request.dart';
 
 class AtomPendingButton extends StatelessWidget {
 
-  final UserData userData;
+  final SimpleUser userData;
 
   const AtomPendingButton({super.key, required this.userData});
 

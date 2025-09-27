@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/connection-status.enum.dart';
 import 'package:madnolia/models/chat_user_model.dart';
+import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/widgets/atoms/buttons/common/atom_pending_button.dart';
 import 'package:madnolia/widgets/atoms/buttons/common/atom_request_button.dart';
 import 'package:madnolia/widgets/atoms/buttons/common/atom_requested_button.dart';
@@ -9,7 +9,7 @@ import 'package:madnolia/widgets/atoms/buttons/common/atom_user_chat_button.dart
 
 class MoleculeConnectionButton extends StatelessWidget {
 
-  final UserData userData;
+  final SimpleUser userData;
   
   const MoleculeConnectionButton({super.key, required this.userData});
 

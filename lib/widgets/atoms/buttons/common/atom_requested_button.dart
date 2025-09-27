@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/database.dart';
+import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/widgets/dialogs/dialog_requested.dart' show DialogRequested;
 
 class AtomRequestedButton extends StatelessWidget {
 
-  final UserData userData;
+  final SimpleUser userData;
   
   const AtomRequestedButton({super.key, required this.userData});
 

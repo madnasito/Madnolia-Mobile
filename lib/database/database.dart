@@ -4,7 +4,6 @@ import 'package:madnolia/database/users/user.schema.dart';
 import 'package:madnolia/database/friendships/friendship.schema.dart';
 import 'package:madnolia/database/match/match.schema.dart';
 
-import '../enums/connection-status.enum.dart';
 import '../enums/friendship-status.enum.dart';
 import '../enums/match-status.enum.dart';
 import '../enums/platforms_id.enum.dart';

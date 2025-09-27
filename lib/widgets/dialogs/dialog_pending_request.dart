@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/database.dart';
+import 'package:madnolia/models/user/simple_user_model.dart';
 
 class DialogPendingRequest extends StatelessWidget {
-  final UserData userData;
+  final SimpleUser userData;
   const DialogPendingRequest({super.key, required this.userData});
 
   @override

@@ -5,7 +5,6 @@
 import 'dart:convert';
 import 'package:madnolia/enums/connection-status.enum.dart';
 
-import '../../database/database.dart';
 
 SimpleUser simpleUserFromJson(String str) => SimpleUser.fromJson(json.decode(str));
 
@@ -57,7 +56,7 @@ class SimpleUser {
       name: json["name"],
       username: json["username"],
       thumb: json["thumb"],
-      image: json["iamge"],
+      image: json["image"],
       connection: connectionStatus,
     );
   }
@@ -71,14 +70,14 @@ class SimpleUser {
     "connection": connection.index, // Send the index of the enum value
   };
 
-  factory SimpleUser.fromUserData(UserData userData) {
-    return SimpleUser(
-      id: userData.id,
-      name: userData.name,
-      username: userData.username,
-      thumb: userData.thumb,
-      image: userData.image,
-      connection: userData.connection,
-    );
-  }
+  // factory SimpleUser.fromUserData(UserData userData) {
+  //   return SimpleUser(
+  //     id: userData.id,
+  //     name: userData.name,
+  //     username: userData.username,
+  //     thumb: userData.thumb,
+  //     image: userData.image,
+  //     connection: userData.connection,
+  //   );
+  // }
 }

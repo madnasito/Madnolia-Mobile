@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImageProvider;
 import 'package:flutter/material.dart';
-import 'package:madnolia/database/database.dart';
+import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_icon_connection_button.dart' show MoleculeConnectionIconButton;
 
 class OrganismUsersList extends StatelessWidget {
-  final List<UserData> users;
+  final List<SimpleUser> users;
   const OrganismUsersList({super.key, required this.users});
 
   @override

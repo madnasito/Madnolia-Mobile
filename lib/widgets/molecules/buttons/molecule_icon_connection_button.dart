@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/connection-status.enum.dart';
 import 'package:madnolia/models/chat_user_model.dart';
+import 'package:madnolia/models/user/simple_user_model.dart';
 import '../../atoms/buttons/atom_buttons.dart';
 
 
 class MoleculeConnectionIconButton extends StatelessWidget {
-  final UserData userData;
+  final SimpleUser userData;
   const MoleculeConnectionIconButton({super.key, required this.userData});
 
   @override

@@ -2,12 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/database.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/organism/organism_users_list.dart';
 
-import '../../models/user/simple_user_model.dart' show SimpleUser;
+import '../../models/user/simple_user_model.dart';
 import '../../widgets/atoms/input/atom_search_input.dart';
 
 class SearchPage extends StatefulWidget {
@@ -97,7 +96,7 @@ class _SearchPageState extends State<SearchPage> {
                           if(snapshot.data!.isEmpty) {
                             return Text(translate('SEARCH.NO_USERS_FOUND'));
                           } 
-                          return OrganismUsersList(users: snapshot.data!.map((e) => UserData.fromJson(e.toJson())).toList());
+                          return OrganismUsersList(users: snapshot.data!.map((e) => SimpleUser.fromJson(e.toJson())).toList());
                         },
                       ),
                     )
@@ -112,6 +111,7 @@ class _SearchPageState extends State<SearchPage> {
   Future<List<SimpleUser>> _searchUsers(String query) async {
     try {
       final resp = await UserService().searchUser(query);
+      debugPrint('Search response: $resp');
       if (resp is Map) return [];
       return (resp as List).map((e) => SimpleUser.fromJson(e)).toList();
     } catch (e) {

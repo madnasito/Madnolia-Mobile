@@ -34,11 +34,6 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
   late final GeneratedColumn<String> image = GeneratedColumn<String>(
       'image', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
-  @override
-  late final GeneratedColumnWithTypeConverter<ConnectionStatus, int>
-      connection = GeneratedColumn<int>('connection', aliasedName, false,
-              type: DriftSqlType.int, requiredDuringInsert: true)
-          .withConverter<ConnectionStatus>($UserTable.$converterconnection);
   static const VerificationMeta _lastUpdatedMeta =
       const VerificationMeta('lastUpdated');
   @override
@@ -47,15 +42,9 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
       type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
       defaultValue: currentDateAndTime);
-  static const VerificationMeta _friendshipIdMeta =
-      const VerificationMeta('friendshipId');
-  @override
-  late final GeneratedColumn<String> friendshipId = GeneratedColumn<String>(
-      'friendship_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, name, username, thumb, image, connection, lastUpdated, friendshipId];
+      [id, name, username, thumb, image, lastUpdated];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -101,12 +90,6 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
           lastUpdated.isAcceptableOrUnknown(
               data['last_updated']!, _lastUpdatedMeta));
     }
-    if (data.containsKey('friendship_id')) {
-      context.handle(
-          _friendshipIdMeta,
-          friendshipId.isAcceptableOrUnknown(
-              data['friendship_id']!, _friendshipIdMeta));
-    }
     return context;
   }
 
@@ -126,13 +109,8 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
           .read(DriftSqlType.string, data['${effectivePrefix}thumb'])!,
       image: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}image'])!,
-      connection: $UserTable.$converterconnection.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}connection'])!),
       lastUpdated: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!,
-      friendshipId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}friendship_id']),
     );
   }
 
@@ -140,9 +118,6 @@ class $UserTable extends User with TableInfo<$UserTable, UserData> {
   $UserTable createAlias(String alias) {
     return $UserTable(attachedDatabase, alias);
   }
-
-  static JsonTypeConverter2<ConnectionStatus, int, int> $converterconnection =
-      const EnumIndexConverter<ConnectionStatus>(ConnectionStatus.values);
 }
 
 class UserData extends DataClass implements Insertable<UserData> {
@@ -151,18 +126,14 @@ class UserData extends DataClass implements Insertable<UserData> {
   final String username;
   final String thumb;
   final String image;
-  final ConnectionStatus connection;
   final DateTime lastUpdated;
-  final String? friendshipId;
   const UserData(
       {required this.id,
       required this.name,
       required this.username,
       required this.thumb,
       required this.image,
-      required this.connection,
-      required this.lastUpdated,
-      this.friendshipId});
+      required this.lastUpdated});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -171,14 +142,7 @@ class UserData extends DataClass implements Insertable<UserData> {
     map['username'] = Variable<String>(username);
     map['thumb'] = Variable<String>(thumb);
     map['image'] = Variable<String>(image);
-    {
-      map['connection'] =
-          Variable<int>($UserTable.$converterconnection.toSql(connection));
-    }
     map['last_updated'] = Variable<DateTime>(lastUpdated);
-    if (!nullToAbsent || friendshipId != null) {
-      map['friendship_id'] = Variable<String>(friendshipId);
-    }
     return map;
   }
 
@@ -189,11 +153,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       username: Value(username),
       thumb: Value(thumb),
       image: Value(image),
-      connection: Value(connection),
       lastUpdated: Value(lastUpdated),
-      friendshipId: friendshipId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(friendshipId),
     );
   }
 
@@ -206,10 +166,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       username: serializer.fromJson<String>(json['username']),
       thumb: serializer.fromJson<String>(json['thumb']),
       image: serializer.fromJson<String>(json['image']),
-      connection: $UserTable.$converterconnection
-          .fromJson(serializer.fromJson<int>(json['connection'])),
       lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
-      friendshipId: serializer.fromJson<String?>(json['friendshipId']),
     );
   }
   @override
@@ -221,10 +178,7 @@ class UserData extends DataClass implements Insertable<UserData> {
       'username': serializer.toJson<String>(username),
       'thumb': serializer.toJson<String>(thumb),
       'image': serializer.toJson<String>(image),
-      'connection': serializer
-          .toJson<int>($UserTable.$converterconnection.toJson(connection)),
       'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
-      'friendshipId': serializer.toJson<String?>(friendshipId),
     };
   }
 
@@ -234,19 +188,14 @@ class UserData extends DataClass implements Insertable<UserData> {
           String? username,
           String? thumb,
           String? image,
-          ConnectionStatus? connection,
-          DateTime? lastUpdated,
-          Value<String?> friendshipId = const Value.absent()}) =>
+          DateTime? lastUpdated}) =>
       UserData(
         id: id ?? this.id,
         name: name ?? this.name,
         username: username ?? this.username,
         thumb: thumb ?? this.thumb,
         image: image ?? this.image,
-        connection: connection ?? this.connection,
         lastUpdated: lastUpdated ?? this.lastUpdated,
-        friendshipId:
-            friendshipId.present ? friendshipId.value : this.friendshipId,
       );
   UserData copyWithCompanion(UserCompanion data) {
     return UserData(
@@ -255,13 +204,8 @@ class UserData extends DataClass implements Insertable<UserData> {
       username: data.username.present ? data.username.value : this.username,
       thumb: data.thumb.present ? data.thumb.value : this.thumb,
       image: data.image.present ? data.image.value : this.image,
-      connection:
-          data.connection.present ? data.connection.value : this.connection,
       lastUpdated:
           data.lastUpdated.present ? data.lastUpdated.value : this.lastUpdated,
-      friendshipId: data.friendshipId.present
-          ? data.friendshipId.value
-          : this.friendshipId,
     );
   }
 
@@ -273,16 +217,14 @@ class UserData extends DataClass implements Insertable<UserData> {
           ..write('username: $username, ')
           ..write('thumb: $thumb, ')
           ..write('image: $image, ')
-          ..write('connection: $connection, ')
-          ..write('lastUpdated: $lastUpdated, ')
-          ..write('friendshipId: $friendshipId')
+          ..write('lastUpdated: $lastUpdated')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, name, username, thumb, image, connection, lastUpdated, friendshipId);
+  int get hashCode =>
+      Object.hash(id, name, username, thumb, image, lastUpdated);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -292,9 +234,7 @@ class UserData extends DataClass implements Insertable<UserData> {
           other.username == this.username &&
           other.thumb == this.thumb &&
           other.image == this.image &&
-          other.connection == this.connection &&
-          other.lastUpdated == this.lastUpdated &&
-          other.friendshipId == this.friendshipId);
+          other.lastUpdated == this.lastUpdated);
 }
 
 class UserCompanion extends UpdateCompanion<UserData> {
@@ -303,9 +243,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
   final Value<String> username;
   final Value<String> thumb;
   final Value<String> image;
-  final Value<ConnectionStatus> connection;
   final Value<DateTime> lastUpdated;
-  final Value<String?> friendshipId;
   final Value<int> rowid;
   const UserCompanion({
     this.id = const Value.absent(),
@@ -313,9 +251,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
     this.username = const Value.absent(),
     this.thumb = const Value.absent(),
     this.image = const Value.absent(),
-    this.connection = const Value.absent(),
     this.lastUpdated = const Value.absent(),
-    this.friendshipId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UserCompanion.insert({
@@ -324,25 +260,20 @@ class UserCompanion extends UpdateCompanion<UserData> {
     required String username,
     required String thumb,
     required String image,
-    required ConnectionStatus connection,
     this.lastUpdated = const Value.absent(),
-    this.friendshipId = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         name = Value(name),
         username = Value(username),
         thumb = Value(thumb),
-        image = Value(image),
-        connection = Value(connection);
+        image = Value(image);
   static Insertable<UserData> custom({
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? username,
     Expression<String>? thumb,
     Expression<String>? image,
-    Expression<int>? connection,
     Expression<DateTime>? lastUpdated,
-    Expression<String>? friendshipId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -351,9 +282,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
       if (username != null) 'username': username,
       if (thumb != null) 'thumb': thumb,
       if (image != null) 'image': image,
-      if (connection != null) 'connection': connection,
       if (lastUpdated != null) 'last_updated': lastUpdated,
-      if (friendshipId != null) 'friendship_id': friendshipId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -364,9 +293,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
       Value<String>? username,
       Value<String>? thumb,
       Value<String>? image,
-      Value<ConnectionStatus>? connection,
       Value<DateTime>? lastUpdated,
-      Value<String?>? friendshipId,
       Value<int>? rowid}) {
     return UserCompanion(
       id: id ?? this.id,
@@ -374,9 +301,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
       username: username ?? this.username,
       thumb: thumb ?? this.thumb,
       image: image ?? this.image,
-      connection: connection ?? this.connection,
       lastUpdated: lastUpdated ?? this.lastUpdated,
-      friendshipId: friendshipId ?? this.friendshipId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -399,15 +324,8 @@ class UserCompanion extends UpdateCompanion<UserData> {
     if (image.present) {
       map['image'] = Variable<String>(image.value);
     }
-    if (connection.present) {
-      map['connection'] = Variable<int>(
-          $UserTable.$converterconnection.toSql(connection.value));
-    }
     if (lastUpdated.present) {
       map['last_updated'] = Variable<DateTime>(lastUpdated.value);
-    }
-    if (friendshipId.present) {
-      map['friendship_id'] = Variable<String>(friendshipId.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -423,9 +341,7 @@ class UserCompanion extends UpdateCompanion<UserData> {
           ..write('username: $username, ')
           ..write('thumb: $thumb, ')
           ..write('image: $image, ')
-          ..write('connection: $connection, ')
           ..write('lastUpdated: $lastUpdated, ')
-          ..write('friendshipId: $friendshipId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1393,9 +1309,7 @@ typedef $$UserTableCreateCompanionBuilder = UserCompanion Function({
   required String username,
   required String thumb,
   required String image,
-  required ConnectionStatus connection,
   Value<DateTime> lastUpdated,
-  Value<String?> friendshipId,
   Value<int> rowid,
 });
 typedef $$UserTableUpdateCompanionBuilder = UserCompanion Function({
@@ -1404,9 +1318,7 @@ typedef $$UserTableUpdateCompanionBuilder = UserCompanion Function({
   Value<String> username,
   Value<String> thumb,
   Value<String> image,
-  Value<ConnectionStatus> connection,
   Value<DateTime> lastUpdated,
-  Value<String?> friendshipId,
   Value<int> rowid,
 });
 
@@ -1452,16 +1364,8 @@ class $$UserTableFilterComposer extends Composer<_$AppDatabase, $UserTable> {
   ColumnFilters<String> get image => $composableBuilder(
       column: $table.image, builder: (column) => ColumnFilters(column));
 
-  ColumnWithTypeConverterFilters<ConnectionStatus, ConnectionStatus, int>
-      get connection => $composableBuilder(
-          column: $table.connection,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
-
   ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get friendshipId => $composableBuilder(
-      column: $table.friendshipId, builder: (column) => ColumnFilters(column));
 
   Expression<bool> friendshipRefs(
       Expression<bool> Function($$FriendshipTableFilterComposer f) f) {
@@ -1508,15 +1412,8 @@ class $$UserTableOrderingComposer extends Composer<_$AppDatabase, $UserTable> {
   ColumnOrderings<String> get image => $composableBuilder(
       column: $table.image, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get connection => $composableBuilder(
-      column: $table.connection, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get friendshipId => $composableBuilder(
-      column: $table.friendshipId,
-      builder: (column) => ColumnOrderings(column));
 }
 
 class $$UserTableAnnotationComposer
@@ -1543,15 +1440,8 @@ class $$UserTableAnnotationComposer
   GeneratedColumn<String> get image =>
       $composableBuilder(column: $table.image, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<ConnectionStatus, int> get connection =>
-      $composableBuilder(
-          column: $table.connection, builder: (column) => column);
-
   GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => column);
-
-  GeneratedColumn<String> get friendshipId => $composableBuilder(
-      column: $table.friendshipId, builder: (column) => column);
 
   Expression<T> friendshipRefs<T extends Object>(
       Expression<T> Function($$FriendshipTableAnnotationComposer a) f) {
@@ -1603,9 +1493,7 @@ class $$UserTableTableManager extends RootTableManager<
             Value<String> username = const Value.absent(),
             Value<String> thumb = const Value.absent(),
             Value<String> image = const Value.absent(),
-            Value<ConnectionStatus> connection = const Value.absent(),
             Value<DateTime> lastUpdated = const Value.absent(),
-            Value<String?> friendshipId = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               UserCompanion(
@@ -1614,9 +1502,7 @@ class $$UserTableTableManager extends RootTableManager<
             username: username,
             thumb: thumb,
             image: image,
-            connection: connection,
             lastUpdated: lastUpdated,
-            friendshipId: friendshipId,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -1625,9 +1511,7 @@ class $$UserTableTableManager extends RootTableManager<
             required String username,
             required String thumb,
             required String image,
-            required ConnectionStatus connection,
             Value<DateTime> lastUpdated = const Value.absent(),
-            Value<String?> friendshipId = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               UserCompanion.insert(
@@ -1636,9 +1520,7 @@ class $$UserTableTableManager extends RootTableManager<
             username: username,
             thumb: thumb,
             image: image,
-            connection: connection,
             lastUpdated: lastUpdated,
-            friendshipId: friendshipId,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
