@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
+import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
@@ -172,6 +173,15 @@ class _ViewMatchState extends State<ViewMatch> {
     final bloc = MessageProvider.of(context);
     final userState = userBloc.state;
     final GlobalKey<FlutterMentionsState> messageKey = GlobalKey();
+
+    if(widget.match.status == MatchStatus.cancelled || widget.match.status == MatchStatus.finished) { 
+      return Container(
+        width: double.infinity,
+        color: Colors.black87,
+        padding: const EdgeInsets.all(16),
+        child: Text(translate('MATCH.MATCH_ENDED'), textAlign: TextAlign.center,),
+      );
+    }
 
     // if (!socketConnected) {
     //   return Center(

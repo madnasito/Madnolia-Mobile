@@ -166,6 +166,7 @@
     "CANCEL_MATCH": "Cancel match",
     "CANCELL_MATCH_QUESTION": "Are you sure you want to cancel the match?",
     "MATCH_CANCELLED": "Match cancelled",
+    "MATCH_ENDED": "Match ended",
     "STATUS": {
       "WAITING": "Waiting",
       "RUNNING": "In progress",

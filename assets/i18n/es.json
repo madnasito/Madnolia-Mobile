@@ -160,6 +160,7 @@
         "CANCEL_MATCH": "Cancelar partida",
         "CANCEL_MATCH_QUESTION": "¿Estás seguro de que deseas cancelar la partida?",
         "MATCH_CANCELLED": "Partida cancelada",
+        "MATCH_ENDED": "Partida finalizada",
         "STATUS": {
             "WAITING": "En espera",
             "RUNNING": "En curso",
