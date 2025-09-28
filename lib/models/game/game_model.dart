@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import '../../enums/platforms_id.enum.dart';
+
 Game gameFromJson(String str) => Game.fromJson(json.decode(str));
 
 String gameToJson(Game data) => json.encode(data.toJson());
@@ -16,6 +18,7 @@ class Game {
     String? background;
     List<String> screenshots;
     String description;
+    List<PlatformId> platforms;
 
     Game({
         required this.id,
@@ -25,6 +28,7 @@ class Game {
         required this.background,
         required this.screenshots,
         required this.description,
+        required this.platforms
     });
 
     factory Game.fromJson(Map<String, dynamic> json) => Game(
@@ -35,6 +39,7 @@ class Game {
         background: json["background"],
         screenshots: List<String>.from(json["screenshots"].map((x) => x)),
         description: json["description"],
+        platforms: List<PlatformId>.from(json["platforms"].map((x) => PlatformId.values.firstWhere((e) => e.id == x))),
     );
 
     Map<String, dynamic> toJson() => {
@@ -45,5 +50,6 @@ class Game {
         "background": background,
         "screenshots": List<String>.from(screenshots.map((x) => x)),
         "description": description,
+        "platforms": List<dynamic>.from(platforms.map((x) => x.id)),
     };
 }

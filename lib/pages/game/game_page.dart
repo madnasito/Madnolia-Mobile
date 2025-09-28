@@ -1,14 +1,12 @@
-import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
-import 'package:madnolia/models/game/game_model.dart';
+import 'package:madnolia/database/database.dart';
+import 'package:madnolia/database/games/games.services.dart';
 import 'package:madnolia/models/match/minimal_match_model.dart';
-import 'package:madnolia/services/games_service.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
@@ -26,7 +24,7 @@ class GamePage extends StatelessWidget {
     final String game = data["game"];
     final int platform = data["platform"];
 
-    final gameDataBloc = context.watch<GameDataBloc>();
+    // final gameDataBloc = context.watch<GameDataBloc>();
 
     return CustomScaffold(
         body:  
@@ -34,10 +32,10 @@ class GamePage extends StatelessWidget {
               child: Column(
                   children:[ 
                     FutureBuilder(
-                      future: _loadGameInfo(game, gameDataBloc), 
-                      builder: (BuildContext context, AsyncSnapshot<Game> snapshot) {
+                      future: GamesDbServices().getGameById(game), 
+                      builder: (BuildContext context, AsyncSnapshot<GameData> snapshot) {
                         if(snapshot.hasData){
-                          final Game game = snapshot.data!;
+                          final GameData game = snapshot.data!;
                           return  Column(
                               children: [
                                 AtomGameImage(name: game.name, background: game.background),
@@ -152,24 +150,4 @@ class GamePage extends StatelessWidget {
     return matches;
   }
   
-  Future<Game> _loadGameInfo(String game, GameDataBloc gameDataBloc) async {
-
-    if(gameDataBloc.state.id == game){
-      final gameData = gameDataBloc.state;
-      return Game(
-        id: gameData.id,
-        name: gameData.name,
-        slug: gameData.slug,
-        gameId: gameData.gameId,
-        background: gameData.background,
-        screenshots: gameData.screenshots,
-        description: gameData.description
-      );
-    }
-
-    final respData = await GamesService().getGameInfoById(game);
-    gameDataBloc.updateGame(respData);
-
-    return respData;
-  }
 }

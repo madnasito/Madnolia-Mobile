@@ -6,11 +6,12 @@ class Game extends Table {
   TextColumn get id => text()();
   TextColumn get name => text()();
   TextColumn get slug => text()();
-  TextColumn get apiId => text().unique()();
+  IntColumn get apiId => integer().unique()();
   TextColumn get platforms => text().map(const PlatformListConverter())();
-  TextColumn get background => text()();
+  TextColumn get background => text().nullable()();
   TextColumn get screenshots => text().map(const StringListConverter())();
   TextColumn get description => text()();
+  DateTimeColumn get lastUpdated => dateTime().withDefault(currentDateAndTime)(); 
 
   @override
   Set<Column> get primaryKey => {id};

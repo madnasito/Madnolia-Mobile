@@ -1,17 +1,27 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:madnolia/database/notifications_config/notifications_config.schema.dart';
 import 'package:madnolia/database/users/user.schema.dart';
 import 'package:madnolia/database/friendships/friendship.schema.dart';
 import 'package:madnolia/database/match/match.schema.dart';
 
+import '../enums/chat_message_status.enum.dart';
 import '../enums/friendship-status.enum.dart';
 import '../enums/match-status.enum.dart';
+import '../enums/notification_configuration_status.dart';
+import '../enums/notification_configuration_type.enum.dart';
+import '../enums/notification_type.enum.dart';
 import '../enums/platforms_id.enum.dart';
+import 'utils/platform_list_converter.dart';
 import 'utils/string_list_converter.dart';
+import 'chat_messages/chat_message.schema.dart';
+import 'attachment/attachment.schema.dart';
+import 'games/game.schema.dart';
+import 'notifications/notification.schema.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [User, Friendship, Match])
+@DriftDatabase(tables: [User, Friendship, Match, ChatMessage, Attachment, Game, Notification, NotificationsConfig])
 class AppDatabase extends _$AppDatabase {
   AppDatabase._internal() : super(_openConnection());
 
