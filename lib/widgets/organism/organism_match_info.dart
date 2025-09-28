@@ -18,9 +18,7 @@ class OrganismMatchInfo extends StatelessWidget {
     
     final userId = context.read<UserBloc>().state.id;
     if(match.date <= DateTime.now().millisecondsSinceEpoch || userId != match.user.id) {
-      
       return OrganismMatchInfoModal(match: match);
-
     }else{
       return (match.status == MatchStatus.cancelled || match.status == MatchStatus.finished) ? SizedBox(): OrganismEditMatchForm(match: match) ;
     }

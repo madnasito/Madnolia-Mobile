@@ -217,6 +217,9 @@ onStart(ServiceInstance service) async {
   socket.on("connection_rejected", (data) => service.invoke("connection_rejected"));
   socket.on("canceled_connection", (data) => service.invoke("canceled_connection"));
 
+  // TODO: Cancell match in DB
+  socket.on('match_cancelled', (data) => service.invoke('match_cancelled', data));
+
   socket.onDisconnect((_) => {
    service.invoke("disconnected_socket")
   });
