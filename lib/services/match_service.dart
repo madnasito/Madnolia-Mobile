@@ -83,7 +83,20 @@ class MatchService {
 
   Future editMatch(String id, Map body) => matchPatchRequest("update/$id", body);
 
-  Future deleteMatch(String id) => matchDeleteRequest("delete/$id");
+  Future cancellMatch(String id) async {
+    try {
+      
+      final token = await _storage.read(key: "token");
+
+      Response response = await dio.delete('$baseUrl/match/cancell/$id', options: Options(headers: {"Authorization": "Bearer $token"}));
+
+      return response.data;
+    } catch (e) {
+      rethrow;
+    }
+
+
+  }
 
   Future matchGetRequest(String apiUrl) async {
     try {

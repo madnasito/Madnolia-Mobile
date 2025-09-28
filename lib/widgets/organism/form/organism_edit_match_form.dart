@@ -4,11 +4,13 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/match/edit_match_model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
+import 'package:madnolia/widgets/molecules/buttons/molecule_button_cancell_match.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
 import 'package:madnolia/widgets/molecules/modal/molecule_modal_icon_button.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
@@ -20,8 +22,8 @@ import '../../molecules/buttons/molecule_form_button.dart';
 
 final formKey = GlobalKey<FormBuilderState>();
 class OrganismEditMatchForm extends StatelessWidget {
-  final FullMatch match;
-  const OrganismEditMatchForm({super.key, required this.match});
+final FullMatch match;
+const OrganismEditMatchForm({super.key, required this.match});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +43,7 @@ class OrganismEditMatchForm extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 10,),
-                const AtomStyledText(text: "Edit match", style: presentationTitle),
+                AtomStyledText(text: translate('MATCH.EDIT_MATCH'), style: presentationTitle),
                 const SizedBox(height: 30),
                 MoleculeTextField(
                   icon: Icons.abc_rounded,
@@ -157,6 +159,8 @@ class OrganismEditMatchForm extends StatelessWidget {
                       isLoading = false;
                     }
                 },),
+                const SizedBox(height: 10),
+                match.status != MatchStatus.cancelled ? MoleculeButtonCancellMatch(match: match) : SizedBox(),
                 const SizedBox(height: 10),
               ],
             ),

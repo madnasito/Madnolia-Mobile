@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/game/minimal_game_model.dart';
 
@@ -23,7 +24,7 @@ class FullMatch {
     List<ChatUser> joined;
     bool private;
     String? tournament;
-    int status;
+    MatchStatus status;
 
     FullMatch({
         required this.id,
@@ -40,20 +41,43 @@ class FullMatch {
         required this.tournament,
     });
 
-    factory FullMatch.fromJson(Map<String, dynamic> json) => FullMatch(
-        id: json["_id"],
-        description: json["description"],
-        game: MinimalGame.fromJson(json["game"]),
-        platform: json["platform"],
-        date: json["date"],
-        user: ChatUser.fromJson(json["user"]),
-        inviteds: List<String>.from(json["inviteds"].map((x) => x)),
-        title: json["title"],
-        joined: List<ChatUser>.from(json["joined"].map((x) => ChatUser.fromJson(x))),
-        private: json["private"],
-        status: json["status"],
-        tournament: json["tournament"]
-    );
+    factory FullMatch.fromJson(Map<String, dynamic> json) {
+
+      MatchStatus matchStatus;
+
+      switch (json["status"]) {
+        case 0:
+          matchStatus = MatchStatus.waiting;
+          break;
+        case 1:
+          matchStatus = MatchStatus.running;
+          break;
+        case 2:
+          matchStatus = MatchStatus.finished;
+          break;
+        case 3:
+          matchStatus = MatchStatus.cancelled;
+          break;
+        default:
+          matchStatus = MatchStatus.waiting;
+          break;
+      }
+
+      return FullMatch(
+          id: json["_id"],
+          description: json["description"],
+          game: MinimalGame.fromJson(json["game"]),
+          platform: json["platform"],
+          date: json["date"],
+          user: ChatUser.fromJson(json["user"]),
+          inviteds: List<String>.from(json["inviteds"].map((x) => x)),
+          title: json["title"],
+          joined: List<ChatUser>.from(json["joined"].map((x) => ChatUser.fromJson(x))),
+          private: json["private"],
+          status: matchStatus,
+          tournament: json["tournament"]
+      );
+    } 
 
     Map<String, dynamic> toJson() => {
         "_id": id,

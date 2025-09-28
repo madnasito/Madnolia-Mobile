@@ -155,6 +155,11 @@
         "MATCH_UPDATED": "Partida actualizada",
         "ERROR_LOADING": "Error cargando partida",
         "JOIN_TO_MATCH": "Unirse a la partida",
+        "EDIT_MATCH": "Editar partida",
+        "LEAVE_MATCH": "Salir de la partida",
+        "CANCEL_MATCH": "Cancelar partida",
+        "CANCEL_MATCH_QUESTION": "¿Estás seguro de que deseas cancelar la partida?",
+        "MATCH_CANCELLED": "Partida cancelada",
         "STATUS": {
             "WAITING": "En espera",
             "RUNNING": "En curso",
@@ -312,7 +317,9 @@
       "CANCEL": "Cancelar",
       "REJECT": "Rechazar",
       "DISMISS": "Descartar",
-      "YOU": "Tu"
+      "YOU": "Tu",
+      "NO": "No",
+      "YES": "Si"
     },
     "ALERT": {
         "YOU_SURE": "¿Estás seguro?",

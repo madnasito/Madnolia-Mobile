@@ -161,6 +161,11 @@
     "MATCH_UPDATED": "Match updated",
     "ERROR_LOADING": "Error loading match",
     "JOIN_TO_MATCH": "Join to match",
+    "EDIT_MATCH": "Edit match",
+    "LEAVE_MATCH": "Leave match",
+    "CANCEL_MATCH": "Cancel match",
+    "CANCELL_MATCH_QUESTION": "Are you sure you want to cancel the match?",
+    "MATCH_CANCELLED": "Match cancelled",
     "STATUS": {
       "WAITING": "Waiting",
       "RUNNING": "In progress",
@@ -318,7 +323,9 @@
       "CANCEL": "Cancel",
       "REJECT": "Reject",
       "DISMISS": "Dismiss",
-      "YOU": "You"
+      "YOU": "You",
+      "NO": "No",
+      "YES": "Yes"
   },
   "ALERT": {
     "YOU_SURE": "Are you sure?",

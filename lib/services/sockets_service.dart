@@ -124,18 +124,6 @@ onStart(ServiceInstance service) async {
   String currentRoom = "";
   String username = "";
   String? userId = await storage.read(key: "userId");
-  
-  // Setup periodic keepalive to prevent service termination
-  // Timer.periodic(const Duration(minutes: 1), (timer) async {
-  //   try {
-  //     service.invoke('keepAlive', {'timestamp': DateTime.now().millisecondsSinceEpoch});
-  //     final activeNotifications = await LocalNotificationsService.getActiveNotifications('madnolia_background');
-  //     if(activeNotifications.isNotEmpty) LocalNotificationsService.deleteNotification(activeNotifications[0].id!);
-  //     debugPrint('Service keepalive: ${DateTime.now()}');
-  //   } catch (e) {
-  //     debugPrint('Keepalive error: $e');
-  //   }
-  // });
 
   socket.onConnect((_) async {
 
@@ -146,6 +134,10 @@ onStart(ServiceInstance service) async {
   });
 
   socket.on("added_to_match", (payload) => service.invoke("added_to_match", {"resp" : payload}));
+
+  socket.on("left_match", (payload) => service.invoke("left_match", {"resp" : payload}));
+  
+  socket.on("player_left_match", (payload) => service.invoke("player_left_match", {"resp" : payload}));
 
   socket.on("message", (payload) async {
 
@@ -284,6 +276,8 @@ onStart(ServiceInstance service) async {
   service.on("off_new_player_to_match").listen((onData) => socket.emit("off_new_player_to_match"));
 
   service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));
+
+  service.on("leave_match").listen((onData) => socket.emit("leave_match", onData?["match"]));
 
   service.on("make_call").listen((onData) => socket.emit("make_call", onData));
 
