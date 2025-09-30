@@ -4,6 +4,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/message_bloc.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/match/full_match.model.dart';
+import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -77,9 +78,12 @@ class MoleculeMatchChatInput extends StatelessWidget {
       return FormButton(
           text: translate("MATCH.JOIN_TO_MATCH"),
           color: Colors.transparent,
-          onPressed: () {
+          onPressed: () async {
             try {
-              socketClient.emit("join_to_match", match.id);
+              final resp = await MatchService().join(match.id);
+              debugPrint(resp.toString());
+              // match.joined.add(userId)l
+
             } catch (e) {
               debugPrint(e.toString());
             }

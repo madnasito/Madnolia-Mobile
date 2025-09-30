@@ -5,6 +5,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/enums/match-status.enum.dart';
+import 'package:madnolia/services/match_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
@@ -200,12 +201,24 @@ class _ViewMatchState extends State<ViewMatch> {
       return FormButton(
         text: translate('MATCH.JOIN_TO_MATCH'),
         color: Colors.transparent,
-        onPressed: () {
+        onPressed: () async {
           try {
-            backgroundService.invoke("join_to_match", {"match": widget.match.id});
-          } catch (e) {
-            debugPrint(e.toString());
-          }
+            print(widget.match.id);
+              final resp = await MatchService().join(widget.match.id);
+              debugPrint(resp.toString());
+
+              setState(() {
+                widget.match.joined.add(ChatUser(
+                  id: userState.id,
+                  name: userState.name,
+                  thumb: userState.thumb,
+                  username: userState.username,
+                ));
+              });
+
+            } catch (e) {
+              debugPrint(e.toString());
+            }
         },
       );
     }

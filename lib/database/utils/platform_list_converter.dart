@@ -9,11 +9,14 @@ class PlatformListConverter extends TypeConverter<List<PlatformId>, String> {
   @override
   List<PlatformId> fromSql(String fromDb) {
     if (fromDb.isEmpty) return [];
-    return List<PlatformId>.from(jsonDecode(fromDb));
+    final List<dynamic> list = jsonDecode(fromDb);
+    return list
+        .map((e) => PlatformId.values.firstWhere((p) => p.id == e))
+        .toList();
   }
 
   @override
   String toSql(List<PlatformId> value) {
-    return jsonEncode(value);
+    return jsonEncode(value.map((e) => e.id).toList());
   }
 }

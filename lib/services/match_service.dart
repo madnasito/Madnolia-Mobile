@@ -98,6 +98,40 @@ class MatchService {
 
   }
 
+  Future leaveMatch(String id) async {
+    try {
+      final token = await _storage.read(key: 'token');
+
+      final response  = await dio.patch('$baseUrl/match/leave/$id',
+        options: Options(headers: {"Authorization": "Bearer $token"})
+      );
+
+      debugPrint(response.data);
+
+      return response.data;
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future join(String id) async {
+    try {
+      final token = await _storage.read(key: 'token');
+
+      final response  = await dio.patch('$baseUrl/match/join/$id',
+        options: Options(headers: {"Authorization": "Bearer $token"})
+      );
+
+      print('$baseUrl/match/join/$id');
+
+      return response.data;
+
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future matchGetRequest(String apiUrl) async {
     try {
       authenticating = true;
