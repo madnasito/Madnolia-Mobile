@@ -123,8 +123,6 @@ class MatchService {
         options: Options(headers: {"Authorization": "Bearer $token"})
       );
 
-      print('$baseUrl/match/join/$id');
-
       return response.data;
 
     } catch (e) {

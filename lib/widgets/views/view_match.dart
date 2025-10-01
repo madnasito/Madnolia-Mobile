@@ -203,7 +203,6 @@ class _ViewMatchState extends State<ViewMatch> {
         color: Colors.transparent,
         onPressed: () async {
           try {
-            print(widget.match.id);
               final resp = await MatchService().join(widget.match.id);
               debugPrint(resp.toString());
 

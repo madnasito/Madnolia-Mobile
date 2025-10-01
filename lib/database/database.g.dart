@@ -664,6 +664,482 @@ class FriendshipCompanion extends UpdateCompanion<FriendshipData> {
   }
 }
 
+class $GameTable extends Game with TableInfo<$GameTable, GameData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $GameTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _slugMeta = const VerificationMeta('slug');
+  @override
+  late final GeneratedColumn<String> slug = GeneratedColumn<String>(
+      'slug', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _apiIdMeta = const VerificationMeta('apiId');
+  @override
+  late final GeneratedColumn<int> apiId = GeneratedColumn<int>(
+      'api_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+  @override
+  late final GeneratedColumnWithTypeConverter<List<PlatformId>, String>
+      platforms = GeneratedColumn<String>('platforms', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<PlatformId>>($GameTable.$converterplatforms);
+  static const VerificationMeta _backgroundMeta =
+      const VerificationMeta('background');
+  @override
+  late final GeneratedColumn<String> background = GeneratedColumn<String>(
+      'background', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String>
+      screenshots = GeneratedColumn<String>('screenshots', aliasedName, false,
+              type: DriftSqlType.string, requiredDuringInsert: true)
+          .withConverter<List<String>>($GameTable.$converterscreenshots);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _lastUpdatedMeta =
+      const VerificationMeta('lastUpdated');
+  @override
+  late final GeneratedColumn<DateTime> lastUpdated = GeneratedColumn<DateTime>(
+      'last_updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        name,
+        slug,
+        apiId,
+        platforms,
+        background,
+        screenshots,
+        description,
+        lastUpdated
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'game';
+  @override
+  VerificationContext validateIntegrity(Insertable<GameData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('slug')) {
+      context.handle(
+          _slugMeta, slug.isAcceptableOrUnknown(data['slug']!, _slugMeta));
+    } else if (isInserting) {
+      context.missing(_slugMeta);
+    }
+    if (data.containsKey('api_id')) {
+      context.handle(
+          _apiIdMeta, apiId.isAcceptableOrUnknown(data['api_id']!, _apiIdMeta));
+    } else if (isInserting) {
+      context.missing(_apiIdMeta);
+    }
+    if (data.containsKey('background')) {
+      context.handle(
+          _backgroundMeta,
+          background.isAcceptableOrUnknown(
+              data['background']!, _backgroundMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('last_updated')) {
+      context.handle(
+          _lastUpdatedMeta,
+          lastUpdated.isAcceptableOrUnknown(
+              data['last_updated']!, _lastUpdatedMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  GameData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return GameData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      slug: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}slug'])!,
+      apiId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}api_id'])!,
+      platforms: $GameTable.$converterplatforms.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}platforms'])!),
+      background: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}background']),
+      screenshots: $GameTable.$converterscreenshots.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}screenshots'])!),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
+      lastUpdated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!,
+    );
+  }
+
+  @override
+  $GameTable createAlias(String alias) {
+    return $GameTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<List<PlatformId>, String> $converterplatforms =
+      const PlatformListConverter();
+  static TypeConverter<List<String>, String> $converterscreenshots =
+      const StringListConverter();
+}
+
+class GameData extends DataClass implements Insertable<GameData> {
+  final String id;
+  final String name;
+  final String slug;
+  final int apiId;
+  final List<PlatformId> platforms;
+  final String? background;
+  final List<String> screenshots;
+  final String description;
+  final DateTime lastUpdated;
+  const GameData(
+      {required this.id,
+      required this.name,
+      required this.slug,
+      required this.apiId,
+      required this.platforms,
+      this.background,
+      required this.screenshots,
+      required this.description,
+      required this.lastUpdated});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    map['slug'] = Variable<String>(slug);
+    map['api_id'] = Variable<int>(apiId);
+    {
+      map['platforms'] =
+          Variable<String>($GameTable.$converterplatforms.toSql(platforms));
+    }
+    if (!nullToAbsent || background != null) {
+      map['background'] = Variable<String>(background);
+    }
+    {
+      map['screenshots'] =
+          Variable<String>($GameTable.$converterscreenshots.toSql(screenshots));
+    }
+    map['description'] = Variable<String>(description);
+    map['last_updated'] = Variable<DateTime>(lastUpdated);
+    return map;
+  }
+
+  GameCompanion toCompanion(bool nullToAbsent) {
+    return GameCompanion(
+      id: Value(id),
+      name: Value(name),
+      slug: Value(slug),
+      apiId: Value(apiId),
+      platforms: Value(platforms),
+      background: background == null && nullToAbsent
+          ? const Value.absent()
+          : Value(background),
+      screenshots: Value(screenshots),
+      description: Value(description),
+      lastUpdated: Value(lastUpdated),
+    );
+  }
+
+  factory GameData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return GameData(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      slug: serializer.fromJson<String>(json['slug']),
+      apiId: serializer.fromJson<int>(json['apiId']),
+      platforms: serializer.fromJson<List<PlatformId>>(json['platforms']),
+      background: serializer.fromJson<String?>(json['background']),
+      screenshots: serializer.fromJson<List<String>>(json['screenshots']),
+      description: serializer.fromJson<String>(json['description']),
+      lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+      'slug': serializer.toJson<String>(slug),
+      'apiId': serializer.toJson<int>(apiId),
+      'platforms': serializer.toJson<List<PlatformId>>(platforms),
+      'background': serializer.toJson<String?>(background),
+      'screenshots': serializer.toJson<List<String>>(screenshots),
+      'description': serializer.toJson<String>(description),
+      'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
+    };
+  }
+
+  GameData copyWith(
+          {String? id,
+          String? name,
+          String? slug,
+          int? apiId,
+          List<PlatformId>? platforms,
+          Value<String?> background = const Value.absent(),
+          List<String>? screenshots,
+          String? description,
+          DateTime? lastUpdated}) =>
+      GameData(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        slug: slug ?? this.slug,
+        apiId: apiId ?? this.apiId,
+        platforms: platforms ?? this.platforms,
+        background: background.present ? background.value : this.background,
+        screenshots: screenshots ?? this.screenshots,
+        description: description ?? this.description,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+      );
+  GameData copyWithCompanion(GameCompanion data) {
+    return GameData(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      slug: data.slug.present ? data.slug.value : this.slug,
+      apiId: data.apiId.present ? data.apiId.value : this.apiId,
+      platforms: data.platforms.present ? data.platforms.value : this.platforms,
+      background:
+          data.background.present ? data.background.value : this.background,
+      screenshots:
+          data.screenshots.present ? data.screenshots.value : this.screenshots,
+      description:
+          data.description.present ? data.description.value : this.description,
+      lastUpdated:
+          data.lastUpdated.present ? data.lastUpdated.value : this.lastUpdated,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GameData(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('slug: $slug, ')
+          ..write('apiId: $apiId, ')
+          ..write('platforms: $platforms, ')
+          ..write('background: $background, ')
+          ..write('screenshots: $screenshots, ')
+          ..write('description: $description, ')
+          ..write('lastUpdated: $lastUpdated')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, slug, apiId, platforms, background,
+      screenshots, description, lastUpdated);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is GameData &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.slug == this.slug &&
+          other.apiId == this.apiId &&
+          other.platforms == this.platforms &&
+          other.background == this.background &&
+          other.screenshots == this.screenshots &&
+          other.description == this.description &&
+          other.lastUpdated == this.lastUpdated);
+}
+
+class GameCompanion extends UpdateCompanion<GameData> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<String> slug;
+  final Value<int> apiId;
+  final Value<List<PlatformId>> platforms;
+  final Value<String?> background;
+  final Value<List<String>> screenshots;
+  final Value<String> description;
+  final Value<DateTime> lastUpdated;
+  final Value<int> rowid;
+  const GameCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.slug = const Value.absent(),
+    this.apiId = const Value.absent(),
+    this.platforms = const Value.absent(),
+    this.background = const Value.absent(),
+    this.screenshots = const Value.absent(),
+    this.description = const Value.absent(),
+    this.lastUpdated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  GameCompanion.insert({
+    required String id,
+    required String name,
+    required String slug,
+    required int apiId,
+    required List<PlatformId> platforms,
+    this.background = const Value.absent(),
+    required List<String> screenshots,
+    required String description,
+    this.lastUpdated = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        name = Value(name),
+        slug = Value(slug),
+        apiId = Value(apiId),
+        platforms = Value(platforms),
+        screenshots = Value(screenshots),
+        description = Value(description);
+  static Insertable<GameData> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<String>? slug,
+    Expression<int>? apiId,
+    Expression<String>? platforms,
+    Expression<String>? background,
+    Expression<String>? screenshots,
+    Expression<String>? description,
+    Expression<DateTime>? lastUpdated,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (slug != null) 'slug': slug,
+      if (apiId != null) 'api_id': apiId,
+      if (platforms != null) 'platforms': platforms,
+      if (background != null) 'background': background,
+      if (screenshots != null) 'screenshots': screenshots,
+      if (description != null) 'description': description,
+      if (lastUpdated != null) 'last_updated': lastUpdated,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  GameCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String>? slug,
+      Value<int>? apiId,
+      Value<List<PlatformId>>? platforms,
+      Value<String?>? background,
+      Value<List<String>>? screenshots,
+      Value<String>? description,
+      Value<DateTime>? lastUpdated,
+      Value<int>? rowid}) {
+    return GameCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      slug: slug ?? this.slug,
+      apiId: apiId ?? this.apiId,
+      platforms: platforms ?? this.platforms,
+      background: background ?? this.background,
+      screenshots: screenshots ?? this.screenshots,
+      description: description ?? this.description,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (slug.present) {
+      map['slug'] = Variable<String>(slug.value);
+    }
+    if (apiId.present) {
+      map['api_id'] = Variable<int>(apiId.value);
+    }
+    if (platforms.present) {
+      map['platforms'] = Variable<String>(
+          $GameTable.$converterplatforms.toSql(platforms.value));
+    }
+    if (background.present) {
+      map['background'] = Variable<String>(background.value);
+    }
+    if (screenshots.present) {
+      map['screenshots'] = Variable<String>(
+          $GameTable.$converterscreenshots.toSql(screenshots.value));
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (lastUpdated.present) {
+      map['last_updated'] = Variable<DateTime>(lastUpdated.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('GameCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('slug: $slug, ')
+          ..write('apiId: $apiId, ')
+          ..write('platforms: $platforms, ')
+          ..write('background: $background, ')
+          ..write('screenshots: $screenshots, ')
+          ..write('description: $description, ')
+          ..write('lastUpdated: $lastUpdated, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -678,7 +1154,10 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
   @override
   late final GeneratedColumn<String> game = GeneratedColumn<String>(
       'game', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES game (id)'));
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -2087,482 +2566,6 @@ class AttachmentCompanion extends UpdateCompanion<AttachmentData> {
   }
 }
 
-class $GameTable extends Game with TableInfo<$GameTable, GameData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $GameTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String> id = GeneratedColumn<String>(
-      'id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _slugMeta = const VerificationMeta('slug');
-  @override
-  late final GeneratedColumn<String> slug = GeneratedColumn<String>(
-      'slug', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _apiIdMeta = const VerificationMeta('apiId');
-  @override
-  late final GeneratedColumn<int> apiId = GeneratedColumn<int>(
-      'api_id', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
-  @override
-  late final GeneratedColumnWithTypeConverter<List<PlatformId>, String>
-      platforms = GeneratedColumn<String>('platforms', aliasedName, false,
-              type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<List<PlatformId>>($GameTable.$converterplatforms);
-  static const VerificationMeta _backgroundMeta =
-      const VerificationMeta('background');
-  @override
-  late final GeneratedColumn<String> background = GeneratedColumn<String>(
-      'background', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  @override
-  late final GeneratedColumnWithTypeConverter<List<String>, String>
-      screenshots = GeneratedColumn<String>('screenshots', aliasedName, false,
-              type: DriftSqlType.string, requiredDuringInsert: true)
-          .withConverter<List<String>>($GameTable.$converterscreenshots);
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
-  @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _lastUpdatedMeta =
-      const VerificationMeta('lastUpdated');
-  @override
-  late final GeneratedColumn<DateTime> lastUpdated = GeneratedColumn<DateTime>(
-      'last_updated', aliasedName, false,
-      type: DriftSqlType.dateTime,
-      requiredDuringInsert: false,
-      defaultValue: currentDateAndTime);
-  @override
-  List<GeneratedColumn> get $columns => [
-        id,
-        name,
-        slug,
-        apiId,
-        platforms,
-        background,
-        screenshots,
-        description,
-        lastUpdated
-      ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'game';
-  @override
-  VerificationContext validateIntegrity(Insertable<GameData> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    if (data.containsKey('slug')) {
-      context.handle(
-          _slugMeta, slug.isAcceptableOrUnknown(data['slug']!, _slugMeta));
-    } else if (isInserting) {
-      context.missing(_slugMeta);
-    }
-    if (data.containsKey('api_id')) {
-      context.handle(
-          _apiIdMeta, apiId.isAcceptableOrUnknown(data['api_id']!, _apiIdMeta));
-    } else if (isInserting) {
-      context.missing(_apiIdMeta);
-    }
-    if (data.containsKey('background')) {
-      context.handle(
-          _backgroundMeta,
-          background.isAcceptableOrUnknown(
-              data['background']!, _backgroundMeta));
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
-    } else if (isInserting) {
-      context.missing(_descriptionMeta);
-    }
-    if (data.containsKey('last_updated')) {
-      context.handle(
-          _lastUpdatedMeta,
-          lastUpdated.isAcceptableOrUnknown(
-              data['last_updated']!, _lastUpdatedMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  GameData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return GameData(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
-      name: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
-      slug: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}slug'])!,
-      apiId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}api_id'])!,
-      platforms: $GameTable.$converterplatforms.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}platforms'])!),
-      background: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}background']),
-      screenshots: $GameTable.$converterscreenshots.fromSql(attachedDatabase
-          .typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}screenshots'])!),
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description'])!,
-      lastUpdated: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!,
-    );
-  }
-
-  @override
-  $GameTable createAlias(String alias) {
-    return $GameTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<List<PlatformId>, String> $converterplatforms =
-      const PlatformListConverter();
-  static TypeConverter<List<String>, String> $converterscreenshots =
-      const StringListConverter();
-}
-
-class GameData extends DataClass implements Insertable<GameData> {
-  final String id;
-  final String name;
-  final String slug;
-  final int apiId;
-  final List<PlatformId> platforms;
-  final String? background;
-  final List<String> screenshots;
-  final String description;
-  final DateTime lastUpdated;
-  const GameData(
-      {required this.id,
-      required this.name,
-      required this.slug,
-      required this.apiId,
-      required this.platforms,
-      this.background,
-      required this.screenshots,
-      required this.description,
-      required this.lastUpdated});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<String>(id);
-    map['name'] = Variable<String>(name);
-    map['slug'] = Variable<String>(slug);
-    map['api_id'] = Variable<int>(apiId);
-    {
-      map['platforms'] =
-          Variable<String>($GameTable.$converterplatforms.toSql(platforms));
-    }
-    if (!nullToAbsent || background != null) {
-      map['background'] = Variable<String>(background);
-    }
-    {
-      map['screenshots'] =
-          Variable<String>($GameTable.$converterscreenshots.toSql(screenshots));
-    }
-    map['description'] = Variable<String>(description);
-    map['last_updated'] = Variable<DateTime>(lastUpdated);
-    return map;
-  }
-
-  GameCompanion toCompanion(bool nullToAbsent) {
-    return GameCompanion(
-      id: Value(id),
-      name: Value(name),
-      slug: Value(slug),
-      apiId: Value(apiId),
-      platforms: Value(platforms),
-      background: background == null && nullToAbsent
-          ? const Value.absent()
-          : Value(background),
-      screenshots: Value(screenshots),
-      description: Value(description),
-      lastUpdated: Value(lastUpdated),
-    );
-  }
-
-  factory GameData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return GameData(
-      id: serializer.fromJson<String>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      slug: serializer.fromJson<String>(json['slug']),
-      apiId: serializer.fromJson<int>(json['apiId']),
-      platforms: serializer.fromJson<List<PlatformId>>(json['platforms']),
-      background: serializer.fromJson<String?>(json['background']),
-      screenshots: serializer.fromJson<List<String>>(json['screenshots']),
-      description: serializer.fromJson<String>(json['description']),
-      lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'name': serializer.toJson<String>(name),
-      'slug': serializer.toJson<String>(slug),
-      'apiId': serializer.toJson<int>(apiId),
-      'platforms': serializer.toJson<List<PlatformId>>(platforms),
-      'background': serializer.toJson<String?>(background),
-      'screenshots': serializer.toJson<List<String>>(screenshots),
-      'description': serializer.toJson<String>(description),
-      'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
-    };
-  }
-
-  GameData copyWith(
-          {String? id,
-          String? name,
-          String? slug,
-          int? apiId,
-          List<PlatformId>? platforms,
-          Value<String?> background = const Value.absent(),
-          List<String>? screenshots,
-          String? description,
-          DateTime? lastUpdated}) =>
-      GameData(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        slug: slug ?? this.slug,
-        apiId: apiId ?? this.apiId,
-        platforms: platforms ?? this.platforms,
-        background: background.present ? background.value : this.background,
-        screenshots: screenshots ?? this.screenshots,
-        description: description ?? this.description,
-        lastUpdated: lastUpdated ?? this.lastUpdated,
-      );
-  GameData copyWithCompanion(GameCompanion data) {
-    return GameData(
-      id: data.id.present ? data.id.value : this.id,
-      name: data.name.present ? data.name.value : this.name,
-      slug: data.slug.present ? data.slug.value : this.slug,
-      apiId: data.apiId.present ? data.apiId.value : this.apiId,
-      platforms: data.platforms.present ? data.platforms.value : this.platforms,
-      background:
-          data.background.present ? data.background.value : this.background,
-      screenshots:
-          data.screenshots.present ? data.screenshots.value : this.screenshots,
-      description:
-          data.description.present ? data.description.value : this.description,
-      lastUpdated:
-          data.lastUpdated.present ? data.lastUpdated.value : this.lastUpdated,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GameData(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('slug: $slug, ')
-          ..write('apiId: $apiId, ')
-          ..write('platforms: $platforms, ')
-          ..write('background: $background, ')
-          ..write('screenshots: $screenshots, ')
-          ..write('description: $description, ')
-          ..write('lastUpdated: $lastUpdated')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name, slug, apiId, platforms, background,
-      screenshots, description, lastUpdated);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is GameData &&
-          other.id == this.id &&
-          other.name == this.name &&
-          other.slug == this.slug &&
-          other.apiId == this.apiId &&
-          other.platforms == this.platforms &&
-          other.background == this.background &&
-          other.screenshots == this.screenshots &&
-          other.description == this.description &&
-          other.lastUpdated == this.lastUpdated);
-}
-
-class GameCompanion extends UpdateCompanion<GameData> {
-  final Value<String> id;
-  final Value<String> name;
-  final Value<String> slug;
-  final Value<int> apiId;
-  final Value<List<PlatformId>> platforms;
-  final Value<String?> background;
-  final Value<List<String>> screenshots;
-  final Value<String> description;
-  final Value<DateTime> lastUpdated;
-  final Value<int> rowid;
-  const GameCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.slug = const Value.absent(),
-    this.apiId = const Value.absent(),
-    this.platforms = const Value.absent(),
-    this.background = const Value.absent(),
-    this.screenshots = const Value.absent(),
-    this.description = const Value.absent(),
-    this.lastUpdated = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  GameCompanion.insert({
-    required String id,
-    required String name,
-    required String slug,
-    required int apiId,
-    required List<PlatformId> platforms,
-    this.background = const Value.absent(),
-    required List<String> screenshots,
-    required String description,
-    this.lastUpdated = const Value.absent(),
-    this.rowid = const Value.absent(),
-  })  : id = Value(id),
-        name = Value(name),
-        slug = Value(slug),
-        apiId = Value(apiId),
-        platforms = Value(platforms),
-        screenshots = Value(screenshots),
-        description = Value(description);
-  static Insertable<GameData> custom({
-    Expression<String>? id,
-    Expression<String>? name,
-    Expression<String>? slug,
-    Expression<int>? apiId,
-    Expression<String>? platforms,
-    Expression<String>? background,
-    Expression<String>? screenshots,
-    Expression<String>? description,
-    Expression<DateTime>? lastUpdated,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-      if (slug != null) 'slug': slug,
-      if (apiId != null) 'api_id': apiId,
-      if (platforms != null) 'platforms': platforms,
-      if (background != null) 'background': background,
-      if (screenshots != null) 'screenshots': screenshots,
-      if (description != null) 'description': description,
-      if (lastUpdated != null) 'last_updated': lastUpdated,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  GameCompanion copyWith(
-      {Value<String>? id,
-      Value<String>? name,
-      Value<String>? slug,
-      Value<int>? apiId,
-      Value<List<PlatformId>>? platforms,
-      Value<String?>? background,
-      Value<List<String>>? screenshots,
-      Value<String>? description,
-      Value<DateTime>? lastUpdated,
-      Value<int>? rowid}) {
-    return GameCompanion(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      slug: slug ?? this.slug,
-      apiId: apiId ?? this.apiId,
-      platforms: platforms ?? this.platforms,
-      background: background ?? this.background,
-      screenshots: screenshots ?? this.screenshots,
-      description: description ?? this.description,
-      lastUpdated: lastUpdated ?? this.lastUpdated,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    if (slug.present) {
-      map['slug'] = Variable<String>(slug.value);
-    }
-    if (apiId.present) {
-      map['api_id'] = Variable<int>(apiId.value);
-    }
-    if (platforms.present) {
-      map['platforms'] = Variable<String>(
-          $GameTable.$converterplatforms.toSql(platforms.value));
-    }
-    if (background.present) {
-      map['background'] = Variable<String>(background.value);
-    }
-    if (screenshots.present) {
-      map['screenshots'] = Variable<String>(
-          $GameTable.$converterscreenshots.toSql(screenshots.value));
-    }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
-    }
-    if (lastUpdated.present) {
-      map['last_updated'] = Variable<DateTime>(lastUpdated.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('GameCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('slug: $slug, ')
-          ..write('apiId: $apiId, ')
-          ..write('platforms: $platforms, ')
-          ..write('background: $background, ')
-          ..write('screenshots: $screenshots, ')
-          ..write('description: $description, ')
-          ..write('lastUpdated: $lastUpdated, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $NotificationTable extends Notification
     with TableInfo<$NotificationTable, NotificationData> {
   @override
@@ -3280,10 +3283,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $UserTable user = $UserTable(this);
   late final $FriendshipTable friendship = $FriendshipTable(this);
+  late final $GameTable game = $GameTable(this);
   late final $MatchTable match = $MatchTable(this);
   late final $ChatMessageTable chatMessage = $ChatMessageTable(this);
   late final $AttachmentTable attachment = $AttachmentTable(this);
-  late final $GameTable game = $GameTable(this);
   late final $NotificationTable notification = $NotificationTable(this);
   late final $NotificationsConfigTable notificationsConfig =
       $NotificationsConfigTable(this);
@@ -3294,10 +3297,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         user,
         friendship,
+        game,
         match,
         chatMessage,
         attachment,
-        game,
         notification,
         notificationsConfig
       ];
@@ -3985,6 +3988,317 @@ typedef $$FriendshipTableProcessedTableManager = ProcessedTableManager<
     (FriendshipData, $$FriendshipTableReferences),
     FriendshipData,
     PrefetchHooks Function({bool user})>;
+typedef $$GameTableCreateCompanionBuilder = GameCompanion Function({
+  required String id,
+  required String name,
+  required String slug,
+  required int apiId,
+  required List<PlatformId> platforms,
+  Value<String?> background,
+  required List<String> screenshots,
+  required String description,
+  Value<DateTime> lastUpdated,
+  Value<int> rowid,
+});
+typedef $$GameTableUpdateCompanionBuilder = GameCompanion Function({
+  Value<String> id,
+  Value<String> name,
+  Value<String> slug,
+  Value<int> apiId,
+  Value<List<PlatformId>> platforms,
+  Value<String?> background,
+  Value<List<String>> screenshots,
+  Value<String> description,
+  Value<DateTime> lastUpdated,
+  Value<int> rowid,
+});
+
+final class $$GameTableReferences
+    extends BaseReferences<_$AppDatabase, $GameTable, GameData> {
+  $$GameTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$MatchTable, List<MatchData>> _matchRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.match,
+          aliasName: $_aliasNameGenerator(db.game.id, db.match.game));
+
+  $$MatchTableProcessedTableManager get matchRefs {
+    final manager = $$MatchTableTableManager($_db, $_db.match)
+        .filter((f) => f.game.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_matchRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$GameTableFilterComposer extends Composer<_$AppDatabase, $GameTable> {
+  $$GameTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get slug => $composableBuilder(
+      column: $table.slug, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get apiId => $composableBuilder(
+      column: $table.apiId, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<List<PlatformId>, List<PlatformId>, String>
+      get platforms => $composableBuilder(
+          column: $table.platforms,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get background => $composableBuilder(
+      column: $table.background, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
+      get screenshots => $composableBuilder(
+          column: $table.screenshots,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
+      column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> matchRefs(
+      Expression<bool> Function($$MatchTableFilterComposer f) f) {
+    final $$MatchTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.match,
+        getReferencedColumn: (t) => t.game,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$MatchTableFilterComposer(
+              $db: $db,
+              $table: $db.match,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$GameTableOrderingComposer extends Composer<_$AppDatabase, $GameTable> {
+  $$GameTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get slug => $composableBuilder(
+      column: $table.slug, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get apiId => $composableBuilder(
+      column: $table.apiId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get platforms => $composableBuilder(
+      column: $table.platforms, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get background => $composableBuilder(
+      column: $table.background, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get screenshots => $composableBuilder(
+      column: $table.screenshots, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
+      column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
+}
+
+class $$GameTableAnnotationComposer
+    extends Composer<_$AppDatabase, $GameTable> {
+  $$GameTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get slug =>
+      $composableBuilder(column: $table.slug, builder: (column) => column);
+
+  GeneratedColumn<int> get apiId =>
+      $composableBuilder(column: $table.apiId, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<PlatformId>, String> get platforms =>
+      $composableBuilder(column: $table.platforms, builder: (column) => column);
+
+  GeneratedColumn<String> get background => $composableBuilder(
+      column: $table.background, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<List<String>, String> get screenshots =>
+      $composableBuilder(
+          column: $table.screenshots, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
+      column: $table.lastUpdated, builder: (column) => column);
+
+  Expression<T> matchRefs<T extends Object>(
+      Expression<T> Function($$MatchTableAnnotationComposer a) f) {
+    final $$MatchTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.match,
+        getReferencedColumn: (t) => t.game,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$MatchTableAnnotationComposer(
+              $db: $db,
+              $table: $db.match,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$GameTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $GameTable,
+    GameData,
+    $$GameTableFilterComposer,
+    $$GameTableOrderingComposer,
+    $$GameTableAnnotationComposer,
+    $$GameTableCreateCompanionBuilder,
+    $$GameTableUpdateCompanionBuilder,
+    (GameData, $$GameTableReferences),
+    GameData,
+    PrefetchHooks Function({bool matchRefs})> {
+  $$GameTableTableManager(_$AppDatabase db, $GameTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$GameTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$GameTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$GameTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> name = const Value.absent(),
+            Value<String> slug = const Value.absent(),
+            Value<int> apiId = const Value.absent(),
+            Value<List<PlatformId>> platforms = const Value.absent(),
+            Value<String?> background = const Value.absent(),
+            Value<List<String>> screenshots = const Value.absent(),
+            Value<String> description = const Value.absent(),
+            Value<DateTime> lastUpdated = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              GameCompanion(
+            id: id,
+            name: name,
+            slug: slug,
+            apiId: apiId,
+            platforms: platforms,
+            background: background,
+            screenshots: screenshots,
+            description: description,
+            lastUpdated: lastUpdated,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String name,
+            required String slug,
+            required int apiId,
+            required List<PlatformId> platforms,
+            Value<String?> background = const Value.absent(),
+            required List<String> screenshots,
+            required String description,
+            Value<DateTime> lastUpdated = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              GameCompanion.insert(
+            id: id,
+            name: name,
+            slug: slug,
+            apiId: apiId,
+            platforms: platforms,
+            background: background,
+            screenshots: screenshots,
+            description: description,
+            lastUpdated: lastUpdated,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$GameTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({matchRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (matchRefs) db.match],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (matchRefs)
+                    await $_getPrefetchedData<GameData, $GameTable, MatchData>(
+                        currentTable: table,
+                        referencedTable:
+                            $$GameTableReferences._matchRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$GameTableReferences(db, table, p0).matchRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) =>
+                                referencedItems.where((e) => e.game == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$GameTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $GameTable,
+    GameData,
+    $$GameTableFilterComposer,
+    $$GameTableOrderingComposer,
+    $$GameTableAnnotationComposer,
+    $$GameTableCreateCompanionBuilder,
+    $$GameTableUpdateCompanionBuilder,
+    (GameData, $$GameTableReferences),
+    GameData,
+    PrefetchHooks Function({bool matchRefs})>;
 typedef $$MatchTableCreateCompanionBuilder = MatchCompanion Function({
   required String id,
   required String game,
@@ -4018,6 +4332,25 @@ typedef $$MatchTableUpdateCompanionBuilder = MatchCompanion Function({
   Value<int> rowid,
 });
 
+final class $$MatchTableReferences
+    extends BaseReferences<_$AppDatabase, $MatchTable, MatchData> {
+  $$MatchTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $GameTable _gameTable(_$AppDatabase db) =>
+      db.game.createAlias($_aliasNameGenerator(db.match.game, db.game.id));
+
+  $$GameTableProcessedTableManager get game {
+    final $_column = $_itemColumn<String>('game')!;
+
+    final manager = $$GameTableTableManager($_db, $_db.game)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_gameTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
 class $$MatchTableFilterComposer extends Composer<_$AppDatabase, $MatchTable> {
   $$MatchTableFilterComposer({
     required super.$db,
@@ -4028,9 +4361,6 @@ class $$MatchTableFilterComposer extends Composer<_$AppDatabase, $MatchTable> {
   });
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get game => $composableBuilder(
-      column: $table.game, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get title => $composableBuilder(
       column: $table.title, builder: (column) => ColumnFilters(column));
@@ -4072,6 +4402,26 @@ class $$MatchTableFilterComposer extends Composer<_$AppDatabase, $MatchTable> {
       get inviteds => $composableBuilder(
           column: $table.inviteds,
           builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  $$GameTableFilterComposer get game {
+    final $$GameTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.game,
+        referencedTable: $db.game,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$GameTableFilterComposer(
+              $db: $db,
+              $table: $db.game,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$MatchTableOrderingComposer
@@ -4085,9 +4435,6 @@ class $$MatchTableOrderingComposer
   });
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get game => $composableBuilder(
-      column: $table.game, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get title => $composableBuilder(
       column: $table.title, builder: (column) => ColumnOrderings(column));
@@ -4121,6 +4468,26 @@ class $$MatchTableOrderingComposer
 
   ColumnOrderings<String> get inviteds => $composableBuilder(
       column: $table.inviteds, builder: (column) => ColumnOrderings(column));
+
+  $$GameTableOrderingComposer get game {
+    final $$GameTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.game,
+        referencedTable: $db.game,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$GameTableOrderingComposer(
+              $db: $db,
+              $table: $db.game,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$MatchTableAnnotationComposer
@@ -4134,9 +4501,6 @@ class $$MatchTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get game =>
-      $composableBuilder(column: $table.game, builder: (column) => column);
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
@@ -4170,6 +4534,26 @@ class $$MatchTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<List<String>, String> get inviteds =>
       $composableBuilder(column: $table.inviteds, builder: (column) => column);
+
+  $$GameTableAnnotationComposer get game {
+    final $$GameTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.game,
+        referencedTable: $db.game,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$GameTableAnnotationComposer(
+              $db: $db,
+              $table: $db.game,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$MatchTableTableManager extends RootTableManager<
@@ -4181,9 +4565,9 @@ class $$MatchTableTableManager extends RootTableManager<
     $$MatchTableAnnotationComposer,
     $$MatchTableCreateCompanionBuilder,
     $$MatchTableUpdateCompanionBuilder,
-    (MatchData, BaseReferences<_$AppDatabase, $MatchTable, MatchData>),
+    (MatchData, $$MatchTableReferences),
     MatchData,
-    PrefetchHooks Function()> {
+    PrefetchHooks Function({bool game})> {
   $$MatchTableTableManager(_$AppDatabase db, $MatchTable table)
       : super(TableManagerState(
           db: db,
@@ -4259,9 +4643,42 @@ class $$MatchTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .map((e) =>
+                  (e.readTable(table), $$MatchTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({game = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (game) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.game,
+                    referencedTable: $$MatchTableReferences._gameTable(db),
+                    referencedColumn: $$MatchTableReferences._gameTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
         ));
 }
 
@@ -4274,9 +4691,9 @@ typedef $$MatchTableProcessedTableManager = ProcessedTableManager<
     $$MatchTableAnnotationComposer,
     $$MatchTableCreateCompanionBuilder,
     $$MatchTableUpdateCompanionBuilder,
-    (MatchData, BaseReferences<_$AppDatabase, $MatchTable, MatchData>),
+    (MatchData, $$MatchTableReferences),
     MatchData,
-    PrefetchHooks Function()>;
+    PrefetchHooks Function({bool game})>;
 typedef $$ChatMessageTableCreateCompanionBuilder = ChatMessageCompanion
     Function({
   required String id,
@@ -5039,234 +5456,6 @@ typedef $$AttachmentTableProcessedTableManager = ProcessedTableManager<
     (AttachmentData, $$AttachmentTableReferences),
     AttachmentData,
     PrefetchHooks Function({bool message})>;
-typedef $$GameTableCreateCompanionBuilder = GameCompanion Function({
-  required String id,
-  required String name,
-  required String slug,
-  required int apiId,
-  required List<PlatformId> platforms,
-  Value<String?> background,
-  required List<String> screenshots,
-  required String description,
-  Value<DateTime> lastUpdated,
-  Value<int> rowid,
-});
-typedef $$GameTableUpdateCompanionBuilder = GameCompanion Function({
-  Value<String> id,
-  Value<String> name,
-  Value<String> slug,
-  Value<int> apiId,
-  Value<List<PlatformId>> platforms,
-  Value<String?> background,
-  Value<List<String>> screenshots,
-  Value<String> description,
-  Value<DateTime> lastUpdated,
-  Value<int> rowid,
-});
-
-class $$GameTableFilterComposer extends Composer<_$AppDatabase, $GameTable> {
-  $$GameTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get slug => $composableBuilder(
-      column: $table.slug, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<int> get apiId => $composableBuilder(
-      column: $table.apiId, builder: (column) => ColumnFilters(column));
-
-  ColumnWithTypeConverterFilters<List<PlatformId>, List<PlatformId>, String>
-      get platforms => $composableBuilder(
-          column: $table.platforms,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
-
-  ColumnFilters<String> get background => $composableBuilder(
-      column: $table.background, builder: (column) => ColumnFilters(column));
-
-  ColumnWithTypeConverterFilters<List<String>, List<String>, String>
-      get screenshots => $composableBuilder(
-          column: $table.screenshots,
-          builder: (column) => ColumnWithTypeConverterFilters(column));
-
-  ColumnFilters<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
-      column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
-}
-
-class $$GameTableOrderingComposer extends Composer<_$AppDatabase, $GameTable> {
-  $$GameTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get name => $composableBuilder(
-      column: $table.name, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get slug => $composableBuilder(
-      column: $table.slug, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<int> get apiId => $composableBuilder(
-      column: $table.apiId, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get platforms => $composableBuilder(
-      column: $table.platforms, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get background => $composableBuilder(
-      column: $table.background, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get screenshots => $composableBuilder(
-      column: $table.screenshots, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
-      column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
-}
-
-class $$GameTableAnnotationComposer
-    extends Composer<_$AppDatabase, $GameTable> {
-  $$GameTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  GeneratedColumn<String> get slug =>
-      $composableBuilder(column: $table.slug, builder: (column) => column);
-
-  GeneratedColumn<int> get apiId =>
-      $composableBuilder(column: $table.apiId, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<List<PlatformId>, String> get platforms =>
-      $composableBuilder(column: $table.platforms, builder: (column) => column);
-
-  GeneratedColumn<String> get background => $composableBuilder(
-      column: $table.background, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<List<String>, String> get screenshots =>
-      $composableBuilder(
-          column: $table.screenshots, builder: (column) => column);
-
-  GeneratedColumn<String> get description => $composableBuilder(
-      column: $table.description, builder: (column) => column);
-
-  GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
-      column: $table.lastUpdated, builder: (column) => column);
-}
-
-class $$GameTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $GameTable,
-    GameData,
-    $$GameTableFilterComposer,
-    $$GameTableOrderingComposer,
-    $$GameTableAnnotationComposer,
-    $$GameTableCreateCompanionBuilder,
-    $$GameTableUpdateCompanionBuilder,
-    (GameData, BaseReferences<_$AppDatabase, $GameTable, GameData>),
-    GameData,
-    PrefetchHooks Function()> {
-  $$GameTableTableManager(_$AppDatabase db, $GameTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$GameTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$GameTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$GameTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> id = const Value.absent(),
-            Value<String> name = const Value.absent(),
-            Value<String> slug = const Value.absent(),
-            Value<int> apiId = const Value.absent(),
-            Value<List<PlatformId>> platforms = const Value.absent(),
-            Value<String?> background = const Value.absent(),
-            Value<List<String>> screenshots = const Value.absent(),
-            Value<String> description = const Value.absent(),
-            Value<DateTime> lastUpdated = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              GameCompanion(
-            id: id,
-            name: name,
-            slug: slug,
-            apiId: apiId,
-            platforms: platforms,
-            background: background,
-            screenshots: screenshots,
-            description: description,
-            lastUpdated: lastUpdated,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String id,
-            required String name,
-            required String slug,
-            required int apiId,
-            required List<PlatformId> platforms,
-            Value<String?> background = const Value.absent(),
-            required List<String> screenshots,
-            required String description,
-            Value<DateTime> lastUpdated = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              GameCompanion.insert(
-            id: id,
-            name: name,
-            slug: slug,
-            apiId: apiId,
-            platforms: platforms,
-            background: background,
-            screenshots: screenshots,
-            description: description,
-            lastUpdated: lastUpdated,
-            rowid: rowid,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ));
-}
-
-typedef $$GameTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $GameTable,
-    GameData,
-    $$GameTableFilterComposer,
-    $$GameTableOrderingComposer,
-    $$GameTableAnnotationComposer,
-    $$GameTableCreateCompanionBuilder,
-    $$GameTableUpdateCompanionBuilder,
-    (GameData, BaseReferences<_$AppDatabase, $GameTable, GameData>),
-    GameData,
-    PrefetchHooks Function()>;
 typedef $$NotificationTableCreateCompanionBuilder = NotificationCompanion
     Function({
   required String id,
@@ -5767,13 +5956,13 @@ class $AppDatabaseManager {
   $$UserTableTableManager get user => $$UserTableTableManager(_db, _db.user);
   $$FriendshipTableTableManager get friendship =>
       $$FriendshipTableTableManager(_db, _db.friendship);
+  $$GameTableTableManager get game => $$GameTableTableManager(_db, _db.game);
   $$MatchTableTableManager get match =>
       $$MatchTableTableManager(_db, _db.match);
   $$ChatMessageTableTableManager get chatMessage =>
       $$ChatMessageTableTableManager(_db, _db.chatMessage);
   $$AttachmentTableTableManager get attachment =>
       $$AttachmentTableTableManager(_db, _db.attachment);
-  $$GameTableTableManager get game => $$GameTableTableManager(_db, _db.game);
   $$NotificationTableTableManager get notification =>
       $$NotificationTableTableManager(_db, _db.notification);
   $$NotificationsConfigTableTableManager get notificationsConfig =>
