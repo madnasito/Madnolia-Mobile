@@ -40,4 +40,8 @@ class GamesDbServices {
       rethrow;
     }
   }
+
+  Future<int> deleteAllGames() {
+    return database.managers.game.delete();
+  }
 }
