@@ -8,6 +8,7 @@ import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/database/friendships/frienship.services.dart';
+import 'package:madnolia/database/games/games.services.dart';
 import 'package:madnolia/database/match/match.services.dart';
 import 'package:madnolia/database/users/user.services.dart';
 import 'package:madnolia/services/sockets_service.dart';
@@ -20,7 +21,6 @@ logoutApp(BuildContext context) async {
   final backgroundService = FlutterBackgroundService();
   final matchesBloc = context.read<PlayerMatchesBloc>();
   final platformGamesBloc = context.read<PlatformGamesBloc>();
-  final userDbServices = UserDbServices();
   final friendshipDbService = FriendshipDbService();
   backgroundService.invoke('logout');
   backgroundService.invoke("delete_all_notifications");
@@ -29,7 +29,8 @@ logoutApp(BuildContext context) async {
   matchesBloc.add(RestoreMatchesState());
   chatsBloc.add(RestoreUserChats());
   platformGamesBloc.add(RestorePlatformsGamesState());
-  userDbServices.deleteUsers();
+  GamesDbServices().deleteAllGames();
+  UserDbServices().deleteUsers();
   MatchDbServices().deleteMatches();
   friendshipDbService.deleteFriendships();
   if(!context.mounted) return;
