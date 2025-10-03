@@ -1177,7 +1177,10 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
   @override
   late final GeneratedColumn<String> user = GeneratedColumn<String>(
       'user', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES user (id)'));
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
@@ -3343,6 +3346,20 @@ final class $$UserTableReferences
         manager.$state.copyWith(prefetchedData: cache));
   }
 
+  static MultiTypedResultKey<$MatchTable, List<MatchData>> _matchRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.match,
+          aliasName: $_aliasNameGenerator(db.user.id, db.match.user));
+
+  $$MatchTableProcessedTableManager get matchRefs {
+    final manager = $$MatchTableTableManager($_db, $_db.match)
+        .filter((f) => f.user.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_matchRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
   static MultiTypedResultKey<$ChatMessageTable, List<ChatMessageData>>
       _chatMessageRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
           db.chatMessage,
@@ -3411,6 +3428,27 @@ class $$UserTableFilterComposer extends Composer<_$AppDatabase, $UserTable> {
             $$FriendshipTableFilterComposer(
               $db: $db,
               $table: $db.friendship,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> matchRefs(
+      Expression<bool> Function($$MatchTableFilterComposer f) f) {
+    final $$MatchTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.match,
+        getReferencedColumn: (t) => t.user,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$MatchTableFilterComposer(
+              $db: $db,
+              $table: $db.match,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -3537,6 +3575,27 @@ class $$UserTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> matchRefs<T extends Object>(
+      Expression<T> Function($$MatchTableAnnotationComposer a) f) {
+    final $$MatchTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.match,
+        getReferencedColumn: (t) => t.user,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$MatchTableAnnotationComposer(
+              $db: $db,
+              $table: $db.match,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
   Expression<T> chatMessageRefs<T extends Object>(
       Expression<T> Function($$ChatMessageTableAnnotationComposer a) f) {
     final $$ChatMessageTableAnnotationComposer composer = $composerBuilder(
@@ -3592,7 +3651,10 @@ class $$UserTableTableManager extends RootTableManager<
     (UserData, $$UserTableReferences),
     UserData,
     PrefetchHooks Function(
-        {bool friendshipRefs, bool chatMessageRefs, bool notificationRefs})> {
+        {bool friendshipRefs,
+        bool matchRefs,
+        bool chatMessageRefs,
+        bool notificationRefs})> {
   $$UserTableTableManager(_$AppDatabase db, $UserTable table)
       : super(TableManagerState(
           db: db,
@@ -3645,12 +3707,14 @@ class $$UserTableTableManager extends RootTableManager<
               .toList(),
           prefetchHooksCallback: (
               {friendshipRefs = false,
+              matchRefs = false,
               chatMessageRefs = false,
               notificationRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (friendshipRefs) db.friendship,
+                if (matchRefs) db.match,
                 if (chatMessageRefs) db.chatMessage,
                 if (notificationRefs) db.notification
               ],
@@ -3665,6 +3729,17 @@ class $$UserTableTableManager extends RootTableManager<
                             $$UserTableReferences._friendshipRefsTable(db),
                         managerFromTypedResult: (p0) =>
                             $$UserTableReferences(db, table, p0).friendshipRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) =>
+                                referencedItems.where((e) => e.user == item.id),
+                        typedResults: items),
+                  if (matchRefs)
+                    await $_getPrefetchedData<UserData, $UserTable, MatchData>(
+                        currentTable: table,
+                        referencedTable:
+                            $$UserTableReferences._matchRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UserTableReferences(db, table, p0).matchRefs,
                         referencedItemsForCurrentItem:
                             (item, referencedItems) =>
                                 referencedItems.where((e) => e.user == item.id),
@@ -3714,7 +3789,10 @@ typedef $$UserTableProcessedTableManager = ProcessedTableManager<
     (UserData, $$UserTableReferences),
     UserData,
     PrefetchHooks Function(
-        {bool friendshipRefs, bool chatMessageRefs, bool notificationRefs})>;
+        {bool friendshipRefs,
+        bool matchRefs,
+        bool chatMessageRefs,
+        bool notificationRefs})>;
 typedef $$FriendshipTableCreateCompanionBuilder = FriendshipCompanion Function({
   required String id,
   required String user,
@@ -4349,6 +4427,20 @@ final class $$MatchTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
   }
+
+  static $UserTable _userTable(_$AppDatabase db) =>
+      db.user.createAlias($_aliasNameGenerator(db.match.user, db.user.id));
+
+  $$UserTableProcessedTableManager get user {
+    final $_column = $_itemColumn<String>('user')!;
+
+    final manager = $$UserTableTableManager($_db, $_db.user)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
 }
 
 class $$MatchTableFilterComposer extends Composer<_$AppDatabase, $MatchTable> {
@@ -4372,9 +4464,6 @@ class $$MatchTableFilterComposer extends Composer<_$AppDatabase, $MatchTable> {
 
   ColumnFilters<DateTime> get date => $composableBuilder(
       column: $table.date, builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<String> get user => $composableBuilder(
-      column: $table.user, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnFilters(column));
@@ -4422,6 +4511,26 @@ class $$MatchTableFilterComposer extends Composer<_$AppDatabase, $MatchTable> {
             ));
     return composer;
   }
+
+  $$UserTableFilterComposer get user {
+    final $$UserTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.user,
+        referencedTable: $db.user,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UserTableFilterComposer(
+              $db: $db,
+              $table: $db.user,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$MatchTableOrderingComposer
@@ -4444,9 +4553,6 @@ class $$MatchTableOrderingComposer
 
   ColumnOrderings<DateTime> get date => $composableBuilder(
       column: $table.date, builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<String> get user => $composableBuilder(
-      column: $table.user, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnOrderings(column));
@@ -4488,6 +4594,26 @@ class $$MatchTableOrderingComposer
             ));
     return composer;
   }
+
+  $$UserTableOrderingComposer get user {
+    final $$UserTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.user,
+        referencedTable: $db.user,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UserTableOrderingComposer(
+              $db: $db,
+              $table: $db.user,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$MatchTableAnnotationComposer
@@ -4510,9 +4636,6 @@ class $$MatchTableAnnotationComposer
 
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
-
-  GeneratedColumn<String> get user =>
-      $composableBuilder(column: $table.user, builder: (column) => column);
 
   GeneratedColumn<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => column);
@@ -4554,6 +4677,26 @@ class $$MatchTableAnnotationComposer
             ));
     return composer;
   }
+
+  $$UserTableAnnotationComposer get user {
+    final $$UserTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.user,
+        referencedTable: $db.user,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UserTableAnnotationComposer(
+              $db: $db,
+              $table: $db.user,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
 }
 
 class $$MatchTableTableManager extends RootTableManager<
@@ -4567,7 +4710,7 @@ class $$MatchTableTableManager extends RootTableManager<
     $$MatchTableUpdateCompanionBuilder,
     (MatchData, $$MatchTableReferences),
     MatchData,
-    PrefetchHooks Function({bool game})> {
+    PrefetchHooks Function({bool game, bool user})> {
   $$MatchTableTableManager(_$AppDatabase db, $MatchTable table)
       : super(TableManagerState(
           db: db,
@@ -4646,7 +4789,7 @@ class $$MatchTableTableManager extends RootTableManager<
               .map((e) =>
                   (e.readTable(table), $$MatchTableReferences(db, table, e)))
               .toList(),
-          prefetchHooksCallback: ({game = false}) {
+          prefetchHooksCallback: ({game = false, user = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [],
@@ -4671,6 +4814,14 @@ class $$MatchTableTableManager extends RootTableManager<
                     referencedColumn: $$MatchTableReferences._gameTable(db).id,
                   ) as T;
                 }
+                if (user) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.user,
+                    referencedTable: $$MatchTableReferences._userTable(db),
+                    referencedColumn: $$MatchTableReferences._userTable(db).id,
+                  ) as T;
+                }
 
                 return state;
               },
@@ -4693,7 +4844,7 @@ typedef $$MatchTableProcessedTableManager = ProcessedTableManager<
     $$MatchTableUpdateCompanionBuilder,
     (MatchData, $$MatchTableReferences),
     MatchData,
-    PrefetchHooks Function({bool game})>;
+    PrefetchHooks Function({bool game, bool user})>;
 typedef $$ChatMessageTableCreateCompanionBuilder = ChatMessageCompanion
     Function({
   required String id,

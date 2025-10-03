@@ -37,6 +37,28 @@ class UserService {
     }
   }
 
+  Future<List<SimpleUser>> getUsersInfoByIds(List<String> ids)  async {
+    try {
+      Response response;
+
+      final String? token = await _storage.read(key: "token");
+
+      debugPrint('Getting info of users: $ids');
+
+      response = await dio.post(
+        '$baseUrl/user/info/multiple',
+        options: Options(headers:  {"Authorization": "Bearer $token"}),
+        data: {'ids': ids}
+      );
+
+      List<SimpleUser> users = (response.data as List).map((user) => SimpleUser.fromJson(user)).toList();
+
+      return users;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future getPartners() => userGetRequest("get_partners");
 
   Future getInvitations() => userGetRequest("match/invitations");

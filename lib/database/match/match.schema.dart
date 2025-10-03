@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:madnolia/database/users/user.schema.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/platforms_id.enum.dart';
 
@@ -11,7 +12,7 @@ class Match extends Table {
   TextColumn get title => text()();
   IntColumn get platform => intEnum<PlatformId>()();
   DateTimeColumn get date => dateTime()();
-  TextColumn get user => text()();
+  TextColumn get user => text().references(User, #id)();
   TextColumn get description => text()();
   IntColumn get duration  => integer()();
   BoolColumn get private => boolean()();

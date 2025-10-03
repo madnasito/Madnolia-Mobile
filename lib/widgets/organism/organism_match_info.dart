@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/widgets/organism/form/organism_edit_match_form.dart';
 import 'package:madnolia/widgets/organism/modal/organism_match_info_modal.dart';
 
 import '../../blocs/user/user_bloc.dart';
-import '../../models/match/full_match.model.dart';
 
 class OrganismMatchInfo extends StatelessWidget {
-  
-  final FullMatch match;
+  final MatchData match;
+  final GameData game;
+  final String userId;
 
-  const OrganismMatchInfo({super.key, required this.match});
+  const OrganismMatchInfo({super.key, required this.match, required this.userId, required this.game});
 
   @override
   Widget build(BuildContext context) {
-    
     final userId = context.read<UserBloc>().state.id;
-    if(match.date <= DateTime.now().millisecondsSinceEpoch || userId != match.user.id) {
-      return OrganismMatchInfoModal(match: match);
-    }else{
-      return (match.status == MatchStatus.cancelled || match.status == MatchStatus.finished) ? SizedBox(): OrganismEditMatchForm(match: match) ;
+    final now = DateTime.now();
+
+    if (match.date.isBefore(now) || userId != match.user) {
+      return OrganismMatchInfoModal(match: match, userId: userId);
     }
 
+    if (match.status == MatchStatus.cancelled || match.status == MatchStatus.finished) {
+      return const SizedBox();
+    }
+
+    return OrganismEditMatchForm(match: match, game: game);
   }
 }

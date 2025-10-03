@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/message_bloc.dart';
-import 'package:madnolia/models/chat_user_model.dart';
-import 'package:madnolia/models/match/full_match.model.dart';
+import 'package:madnolia/database/database.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -13,7 +12,7 @@ import '../chat/input_widget.dart';
 class MoleculeMatchChatInput extends StatelessWidget {
   final String matchOwner;
   final String userId;
-  final FullMatch match;
+  final MatchData match;
   final bool isInMatch;
   final Socket socketClient;
   final GlobalKey<FlutterMentionsState> messageKey;
@@ -30,8 +29,8 @@ class MoleculeMatchChatInput extends StatelessWidget {
   Widget build(BuildContext context) {
     bool owner = userId == matchOwner ? true : false;
 
-    List<ChatUser> founded =
-        match.joined.where((e) => userId == e.id).toList();
+    List<String> founded =
+        match.joined.where((e) => userId == e).toList();
     
     if(owner || founded.isNotEmpty || isInMatch){
       Size screenSize = MediaQuery.of(context).size;

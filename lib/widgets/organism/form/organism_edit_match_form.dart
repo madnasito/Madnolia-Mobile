@@ -1,13 +1,15 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/database/database.dart';
+import 'package:madnolia/database/match/match.services.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/match/edit_match_model.dart';
 import 'package:madnolia/services/match_service.dart';
-import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
 import 'package:madnolia/widgets/custom_input_widget.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_button_cancell_match.dart';
@@ -15,21 +17,22 @@ import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
 import 'package:madnolia/widgets/molecules/modal/molecule_modal_icon_button.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:toast/toast.dart';
+import '../../../models/match/match_model.dart';
 
-import '../../../models/match/full_match.model.dart';
 import '../../../style/text_style.dart';
 import '../../molecules/buttons/molecule_form_button.dart';
 
 final formKey = GlobalKey<FormBuilderState>();
 class OrganismEditMatchForm extends StatelessWidget {
-final FullMatch match;
-const OrganismEditMatchForm({super.key, required this.match});
+final MatchData match;
+final GameData game;
+const OrganismEditMatchForm({super.key, required this.match, required this.game});
 
   @override
   Widget build(BuildContext context) {
     final dateController = TextEditingController();
     bool isLoading = false;
-    dateController.text = DateTime.fromMillisecondsSinceEpoch(match.date).toLocal().toString().substring(0, 16);
+    dateController.text = match.date.toLocal().toString().substring(0, 16);
     ToastContext().init(context);
     return MoleculeModalIconButton(
       content: FormBuilder(
@@ -140,27 +143,35 @@ const OrganismEditMatchForm({super.key, required this.match});
                         description: description,
                         date: DateTime.parse(dateController.text).millisecondsSinceEpoch
                         );
-                      final Map resp = await MatchService().editMatch(match.id, body.toJson());
+
+                      final matchDbServices = MatchDbServices();
+                      final Match resp = await MatchService().updateMatch(match.id, body);
+
+                      await matchDbServices.createOrUpdateMatch(matchDbServices.matchToCompanion(resp));
+                      
                       isLoading = false;
-
-                      if(!context.mounted) return;
-
-                      if(!resp.containsKey("_id")) return showErrorServerAlert(context, resp);
-
-                      match.date = resp["date"];
-                      match.title = name;
-                      match.description = description;
 
                       debugPrint(resp.toString());
 
-                      context.pop();
+                      if(context.mounted) context.pop();
                       Toast.show(translate("MATCH.MATCH_UPDATED"), border: Border.all(color: Colors.greenAccent), duration: 4,gravity: 5 );
                     } catch (e) {
+                      if(!context.mounted) return;
+
                       isLoading = false;
+                      if(e is DioException){
+                        if(e.response?.data is Map){
+                          throw e.response?.data;
+                        } else {
+                          throw {'message': 'NETWORK_ERROR'};
+                        }
+                      }else {
+                        throw {'message': 'NETWORK_ERROR'};
+                      }
                     }
                 },),
                 const SizedBox(height: 10),
-                match.status != MatchStatus.cancelled ? MoleculeButtonCancellMatch(match: match) : SizedBox(),
+                match.status != MatchStatus.cancelled ? MoleculeButtonCancellMatch(match: match, game: game,) : SizedBox(),
                 const SizedBox(height: 10),
               ],
             ),

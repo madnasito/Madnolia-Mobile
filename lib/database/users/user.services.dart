@@ -49,6 +49,40 @@ class UserDbServices {
     }
   }
 
+  Future<List<UserData>> getUsersByIds(List<String> ids) async {
+    if (ids.isEmpty) {
+      return [];
+    }
+    try {
+      List<UserData> existingUsers = await (database.select(database.user)..where((user) => user.id.isIn(ids))).get();
+
+      print('existings users: $existingUsers');
+      if(existingUsers.length == ids.length) {
+        return existingUsers;
+      }
+
+      final freshUsersInfo = await UserService().getUsersInfoByIds(ids);
+
+      for (var userInfo in freshUsersInfo) {
+        final userCompanion = UserCompanion(
+          id: Value(userInfo.id),
+          image: Value(userInfo.image),
+          name: Value(userInfo.name),
+          username: Value(userInfo.username),
+          thumb: Value(userInfo.thumb)
+        );
+
+        await createOrUpdateUser(userCompanion);
+      }
+
+      existingUsers = await (database.select(database.user)..where((user) => user.id.isIn(ids))).get();
+
+      return existingUsers;
+      
+    } catch (e) {
+      rethrow;
+    }
+  }
   Future<UserData?> getUserByFriendship(String friendshipId) async {
     try {
       final friendship = await (database.select(database.friendship)..where((f) => f.id.equals(friendshipId))).getSingle();

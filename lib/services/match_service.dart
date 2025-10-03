@@ -6,6 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:madnolia/models/game/platform_game.dart';
+import 'package:madnolia/models/match/edit_match_model.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:madnolia/models/platform/platform_with_game_matches.dart';
@@ -83,6 +84,18 @@ class MatchService {
 
   Future editMatch(String id, Map body) => matchPatchRequest("update/$id", body);
 
+  Future<Match> updateMatch(String id, EditMatchModel body ) async {
+    final response = await dio.patch('$baseUrl/match/update/$id',
+      data: body.toJson(),
+      options: Options(
+        headers: {"Authorization": "Bearer ${_storage.read(key: "token")}"}
+      )
+    );
+
+    final match = Match.fromJson(response.data);
+
+    return match;
+  }
   Future cancellMatch(String id) async {
     try {
       

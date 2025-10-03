@@ -3,6 +3,7 @@ import 'dart:async' show StreamSubscription;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/database/database.dart';
+import 'package:madnolia/database/match/match.services.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/services/match_service.dart';
@@ -14,18 +15,16 @@ import 'package:madnolia/blocs/message/message_bloc.dart';
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/models/chat/message_model.dart';
-import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
 
-import '../../models/match/full_match.model.dart';
-
 class ViewMatch extends StatefulWidget {
-  final FullMatch match;
-  const ViewMatch({super.key, required this.match});
+  final MatchData match;
+  final GameData game;
+  const ViewMatch({super.key, required this.match, required this.game});
 
   @override
   State<ViewMatch> createState() => _ViewMatchState();
@@ -34,6 +33,8 @@ class ViewMatch extends StatefulWidget {
 class _ViewMatchState extends State<ViewMatch> {
   bool isInMatch = false;
   bool socketConnected = true;
+  bool _isLoading = false;
+  String? _errorMessage;
   late UserBloc userBloc;
   late final FlutterBackgroundService backgroundService;
   
@@ -124,7 +125,7 @@ class _ViewMatchState extends State<ViewMatch> {
                   maxLines: 1,
                 ),
                 Text(
-                  widget.match.game.name,
+                  widget.game.name,
                   style: const TextStyle(fontSize: 12),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -140,8 +141,8 @@ class _ViewMatchState extends State<ViewMatch> {
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
                 child: SizedBox(
                   width: 90,
-                  child: widget.match.game.background != null ? AtomGameImage(
-                    background: resizeImage(widget.match.game.background! 
+                  child: widget.game.background != null ? AtomGameImage(
+                    background: resizeImage(widget.game.background! 
                     )
                   ) : Image.asset("assets/no image.jpg", fit: BoxFit.cover) ),
               ),
@@ -152,7 +153,7 @@ class _ViewMatchState extends State<ViewMatch> {
                   // uri: Uri.tryParse("https://madnolia.app/match/${widget.match.id}"),
                   // subject: "🎮 Let's play ${widget.match.game.name}",
                   text: translate("SHARE.TEXT", args: {
-                    "gameName": widget.match.game.name,
+                    "gameName": widget.game.name,
                     "match": "https://madnolia.app/match/${widget.match.id}"
                     })
                   // uri: Uri.parse('https://madnolia.app/match/${widget.match.id}')
@@ -162,7 +163,7 @@ class _ViewMatchState extends State<ViewMatch> {
       
                 debugPrint(result.status.toString());
               }, icon: Icon(Icons.share_outlined)),
-              OrganismMatchInfo(match: widget.match),
+              OrganismMatchInfo(match: widget.match, game: widget.game, userId: widget.match.user,),
             ],
           ),
         ],
@@ -184,41 +185,58 @@ class _ViewMatchState extends State<ViewMatch> {
       );
     }
 
-    // if (!socketConnected) {
-    //   return Center(
-    //     child: Padding(
-    //       padding: const EdgeInsets.symmetric(vertical: 7),
-    //       child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION")),
-    //     ),
-    //   );
-    // }
-
-    final isOwnerOrMember = userState.id == widget.match.user.id || 
-        widget.match.joined.any((e) => userState.id == e.id) || 
+    final isOwnerOrMember = userState.id == widget.match.user || 
+        widget.match.joined.any((e) => userState.id == e) || 
         isInMatch;
 
     if (!isOwnerOrMember) {
-      return FormButton(
-        text: translate('MATCH.JOIN_TO_MATCH'),
-        color: Colors.transparent,
-        onPressed: () async {
-          try {
-              final resp = await MatchService().join(widget.match.id);
-              debugPrint(resp.toString());
+      if (_isLoading) {
+        return const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Center(child: CircularProgressIndicator()),
+        );
+      }
 
+      return Column(
+        children: [
+          if (_errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                _errorMessage!,
+                style: const TextStyle(color: Colors.red),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          FormButton(
+            text: translate('MATCH.JOIN_TO_MATCH'),
+            color: Colors.transparent,
+            onPressed: () async {
               setState(() {
-                widget.match.joined.add(ChatUser(
-                  id: userState.id,
-                  name: userState.name,
-                  thumb: userState.thumb,
-                  username: userState.username,
-                ));
+                _isLoading = true;
+                _errorMessage = null;
               });
+              try {
+                final resp = await MatchService().join(widget.match.id);
+                debugPrint(resp.toString());
 
-            } catch (e) {
-              debugPrint(e.toString());
-            }
-        },
+                await MatchDbServices().joinUser(widget.match.id, userState.id);
+
+                setState(() {
+                  isInMatch = true;
+                  _isLoading = false;
+                });
+
+              } catch (e) {
+                debugPrint(e.toString());
+                setState(() {
+                  _errorMessage = translate('MATCH.ERRORS.JOIN_FAILED');
+                  _isLoading = false;
+                });
+              }
+            },
+          ),
+        ],
       );
     }
 
@@ -228,8 +246,8 @@ class _ViewMatchState extends State<ViewMatch> {
   Widget _buildMessageInput(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey, bool socketConnected) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    final List<ChatUser> usersLists = widget.match.joined.where((member) => member.id != userBloc.state.id).toList();
-    if(userBloc.state.id != widget.match.user.id) usersLists.add(widget.match.user);
+    final List<String> usersLists = widget.match.joined.where((member) => member != userBloc.state.id).toList();
+    if(userBloc.state.id != widget.match.user) usersLists.add(widget.match.user);
     
     return Wrap(
       children: [

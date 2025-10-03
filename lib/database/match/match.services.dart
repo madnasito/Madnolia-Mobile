@@ -1,5 +1,10 @@
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:madnolia/database/games/games.services.dart';
+import 'package:madnolia/database/users/user.services.dart';
 import 'package:madnolia/services/match_service.dart';
+
+import '../../models/match/match_model.dart';
 
 import '../database.dart';
 
@@ -7,10 +12,73 @@ class MatchDbServices {
 
   final database = AppDatabase.instance;
 
+  MatchCompanion matchToCompanion(Match match) {
+    return MatchCompanion(
+      id: Value(match.id),
+      game: Value(match.game),
+      title: Value(match.title),
+      platform: Value(match.platform),
+      date: Value(DateTime.fromMillisecondsSinceEpoch(match.date)),
+      user: Value(match.user),
+      description: Value(match.description),
+      duration: Value(match.duration),
+      private: Value(match.private),
+      tournament: Value(match.tournament),
+      status: Value(match.status),
+      joined: Value(match.joined),
+      inviteds: Value(match.inviteds),
+    );
+  }
+
   Future<int> createOrUpdateMatch(MatchCompanion match) async {
     try {
       return await database.into(database.match).insertOnConflictUpdate(match);
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<MatchWithGame> getMatchWithGame(String matchId) async {
+    final joinedQuery = (database.select(database.match)..where((m) => m.id.equals(matchId)))
+        .join([
+          innerJoin(database.game, database.game.id.equalsExp(database.match.game))
+        ]);
+
+    var row = await joinedQuery.getSingleOrNull();
+
+    if (row == null) {
+      // Data not found locally, fetch from remote
+      final matchInfo = await MatchService().getMatch(matchId);
+      await GamesDbServices().getGameById(matchInfo.game); // Ensures game is cached
+      await createOrUpdateMatch(matchToCompanion(matchInfo)); // Caches match
+
+      // Retry the query now that data should be in the DB
+      row = await joinedQuery.getSingleOrNull();
+
+      // If it's still null after fetching, something is fundamentally wrong.
+      if (row == null) {
+        throw Exception('Failed to load match data even after fetching from remote.');
+      }
+    }
+
+    final matchData = row.readTable(database.match);
+    final gameData = row.readTable(database.game);
+    return MatchWithGame(match: matchData, game: gameData);
+  }
+
+
+  Future<int> joinUser(String matchId, String userId) async {
+    try {
+      final match = await (database.select(database.match)..where((m) => m.id.equals(matchId))).getSingle();
+      final updatedJoined = List<String>.from(match.joined)..add(userId);
+
+      final updatedMatch = MatchCompanion(
+        joined: Value(updatedJoined),
+      );
+
+      return await (database.update(database.match)..where((m) => m.id.equals(matchId))).write(updatedMatch);
+    } catch (e) {
+      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -23,6 +91,12 @@ class MatchDbServices {
       if(existingMatch != null) return existingMatch;
 
       final matchInfo = await MatchService().getMatch(id);
+
+      await Future.wait([
+        UserDbServices().getUserById(matchInfo.user),
+        GamesDbServices().getGameById(matchInfo.game)
+      ]);
+
 
       final matchCompanion = MatchCompanion(
         id: Value(matchInfo.id),
@@ -44,6 +118,7 @@ class MatchDbServices {
       final match = await (database.select(database.match)..where((match) => match.id.equals(id))).getSingle();
       return match;
     } catch (e) {
+      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -51,4 +126,10 @@ class MatchDbServices {
   Future<int> deleteMatches() async {
     return await database.managers.match.delete();
   }
+}
+
+class MatchWithGame {
+  final MatchData match;
+  final GameData game;
+  MatchWithGame({required this.match, required this.game});
 }

@@ -4,7 +4,6 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/pages/auth/recover_password_page.dart';
 import 'package:madnolia/pages/chat/user_chat_page.dart';
 import 'package:madnolia/pages/chat/chats_page.dart';
-import 'package:madnolia/pages/chat/room_call_page.dart';
 import 'package:madnolia/pages/game/game_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -177,13 +176,13 @@ final GoRouter router = GoRouter(
               }
             );
           },
-          routes: [
-            GoRoute(
-              name: "match_call",
-              path: "call",
-              builder: (BuildContext context, GoRouterState state) => const RoomCallPage()
-              )
-          ]
+          // routes: [
+          //   GoRoute(
+          //     name: "match_call",
+          //     path: "call",
+          //     builder: (BuildContext context, GoRouterState state) => const RoomCallPage()
+          //     )
+          // ]
         ),
         GoRoute(
             path: "game", name: "game", builder: (context, state) => const GamePage()),
