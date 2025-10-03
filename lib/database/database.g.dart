@@ -1223,6 +1223,14 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
       GeneratedColumn<String>('inviteds', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<List<String>>($MatchTable.$converterinviteds);
+  static const VerificationMeta _lastUpdatedMeta =
+      const VerificationMeta('lastUpdated');
+  @override
+  late final GeneratedColumn<DateTime> lastUpdated = GeneratedColumn<DateTime>(
+      'last_updated', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1237,7 +1245,8 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
         tournament,
         status,
         joined,
-        inviteds
+        inviteds,
+        lastUpdated
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1304,6 +1313,12 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
           tournament.isAcceptableOrUnknown(
               data['tournament']!, _tournamentMeta));
     }
+    if (data.containsKey('last_updated')) {
+      context.handle(
+          _lastUpdatedMeta,
+          lastUpdated.isAcceptableOrUnknown(
+              data['last_updated']!, _lastUpdatedMeta));
+    }
     return context;
   }
 
@@ -1341,6 +1356,8 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
       inviteds: $MatchTable.$converterinviteds.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}inviteds'])!),
+      lastUpdated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!,
     );
   }
 
@@ -1373,6 +1390,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
   final MatchStatus status;
   final List<String> joined;
   final List<String> inviteds;
+  final DateTime lastUpdated;
   const MatchData(
       {required this.id,
       required this.game,
@@ -1386,7 +1404,8 @@ class MatchData extends DataClass implements Insertable<MatchData> {
       this.tournament,
       required this.status,
       required this.joined,
-      required this.inviteds});
+      required this.inviteds,
+      required this.lastUpdated});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -1416,6 +1435,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
       map['inviteds'] =
           Variable<String>($MatchTable.$converterinviteds.toSql(inviteds));
     }
+    map['last_updated'] = Variable<DateTime>(lastUpdated);
     return map;
   }
 
@@ -1436,6 +1456,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
       status: Value(status),
       joined: Value(joined),
       inviteds: Value(inviteds),
+      lastUpdated: Value(lastUpdated),
     );
   }
 
@@ -1458,6 +1479,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           .fromJson(serializer.fromJson<int>(json['status'])),
       joined: serializer.fromJson<List<String>>(json['joined']),
       inviteds: serializer.fromJson<List<String>>(json['inviteds']),
+      lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
     );
   }
   @override
@@ -1479,6 +1501,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           serializer.toJson<int>($MatchTable.$converterstatus.toJson(status)),
       'joined': serializer.toJson<List<String>>(joined),
       'inviteds': serializer.toJson<List<String>>(inviteds),
+      'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
     };
   }
 
@@ -1495,7 +1518,8 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           Value<String?> tournament = const Value.absent(),
           MatchStatus? status,
           List<String>? joined,
-          List<String>? inviteds}) =>
+          List<String>? inviteds,
+          DateTime? lastUpdated}) =>
       MatchData(
         id: id ?? this.id,
         game: game ?? this.game,
@@ -1510,6 +1534,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
         status: status ?? this.status,
         joined: joined ?? this.joined,
         inviteds: inviteds ?? this.inviteds,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
       );
   MatchData copyWithCompanion(MatchCompanion data) {
     return MatchData(
@@ -1528,6 +1553,8 @@ class MatchData extends DataClass implements Insertable<MatchData> {
       status: data.status.present ? data.status.value : this.status,
       joined: data.joined.present ? data.joined.value : this.joined,
       inviteds: data.inviteds.present ? data.inviteds.value : this.inviteds,
+      lastUpdated:
+          data.lastUpdated.present ? data.lastUpdated.value : this.lastUpdated,
     );
   }
 
@@ -1546,14 +1573,28 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           ..write('tournament: $tournament, ')
           ..write('status: $status, ')
           ..write('joined: $joined, ')
-          ..write('inviteds: $inviteds')
+          ..write('inviteds: $inviteds, ')
+          ..write('lastUpdated: $lastUpdated')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, game, title, platform, date, user,
-      description, duration, private, tournament, status, joined, inviteds);
+  int get hashCode => Object.hash(
+      id,
+      game,
+      title,
+      platform,
+      date,
+      user,
+      description,
+      duration,
+      private,
+      tournament,
+      status,
+      joined,
+      inviteds,
+      lastUpdated);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1570,7 +1611,8 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           other.tournament == this.tournament &&
           other.status == this.status &&
           other.joined == this.joined &&
-          other.inviteds == this.inviteds);
+          other.inviteds == this.inviteds &&
+          other.lastUpdated == this.lastUpdated);
 }
 
 class MatchCompanion extends UpdateCompanion<MatchData> {
@@ -1587,6 +1629,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
   final Value<MatchStatus> status;
   final Value<List<String>> joined;
   final Value<List<String>> inviteds;
+  final Value<DateTime> lastUpdated;
   final Value<int> rowid;
   const MatchCompanion({
     this.id = const Value.absent(),
@@ -1602,6 +1645,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
     this.status = const Value.absent(),
     this.joined = const Value.absent(),
     this.inviteds = const Value.absent(),
+    this.lastUpdated = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   MatchCompanion.insert({
@@ -1618,6 +1662,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
     required MatchStatus status,
     required List<String> joined,
     required List<String> inviteds,
+    this.lastUpdated = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         game = Value(game),
@@ -1645,6 +1690,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
     Expression<int>? status,
     Expression<String>? joined,
     Expression<String>? inviteds,
+    Expression<DateTime>? lastUpdated,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1661,6 +1707,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
       if (status != null) 'status': status,
       if (joined != null) 'joined': joined,
       if (inviteds != null) 'inviteds': inviteds,
+      if (lastUpdated != null) 'last_updated': lastUpdated,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1679,6 +1726,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
       Value<MatchStatus>? status,
       Value<List<String>>? joined,
       Value<List<String>>? inviteds,
+      Value<DateTime>? lastUpdated,
       Value<int>? rowid}) {
     return MatchCompanion(
       id: id ?? this.id,
@@ -1694,6 +1742,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
       status: status ?? this.status,
       joined: joined ?? this.joined,
       inviteds: inviteds ?? this.inviteds,
+      lastUpdated: lastUpdated ?? this.lastUpdated,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1744,6 +1793,9 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
       map['inviteds'] = Variable<String>(
           $MatchTable.$converterinviteds.toSql(inviteds.value));
     }
+    if (lastUpdated.present) {
+      map['last_updated'] = Variable<DateTime>(lastUpdated.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1766,6 +1818,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
           ..write('status: $status, ')
           ..write('joined: $joined, ')
           ..write('inviteds: $inviteds, ')
+          ..write('lastUpdated: $lastUpdated, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4391,6 +4444,7 @@ typedef $$MatchTableCreateCompanionBuilder = MatchCompanion Function({
   required MatchStatus status,
   required List<String> joined,
   required List<String> inviteds,
+  Value<DateTime> lastUpdated,
   Value<int> rowid,
 });
 typedef $$MatchTableUpdateCompanionBuilder = MatchCompanion Function({
@@ -4407,6 +4461,7 @@ typedef $$MatchTableUpdateCompanionBuilder = MatchCompanion Function({
   Value<MatchStatus> status,
   Value<List<String>> joined,
   Value<List<String>> inviteds,
+  Value<DateTime> lastUpdated,
   Value<int> rowid,
 });
 
@@ -4492,6 +4547,9 @@ class $$MatchTableFilterComposer extends Composer<_$AppDatabase, $MatchTable> {
           column: $table.inviteds,
           builder: (column) => ColumnWithTypeConverterFilters(column));
 
+  ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
+      column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
+
   $$GameTableFilterComposer get game {
     final $$GameTableFilterComposer composer = $composerBuilder(
         composer: this,
@@ -4574,6 +4632,9 @@ class $$MatchTableOrderingComposer
 
   ColumnOrderings<String> get inviteds => $composableBuilder(
       column: $table.inviteds, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
+      column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
 
   $$GameTableOrderingComposer get game {
     final $$GameTableOrderingComposer composer = $composerBuilder(
@@ -4658,6 +4719,9 @@ class $$MatchTableAnnotationComposer
   GeneratedColumnWithTypeConverter<List<String>, String> get inviteds =>
       $composableBuilder(column: $table.inviteds, builder: (column) => column);
 
+  GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
+      column: $table.lastUpdated, builder: (column) => column);
+
   $$GameTableAnnotationComposer get game {
     final $$GameTableAnnotationComposer composer = $composerBuilder(
         composer: this,
@@ -4735,6 +4799,7 @@ class $$MatchTableTableManager extends RootTableManager<
             Value<MatchStatus> status = const Value.absent(),
             Value<List<String>> joined = const Value.absent(),
             Value<List<String>> inviteds = const Value.absent(),
+            Value<DateTime> lastUpdated = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MatchCompanion(
@@ -4751,6 +4816,7 @@ class $$MatchTableTableManager extends RootTableManager<
             status: status,
             joined: joined,
             inviteds: inviteds,
+            lastUpdated: lastUpdated,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -4767,6 +4833,7 @@ class $$MatchTableTableManager extends RootTableManager<
             required MatchStatus status,
             required List<String> joined,
             required List<String> inviteds,
+            Value<DateTime> lastUpdated = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               MatchCompanion.insert(
@@ -4783,6 +4850,7 @@ class $$MatchTableTableManager extends RootTableManager<
             status: status,
             joined: joined,
             inviteds: inviteds,
+            lastUpdated: lastUpdated,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

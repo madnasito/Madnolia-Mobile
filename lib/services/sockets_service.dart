@@ -7,6 +7,8 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/database/match/match.services.dart';
+import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/message_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart' show MatchReady;
@@ -217,8 +219,7 @@ onStart(ServiceInstance service) async {
   socket.on("connection_rejected", (data) => service.invoke("connection_rejected"));
   socket.on("canceled_connection", (data) => service.invoke("canceled_connection"));
 
-  // TODO: Cancell match in DB
-  socket.on('match_cancelled', (data) => service.invoke('match_cancelled', data));
+  socket.on('match_cancelled', (data) async => await MatchDbServices().updateMatchStatus(data['match'], MatchStatus.cancelled));
 
   socket.onDisconnect((_) => {
    service.invoke("disconnected_socket")
@@ -276,7 +277,7 @@ onStart(ServiceInstance service) async {
 
   service.on("logout").listen((onData) => socket.emit("logout"));
 
-  service.on("off_new_player_to_match").listen((onData) => socket.emit("off_new_player_to_match"));
+  service.on("new_player_to_match").listen((onData) async => await MatchDbServices().joinUser(onData?['match'], onData?['user']));
 
   service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));
 

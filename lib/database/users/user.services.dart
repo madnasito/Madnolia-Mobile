@@ -56,7 +56,6 @@ class UserDbServices {
     try {
       List<UserData> existingUsers = await (database.select(database.user)..where((user) => user.id.isIn(ids))).get();
 
-      print('existings users: $existingUsers');
       if(existingUsers.length == ids.length) {
         return existingUsers;
       }

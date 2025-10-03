@@ -20,6 +20,7 @@ class Match extends Table {
   IntColumn get status => intEnum<MatchStatus>()();
   TextColumn get joined => text().map(const StringListConverter())();
   TextColumn get inviteds => text().map(const StringListConverter())();
+  DateTimeColumn get lastUpdated => dateTime().withDefault(currentDateAndTime)();
 
   @override
   Set<Column> get primaryKey => {id};

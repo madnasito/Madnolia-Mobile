@@ -56,10 +56,10 @@ class _ViewMatchState extends State<ViewMatch> {
     
     // Guarda las suscripciones para poder cancelarlas después
     _newPlayerSubscription = backgroundService.on("new_player_to_match").listen((data) {
-      if (!mounted) return;
-      // TODO: find it in database and add to match
-      // ChatUser user = ChatUser.fromJson(data!);
-      // debugPrint(user.name);
+      if(data?["match"] != widget.match.id) return;
+      setState(() {
+        
+      });
     });
     
     _addedToMatchSubscription = backgroundService.on("added_to_match").listen((data) {
@@ -92,7 +92,7 @@ class _ViewMatchState extends State<ViewMatch> {
     _socketConnectedSubscription?.cancel();
     
     backgroundService.invoke("disconnect_chat");
-    backgroundService.invoke("off_new_player_to_match");
+    // backgroundService.invoke("new_player_to_match");
     userBloc.updateChatRoom("");
     super.dispose();
   }

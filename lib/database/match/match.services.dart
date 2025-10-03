@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/games/games.services.dart';
 import 'package:madnolia/database/users/user.services.dart';
+import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/services/match_service.dart';
 
 import '../../models/match/match_model.dart';
@@ -84,11 +85,16 @@ class MatchDbServices {
   }
 
   Future<MatchData> getMatchById(String id) async {
-
     try {
       final MatchData? existingMatch = await (database.select(database.match)..where((match) => match.id.equals(id))).getSingleOrNull();
 
-      if(existingMatch != null) return existingMatch;
+      if (existingMatch != null) {
+        final now = DateTime.now();
+        final difference = now.difference(existingMatch.lastUpdated);
+        if (difference.inMinutes <= 30) {
+          return existingMatch;
+        }
+      }
 
       final matchInfo = await MatchService().getMatch(id);
 
@@ -96,7 +102,6 @@ class MatchDbServices {
         UserDbServices().getUserById(matchInfo.user),
         GamesDbServices().getGameById(matchInfo.game)
       ]);
-
 
       final matchCompanion = MatchCompanion(
         id: Value(matchInfo.id),
@@ -110,7 +115,8 @@ class MatchDbServices {
         private: Value(matchInfo.private),
         status: Value(matchInfo.status),
         joined: Value(matchInfo.joined),
-        inviteds: Value(matchInfo.inviteds)
+        inviteds: Value(matchInfo.inviteds),
+        lastUpdated: Value(DateTime.now()),
       );
 
       await createOrUpdateMatch(matchCompanion);
@@ -119,6 +125,18 @@ class MatchDbServices {
       return match;
     } catch (e) {
       debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<int> updateMatchStatus(String matchId, MatchStatus status) async {
+    try {
+      final updatedMatch = MatchCompanion(
+        status: Value(status),
+      );
+
+      return await (database.update(database.match)..where((m) => m.id.equals(matchId))).write(updatedMatch);
+    } catch (e) {
       rethrow;
     }
   }
