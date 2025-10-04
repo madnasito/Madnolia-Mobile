@@ -3,7 +3,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
-import 'package:madnolia/models/chat/message_model.dart';
+import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/services/messages_service.dart';
 import 'package:stream_transform/stream_transform.dart';

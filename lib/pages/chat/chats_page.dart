@@ -9,7 +9,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/enums/list_status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
-import 'package:madnolia/models/chat/message_model.dart';
+import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_users_chats.dart';

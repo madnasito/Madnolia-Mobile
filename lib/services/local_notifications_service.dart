@@ -22,7 +22,7 @@ import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
-import '../models/chat/message_model.dart';
+import '../models/chat/chat_message_model.dart';
 
 
 @pragma("vm:entry-point")

@@ -14,7 +14,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/message/message_bloc.dart';
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
-import 'package:madnolia/models/chat/message_model.dart';
+import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';

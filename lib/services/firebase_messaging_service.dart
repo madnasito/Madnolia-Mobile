@@ -6,7 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' show Flutter
 import 'package:madnolia/database/match/match.services.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
-import 'package:madnolia/models/chat/message_model.dart';
+import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';

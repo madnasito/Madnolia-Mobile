@@ -8,7 +8,7 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/models/chat/user_messages.body.dart' show UserMessagesBody;
 import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart' show MoleculeUserChatMessagesList;
-import '../../../models/chat/message_model.dart' show ChatMessage;
+import '../../../models/chat/chat_message_model.dart' show ChatMessage;
 
 class OrganismUserChatMessages extends StatefulWidget {
   final String id;

@@ -6,7 +6,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
-import 'package:madnolia/models/chat/message_model.dart';
+import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 

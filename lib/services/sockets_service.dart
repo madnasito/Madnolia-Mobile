@@ -10,7 +10,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/database/match/match.services.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
-import 'package:madnolia/models/chat/message_model.dart';
+import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart' show MatchReady;
 import 'package:madnolia/services/firebase_messaging_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
