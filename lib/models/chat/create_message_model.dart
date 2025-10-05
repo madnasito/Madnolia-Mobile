@@ -36,25 +36,29 @@ CreateMessage createMessageFromJson(String str) =>
 String createMessageToJson(CreateMessage data) => json.encode(data.toJson());
 
 class CreateMessage {
+  String id;
   String conversation;
-  String text;
+  String content;
   MessageType type; // Use the enum directly
 
   CreateMessage({
+    required this.id,
     required this.conversation,
-    required this.text,
+    required this.content,
     required this.type,
   });
 
   factory CreateMessage.fromJson(Map<String, dynamic> json) => CreateMessage(
-        conversation: json["conversation"],
-        text: json["text"],
-        type: MessageTypeExtension.fromInt(json["type"]), // Convert int to enum
-      );
+    id: json["id"],
+    conversation: json["conversation"],
+    content: json["content"],
+    type: MessageTypeExtension.fromInt(json["type"]), // Convert int to enum
+  );
 
   Map<String, dynamic> toJson() => {
-        "conversation": conversation,
-        "text": text,
-        "type": type.value, // Convert enum to int
-      };
+    "id": id,
+    "conversation": conversation,
+    "content": content,
+    "type": type.value, // Convert enum to int
+  };
 }

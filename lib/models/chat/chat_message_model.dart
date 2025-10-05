@@ -12,7 +12,7 @@ import 'package:madnolia/enums/message_type.enum.dart';
 class ChatMessage {
     String id;
     ChatMessageStatus status;
-    String text;
+    String content;
     MessageType type;
     String conversation;
     String creator;
@@ -21,7 +21,7 @@ class ChatMessage {
     ChatMessage({
         required this.id,
         required this.status,
-        required this.text,
+        required this.content,
         required this.type,
         required this.conversation,
         required this.creator,
@@ -68,7 +68,7 @@ class ChatMessage {
       return ChatMessage(
         id: json["id"],
         status: messageStatus,
-        text: json["text"],
+        content: json["content"],
         type: messageType,
         conversation: json["conversation"],
         creator: json["creator"],
@@ -79,7 +79,7 @@ class ChatMessage {
     Map<String, dynamic> toJson() => {
         "id": id,
         "status": status.index,  // Convert enum to its index
-        "text": text,
+        "content": content,
         "type": type.index,      // Convert enum to its index
         "conversation": conversation,
         "creator": creator,
@@ -90,7 +90,7 @@ class ChatMessage {
       return ChatMessageCompanion(
         id: Value(id),
         status: Value(status),
-        content: Value(text),
+        content: Value(content),
         conversation: Value(conversation),
         creator: Value(creator),
         date: Value(date),

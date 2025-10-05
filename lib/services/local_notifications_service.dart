@@ -22,6 +22,7 @@ import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
+import 'package:uuid/uuid.dart';
 import '../models/chat/chat_message_model.dart';
 
 
@@ -148,7 +149,7 @@ class LocalNotificationsService {
         final user = userData[msg.creator]!;
         final image = await getRoundedImageBytes(CachedNetworkImageProvider(user.thumb));
         return Message(
-          msg.text,
+          msg.content,
           msg.date,
           Person(
             name: user.name,
@@ -454,10 +455,13 @@ static Future<void> _updateSummaryNotification() async {
         final isRunning = await service.isRunning();
 
         // Preparar el mensaje a enviar
+
+        final uuid = Uuid();
         final messageData = CreateMessage(
+          id: uuid.v4(),
           conversation: message.conversation,
-          text: notificationResponse.input.toString(),
-          type: message.type
+          content: notificationResponse.input.toString(),
+          type: message.type,
         ).toJson();
 
         if (!isRunning) {

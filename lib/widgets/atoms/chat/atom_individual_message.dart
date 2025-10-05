@@ -47,7 +47,7 @@ class _AtomIndividualMessageState extends State<AtomIndividualMessage>
       key: Key(widget.message.id),
       onVisibilityChanged: (info) {
         if(info.visibleFraction > 0 && widget.message.status == ChatMessageStatus.sent && widget.message.creator != myId) {
-          debugPrint('${widget.message.text}: ${widget.message.status}');
+          debugPrint('${widget.message.content}: ${widget.message.status}');
           backgroundService.invoke('update_recipient_status', {'id': widget.message.id, 'status': ChatMessageStatus.read.index});
           chatsBloc.add(UpdateRecipientStatus(messageId: widget.message.id, status: ChatMessageStatus.read));
         }
@@ -63,7 +63,7 @@ class _AtomIndividualMessageState extends State<AtomIndividualMessage>
               border: Border.all(color: widget.message.creator == myId ? Colors.lightBlueAccent : Colors.white54, width: 0.5),
             ),
             child: ExpandableText(
-              widget.message.text,
+              widget.message.content,
               expandText: "↓ ${translate('UTILS.SHOW_MORE')}",
               collapseText: "↑ ${translate('UTILS.SHOW_LESS')}",
               maxLines: 6,

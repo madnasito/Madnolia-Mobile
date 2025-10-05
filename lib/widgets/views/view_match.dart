@@ -6,6 +6,7 @@ import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/match/match.services.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/enums/match-status.enum.dart';
+import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,9 @@ import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../enums/message_type.enum.dart';
 
 class ViewMatch extends StatefulWidget {
   final MatchData match;
@@ -284,9 +288,10 @@ class _ViewMatchState extends State<ViewMatch> {
 
   void _handleSubmit(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey, socketConnected) {
     if (bloc.message.isEmpty || !socketConnected) return;
+    final id = const Uuid().v4();
     backgroundService.invoke(
       "new_message", 
-      {"text": bloc.message, "conversation": widget.match.id, "type": 2}
+      CreateMessage(id: id, conversation: widget.match.id, content: bloc.message, type: MessageType.match).toJson()
     );
     bloc.changeMessage("");
     messageKey.currentState?.controller?.clear();
@@ -407,7 +412,7 @@ class BuildMessageList extends StatelessWidget {
             state.groupMessages[index].creator != state.groupMessages[index - 1].creator;
         
         return GroupChatMessageOrganism(
-          text: state.groupMessages[index].text,
+          text: state.groupMessages[index].content,
           user: user,
           mainMessage: isMainMessage,
         );

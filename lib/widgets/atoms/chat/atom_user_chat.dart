@@ -93,7 +93,7 @@ class AtomUserChat extends StatelessWidget {
                   ),
                 ),
                 subtitle: Text(
-                  userChat.message.text,
+                  userChat.message.content,
                   style: TextStyle(
                     color: iReadThat(notMe) ? Colors.white : Colors.grey[300],
                     overflow: TextOverflow.ellipsis,

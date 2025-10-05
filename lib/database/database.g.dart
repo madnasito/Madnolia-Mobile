@@ -2303,6 +2303,11 @@ class $AttachmentTable extends Attachment
   late final GeneratedColumn<String> file = GeneratedColumn<String>(
       'file', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  late final GeneratedColumnWithTypeConverter<AttachmentType, int> type =
+      GeneratedColumn<int>('type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<AttachmentType>($AttachmentTable.$convertertype);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -2317,7 +2322,7 @@ class $AttachmentTable extends Attachment
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, message, thumb, file, createdAt, updatedAt];
+      [id, message, thumb, file, type, createdAt, updatedAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -2376,6 +2381,8 @@ class $AttachmentTable extends Attachment
           .read(DriftSqlType.string, data['${effectivePrefix}thumb']),
       file: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}file'])!,
+      type: $AttachmentTable.$convertertype.fromSql(attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}type'])!),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.typeMapping
@@ -2387,6 +2394,9 @@ class $AttachmentTable extends Attachment
   $AttachmentTable createAlias(String alias) {
     return $AttachmentTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<AttachmentType, int, int> $convertertype =
+      const EnumIndexConverter<AttachmentType>(AttachmentType.values);
 }
 
 class AttachmentData extends DataClass implements Insertable<AttachmentData> {
@@ -2394,6 +2404,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
   final String message;
   final String? thumb;
   final String file;
+  final AttachmentType type;
   final DateTime createdAt;
   final DateTime? updatedAt;
   const AttachmentData(
@@ -2401,6 +2412,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
       required this.message,
       this.thumb,
       required this.file,
+      required this.type,
       required this.createdAt,
       this.updatedAt});
   @override
@@ -2412,6 +2424,9 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
       map['thumb'] = Variable<String>(thumb);
     }
     map['file'] = Variable<String>(file);
+    {
+      map['type'] = Variable<int>($AttachmentTable.$convertertype.toSql(type));
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     if (!nullToAbsent || updatedAt != null) {
       map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -2426,6 +2441,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
       thumb:
           thumb == null && nullToAbsent ? const Value.absent() : Value(thumb),
       file: Value(file),
+      type: Value(type),
       createdAt: Value(createdAt),
       updatedAt: updatedAt == null && nullToAbsent
           ? const Value.absent()
@@ -2441,6 +2457,8 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
       message: serializer.fromJson<String>(json['message']),
       thumb: serializer.fromJson<String?>(json['thumb']),
       file: serializer.fromJson<String>(json['file']),
+      type: $AttachmentTable.$convertertype
+          .fromJson(serializer.fromJson<int>(json['type'])),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
     );
@@ -2453,6 +2471,8 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
       'message': serializer.toJson<String>(message),
       'thumb': serializer.toJson<String?>(thumb),
       'file': serializer.toJson<String>(file),
+      'type':
+          serializer.toJson<int>($AttachmentTable.$convertertype.toJson(type)),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
     };
@@ -2463,6 +2483,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
           String? message,
           Value<String?> thumb = const Value.absent(),
           String? file,
+          AttachmentType? type,
           DateTime? createdAt,
           Value<DateTime?> updatedAt = const Value.absent()}) =>
       AttachmentData(
@@ -2470,6 +2491,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
         message: message ?? this.message,
         thumb: thumb.present ? thumb.value : this.thumb,
         file: file ?? this.file,
+        type: type ?? this.type,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
       );
@@ -2479,6 +2501,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
       message: data.message.present ? data.message.value : this.message,
       thumb: data.thumb.present ? data.thumb.value : this.thumb,
       file: data.file.present ? data.file.value : this.file,
+      type: data.type.present ? data.type.value : this.type,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -2491,6 +2514,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
           ..write('message: $message, ')
           ..write('thumb: $thumb, ')
           ..write('file: $file, ')
+          ..write('type: $type, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -2499,7 +2523,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
 
   @override
   int get hashCode =>
-      Object.hash(id, message, thumb, file, createdAt, updatedAt);
+      Object.hash(id, message, thumb, file, type, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2508,6 +2532,7 @@ class AttachmentData extends DataClass implements Insertable<AttachmentData> {
           other.message == this.message &&
           other.thumb == this.thumb &&
           other.file == this.file &&
+          other.type == this.type &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -2517,6 +2542,7 @@ class AttachmentCompanion extends UpdateCompanion<AttachmentData> {
   final Value<String> message;
   final Value<String?> thumb;
   final Value<String> file;
+  final Value<AttachmentType> type;
   final Value<DateTime> createdAt;
   final Value<DateTime?> updatedAt;
   final Value<int> rowid;
@@ -2525,6 +2551,7 @@ class AttachmentCompanion extends UpdateCompanion<AttachmentData> {
     this.message = const Value.absent(),
     this.thumb = const Value.absent(),
     this.file = const Value.absent(),
+    this.type = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -2534,18 +2561,21 @@ class AttachmentCompanion extends UpdateCompanion<AttachmentData> {
     required String message,
     this.thumb = const Value.absent(),
     required String file,
+    required AttachmentType type,
     required DateTime createdAt,
     this.updatedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         message = Value(message),
         file = Value(file),
+        type = Value(type),
         createdAt = Value(createdAt);
   static Insertable<AttachmentData> custom({
     Expression<String>? id,
     Expression<String>? message,
     Expression<String>? thumb,
     Expression<String>? file,
+    Expression<int>? type,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<int>? rowid,
@@ -2555,6 +2585,7 @@ class AttachmentCompanion extends UpdateCompanion<AttachmentData> {
       if (message != null) 'message': message,
       if (thumb != null) 'thumb': thumb,
       if (file != null) 'file': file,
+      if (type != null) 'type': type,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (rowid != null) 'rowid': rowid,
@@ -2566,6 +2597,7 @@ class AttachmentCompanion extends UpdateCompanion<AttachmentData> {
       Value<String>? message,
       Value<String?>? thumb,
       Value<String>? file,
+      Value<AttachmentType>? type,
       Value<DateTime>? createdAt,
       Value<DateTime?>? updatedAt,
       Value<int>? rowid}) {
@@ -2574,6 +2606,7 @@ class AttachmentCompanion extends UpdateCompanion<AttachmentData> {
       message: message ?? this.message,
       thumb: thumb ?? this.thumb,
       file: file ?? this.file,
+      type: type ?? this.type,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       rowid: rowid ?? this.rowid,
@@ -2595,6 +2628,10 @@ class AttachmentCompanion extends UpdateCompanion<AttachmentData> {
     if (file.present) {
       map['file'] = Variable<String>(file.value);
     }
+    if (type.present) {
+      map['type'] =
+          Variable<int>($AttachmentTable.$convertertype.toSql(type.value));
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -2614,6 +2651,7 @@ class AttachmentCompanion extends UpdateCompanion<AttachmentData> {
           ..write('message: $message, ')
           ..write('thumb: $thumb, ')
           ..write('file: $file, ')
+          ..write('type: $type, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('rowid: $rowid')
@@ -5392,6 +5430,7 @@ typedef $$AttachmentTableCreateCompanionBuilder = AttachmentCompanion Function({
   required String message,
   Value<String?> thumb,
   required String file,
+  required AttachmentType type,
   required DateTime createdAt,
   Value<DateTime?> updatedAt,
   Value<int> rowid,
@@ -5401,6 +5440,7 @@ typedef $$AttachmentTableUpdateCompanionBuilder = AttachmentCompanion Function({
   Value<String> message,
   Value<String?> thumb,
   Value<String> file,
+  Value<AttachmentType> type,
   Value<DateTime> createdAt,
   Value<DateTime?> updatedAt,
   Value<int> rowid,
@@ -5443,6 +5483,11 @@ class $$AttachmentTableFilterComposer
 
   ColumnFilters<String> get file => $composableBuilder(
       column: $table.file, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<AttachmentType, AttachmentType, int>
+      get type => $composableBuilder(
+          column: $table.type,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
@@ -5489,6 +5534,9 @@ class $$AttachmentTableOrderingComposer
   ColumnOrderings<String> get file => $composableBuilder(
       column: $table.file, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<int> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
 
@@ -5533,6 +5581,9 @@ class $$AttachmentTableAnnotationComposer
 
   GeneratedColumn<String> get file =>
       $composableBuilder(column: $table.file, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<AttachmentType, int> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -5588,6 +5639,7 @@ class $$AttachmentTableTableManager extends RootTableManager<
             Value<String> message = const Value.absent(),
             Value<String?> thumb = const Value.absent(),
             Value<String> file = const Value.absent(),
+            Value<AttachmentType> type = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime?> updatedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -5597,6 +5649,7 @@ class $$AttachmentTableTableManager extends RootTableManager<
             message: message,
             thumb: thumb,
             file: file,
+            type: type,
             createdAt: createdAt,
             updatedAt: updatedAt,
             rowid: rowid,
@@ -5606,6 +5659,7 @@ class $$AttachmentTableTableManager extends RootTableManager<
             required String message,
             Value<String?> thumb = const Value.absent(),
             required String file,
+            required AttachmentType type,
             required DateTime createdAt,
             Value<DateTime?> updatedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
@@ -5615,6 +5669,7 @@ class $$AttachmentTableTableManager extends RootTableManager<
             message: message,
             thumb: thumb,
             file: file,
+            type: type,
             createdAt: createdAt,
             updatedAt: updatedAt,
             rowid: rowid,

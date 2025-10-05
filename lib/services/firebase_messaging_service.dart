@@ -69,7 +69,7 @@ Future<void> _showNotification(RemoteMessage message) async {
           // Regular expression to get the mention as a full word
           final mentionRegex = RegExp(r'(^|\s)@' + RegExp.escape(username) + r'(\s|$)');
           
-          if (!mentionRegex.hasMatch(chatMessage.text)) return;
+          if (!mentionRegex.hasMatch(chatMessage.content)) return;
         }
         await LocalNotificationsService.displayRoomMessage(chatMessage);
         break;
