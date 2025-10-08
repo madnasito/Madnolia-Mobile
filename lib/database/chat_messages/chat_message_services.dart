@@ -3,9 +3,13 @@ import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 
+import '../../services/messages_service.dart';
+
 class ChatMessageDbServices {
 
   final database = AppDatabase.instance;
+
+  final _messagesService = MessagesService();
 
   Future<int> createOrUpdate(ChatMessageCompanion message) async {
     try {

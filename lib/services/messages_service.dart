@@ -12,6 +12,8 @@ class MessagesService {
 
   final _storage = const FlutterSecureStorage();
 
+  final _dio = Dio();
+
   final String baseUrl = dotenv.get("API_URL");
 
 
@@ -46,7 +48,7 @@ class MessagesService {
 
       final body = messagesBody.toJson();
 
-      final resp = await Dio().post(url, data: body, options: Options(headers: {"Authorization": "Bearer $token"}));
+      final resp = await _dio.post(url, data: body, options: Options(headers: {"Authorization": "Bearer $token"}));
 
       final messages = resp.data.map((e) => ChatMessage.fromJson(e as Map<String, dynamic>)).toList();
       return messages;
@@ -59,7 +61,7 @@ class MessagesService {
   try {
       final url = "$baseUrl/messages";
       final String? token = await _storage.read(key: "token");
-      final resp = await Dio().get(
+      final resp = await _dio.get(
         url, 
         options: Options(headers: {"Authorization": "Bearer $token"})
       );
@@ -75,4 +77,25 @@ class MessagesService {
     }
   }
 
+  Future<List<ChatMessage>> syncFromDate(DateTime date, int skip) async {
+    try {
+      final url = "$baseUrl/messages/sync";
+      final String? token = await _storage.read(key: 'token');
+
+      final resp = await _dio.get(url,
+        queryParameters: {
+          "date": date.toIso8601String(),
+          "skip": skip
+        },
+        options: Options(headers: {"Authorization": "Bearer $token"})
+      );
+
+      final messages = resp.data.map((e) => ChatMessage.fromJson(e as Map<String, dynamic>)).toList();
+
+      return messages;
+    }
+    catch (e) {
+      rethrow;
+    }
+  }
 }
