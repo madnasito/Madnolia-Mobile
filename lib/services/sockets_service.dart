@@ -7,6 +7,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/database/chat_messages/chat_message_services.dart';
 import 'package:madnolia/database/match/match.services.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
@@ -26,6 +27,8 @@ import '../models/invitation_model.dart' show Invitation;
 @pragma('vm:entry-point')
 onStart(ServiceInstance service) async {
   debugPrint('Background service starting...');
+
+  final chatMessageDbServices = ChatMessageDbServices();
   
   // Load environment variables FIRST before Firebase initialization
   try {
@@ -167,6 +170,8 @@ onStart(ServiceInstance service) async {
     }
     });
   
+  socket.on('sended_message', (payload) async => await chatMessageDbServices.messageSended(payload['uid'], payload['message']['id'], DateTime.parse(payload['message']['date'])));
+
   socket.on("update_recipient_status", (data) => service.invoke("update_recipient_status", data));
 
   socket.on("invitation", (data) async {

@@ -17,6 +17,7 @@ class ChatMessage {
     String conversation;
     String creator;
     DateTime date;
+    DateTime updatedAt;
 
     ChatMessage({
         required this.id,
@@ -26,6 +27,7 @@ class ChatMessage {
         required this.conversation,
         required this.creator,
         required this.date,
+        required this.updatedAt,
     });
 
     factory ChatMessage.fromJson(Map<String, dynamic> json) {
@@ -73,6 +75,7 @@ class ChatMessage {
         conversation: json["conversation"],
         creator: json["creator"],
         date: DateTime.parse(json["date"]),
+        updatedAt: DateTime.parse(json["updatedAt"]),
       );
     }
 
@@ -84,6 +87,7 @@ class ChatMessage {
         "conversation": conversation,
         "creator": creator,
         "date": date.toIso8601String(),
+        "updatedAt": updatedAt.toIso8601String(),
     };
 
     ChatMessageCompanion toCompanion() {
@@ -94,6 +98,7 @@ class ChatMessage {
         conversation: Value(conversation),
         creator: Value(creator),
         date: Value(date),
+        updatedAt: Value(updatedAt)
       );
     }
 }
