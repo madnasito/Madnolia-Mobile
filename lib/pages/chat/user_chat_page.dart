@@ -29,7 +29,7 @@ class UserChatPage extends StatelessWidget {
               if(snapshot.hasData){
                 return BlocProvider(
                   create: (context) => MessageBloc()
-                    ..add(UserMessageFetched(messagesBody: UserMessagesBody(user: chatUser.id, skip: 0))),
+                    ..add(UserMessageFetched(messagesBody: UserMessagesBody(user: chatUser.id))),
                   child: Column(
                     children: [
                       GestureDetector(

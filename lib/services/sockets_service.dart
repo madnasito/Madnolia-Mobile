@@ -28,14 +28,14 @@ import '../models/invitation_model.dart' show Invitation;
 onStart(ServiceInstance service) async {
   debugPrint('Background service starting...');
 
-  final chatMessageDbServices = ChatMessageDbServices();
-  
   // Load environment variables FIRST before Firebase initialization
   try {
     (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod");
   } catch (e) {
     debugPrint('Error loading dotenv in background service: $e');
   }
+  
+  final chatMessageDbServices = ChatMessageDbServices();
   
   // Initialize Firebase after dotenv is loaded
   try {

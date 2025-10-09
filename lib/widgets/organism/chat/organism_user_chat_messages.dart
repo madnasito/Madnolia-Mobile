@@ -108,7 +108,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
     if (_isBottom) {
       skip += 10; // Increment skip for pagination
       _messageBloc.add(UserMessageFetched(
-        messagesBody: UserMessagesBody(user: widget.user, skip: skip),
+        messagesBody: UserMessagesBody(user: widget.user),
       ));
     }
   }

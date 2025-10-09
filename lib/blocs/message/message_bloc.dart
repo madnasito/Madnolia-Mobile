@@ -42,8 +42,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       if(state.hasReachedMax) return ;
 
       try {
-        event.messagesBody.skip = state.userMessages.length;
-        final messages = await MessagesService().getUserChatMessages(event.messagesBody);
+
+
+        final messages = await MessagesService().getUserChatMessages(
+          event.messagesBody.user,
+          state.userMessages.isNotEmpty ? state.userMessages.last.id : null
+        );
 
         if(messages.isEmpty){
           return emit(state.copyWith(hasReachedMax: true));
@@ -66,7 +70,14 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       if (state.hasReachedMax) return;
 
       try {
-        final List<ChatMessage> messages = await MessagesService().getMatchMessages(event.roomId, state.groupMessages.length);
+
+        String? cursor;
+
+        if(state.groupMessages.isNotEmpty){
+          cursor = state.groupMessages.last.id;
+        }
+
+        final List<ChatMessage> messages = await MessagesService().getMatchMessages(event.roomId, cursor);
 
         if(messages.isEmpty){
           return emit(state.copyWith(hasReachedMax: true));

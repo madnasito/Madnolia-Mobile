@@ -10,20 +10,20 @@ String userMessagesBodyToJson(UserMessagesBody data) => json.encode(data.toJson(
 
 class UserMessagesBody {
     String user;
-    int skip;
+    // String? cursor;
 
     UserMessagesBody({
         required this.user,
-        required this.skip,
+        // this.cursor,
     });
 
     factory UserMessagesBody.fromJson(Map<String, dynamic> json) => UserMessagesBody(
         user: json["user"],
-        skip: json["skip"],
+        // cursor: json["cursor"],
     );
 
     Map<String, dynamic> toJson() => {
         "user": user,
-        "skip": skip,
+        // "cursor": cursor,
     };
 }

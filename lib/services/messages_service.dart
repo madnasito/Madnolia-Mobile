@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
-import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:madnolia/models/chat/user_messages.body.dart';
+import 'package:madnolia/models/chat/messages_page.dart';
+import 'package:madnolia/models/chat/chat_message_model.dart';
+
 import 'package:dio/dio.dart';
 
 import '../models/chat/user_chat_model.dart';
@@ -17,41 +19,44 @@ class MessagesService {
   final String baseUrl = dotenv.get("API_URL");
 
 
-  Future<List<ChatMessage>> getMatchMessages(String id, int page) async {
+  Future<List<ChatMessage>> getMatchMessages(String id, String? cursor) async {
   try {
-    final url = Uri.parse("$baseUrl/messages/match?match=$id&skip=$page");
-    final resp = await http.get(url);
-
-    // Ensure response is successful
-    if (resp.statusCode != 200) {
-      throw Exception('Failed to load messages: ${resp.statusCode}');
+    final Map<String, String> queryParams = {
+      'match': id,
+    };
+    if (cursor != null) {
+      queryParams['cursor'] = cursor;
     }
+    
+    final String? token = await _storage.read(key: "token");
+    final url = "$baseUrl/messages/match";
+    final resp = await _dio.get(
+      url,
+      data: queryParams,
+      options: Options(headers: {"Authorization": "Bearer $token"})
+    );
 
-    // Explicitly type the decoded JSON
-    final List<dynamic> jsonBody = jsonDecode(resp.body);
-
-    // Properly convert each item to GroupMessage
-    final List<ChatMessage> messages = jsonBody
-        .map<ChatMessage>((dynamic e) => ChatMessage.fromJson(e as Map<String, dynamic>))
-        .toList();
-
-    return messages;
+    return (resp.data as List).map((e) => ChatMessage.fromJson(e)).toList();
   } catch (e) {
-    throw Exception('Failed to fetch match messages: $e');
+    rethrow;
   }
 }
 
-  Future getUserChatMessages(UserMessagesBody messagesBody) async {
+  Future<List<ChatMessage>> getUserChatMessages(String userId, String? cursor) async {
     try {
       final url = "$baseUrl/messages/chat";
       final String? token = await _storage.read(key: "token");
 
-      final body = messagesBody.toJson();
+      final Map<String, String> queryParams = {
+        'user': userId,
+      };
+      if (cursor != null) {
+        queryParams['cursor'] = cursor;
+      }
 
-      final resp = await _dio.post(url, data: body, options: Options(headers: {"Authorization": "Bearer $token"}));
+      final resp = await _dio.post(url, data: queryParams, options: Options(headers: {"Authorization": "Bearer $token"}));
 
-      final messages = resp.data.map((e) => ChatMessage.fromJson(e as Map<String, dynamic>)).toList();
-      return messages;
+      return (resp.data as List).map((e) => ChatMessage.fromJson(e)).toList();
     } catch (e) {
       throw Exception(e);
     }
@@ -77,25 +82,5 @@ class MessagesService {
     }
   }
 
-  Future<List<ChatMessage>> syncFromDate(DateTime date, int skip) async {
-    try {
-      final url = "$baseUrl/messages/sync";
-      final String? token = await _storage.read(key: 'token');
-
-      final resp = await _dio.get(url,
-        queryParameters: {
-          "date": date.toIso8601String(),
-          "skip": skip
-        },
-        options: Options(headers: {"Authorization": "Bearer $token"})
-      );
-
-      final messages = resp.data.map((e) => ChatMessage.fromJson(e as Map<String, dynamic>)).toList();
-
-      return messages;
-    }
-    catch (e) {
-      rethrow;
-    }
-  }
+  
 }
