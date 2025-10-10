@@ -4,6 +4,7 @@ import 'package:madnolia/database/notifications_config/notifications_config.sche
 import 'package:madnolia/database/users/user.schema.dart';
 import 'package:madnolia/database/friendships/friendship.schema.dart';
 import 'package:madnolia/database/match/match.schema.dart';
+import 'package:madnolia/database/conversations/conversation.schema.dart';
 
 import '../enums/attachment_type.dart';
 import '../enums/chat_message_status.enum.dart';
@@ -22,7 +23,7 @@ import 'notifications/notification.schema.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [User, Friendship, Match, ChatMessage, Attachment, Game, Notification, NotificationsConfig])
+@DriftDatabase(tables: [User, Friendship, Match, ChatMessage, Attachment, Game, Notification, NotificationsConfig, Conversation])
 class AppDatabase extends _$AppDatabase {
   AppDatabase._internal() : super(_openConnection());
 

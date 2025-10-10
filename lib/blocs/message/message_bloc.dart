@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' show droppable;
 import 'package:equatable/equatable.dart';
+import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
+import 'package:madnolia/database/conversations/conversation_state_repository.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
@@ -35,6 +37,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
     on<RestoreState>(_restoreState);
   }
+
+  final _conversationStateRepository = ConversationRepository();
+  final _chatMessageRepository = ChatMessageRepository();
 
   Future _onFetchUserMessages(
     UserMessageFetched event,

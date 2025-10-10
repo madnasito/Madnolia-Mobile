@@ -1,10 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
-import 'package:http/http.dart' as http;
-import 'package:madnolia/models/chat/user_messages.body.dart';
-import 'package:madnolia/models/chat/messages_page.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
 
 import 'package:dio/dio.dart';
