@@ -3,7 +3,7 @@ import 'package:madnolia/database/database.dart';
 
 import '../../services/games_service.dart';
 
-class GamesDbServices {
+class GamesRepository {
   final database = AppDatabase.instance;
   
   Future<int> createOrUpdateGame(GameCompanion game) async {

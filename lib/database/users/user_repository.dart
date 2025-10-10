@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
 import '../../services/user_service.dart';
 
-class UserDbServices {
+class UserRepository {
 
   final database = AppDatabase.instance;
 

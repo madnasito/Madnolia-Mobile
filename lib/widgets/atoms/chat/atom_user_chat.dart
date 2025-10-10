@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/friendships/frienship.services.dart';
-import 'package:madnolia/database/users/user.services.dart';
+import 'package:madnolia/database/friendships/frienship.repository.dart';
+import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
@@ -20,7 +20,7 @@ class AtomUserChat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final friendshipDbServices = FriendshipDbService();
+    final friendshipDbServices = FriendshipRepository();
     return FutureBuilder<FriendshipData>(
       future: friendshipDbServices.getFriendshipById(userChat.id),
       builder: (BuildContext context, AsyncSnapshot<FriendshipData> friendshipSnapshot) {
@@ -43,7 +43,7 @@ class AtomUserChat extends StatelessWidget {
         final friendship = friendshipSnapshot.data!;
         final String notMe = friendship.user;
 
-        final userDbServices = UserDbServices();
+        final userDbServices = UserRepository();
         // Segundo FutureBuilder para obtener los datos del usuario
         return FutureBuilder<UserData>(
           future: userDbServices.getUserById(notMe),

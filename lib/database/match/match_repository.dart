@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
-import 'package:madnolia/database/games/games.services.dart';
-import 'package:madnolia/database/users/user.services.dart';
+import 'package:madnolia/database/games/games.repository.dart';
+import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/services/match_service.dart';
 
@@ -9,7 +9,7 @@ import '../../models/match/match_model.dart';
 
 import '../database.dart';
 
-class MatchDbServices {
+class MatchRepository {
 
   final database = AppDatabase.instance;
 
@@ -50,7 +50,7 @@ class MatchDbServices {
     if (row == null) {
       // Data not found locally, fetch from remote
       final matchInfo = await MatchService().getMatch(matchId);
-      await GamesDbServices().getGameById(matchInfo.game); // Ensures game is cached
+      await GamesRepository().getGameById(matchInfo.game); // Ensures game is cached
       await createOrUpdateMatch(matchToCompanion(matchInfo)); // Caches match
 
       // Retry the query now that data should be in the DB
@@ -99,8 +99,8 @@ class MatchDbServices {
       final matchInfo = await MatchService().getMatch(id);
 
       await Future.wait([
-        UserDbServices().getUserById(matchInfo.user),
-        GamesDbServices().getGameById(matchInfo.game)
+        UserRepository().getUserById(matchInfo.user),
+        GamesRepository().getGameById(matchInfo.game)
       ]);
 
       final matchCompanion = MatchCompanion(

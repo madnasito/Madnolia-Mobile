@@ -7,8 +7,8 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/chat_messages/chat_message_services.dart';
-import 'package:madnolia/database/match/match.services.dart';
+import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
+import 'package:madnolia/database/match/match_repository.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
@@ -35,7 +35,7 @@ onStart(ServiceInstance service) async {
     debugPrint('Error loading dotenv in background service: $e');
   }
   
-  final chatMessageDbServices = ChatMessageDbServices();
+  final chatMessageDbServices = ChatMessageRepository();
   
   // Initialize Firebase after dotenv is loaded
   try {
@@ -224,7 +224,7 @@ onStart(ServiceInstance service) async {
   socket.on("connection_rejected", (data) => service.invoke("connection_rejected"));
   socket.on("canceled_connection", (data) => service.invoke("canceled_connection"));
 
-  socket.on('match_cancelled', (data) async => await MatchDbServices().updateMatchStatus(data['match'], MatchStatus.cancelled));
+  socket.on('match_cancelled', (data) async => await MatchRepository().updateMatchStatus(data['match'], MatchStatus.cancelled));
 
   socket.onDisconnect((_) => {
    service.invoke("disconnected_socket")
@@ -282,7 +282,7 @@ onStart(ServiceInstance service) async {
 
   service.on("logout").listen((onData) => socket.emit("logout"));
 
-  service.on("new_player_to_match").listen((onData) async => await MatchDbServices().joinUser(onData?['match'], onData?['user']));
+  service.on("new_player_to_match").listen((onData) async => await MatchRepository().joinUser(onData?['match'], onData?['user']));
 
   service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));
 

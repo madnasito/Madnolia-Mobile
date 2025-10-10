@@ -3,7 +3,7 @@ import 'dart:async' show StreamSubscription;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/match/match.services.dart';
+import 'package:madnolia/database/match/match_repository.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
@@ -224,7 +224,7 @@ class _ViewMatchState extends State<ViewMatch> {
                 final resp = await MatchService().join(widget.match.id);
                 debugPrint(resp.toString());
 
-                await MatchDbServices().joinUser(widget.match.id, userState.id);
+                await MatchRepository().joinUser(widget.match.id, userState.id);
 
                 setState(() {
                   isInMatch = true;

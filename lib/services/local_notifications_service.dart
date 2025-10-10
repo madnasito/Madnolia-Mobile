@@ -10,8 +10,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/match/match.services.dart';
-import 'package:madnolia/database/users/user.services.dart';
+import 'package:madnolia/database/match/match_repository.dart';
+import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
@@ -84,7 +84,7 @@ class LocalNotificationsService {
   static Future<void> displayRoomMessage(ChatMessage message) async {
     try {
       await initializeTranslations();
-      final matchDbServices = MatchDbServices();
+      final matchDbServices = MatchRepository();
       const String groupChannelId = 'messages';
       const String groupChannelName = 'Messages';
       const String groupChannelDescription = 'Messages channel';
@@ -122,14 +122,14 @@ class LocalNotificationsService {
         debugPrint("Message type is Match. Title: $title");
       } else {
         debugPrint("Message type is User. Calculating other user's name...");
-        final otherUser = await UserDbServices().getUserByFriendship(message.conversation);
+        final otherUser = await UserRepository().getUserByFriendship(message.conversation);
         title = otherUser?.name;
         debugPrint("Calculated Title (Other User's Name): $title");
       }
       debugPrint("--- End Notification Title Debug ---");
       // --- FIN LÓGICA DE TÍTULO ---
 
-      final userDbServices = UserDbServices();
+      final userDbServices = UserRepository();
       final userIds = targetGroup.map((msg) => msg.creator).toSet();
       final userData = <String, UserData>{};
       for (final userId in userIds) {
@@ -260,9 +260,9 @@ class LocalNotificationsService {
     try {
 
       await initializeTranslations();
-      final matchDbServices = MatchDbServices();
+      final matchDbServices = MatchRepository();
       final matchDb = await matchDbServices.getMatchById(invitation.match);
-      final userDbServices = UserDbServices();
+      final userDbServices = UserRepository();
       final userDb = await userDbServices.getUserById(invitation.user);
       final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeImage(invitation.img)));
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
@@ -296,7 +296,7 @@ class LocalNotificationsService {
     // To display the notification in device
     await initializeTranslations();
     try {
-      final matchDbServices = MatchDbServices();
+      final matchDbServices = MatchRepository();
       final matchDb = await matchDbServices.getMatchById(payload.match);
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails = const NotificationDetails(
@@ -326,7 +326,7 @@ class LocalNotificationsService {
       // _roomMessages.clear();
       // _userMessages.clear();
 
-      final userDbServices = UserDbServices();
+      final userDbServices = UserRepository();
       try {
         MatchData matchDb = MatchData.fromJson(json.decode(details.payload!));
         final context = navigatorKey.currentContext;
@@ -399,8 +399,8 @@ static Future<void> _updateSummaryNotification() async {
         const String groupChannelName = 'Messages';
         const String groupChannelDescription = 'Messages channel';
         const String groupKey = 'all_chat_messages';
-        final userDbServices = UserDbServices();
-        final matchDbServices = MatchDbServices();
+        final userDbServices = UserRepository();
+        final matchDbServices = MatchRepository();
         
         List<String> summaryLines = [];
         for (var group in _roomMessages) {

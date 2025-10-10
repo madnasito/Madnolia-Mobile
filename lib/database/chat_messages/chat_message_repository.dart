@@ -5,7 +5,7 @@ import 'package:madnolia/enums/chat_message_status.enum.dart';
 
 import '../../services/messages_service.dart';
 
-class ChatMessageDbServices {
+class ChatMessageRepository {
 
   final database = AppDatabase.instance;
 

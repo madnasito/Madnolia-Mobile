@@ -3,7 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
-import 'package:madnolia/database/match/match.services.dart';
+import 'package:madnolia/database/match/match_repository.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
@@ -75,7 +75,7 @@ Future<void> _showNotification(RemoteMessage message) async {
         break;
       case 'match_ready':
         final MatchReady payload = matchReadyFromJson(message.data['data']);
-        await MatchDbServices().updateMatchStatus(payload.match, MatchStatus.running);
+        await MatchRepository().updateMatchStatus(payload.match, MatchStatus.running);
         await LocalNotificationsService.displayMatchReady(payload);
         break;
       case 'invitation':

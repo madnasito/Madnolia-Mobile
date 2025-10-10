@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' show droppable;
 import 'package:equatable/equatable.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/users/user.services.dart';
+import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/services/messages_service.dart';
@@ -91,7 +91,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
         users = users.toSet().toList();
 
-        final userDbServices = UserDbServices();
+        final userDbServices = UserRepository();
 
         for (var id in users) {        
           final newChatUser = await userDbServices.getUserById(id);
@@ -132,7 +132,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     List<UserData> chatUsers = [];
     chatUsers.addAll(state.users);
 
-    final userDbServices = UserDbServices();
+    final userDbServices = UserRepository();
 
 
     final userDb = await userDbServices.getUserById(event.message.creator);
