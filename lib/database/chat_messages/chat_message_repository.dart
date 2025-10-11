@@ -153,9 +153,36 @@ class ChatMessageRepository {
 
         
       }
-      return messages;
+            return messages;
+          } catch (e) {
+            rethrow;
+          }
+        }
+      
+  Stream<List<ChatMessageData>> watchMessagesInRoom({ required String conversationId, int limit = 50, String? cursorId}) {
+    try {
+      final query = database.select(database.chatMessage)
+        ..where((tbl) => tbl.conversation.equals(conversationId));
+
+      if (cursorId != null) {
+        // This subquery is not ideal in a stream, but follows the existing pattern.
+        // A more optimized approach would be to pass the cursor's date directly.
+        (database.select(database.chatMessage, distinct: true)
+          ..where((tbl) => tbl.id.equals(cursorId))).getSingleOrNull().then((cursorMessage) {
+            if (cursorMessage != null) {
+              query.where((tbl) => tbl.date.isSmallerThan(Variable(cursorMessage.date)));
+            }
+        });
+      }
+
+      final finalQuery = query
+        ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])
+        ..limit(limit);
+
+      return finalQuery.watch();
     } catch (e) {
       rethrow;
     }
   }
 }
+      
