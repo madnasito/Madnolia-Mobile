@@ -15,7 +15,6 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/message/message_bloc.dart';
 import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
-import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:madnolia/widgets/chat/input_widget.dart';
 import 'package:madnolia/widgets/form_button.dart';
@@ -331,7 +330,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
       // if (!mounted) return; // Verifica si el widget está montado
       
       if (onData != null) {
-        final message = ChatMessage.fromJson(onData);
+        final message = ChatMessageData.fromJson(onData);
         if (message.conversation == widget.room && 
             (_messageBloc.state.groupMessages.isEmpty || 
              message.id != _messageBloc.state.groupMessages[0].id)) {

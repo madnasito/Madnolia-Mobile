@@ -28,7 +28,7 @@ final class AddIndividualMessage extends MessageEvent {
 }
 
 final class AddRoomMessage extends MessageEvent {
-  final ChatMessage message;
+  final ChatMessageData message;
   const AddRoomMessage({ required this.message });
 }
 

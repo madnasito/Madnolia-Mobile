@@ -5,6 +5,7 @@ import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
 import 'package:madnolia/database/conversations/conversation_state_repository.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/users/user_repository.dart';
+import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/services/messages_service.dart';
@@ -48,7 +49,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
       try {
 
-
         final messages = await MessagesService().getUserChatMessages(
           event.messagesBody.user,
           state.userMessages.isNotEmpty ? state.userMessages.last.id : null
@@ -82,7 +82,11 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           cursor = state.groupMessages.last.id;
         }
 
-        final List<ChatMessage> messages = await MessagesService().getMatchMessages(event.roomId, cursor);
+        final List<ChatMessageData> messages = await _chatMessageRepository.getMessagesInRoom(
+          conversationId: event.roomId,
+          type: MessageType.match,
+          cursorId: cursor
+        );
 
         if(messages.isEmpty){
           return emit(state.copyWith(hasReachedMax: true));

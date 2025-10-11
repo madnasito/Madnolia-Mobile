@@ -27,7 +27,7 @@ class MessagesService {
     final url = "$baseUrl/messages/match";
     final resp = await _dio.get(
       url,
-      data: queryParams,
+      queryParameters: queryParams,
       options: Options(headers: {"Authorization": "Bearer $token"})
     );
 
