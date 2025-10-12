@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -40,45 +41,58 @@ class MyMessageMolecule extends StatelessWidget {
               topLeft: Radius.circular(15),
               topRight: Radius.circular(15),
               bottomLeft: Radius.circular(15),
-              bottomRight: Radius.circular(0),
+              bottomRight: Radius.circular(mainMessage ? 0 : 15),
             ),
           ),
           padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              ExpandableText(
-                messageData.content,
-                expandText: translate("UTILS.SHOW_MORE"),
-                collapseText: translate("UTILS.SHOW_LESS"),
-                maxLines: 6,
-                animation: true,
-                collapseOnTextTap: true,
-                expandOnTextTap: true,
-                mentionStyle: TextStyle(color: Colors.greenAccent),
-                onMentionTap: (value) => debugPrint('Mention $value'),
-                onUrlTap: (value) async {
-                  final Uri url = Uri.parse(value);
-                  if (!await launchUrl(url)) {
-                    throw Exception('Could not launch $url');
-                  }
-                },
-                urlStyle: const TextStyle(
-                  color: Color.fromARGB(255, 169, 145, 255),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ExpandableText(
+                    messageData.content,
+                    expandText: translate("UTILS.SHOW_MORE"),
+                    collapseText: translate("UTILS.SHOW_LESS"),
+                    maxLines: 6,
+                    animation: true,
+                    collapseOnTextTap: true,
+                    expandOnTextTap: true,
+                    mentionStyle: TextStyle(color: Colors.greenAccent),
+                    onMentionTap: (value) => debugPrint('Mention $value'),
+                    onUrlTap: (value) async {
+                      final Uri url = Uri.parse(value);
+                      if (!await launchUrl(url)) {
+                        throw Exception('Could not launch $url');
+                      }
+                    },
+                    urlStyle: const TextStyle(
+                      color: Color.fromARGB(255, 169, 145, 255),
+                    ),
+                  ),
                 ),
               ),
               Row(
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     DateFormat.Hm().format(messageData.date),
-                    style: Theme.of(context).textTheme.bodySmall,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.6)),
                   ),
                   const SizedBox(width: 4),
-                  AtomMessageStatusIcon(status: messageData.status),
+                  AtomMessageStatusIcon(status: messageData.status, size: 12),
                 ],
-              )
+              ),
             ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(bottom: mainMessage ? 10 : 2, left: 2),
+          child: CircleAvatar(
+            backgroundImage:
+                mainMessage ? CachedNetworkImageProvider(user.thumb) : null,
+            backgroundColor: Colors.transparent,
           ),
         ),
       ],
@@ -104,6 +118,17 @@ class NotMyMessageMolecule extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        GestureDetector(
+          child: Container(
+            margin: EdgeInsets.only(
+                left: 2, right: 4, bottom: mainMessage ? 10 : 2),
+            child: CircleAvatar(
+              backgroundImage:
+                  mainMessage ? CachedNetworkImageProvider(user!.thumb) : null,
+              backgroundColor: Colors.transparent,
+            ),
+          ),
+        ),
         Container(
           constraints: BoxConstraints(maxWidth: maxWidth),
           margin: EdgeInsets.only(bottom: mainMessage ? 10 : 2, left: 10),
@@ -114,45 +139,46 @@ class NotMyMessageMolecule extends StatelessWidget {
               color: Colors.white.withOpacity(0.2),
             ),
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(0),
+              topLeft: Radius.circular(15),
               topRight: Radius.circular(15),
-              bottomLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(mainMessage ? 0 : 15),
               bottomRight: Radius.circular(15),
             ),
           ),
           padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              ExpandableText(
-                messageData.content,
-                expandText: translate("UTILS.SHOW_MORE"),
-                collapseText: translate("UTILS.SHOW_LESS"),
-                maxLines: 6,
-                animation: true,
-                collapseOnTextTap: true,
-                expandOnTextTap: true,
-                mentionStyle: TextStyle(color: Colors.greenAccent),
-                onMentionTap: (value) => debugPrint('Mention $value'),
-                onUrlTap: (value) async {
-                  final Uri url = Uri.parse(value);
-                  if (!await launchUrl(url)) {
-                    throw Exception('Could not launch $url');
-                  }
-                },
-                urlStyle: const TextStyle(
-                  color: Color.fromARGB(255, 169, 145, 255),
+              Flexible(
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ExpandableText(
+                    messageData.content,
+                    expandText: translate("UTILS.SHOW_MORE"),
+                    collapseText: translate("UTILS.SHOW_LESS"),
+                    maxLines: 6,
+                    animation: true,
+                    collapseOnTextTap: true,
+                    expandOnTextTap: true,
+                    mentionStyle: TextStyle(color: Colors.greenAccent),
+                    onMentionTap: (value) => debugPrint('Mention $value'),
+                    onUrlTap: (value) async {
+                      final Uri url = Uri.parse(value);
+                      if (!await launchUrl(url)) {
+                        throw Exception('Could not launch $url');
+                      }
+                    },
+                    urlStyle: const TextStyle(
+                      color: Color.fromARGB(255, 169, 145, 255),
+                    ),
+                  ),
                 ),
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    DateFormat.Hm().format(messageData.date),
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              )
+              Text(
+                DateFormat.Hm().format(messageData.date),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.6)),
+              ),
             ],
           ),
         ),

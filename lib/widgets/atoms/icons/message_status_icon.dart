@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 
 class AtomMessageStatusIcon extends StatelessWidget {
   final ChatMessageStatus status;
+  final double? size;
 
-  const AtomMessageStatusIcon({super.key, required this.status});
+  const AtomMessageStatusIcon({super.key, required this.status, this.size});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +30,6 @@ class AtomMessageStatusIcon extends StatelessWidget {
         return const SizedBox.shrink();
     }
 
-    return Icon(icon, color: color, size: 16);
+    return Icon(icon, color: color, size: size ?? 16);
   }
 }
