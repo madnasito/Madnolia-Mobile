@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
+import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:madnolia/database/notifications_config/notifications_config.schema.dart';
 import 'package:madnolia/database/users/user.schema.dart';
 import 'package:madnolia/database/friendships/friendship.schema.dart';
@@ -34,6 +35,7 @@ class AppDatabase extends _$AppDatabase {
 
   // Puedes descomentar y usar este método si quieres una conexión por defecto:
   static QueryExecutor _openConnection() {
+    debugPrint('database connected');
     return driftDatabase(
       name: 'madnolia',
       native: const DriftNativeOptions(),

@@ -8,7 +8,7 @@ import 'package:madnolia/enums/message_type.enum.dart';
 import '../../models/chat/chat_message_model.dart';
 import '../../services/messages_service.dart';
 
-class ChatMessageRepository {
+class ChatMessageRepository extends DriftDatabase {
 
   final database = AppDatabase.instance;
   final _conversationRepository = ConversationRepository();
@@ -26,9 +26,11 @@ class ChatMessageRepository {
 
   Future<void> createOrUpdateMultiple(List<ChatMessageCompanion> messages) async {
     try {
-      return await database.batch((batch) {
+      await database.batch((batch) {
         batch.insertAllOnConflictUpdate(database.chatMessage, messages);
       });
+      // Notificar actualización manualmente
+      database.notifyUpdates({const TableUpdate('chat_message', kind: UpdateKind.insert)});
     } catch (e) {
       debugPrint('Error in create or update multiple messages: $e');
       rethrow;
@@ -159,27 +161,10 @@ class ChatMessageRepository {
           }
         }
       
-  Stream<List<ChatMessageData>> watchMessagesInRoom({ required String conversationId, int limit = 50, String? cursorId}) {
+  Stream<List<ChatMessageData>> watchMessagesInRoom({ required String conversationId, String? cursorId}){
     try {
-      final query = database.select(database.chatMessage)
-        ..where((tbl) => tbl.conversation.equals(conversationId));
-
-      if (cursorId != null) {
-        // This subquery is not ideal in a stream, but follows the existing pattern.
-        // A more optimized approach would be to pass the cursor's date directly.
-        (database.select(database.chatMessage, distinct: true)
-          ..where((tbl) => tbl.id.equals(cursorId))).getSingleOrNull().then((cursorMessage) {
-            if (cursorMessage != null) {
-              query.where((tbl) => tbl.date.isSmallerThan(Variable(cursorMessage.date)));
-            }
-        });
-      }
-
-      final finalQuery = query
-        ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])
-        ..limit(limit);
-
-      return finalQuery.watch();
+      debugPrint('watchMessagesInRoom');
+      return database.select(database.chatMessage).watch();
     } catch (e) {
       rethrow;
     }

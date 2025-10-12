@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' show droppable;
 import 'package:equatable/equatable.dart';
+import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
 import 'package:madnolia/database/conversations/conversation_state_repository.dart';
 import 'package:madnolia/database/database.dart';
@@ -24,6 +25,11 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
+
+
+  final _conversationStateRepository = ConversationRepository();
+  final _chatMessageRepository = ChatMessageRepository();
+
   MessageBloc() : super(MessageInitial()) {
     on<UserMessageFetched>(
       _onFetchUserMessages, transformer: throttleDroppable(throttleDuration));
@@ -36,11 +42,29 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
     on<UpdateUnreadUserChatCount>(_updateUnreadUserChatsCount);
 
+    on<WatchRoomMessages>(_watchRoomMessages, transformer: throttleDroppable(throttleDuration));
+
     on<RestoreState>(_restoreState);
   }
 
-  final _conversationStateRepository = ConversationRepository();
-  final _chatMessageRepository = ChatMessageRepository();
+
+  Future _watchRoomMessages(
+    WatchRoomMessages event,
+    Emitter<MessageState> emit) async {
+
+      try {
+        _chatMessageRepository
+          .watchMessagesInRoom(conversationId: event.roomId)
+          .listen((messages) {
+
+            // add(AddRoomMessages(messages: messages));
+            debugPrint('messages bloc: $messages');
+          });
+      } catch (e) {
+        debugPrint(e.toString());
+        rethrow;
+      }
+  }  
 
   Future _onFetchUserMessages(
     UserMessageFetched event,
@@ -114,6 +138,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             users: chatUsers
           )
         );
+
+        // add(WatchRoomMessages(roomId: event.roomId));
       } catch (e) {
         emit(state.copyWith(status: ListStatus.failure));
       }
@@ -153,6 +179,16 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         users: chatUsers
       )
     );
+  }
+
+  void _addRoomMessages(AddRoomMessages event, Emitter<MessageState> emit) async {
+    final stateMessages = state.groupMessages;
+    stateMessages.addAll(event.messages);
+    emit(
+      state.copyWith(
+        groupMessages:  stateMessages),
+        // users: chatUsers
+      );
   }
 
   void _updateUnreadUserChatsCount(UpdateUnreadUserChatCount event, Emitter<MessageState> emit) =>

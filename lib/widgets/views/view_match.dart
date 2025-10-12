@@ -316,10 +316,11 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   void initState() {
     super.initState();
     _messageBloc = context.read<MessageBloc>();
+    _messageBloc.add(GroupMessageFetched(roomId: widget.room));
     _backgroundService = FlutterBackgroundService();
     _scrollController.addListener(_onScroll);
     _setupMessageListener();
-    _messageBloc.add(GroupMessageFetched(roomId: widget.room));
+    
     chatUsers = [];
   }
 
@@ -329,14 +330,14 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
     debugPrint("¡Invoking new message from view!");
       // if (!mounted) return; // Verifica si el widget está montado
       
-      if (onData != null) {
-        final message = ChatMessageData.fromJson(onData);
-        if (message.conversation == widget.room && 
-            (_messageBloc.state.groupMessages.isEmpty || 
-             message.id != _messageBloc.state.groupMessages[0].id)) {
-          _messageBloc.add(AddRoomMessage(message: message));
-        }
-      }
+      // if (onData != null) {
+      //   final message = ChatMessageData.fromJson(onData);
+      //   if (message.conversation == widget.room && 
+      //       (_messageBloc.state.groupMessages.isEmpty || 
+      //        message.id != _messageBloc.state.groupMessages[0].id)) {
+      //     _messageBloc.add(AddRoomMessage(message: message));
+      //   }
+      // }
     });
   }
 
@@ -348,16 +349,16 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
         if (state.status == ListStatus.failure && state.groupMessages.isEmpty) {
           return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
         }
-        if (state.groupMessages.isEmpty && state.hasReachedMax) {
+        else if (state.groupMessages.isEmpty && state.hasReachedMax) {
           return Center(child: Text(translate('CHAT.SAY_HI')));
         }
 
-        if (state.status == ListStatus.initial && state.groupMessages.isEmpty) {
+        else if (state.status == ListStatus.initial && state.groupMessages.isEmpty) {
           return const Center(child: CircularProgressIndicator());
+        }else {
+          _messageBloc.add(WatchRoomMessages(roomId: widget.room));
+          return BuildMessageList(scrollController: _scrollController, state: state);
         }
-        
-        return BuildMessageList(scrollController: _scrollController, state: state);
-
       },
     );
   }

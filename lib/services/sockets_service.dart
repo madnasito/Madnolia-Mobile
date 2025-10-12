@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:drift/drift.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,16 +9,20 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
+import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/match/match_repository.dart';
+import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
+import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart' show MatchReady;
 import 'package:madnolia/services/firebase_messaging_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:uuid/uuid.dart';
 import '../firebase_options.dart';
 
 
@@ -154,6 +159,10 @@ onStart(ServiceInstance service) async {
 
       ChatMessage message = ChatMessage.fromJson(payload);
 
+      final messageDbSaved = await chatMessageDbServices.createOrUpdate(message.toCompanion());
+
+      debugPrint('message saved: $messageDbSaved');
+
       if(message.creator == userId) return LocalNotificationsService.deleteRoomMessages(message.conversation);
 
       if(currentRoom != payload["conversation"] ) {
@@ -170,7 +179,10 @@ onStart(ServiceInstance service) async {
     }
     });
   
-  socket.on('sended_message', (payload) async => await chatMessageDbServices.messageSended(payload['uid'], payload['message']['id'], DateTime.parse(payload['message']['date'])));
+  socket.on('sended_message', (payload) async  {
+    final messageDb = await chatMessageDbServices.messageSended(payload['uid'], payload['message']['id'], DateTime.parse(payload['message']['date']));
+    debugPrint('Message sended saved $messageDb');
+  });
 
   socket.on("update_recipient_status", (data) => service.invoke("update_recipient_status", data));
 
@@ -267,7 +279,27 @@ onStart(ServiceInstance service) async {
     }
   );
 
-  service.on("new_message").listen((onData) => socket.emit("message", onData));
+  service.on("new_message").listen((onData) async {
+    try {
+      final message = CreateMessage.fromJson(onData!);
+      final result = await ChatMessageRepository().createOrUpdate(
+        ChatMessageCompanion(
+          content: Value(message.content),
+          conversation: Value(message.conversation),
+          creator: Value(userId!),
+          date: Value(DateTime.now()),
+          id: Value(message.id),
+          status: Value(ChatMessageStatus.queued)
+        )
+      );
+
+      debugPrint(result.toString());
+      socket.emitWithAck("message", onData);
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  });
 
   service.on("update_recipient_status").listen((onData) => socket.emit("update_recipient_status", onData));
 
