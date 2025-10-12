@@ -98,7 +98,8 @@ class ChatMessage {
         conversation: Value(conversation),
         creator: Value(creator),
         date: Value(date),
-        updatedAt: Value(updatedAt)
+        updatedAt: Value(updatedAt),
+        type: Value(type)
       );
     }
 }

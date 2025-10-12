@@ -288,7 +288,8 @@ onStart(ServiceInstance service) async {
           creator: Value(userId!),
           date: Value(DateTime.now()),
           id: Value(message.id),
-          status: Value(ChatMessageStatus.queued)
+          status: Value(ChatMessageStatus.queued),
+          type: Value(message.type)
         )
       );
 
