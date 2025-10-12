@@ -11,7 +11,7 @@ import '../database.dart';
 
 class MatchRepository {
 
-  final database = AppDatabase.instance;
+  final database = AppDatabase();
 
   MatchCompanion matchToCompanion(Match match) {
     return MatchCompanion(

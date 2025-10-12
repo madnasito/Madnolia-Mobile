@@ -26,9 +26,13 @@ part 'database.g.dart';
 
 @DriftDatabase(tables: [User, Friendship, Match, ChatMessage, Attachment, Game, Notification, NotificationsConfig, Conversation])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase._internal() : super(_openConnection());
+  static final AppDatabase _instance = AppDatabase._internal();
+  
+  factory AppDatabase() {
+    return _instance;
+  }
 
-  static final AppDatabase instance = AppDatabase._internal();
+  AppDatabase._internal([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
   int get schemaVersion => 1;
@@ -39,7 +43,8 @@ class AppDatabase extends _$AppDatabase {
     return driftDatabase(
       name: 'madnolia',
       native: const DriftNativeOptions(
-        shareAcrossIsolates: true
+        shareAcrossIsolates: false,
+        isolateDebugLog: true,
       ),
     );
   }

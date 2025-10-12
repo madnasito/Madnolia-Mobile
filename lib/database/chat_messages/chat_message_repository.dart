@@ -10,7 +10,7 @@ import '../../services/messages_service.dart';
 
 class ChatMessageRepository {
 
-  final database = AppDatabase.instance;
+  final database = AppDatabase();
   final _conversationRepository = ConversationRepository();
 
   final _messagesService = MessagesService();
@@ -175,7 +175,7 @@ class ChatMessageRepository {
       }
 
       final finalQuery = query
-        ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])
+        ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.asc)])
         ..limit(limit);
 
       yield* finalQuery.watch().map((messages) {

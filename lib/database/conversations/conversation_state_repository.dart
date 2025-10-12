@@ -4,7 +4,7 @@ import 'package:madnolia/database/database.dart';
 
 class ConversationRepository {
 
-  final database = AppDatabase.instance;
+  final database = AppDatabase();
 
   Future<void> createOrUpdate(ConversationCompanion conversationState) async {
     try {

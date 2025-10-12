@@ -5,7 +5,7 @@ import '../../services/user_service.dart';
 
 class UserRepository {
 
-  final database = AppDatabase.instance;
+  final database = AppDatabase();
 
   Future<int> createOrUpdateUser(UserCompanion user) async {
     try {
