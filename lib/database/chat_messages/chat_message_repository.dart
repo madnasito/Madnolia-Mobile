@@ -8,7 +8,7 @@ import 'package:madnolia/enums/message_type.enum.dart';
 import '../../models/chat/chat_message_model.dart';
 import '../../services/messages_service.dart';
 
-class ChatMessageRepository extends DriftDatabase {
+class ChatMessageRepository {
 
   final database = AppDatabase.instance;
   final _conversationRepository = ConversationRepository();
@@ -161,10 +161,27 @@ class ChatMessageRepository extends DriftDatabase {
           }
         }
       
-  Stream<List<ChatMessageData>> watchMessagesInRoom({ required String conversationId, String? cursorId}){
+  Stream<List<ChatMessageData>> watchMessagesInRoom({ required String conversationId, int limit = 50, String? cursorId}) async* {
     try {
-      debugPrint('watchMessagesInRoom');
-      return database.select(database.chatMessage).watch();
+      final query = database.select(database.chatMessage)
+        ..where((tbl) => tbl.conversation.equals(conversationId));
+
+      if (cursorId != null) {
+        final cursorMessage = await (database.select(database.chatMessage, distinct: true)
+          ..where((tbl) => tbl.id.equals(cursorId))).getSingleOrNull();
+        if (cursorMessage != null) {
+          query.where((tbl) => tbl.date.isSmallerThan(Variable(cursorMessage.date)));
+        }
+      }
+
+      final finalQuery = query
+        ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])
+        ..limit(limit);
+
+      yield* finalQuery.watch().map((messages) {
+        debugPrint('watchMessagesInRoom: cambio detectado, mensajes: ${messages.length}');
+        return messages;
+      });
     } catch (e) {
       rethrow;
     }
