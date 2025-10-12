@@ -1,31 +1,31 @@
 import 'dart:convert';
 
-import '../../enums/message_type.enum.dart';
+import '../../enums/chat_message_type.enum.dart';
 
-// Extension to convert MessageType to integer and vice versa
-extension MessageTypeExtension on MessageType {
+// Extension to convert ChatMessageType to integer and vice versa
+extension ChatMessageTypeExtension on ChatMessageType {
   int get value {
     switch (this) {
-      case MessageType.user:
+      case ChatMessageType.user:
         return 0;
-      case MessageType.group:
+      case ChatMessageType.group:
         return 1;
-      case MessageType.match:
+      case ChatMessageType.match:
         return 2;
       
     }
   }
 
-  static MessageType fromInt(int value) {
+  static ChatMessageType fromInt(int value) {
     switch (value) {
       case 0:
-        return MessageType.user;
+        return ChatMessageType.user;
       case 1:
-        return MessageType.group;
+        return ChatMessageType.group;
       case 2:
-        return MessageType.match;
+        return ChatMessageType.match;
       default:
-        throw ArgumentError("Invalid MessageType integer value: $value");
+        throw ArgumentError("Invalid ChatMessageType integer value: $value");
     }
   }
 }
@@ -39,7 +39,7 @@ class CreateMessage {
   String id;
   String conversation;
   String content;
-  MessageType type; // Use the enum directly
+  ChatMessageType type; // Use the enum directly
 
   CreateMessage({
     required this.id,
@@ -52,7 +52,7 @@ class CreateMessage {
     id: json["id"],
     conversation: json["conversation"],
     content: json["content"],
-    type: MessageTypeExtension.fromInt(json["type"]), // Convert int to enum
+    type: ChatMessageTypeExtension.fromInt(json["type"]), // Convert int to enum
   );
 
   Map<String, dynamic> toJson() => {

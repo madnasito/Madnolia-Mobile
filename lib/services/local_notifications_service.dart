@@ -12,7 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/match/match_repository.dart';
 import 'package:madnolia/database/users/user_repository.dart';
-import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
@@ -117,7 +117,7 @@ class LocalNotificationsService {
       debugPrint("Incoming Message Creator ID: ${message.creator}");
 
       String? title;
-      if (message.type == MessageType.match) {
+      if (message.type == ChatMessageType.match) {
         title = (await matchDbServices.getMatchById(message.conversation)).title;
         debugPrint("Message type is Match. Title: $title");
       } else {
@@ -212,7 +212,7 @@ class LocalNotificationsService {
           if (group.isNotEmpty) {
             // Corrección: Asegurarse de obtener el título correcto para cada grupo en el resumen
             String? chatTitle;
-            if (group.first.type == MessageType.match) {
+            if (group.first.type == ChatMessageType.match) {
               chatTitle = (await matchDbServices.getMatchById(group.first.conversation)).title;
             } else {
               final otherUserId = await userDbServices.getUserByFriendship(group.first.conversation);
@@ -339,7 +339,7 @@ class LocalNotificationsService {
         final ChatMessage message = chatMessageFromJson(details.payload!);
         final context = navigatorKey.currentContext;
         switch (message.type) {
-          case MessageType.user:
+          case ChatMessageType.user:
             UserData userDb = await userDbServices.getUserById(message.creator);
             const storage = FlutterSecureStorage();
 
@@ -406,7 +406,7 @@ static Future<void> _updateSummaryNotification() async {
         for (var group in _roomMessages) {
             if (group.isNotEmpty) {
                 String? chatTitle;
-                if (group.first.type == MessageType.match) {
+                if (group.first.type == ChatMessageType.match) {
                     chatTitle = (await matchDbServices.getMatchById(group.first.conversation)).title;
                 } else {
                     final otherUserId = await userDbServices.getUserByFriendship(group.first.conversation);

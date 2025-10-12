@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/users/user_repository.dart';
-import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:madnolia/services/messages_service.dart';
@@ -105,7 +105,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
         final List<ChatMessageData> messages = await _chatMessageRepository.getMessagesInRoom(
           conversationId: event.roomId,
-          type: MessageType.match,
+          type: ChatMessageType.match,
           cursorId: cursor
         );
 

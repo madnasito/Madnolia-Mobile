@@ -13,7 +13,7 @@ import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/match/match_repository.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
-import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart' show MatchReady;
@@ -169,8 +169,8 @@ onStart(ServiceInstance service) async {
         
         final mentionRegex = RegExp(r'(^|\s)@' + RegExp.escape(username) + r'(\s|$)');
 
-        if(message.type == MessageType.user){ LocalNotificationsService.displayRoomMessage(message);}
-        else if(message.type == MessageType.match && mentionRegex.hasMatch(message.content)) {LocalNotificationsService.displayRoomMessage(message);}
+        if(message.type == ChatMessageType.user){ LocalNotificationsService.displayRoomMessage(message);}
+        else if(message.type == ChatMessageType.match && mentionRegex.hasMatch(message.content)) {LocalNotificationsService.displayRoomMessage(message);}
       }
       
     } catch (e) {

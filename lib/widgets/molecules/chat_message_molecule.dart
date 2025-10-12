@@ -8,12 +8,12 @@ import 'package:url_launcher/url_launcher.dart' show launchUrl;
 
 class MyMessageMolecule extends StatelessWidget {
   final UserData user;
-  final String text;
+  final ChatMessageData messageData;
   final bool mainMessage;
   
   const MyMessageMolecule({
     super.key, 
-    required this.text, 
+    required this.messageData, 
     required this.mainMessage, 
     required this.user,
   });
@@ -39,7 +39,7 @@ class MyMessageMolecule extends StatelessWidget {
                 border: Border.all(color: Colors.blue, width: 0.5),
               ),
               child: ExpandableText(
-                text,
+                messageData.content,
                 expandText: translate("UTILS.SHOW_MORE"),
                 collapseText: translate("UTILS.SHOW_LESS"),
                 maxLines: 6,
@@ -75,13 +75,13 @@ class MyMessageMolecule extends StatelessWidget {
 
 class NotMyMessageMolecule extends StatelessWidget {
   final UserData? user;
-  final String text;
+  final ChatMessageData messageData;
   final bool mainMessage;
   
   const NotMyMessageMolecule({
     super.key, 
     this.user, 
-    required this.text, 
+    required this.messageData, 
     required this.mainMessage
   });
 
@@ -112,7 +112,7 @@ class NotMyMessageMolecule extends StatelessWidget {
                 border: Border.all(color: Colors.white38, width: 0.5),
               ),
               child: ExpandableText(
-                text,
+                messageData.content,
                 expandText: translate("UTILS.SHOW_MORE"),
                 collapseText: translate("UTILS.SHOW_LESS"),
                 maxLines: 6,

@@ -6,13 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class GroupChatMessageOrganism extends StatefulWidget {
-  final String text;
+  final ChatMessageData messageData;
   final UserData user;
   final bool mainMessage;
 
   const GroupChatMessageOrganism(
       {super.key,
-      required this.text,
+      required this.messageData,
       required this.user,
       required this.mainMessage});
 
@@ -47,8 +47,8 @@ class _GroupChatMessageOrganismState extends State<GroupChatMessageOrganism> wit
                   parent: animationController, curve: Curves.easeInOut),
               child: Container(
                 child: widget.user.id == userState.id
-                    ? MyMessageMolecule(user: widget.user, text: widget.text, mainMessage: widget.mainMessage)
-                    : NotMyMessageMolecule(user: widget.user, text: widget.text, mainMessage: widget.mainMessage),
+                    ? MyMessageMolecule(user: widget.user, messageData: widget.messageData, mainMessage: widget.mainMessage)
+                    : NotMyMessageMolecule(user: widget.user, messageData: widget.messageData, mainMessage: widget.mainMessage),
               ),
             ),
           );

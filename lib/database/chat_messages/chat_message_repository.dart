@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/conversations/conversation_state_repository.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
-import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 
 import '../../models/chat/chat_message_model.dart';
 import '../../services/messages_service.dart';
@@ -95,7 +95,7 @@ class ChatMessageRepository {
     }
   }
 
-  Future<List<ChatMessageData>> getMessagesInRoom({ required String conversationId, required MessageType type, String? cursorId}) async {
+  Future<List<ChatMessageData>> getMessagesInRoom({ required String conversationId, required ChatMessageType type, String? cursorId}) async {
     try {
       final query = database.select(database.chatMessage)
         ..where((tbl) => tbl.conversation.equals(conversationId));
@@ -120,9 +120,9 @@ class ChatMessageRepository {
 
         List<ChatMessage> messagesApi = [];
         switch (type) {
-          case MessageType.match:
+          case ChatMessageType.match:
               messagesApi = await _messagesService.getMatchMessages(conversationId, cursorId);
-          case MessageType.user:
+          case ChatMessageType.user:
               messagesApi = await _messagesService.getUserChatMessages(conversationId, cursorId);
             break;
           default:
@@ -140,6 +140,7 @@ class ChatMessageRepository {
             creator: m.creator,
             date: m.date,
             updatedAt: m.updatedAt,
+            type: m.type
           )).toList();
           messages.addAll(newMessages);
         }

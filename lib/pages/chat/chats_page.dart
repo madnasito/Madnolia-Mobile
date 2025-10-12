@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/enums/list_status.enum.dart';
-import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
@@ -92,7 +92,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
     _messageSubscription = service.on('message').listen((onData) {
       if (onData != null) {
         final message = ChatMessage.fromJson(onData);
-        if (message.type == MessageType.user) {
+        if (message.type == ChatMessageType.user) {
           chatsBloc.add(AddIndividualMessage(message: message));
           setState(() {
             

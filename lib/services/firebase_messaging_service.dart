@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
 import 'package:madnolia/database/match/match_repository.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
-import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart';
@@ -60,7 +60,7 @@ Future<void> _showNotification(RemoteMessage message) async {
 
         String? userId = await storage.read(key: 'userId');
         
-        if ((chatMessage.type == MessageType.match || chatMessage.type == MessageType.group) && 
+        if ((chatMessage.type == ChatMessageType.match || chatMessage.type == ChatMessageType.group) && 
             chatMessage.creator != userId) {
           String? username = await storage.read(key: 'username');
           

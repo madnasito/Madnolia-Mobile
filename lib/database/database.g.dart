@@ -1883,6 +1883,11 @@ class $ChatMessageTable extends ChatMessage
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('REFERENCES chat_message (id)'));
   @override
+  late final GeneratedColumnWithTypeConverter<ChatMessageType, int> type =
+      GeneratedColumn<int>('type', aliasedName, false,
+              type: DriftSqlType.int, requiredDuringInsert: true)
+          .withConverter<ChatMessageType>($ChatMessageTable.$convertertype);
+  @override
   List<GeneratedColumn> get $columns => [
         id,
         status,
@@ -1891,7 +1896,8 @@ class $ChatMessageTable extends ChatMessage
         creator,
         date,
         updatedAt,
-        parentMessage
+        parentMessage,
+        type
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1970,6 +1976,9 @@ class $ChatMessageTable extends ChatMessage
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at']),
       parentMessage: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}parent_message']),
+      type: $ChatMessageTable.$convertertype.fromSql(attachedDatabase
+          .typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}type'])!),
     );
   }
 
@@ -1980,6 +1989,8 @@ class $ChatMessageTable extends ChatMessage
 
   static JsonTypeConverter2<ChatMessageStatus, int, int> $converterstatus =
       const EnumIndexConverter<ChatMessageStatus>(ChatMessageStatus.values);
+  static JsonTypeConverter2<ChatMessageType, int, int> $convertertype =
+      const EnumIndexConverter<ChatMessageType>(ChatMessageType.values);
 }
 
 class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
@@ -1991,6 +2002,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
   final DateTime date;
   final DateTime? updatedAt;
   final String? parentMessage;
+  final ChatMessageType type;
   const ChatMessageData(
       {required this.id,
       required this.status,
@@ -1999,7 +2011,8 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
       required this.creator,
       required this.date,
       this.updatedAt,
-      this.parentMessage});
+      this.parentMessage,
+      required this.type});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2018,6 +2031,9 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
     if (!nullToAbsent || parentMessage != null) {
       map['parent_message'] = Variable<String>(parentMessage);
     }
+    {
+      map['type'] = Variable<int>($ChatMessageTable.$convertertype.toSql(type));
+    }
     return map;
   }
 
@@ -2035,6 +2051,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
       parentMessage: parentMessage == null && nullToAbsent
           ? const Value.absent()
           : Value(parentMessage),
+      type: Value(type),
     );
   }
 
@@ -2051,6 +2068,8 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
       date: serializer.fromJson<DateTime>(json['date']),
       updatedAt: serializer.fromJson<DateTime?>(json['updatedAt']),
       parentMessage: serializer.fromJson<String?>(json['parentMessage']),
+      type: $ChatMessageTable.$convertertype
+          .fromJson(serializer.fromJson<int>(json['type'])),
     );
   }
   @override
@@ -2066,6 +2085,8 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
       'date': serializer.toJson<DateTime>(date),
       'updatedAt': serializer.toJson<DateTime?>(updatedAt),
       'parentMessage': serializer.toJson<String?>(parentMessage),
+      'type':
+          serializer.toJson<int>($ChatMessageTable.$convertertype.toJson(type)),
     };
   }
 
@@ -2077,7 +2098,8 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
           String? creator,
           DateTime? date,
           Value<DateTime?> updatedAt = const Value.absent(),
-          Value<String?> parentMessage = const Value.absent()}) =>
+          Value<String?> parentMessage = const Value.absent(),
+          ChatMessageType? type}) =>
       ChatMessageData(
         id: id ?? this.id,
         status: status ?? this.status,
@@ -2088,6 +2110,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
         updatedAt: updatedAt.present ? updatedAt.value : this.updatedAt,
         parentMessage:
             parentMessage.present ? parentMessage.value : this.parentMessage,
+        type: type ?? this.type,
       );
   ChatMessageData copyWithCompanion(ChatMessageCompanion data) {
     return ChatMessageData(
@@ -2103,6 +2126,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
       parentMessage: data.parentMessage.present
           ? data.parentMessage.value
           : this.parentMessage,
+      type: data.type.present ? data.type.value : this.type,
     );
   }
 
@@ -2116,14 +2140,15 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
           ..write('creator: $creator, ')
           ..write('date: $date, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('parentMessage: $parentMessage')
+          ..write('parentMessage: $parentMessage, ')
+          ..write('type: $type')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(id, status, content, conversation, creator,
-      date, updatedAt, parentMessage);
+      date, updatedAt, parentMessage, type);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2135,7 +2160,8 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
           other.creator == this.creator &&
           other.date == this.date &&
           other.updatedAt == this.updatedAt &&
-          other.parentMessage == this.parentMessage);
+          other.parentMessage == this.parentMessage &&
+          other.type == this.type);
 }
 
 class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
@@ -2147,6 +2173,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
   final Value<DateTime> date;
   final Value<DateTime?> updatedAt;
   final Value<String?> parentMessage;
+  final Value<ChatMessageType> type;
   final Value<int> rowid;
   const ChatMessageCompanion({
     this.id = const Value.absent(),
@@ -2157,6 +2184,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
     this.date = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.parentMessage = const Value.absent(),
+    this.type = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ChatMessageCompanion.insert({
@@ -2168,13 +2196,15 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
     required DateTime date,
     this.updatedAt = const Value.absent(),
     this.parentMessage = const Value.absent(),
+    required ChatMessageType type,
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         status = Value(status),
         content = Value(content),
         conversation = Value(conversation),
         creator = Value(creator),
-        date = Value(date);
+        date = Value(date),
+        type = Value(type);
   static Insertable<ChatMessageData> custom({
     Expression<String>? id,
     Expression<int>? status,
@@ -2184,6 +2214,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
     Expression<DateTime>? date,
     Expression<DateTime>? updatedAt,
     Expression<String>? parentMessage,
+    Expression<int>? type,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2195,6 +2226,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
       if (date != null) 'date': date,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (parentMessage != null) 'parent_message': parentMessage,
+      if (type != null) 'type': type,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2208,6 +2240,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
       Value<DateTime>? date,
       Value<DateTime?>? updatedAt,
       Value<String?>? parentMessage,
+      Value<ChatMessageType>? type,
       Value<int>? rowid}) {
     return ChatMessageCompanion(
       id: id ?? this.id,
@@ -2218,6 +2251,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
       date: date ?? this.date,
       updatedAt: updatedAt ?? this.updatedAt,
       parentMessage: parentMessage ?? this.parentMessage,
+      type: type ?? this.type,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2250,6 +2284,10 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
     if (parentMessage.present) {
       map['parent_message'] = Variable<String>(parentMessage.value);
     }
+    if (type.present) {
+      map['type'] =
+          Variable<int>($ChatMessageTable.$convertertype.toSql(type.value));
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2267,6 +2305,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
           ..write('date: $date, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('parentMessage: $parentMessage, ')
+          ..write('type: $type, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5169,6 +5208,7 @@ typedef $$ChatMessageTableCreateCompanionBuilder = ChatMessageCompanion
   required DateTime date,
   Value<DateTime?> updatedAt,
   Value<String?> parentMessage,
+  required ChatMessageType type,
   Value<int> rowid,
 });
 typedef $$ChatMessageTableUpdateCompanionBuilder = ChatMessageCompanion
@@ -5181,6 +5221,7 @@ typedef $$ChatMessageTableUpdateCompanionBuilder = ChatMessageCompanion
   Value<DateTime> date,
   Value<DateTime?> updatedAt,
   Value<String?> parentMessage,
+  Value<ChatMessageType> type,
   Value<int> rowid,
 });
 
@@ -5261,6 +5302,11 @@ class $$ChatMessageTableFilterComposer
 
   ColumnFilters<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnWithTypeConverterFilters<ChatMessageType, ChatMessageType, int>
+      get type => $composableBuilder(
+          column: $table.type,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 
   $$UserTableFilterComposer get creator {
     final $$UserTableFilterComposer composer = $composerBuilder(
@@ -5352,6 +5398,9 @@ class $$ChatMessageTableOrderingComposer
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
       column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<int> get type => $composableBuilder(
+      column: $table.type, builder: (column) => ColumnOrderings(column));
+
   $$UserTableOrderingComposer get creator {
     final $$UserTableOrderingComposer composer = $composerBuilder(
         composer: this,
@@ -5419,6 +5468,9 @@ class $$ChatMessageTableAnnotationComposer
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ChatMessageType, int> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
 
   $$UserTableAnnotationComposer get creator {
     final $$UserTableAnnotationComposer composer = $composerBuilder(
@@ -5514,6 +5566,7 @@ class $$ChatMessageTableTableManager extends RootTableManager<
             Value<DateTime> date = const Value.absent(),
             Value<DateTime?> updatedAt = const Value.absent(),
             Value<String?> parentMessage = const Value.absent(),
+            Value<ChatMessageType> type = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ChatMessageCompanion(
@@ -5525,6 +5578,7 @@ class $$ChatMessageTableTableManager extends RootTableManager<
             date: date,
             updatedAt: updatedAt,
             parentMessage: parentMessage,
+            type: type,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -5536,6 +5590,7 @@ class $$ChatMessageTableTableManager extends RootTableManager<
             required DateTime date,
             Value<DateTime?> updatedAt = const Value.absent(),
             Value<String?> parentMessage = const Value.absent(),
+            required ChatMessageType type,
             Value<int> rowid = const Value.absent(),
           }) =>
               ChatMessageCompanion.insert(
@@ -5547,6 +5602,7 @@ class $$ChatMessageTableTableManager extends RootTableManager<
             date: date,
             updatedAt: updatedAt,
             parentMessage: parentMessage,
+            type: type,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:madnolia/database/database.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 
 class AtomMyMessage extends StatelessWidget {
-  final String text;
-  final String thumb;
+  final ChatMessageData messageData;
+  final UserData userData;
   final bool mainMessage;
-  final bool groupMessage;
 
-  const AtomMyMessage({super.key, required this.text, required this.thumb, required this.mainMessage, this.groupMessage = false});
+  const AtomMyMessage({super.key, required this.messageData, required this.mainMessage, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +26,16 @@ class AtomMyMessage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: Colors.blue, width: 0.5)),
               child:Text(
-                    text,
+                    messageData.content,
                     overflow: TextOverflow.clip,
                   ),
             ),
           ),
-          groupMessage ?
+          messageData.type != ChatMessageType.user ?
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 5),
               child: CircleAvatar(
-                  backgroundImage: mainMessage ? CachedNetworkImageProvider(thumb) : null,
+                  backgroundImage: mainMessage ? CachedNetworkImageProvider(userData.thumb) : null,
                   backgroundColor: Colors.transparent,
               ),
             ) : const SizedBox(),

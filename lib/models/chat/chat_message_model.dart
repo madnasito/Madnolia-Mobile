@@ -7,13 +7,13 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
-import 'package:madnolia/enums/message_type.enum.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 
 class ChatMessage {
     String id;
     ChatMessageStatus status;
     String content;
-    MessageType type;
+    ChatMessageType type;
     String conversation;
     String creator;
     DateTime date;
@@ -31,21 +31,21 @@ class ChatMessage {
     });
 
     factory ChatMessage.fromJson(Map<String, dynamic> json) {
-      MessageType messageType;
+      ChatMessageType messageType;
       ChatMessageStatus messageStatus;
       
       switch (json["type"]) {
         case 0:
-          messageType = MessageType.user;
+          messageType = ChatMessageType.user;
           break;
         case 1:
-          messageType = MessageType.group;
+          messageType = ChatMessageType.group;
           break;
         case 2:
-          messageType = MessageType.match;
+          messageType = ChatMessageType.match;
           break;
         default:
-          messageType = MessageType.user;
+          messageType = ChatMessageType.user;
           break;
       }
 

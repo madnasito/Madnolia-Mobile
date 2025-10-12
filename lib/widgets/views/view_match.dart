@@ -22,7 +22,7 @@ import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../enums/message_type.enum.dart';
+import '../../enums/chat_message_type.enum.dart';
 
 class ViewMatch extends StatefulWidget {
   final MatchData match;
@@ -290,7 +290,7 @@ class _ViewMatchState extends State<ViewMatch> {
     final id = const Uuid().v4();
     backgroundService.invoke(
       "new_message", 
-      CreateMessage(id: id, conversation: widget.match.id, content: bloc.message, type: MessageType.match).toJson()
+      CreateMessage(id: id, conversation: widget.match.id, content: bloc.message, type: ChatMessageType.match).toJson()
     );
     bloc.changeMessage("");
     messageKey.currentState?.controller?.clear();
@@ -412,7 +412,7 @@ class BuildMessageList extends StatelessWidget {
             state.groupMessages[index].creator != state.groupMessages[index - 1].creator;
         
         return GroupChatMessageOrganism(
-          text: state.groupMessages[index].content,
+          messageData: state.groupMessages[index],
           user: user,
           mainMessage: isMainMessage,
         );

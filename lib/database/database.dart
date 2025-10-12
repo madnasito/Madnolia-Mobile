@@ -6,6 +6,7 @@ import 'package:madnolia/database/users/user.schema.dart';
 import 'package:madnolia/database/friendships/friendship.schema.dart';
 import 'package:madnolia/database/match/match.schema.dart';
 import 'package:madnolia/database/conversations/conversation.schema.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 
 import '../enums/attachment_type.dart';
 import '../enums/chat_message_status.enum.dart';

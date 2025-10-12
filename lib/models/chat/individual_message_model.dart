@@ -11,7 +11,7 @@
 //   String user;
 //   String text;
 //   DateTime date;
-//   MessageType type; // Use the enum directly
+//   ChatMessageType type; // Use the enum directly
 
 //   IndividualMessage({
 //     required this.id,
@@ -23,19 +23,19 @@
 //   });
 
 //   factory IndividualMessage.fromJson(Map<String, dynamic> json) {
-//     MessageType messageType;
+//     ChatMessageType messageType;
 //     switch (json["type"]){
 //       case 0:
-//         messageType = MessageType.user;
+//         messageType = ChatMessageType.user;
 //         break;
 //       case 1:
-//         messageType = MessageType.group;
+//         messageType = ChatMessageType.group;
 //         break;
 //       case 2:
-//         messageType = MessageType.match;
+//         messageType = ChatMessageType.match;
 //         break;
 //       default:
-//         messageType = MessageType.user;
+//         messageType = ChatMessageType.user;
 //         break;
 //     }
 //     return IndividualMessage(

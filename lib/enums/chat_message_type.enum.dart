@@ -1,4 +1,4 @@
-enum MessageType {
+enum ChatMessageType {
   user,
   group,
   match,
