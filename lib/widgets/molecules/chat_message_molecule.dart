@@ -35,7 +35,7 @@ class MyMessageMolecule extends StatelessWidget {
             color: Colors.transparent,
             border: Border.all(
               width: 1,
-              color: Colors.blue.withOpacity(0.5),
+              color: Colors.blue.withValues(alpha: 0.5),
             ),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15),
@@ -78,7 +78,7 @@ class MyMessageMolecule extends StatelessWidget {
                 children: [
                   Text(
                     DateFormat.Hm().format(messageData.date),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.6)),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.6)),
                   ),
                   const SizedBox(width: 4),
                   AtomMessageStatusIcon(status: messageData.status, size: 12),
@@ -136,7 +136,7 @@ class NotMyMessageMolecule extends StatelessWidget {
             color: Colors.transparent,
             border: Border.all(
               width: 1,
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withValues(alpha: 0.2),
             ),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15),
@@ -177,7 +177,7 @@ class NotMyMessageMolecule extends StatelessWidget {
               ),
               Text(
                 DateFormat.Hm().format(messageData.date),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withOpacity(0.6)),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.6)),
               ),
             ],
           ),
