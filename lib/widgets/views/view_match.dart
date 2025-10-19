@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/match/match_repository.dart';
-import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
@@ -394,7 +393,6 @@ class BuildMessageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserRepository userRepository = UserRepository();
     return Container(
     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
     color: Colors.black38,
