@@ -23,7 +23,7 @@ class MoleculeUserChatMessagesList extends StatelessWidget {
       reverse: true,
       itemBuilder: (context, index) {
         if (index < state.roomMessages.length) {
-          return AtomIndividualMessage(message: state.roomMessages[index]);
+          return AtomIndividualMessage(message: state.roomMessages[index].chatMessage);
         }
         
         // Only show loading indicator at the bottom if we're loading more

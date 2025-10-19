@@ -9,6 +9,7 @@ import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../enums/list_status.enum.dart' show ListStatus;
+import '../../models/chat/chat_message_with_user.dart';
 
 part 'message_event.dart';
 part 'message_state.dart';
@@ -31,8 +32,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     on<GroupMessageFetched>(
       _onFetchGroupMessages, transformer: throttleDroppable(throttleDuration));
     
-    on<AddIndividualMessage>(_addIndividualMessage);
-    on<AddRoomMessage>(_addRoomMessage);
+    // on<AddIndividualMessage>(_addIndividualMessage);
+    // on<AddRoomMessage>(_addRoomMessage);
 
     on<UpdateUnreadUserChatCount>(_updateUnreadUserChatsCount);
 
@@ -80,7 +81,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         emit(
           state.copyWith(
             status: ListStatus.success,
-            roomMessages: [...state.roomMessages, ...messages]
+            // roomMessages: [...state.roomMessages, ...messages]
           )
         );
       } catch (e) {
@@ -98,7 +99,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         String? cursor;
 
         if(state.roomMessages.isNotEmpty){
-          cursor = state.roomMessages.last.id;
+          cursor = state.roomMessages.last.chatMessage.id;
         }
 
         final List<ChatMessageData> messages = await _chatMessageRepository.getMessagesInRoom(
@@ -123,7 +124,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         emit(
           state.copyWith(
             status: ListStatus.success,
-            roomMessages: [...state.roomMessages, ...messages],
+            // roomMessages: [...state.roomMessages, ...messages],
           )
         );
 
@@ -143,32 +144,32 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     ));
   }
 
-  void _addIndividualMessage( AddIndividualMessage event, Emitter<MessageState> emit) => emit(
-    state.copyWith(
-      roomMessages: [event.message, ...state.roomMessages]
-    )
-  );
+  // void _addIndividualMessage( AddIndividualMessage event, Emitter<MessageState> emit) => emit(
+  //   state.copyWith(
+  //     roomMessages: [event.message, ...state.roomMessages]
+  //   )
+  // );
 
-  void _addRoomMessage( AddRoomMessage event, Emitter<MessageState> emit ) async {
+  // void _addRoomMessage( AddRoomMessage event, Emitter<MessageState> emit ) async {
 
 
-    emit(
-      state.copyWith(
-        roomMessages: [event.message, ...state.roomMessages],
-        // users: chatUsers
-      )
-    );
-  }
+  //   emit(
+  //     state.copyWith(
+  //       roomMessages: [event.message, ...state.roomMessages],
+  //       // users: chatUsers
+  //     )
+  //   );
+  // }
 
-  void _addRoomMessages(AddRoomMessages event, Emitter<MessageState> emit) async {
-    final stateMessages = state.roomMessages;
-    stateMessages.addAll(event.messages);
-    emit(
-      state.copyWith(
-        roomMessages:  stateMessages),
-        // users: chatUsers
-      );
-  }
+  // void _addRoomMessages(AddRoomMessages event, Emitter<MessageState> emit) async {
+  //   final stateMessages = state.roomMessages;
+  //   stateMessages.addAll(event.messages);
+  //   emit(
+  //     state.copyWith(
+  //       roomMessages:  stateMessages),
+  //       // users: chatUsers
+  //     );
+  // }
 
   void _updateUnreadUserChatsCount(UpdateUnreadUserChatCount event, Emitter<MessageState> emit) =>
   emit(

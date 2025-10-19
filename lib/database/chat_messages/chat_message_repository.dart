@@ -5,6 +5,7 @@ import 'package:madnolia/database/conversations/conversation_state_repository.da
 import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
+import 'package:madnolia/models/chat/chat_message_with_user.dart';
 
 import '../../models/chat/chat_message_model.dart';
 import '../../services/messages_service.dart';
@@ -173,28 +174,25 @@ class ChatMessageRepository {
           }
         }
       
-  Stream<List<ChatMessageData>> watchMessagesInRoom({ required String conversationId, int limit = 50, String? cursorId}) async* {
+  Stream<List<ChatMessageWithUser>> watchMessagesInRoom({ required String conversationId}) async* {
     try {
-      final query = database.select(database.chatMessage)
-        ..where((tbl) => tbl.conversation.equals(conversationId));
+      final query = database.select(database.chatMessage).join([
+        innerJoin(database.user, database.user.id.equalsExp(database.chatMessage.creator))
+      ])
+      ..where(database.chatMessage.conversation.equals(conversationId));
+     
+      query.orderBy([OrderingTerm.desc(database.chatMessage.date)]);
 
-      if (cursorId != null) {
-        final cursorMessage = await (database.select(database.chatMessage, distinct: true)
-          ..where((tbl) => tbl.id.equals(cursorId))).getSingleOrNull();
-        if (cursorMessage != null) {
-          query.where((tbl) => tbl.date.isSmallerThan(Variable(cursorMessage.date)));
-        }
-      }
-
-      final finalQuery = query
-        ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.asc)])
-        ..limit(limit);
-
-      yield* finalQuery.watch().map((messages) {
-        debugPrint('watchMessagesInRoom: cambio detectado, mensajes: ${messages.length}');
-        return messages;
+      yield* query.watch().map((rows) {
+        return rows.map((row) {
+          return ChatMessageWithUser(
+            chatMessage: row.readTable(database.chatMessage), 
+            user: row.readTable(database.user)
+          );
+        }).toList();
       });
     } catch (e) {
+      debugPrint(e.toString());
       rethrow;
     }
   }

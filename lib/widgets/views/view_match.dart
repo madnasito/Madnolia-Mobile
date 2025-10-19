@@ -407,15 +407,14 @@ class BuildMessageList extends StatelessWidget {
       itemBuilder: (context, index) {
         
         final message = state.roomMessages[index];
-        UserData user = await userRepository.getUserById(message.creator);
 
 
         final isMainMessage = index == 0 || 
-            state.roomMessages[index].creator != state.roomMessages[index - 1].creator;
+            state.roomMessages[index].chatMessage.creator != state.roomMessages[index - 1].chatMessage.creator;
         
         return GroupChatMessageOrganism(
-          messageData: state.roomMessages[index],
-          user: user,
+          messageData: state.roomMessages[index].chatMessage,
+          user: message.user,
           mainMessage: isMainMessage,
         );
       },
