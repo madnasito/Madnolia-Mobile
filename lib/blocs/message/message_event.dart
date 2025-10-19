@@ -19,6 +19,14 @@ final class AddRoomMessages extends MessageEvent {
   const AddRoomMessages({required this.messages});
 }
 
+final class MessageFetched extends MessageEvent {
+  final String roomId;
+  final ChatMessageType type;
+  final String? cursorId;
+
+  const MessageFetched({ required this.roomId, required this.type, this.cursorId });
+}
+
 final class GroupMessageFetched extends MessageEvent {
   final String roomId;
 
@@ -34,7 +42,7 @@ final class WatchRoomMessages extends MessageEvent {
 final class RestoreState extends MessageEvent {}
 
 final class AddIndividualMessage extends MessageEvent {
-  final ChatMessage message;
+  final ChatMessageData message;
 
   const AddIndividualMessage({ required this.message});
 }

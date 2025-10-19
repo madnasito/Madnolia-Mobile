@@ -22,8 +22,8 @@ class MoleculeUserChatMessagesList extends StatelessWidget {
       addAutomaticKeepAlives: true,
       reverse: true,
       itemBuilder: (context, index) {
-        if (index < state.userMessages.length) {
-          return AtomIndividualMessage(message: state.userMessages[index]);
+        if (index < state.roomMessages.length) {
+          return AtomIndividualMessage(message: state.roomMessages[index]);
         }
         
         // Only show loading indicator at the bottom if we're loading more
@@ -34,7 +34,7 @@ class MoleculeUserChatMessagesList extends StatelessWidget {
               )
             : const SizedBox.shrink();
       },
-      itemCount: state.userMessages.length + (isLoading ? 1 : 0),
+      itemCount: state.roomMessages.length + (isLoading ? 1 : 0),
       controller: scrollController,
     );
   }

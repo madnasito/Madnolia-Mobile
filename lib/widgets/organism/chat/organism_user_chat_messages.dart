@@ -8,7 +8,6 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/models/chat/user_messages.body.dart' show UserMessagesBody;
 import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart' show MoleculeUserChatMessagesList;
-import '../../../models/chat/chat_message_model.dart' show ChatMessage;
 
 class OrganismUserChatMessages extends StatefulWidget {
   final String id;
@@ -49,11 +48,15 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
     if (!mounted || onData['type'] != 0) return;
 
     try {
-      final message = ChatMessage.fromJson(onData);
 
-      if (message.conversation == widget.id)  {
-        _messageBloc.add(AddIndividualMessage(message: message));
-      }
+      // TODO: Reload screen with streaming, save message on sockets service
+      // final message = ChatMessage.fromJson(onData);
+
+      // final messageData = ChatMessageRepository().createOrUpdate(message.toCompanion());
+
+      // if (message.conversation == widget.id)  {
+      //   _messageBloc.add(AddIndividualMessage(message: messageData));
+      // }
     } catch (e) {
       debugPrint('Error processing message: $e');
     }
@@ -70,7 +73,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
           case ListStatus.initial:
             return const Center(child: CircularProgressIndicator());
           case ListStatus.success:
-            if (state.userMessages.isNotEmpty) {
+            if (state.roomMessages.isNotEmpty) {
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                 color: Colors.black38,

@@ -4,11 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
-import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
-import 'package:madnolia/services/messages_service.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../enums/list_status.enum.dart' show ListStatus;
@@ -28,7 +25,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final _chatMessageRepository = ChatMessageRepository();
 
   MessageBloc() : super(MessageInitial()) {
-    on<UserMessageFetched>(
+    on<MessageFetched>(
       _onFetchUserMessages, transformer: throttleDroppable(throttleDuration));
 
     on<GroupMessageFetched>(
@@ -64,15 +61,16 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   }  
 
   Future _onFetchUserMessages(
-    UserMessageFetched event,
+    MessageFetched event,
     Emitter<MessageState> emit) async {
       if(state.hasReachedMax) return ;
 
       try {
 
-        final messages = await MessagesService().getUserChatMessages(
-          event.messagesBody.user,
-          state.userMessages.isNotEmpty ? state.userMessages.last.id : null
+        final messages = await _chatMessageRepository.getMessagesInRoom(
+          conversationId:  event.roomId,
+          type: event.type,
+          cursorId: event.cursorId
         );
 
         if(messages.isEmpty){
@@ -82,7 +80,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         emit(
           state.copyWith(
             status: ListStatus.success,
-            userMessages: [...state.userMessages, ...messages]
+            roomMessages: [...state.roomMessages, ...messages]
           )
         );
       } catch (e) {
@@ -99,8 +97,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
         String? cursor;
 
-        if(state.groupMessages.isNotEmpty){
-          cursor = state.groupMessages.last.id;
+        if(state.roomMessages.isNotEmpty){
+          cursor = state.roomMessages.last.id;
         }
 
         final List<ChatMessageData> messages = await _chatMessageRepository.getMessagesInRoom(
@@ -114,25 +112,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         }
         
         List<String> users = [];
-        List<UserData> chatUsers = [];
-        chatUsers.addAll(state.users);
+        // List<UserData> chatUsers = [];
+        // chatUsers.addAll(state.users);
 
         users = messages.map((e) => e.creator).toList();
 
         users = users.toSet().toList();
 
-        final userDbServices = UserRepository();
-
-        for (var id in users) {        
-          final newChatUser = await userDbServices.getUserById(id);
-          if(!chatUsers.contains(newChatUser)) chatUsers.add(newChatUser);
-        }
 
         emit(
           state.copyWith(
             status: ListStatus.success,
-            groupMessages: [...state.groupMessages, ...messages],
-            users: chatUsers
+            roomMessages: [...state.roomMessages, ...messages],
           )
         );
 
@@ -147,43 +138,34 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       state.copyWith(
       status: ListStatus.initial,
       unreadUserChats: 0,
-      userMessages: [],
-      groupMessages: [],
+      roomMessages: [],
       hasReachedMax: false
     ));
   }
 
   void _addIndividualMessage( AddIndividualMessage event, Emitter<MessageState> emit) => emit(
     state.copyWith(
-      userMessages: [event.message, ...state.userMessages]
+      roomMessages: [event.message, ...state.roomMessages]
     )
   );
 
   void _addRoomMessage( AddRoomMessage event, Emitter<MessageState> emit ) async {
 
-    List<UserData> chatUsers = [];
-    chatUsers.addAll(state.users);
-
-    final userDbServices = UserRepository();
-
-
-    final userDb = await userDbServices.getUserById(event.message.creator);
-    if(!chatUsers.contains(userDb)) chatUsers.add(userDb);
 
     emit(
       state.copyWith(
-        groupMessages: [event.message, ...state.groupMessages],
-        users: chatUsers
+        roomMessages: [event.message, ...state.roomMessages],
+        // users: chatUsers
       )
     );
   }
 
   void _addRoomMessages(AddRoomMessages event, Emitter<MessageState> emit) async {
-    final stateMessages = state.groupMessages;
+    final stateMessages = state.roomMessages;
     stateMessages.addAll(event.messages);
     emit(
       state.copyWith(
-        groupMessages:  stateMessages),
+        roomMessages:  stateMessages),
         // users: chatUsers
       );
   }

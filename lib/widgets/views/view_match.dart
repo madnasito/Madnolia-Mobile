@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/match/match_repository.dart';
+import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
@@ -346,14 +347,14 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   Widget build(BuildContext context) {
     return BlocBuilder<MessageBloc, MessageState>(
       builder: (context, state) {
-        if (state.status == ListStatus.failure && state.groupMessages.isEmpty) {
+        if (state.status == ListStatus.failure && state.roomMessages.isEmpty) {
           return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
         }
-        else if (state.groupMessages.isEmpty && state.hasReachedMax) {
+        else if (state.roomMessages.isEmpty && state.hasReachedMax) {
           return Center(child: Text(translate('CHAT.SAY_HI')));
         }
 
-        else if (state.status == ListStatus.initial && state.groupMessages.isEmpty) {
+        else if (state.status == ListStatus.initial && state.roomMessages.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }else {
           _messageBloc.add(WatchRoomMessages(roomId: widget.room));
@@ -393,6 +394,7 @@ class BuildMessageList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserRepository userRepository = UserRepository();
     return Container(
     padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
     color: Colors.black38,
@@ -401,18 +403,18 @@ class BuildMessageList extends StatelessWidget {
       cacheExtent: 99999,
       reverse: true,
       addAutomaticKeepAlives: true,
-      itemCount: state.groupMessages.length,
+      itemCount: state.roomMessages.length,
       itemBuilder: (context, index) {
         
-        final message = state.groupMessages[index];
-        UserData user = state.users.firstWhere((user) => message.creator == user.id);
+        final message = state.roomMessages[index];
+        UserData user = await userRepository.getUserById(message.creator);
 
 
         final isMainMessage = index == 0 || 
-            state.groupMessages[index].creator != state.groupMessages[index - 1].creator;
+            state.roomMessages[index].creator != state.roomMessages[index - 1].creator;
         
         return GroupChatMessageOrganism(
-          messageData: state.groupMessages[index],
+          messageData: state.roomMessages[index],
           user: user,
           mainMessage: isMainMessage,
         );

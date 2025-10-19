@@ -60,7 +60,9 @@ class UserRepository {
         return existingUsers;
       }
 
-      final freshUsersInfo = await UserService().getUsersInfoByIds(ids);
+      List<String> unknowUsers = ids.where((id) => !existingUsers.any((user) => user.id == id)).toList();
+
+      final freshUsersInfo = await UserService().getUsersInfoByIds(unknowUsers);
 
       for (var userInfo in freshUsersInfo) {
         final userCompanion = UserCompanion(
@@ -82,6 +84,8 @@ class UserRepository {
       rethrow;
     }
   }
+
+
   Future<UserData?> getUserByFriendship(String friendshipId) async {
     try {
       final friendship = await (database.select(database.friendship)..where((f) => f.id.equals(friendshipId))).getSingle();
