@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/conversations/conversation_state_repository.dart';
+import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 
@@ -14,9 +15,13 @@ class ChatMessageRepository {
   final _conversationRepository = ConversationRepository();
 
   final _messagesService = MessagesService();
+  final _userRepository = UserRepository();
 
   Future<int> createOrUpdate(ChatMessageCompanion message) async {
     try {
+      // Verify that user creator exists
+      await _userRepository.getUserById(message.creator.value);
+      
       return await database.into(database.chatMessage).insertOnConflictUpdate(message);
     } catch (e) {
       debugPrint('Error in create or update message: $e');
@@ -26,6 +31,12 @@ class ChatMessageRepository {
 
   Future<void> createOrUpdateMultiple(List<ChatMessageCompanion> messages) async {
     try {
+
+      final List<String> creators = messages.map((m) => m.creator.value).toList();
+
+      // Verifying all messages creators below
+      await _userRepository.getUsersByIds(creators);
+
       await database.batch((batch) {
         batch.insertAllOnConflictUpdate(database.chatMessage, messages);
       });
