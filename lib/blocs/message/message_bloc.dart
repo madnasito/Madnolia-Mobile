@@ -48,6 +48,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     Emitter<MessageState> emit) async {
 
       try {
+        debugPrint('Watch room bloc');
         await emit.forEach(
           _chatMessageRepository.watchMessagesInRoom(
             conversationId: event.roomId),
