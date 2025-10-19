@@ -27,12 +27,6 @@ final class MessageFetched extends MessageEvent {
   const MessageFetched({ required this.roomId, required this.type, this.cursorId });
 }
 
-final class GroupMessageFetched extends MessageEvent {
-  final String roomId;
-
-  const GroupMessageFetched({ required this.roomId });
-}
-
 final class WatchRoomMessages extends MessageEvent {
   final String roomId;
 

@@ -8,7 +8,7 @@ import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../enums/list_status.enum.dart' show ListStatus;
+import '../../enums/list_status.enum.dart' show ListStatus, failure;
 import '../../models/chat/chat_message_with_user.dart';
 
 part 'message_event.dart';
@@ -27,10 +27,10 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   MessageBloc() : super(MessageInitial()) {
     on<MessageFetched>(
-      _onFetchUserMessages, transformer: throttleDroppable(throttleDuration));
+      _onFetchRoomMessages, transformer: throttleDroppable(throttleDuration));
 
-    on<GroupMessageFetched>(
-      _onFetchGroupMessages, transformer: throttleDroppable(throttleDuration));
+    // on<GroupMessageFetched>(
+    //   _onFetchGroupMessages, transformer: throttleDroppable(throttleDuration));
     
     // on<AddIndividualMessage>(_addIndividualMessage);
     // on<AddRoomMessage>(_addRoomMessage);
@@ -48,49 +48,24 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     Emitter<MessageState> emit) async {
 
       try {
-        _chatMessageRepository
-          .watchMessagesInRoom(conversationId: event.roomId)
-          .listen((messages) {
-
-            // add(AddRoomMessages(messages: messages));
-            debugPrint('messages bloc: $messages');
-          });
+        await emit.forEach(
+          _chatMessageRepository.watchMessagesInRoom(
+            conversationId: event.roomId),
+            onData: (messages) => state.copyWith(roomMessages: messages),
+            onError: (error, stackTrace) {
+              debugPrint(error.toString());
+              debugPrint(stackTrace.toString());
+              return state.copyWith(status: ListStatus.failure);
+            }
+          );
       } catch (e) {
         debugPrint(e.toString());
         rethrow;
       }
-  }  
-
-  Future _onFetchUserMessages(
-    MessageFetched event,
-    Emitter<MessageState> emit) async {
-      if(state.hasReachedMax) return ;
-
-      try {
-
-        final messages = await _chatMessageRepository.getMessagesInRoom(
-          conversationId:  event.roomId,
-          type: event.type,
-          cursorId: event.cursorId
-        );
-
-        if(messages.isEmpty){
-          return emit(state.copyWith(hasReachedMax: true));
-        }
-
-        emit(
-          state.copyWith(
-            status: ListStatus.success,
-            // roomMessages: [...state.roomMessages, ...messages]
-          )
-        );
-      } catch (e) {
-        emit(state.copyWith(status: ListStatus.failure));
-      }
   }
 
-  Future _onFetchGroupMessages(
-    GroupMessageFetched event,
+  Future _onFetchRoomMessages(
+    MessageFetched event,
     Emitter<MessageState> emit) async {
       if (state.hasReachedMax) return;
 
@@ -104,22 +79,13 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
         final List<ChatMessageData> messages = await _chatMessageRepository.getMessagesInRoom(
           conversationId: event.roomId,
-          type: ChatMessageType.match,
+          type: event.type,
           cursorId: cursor
         );
 
         if(messages.isEmpty){
           return emit(state.copyWith(hasReachedMax: true));
         }
-        
-        List<String> users = [];
-        // List<UserData> chatUsers = [];
-        // chatUsers.addAll(state.users);
-
-        users = messages.map((e) => e.creator).toList();
-
-        users = users.toSet().toList();
-
 
         emit(
           state.copyWith(
@@ -128,7 +94,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           )
         );
 
-        // add(WatchRoomMessages(roomId: event.roomId));
       } catch (e) {
         emit(state.copyWith(status: ListStatus.failure));
       }

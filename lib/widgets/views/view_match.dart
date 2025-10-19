@@ -316,7 +316,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   void initState() {
     super.initState();
     _messageBloc = context.read<MessageBloc>();
-    _messageBloc.add(GroupMessageFetched(roomId: widget.room));
+    _messageBloc.add(MessageFetched(roomId: widget.room, type: ChatMessageType.match));
     _backgroundService = FlutterBackgroundService();
     _scrollController.addListener(_onScroll);
     _setupMessageListener();
@@ -346,6 +346,11 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   Widget build(BuildContext context) {
     return BlocBuilder<MessageBloc, MessageState>(
       builder: (context, state) {
+
+        if(state.status == ListStatus.success){
+          _messageBloc.add(WatchRoomMessages(roomId: widget.room));
+        }
+
         if (state.status == ListStatus.failure && state.roomMessages.isEmpty) {
           return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
         }
@@ -375,7 +380,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
 
   void _onScroll() {
     if (_isBottom) {
-      _messageBloc.add(GroupMessageFetched(roomId: widget.room));
+      _messageBloc.add(MessageFetched(roomId: widget.room, type: ChatMessageType.match));
     }
   }
 
