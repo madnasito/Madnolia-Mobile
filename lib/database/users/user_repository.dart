@@ -54,33 +54,37 @@ class UserRepository {
       return [];
     }
     try {
-      List<UserData> existingUsers = await (database.select(database.user)..where((user) => user.id.isIn(ids))).get();
+      final existingUsers = await (database.select(database.user)..where((user) => user.id.isIn(ids))).get();
+      
+      final existingUserIds = existingUsers.map((u) => u.id).toSet();
+      final unknownUserIds = ids.where((id) => !existingUserIds.contains(id)).toList();
 
-      if(existingUsers.length == ids.length) {
+      if (unknownUserIds.isEmpty) {
         return existingUsers;
       }
 
-      List<String> unknowUsers = ids.where((id) => !existingUsers.any((user) => user.id == id)).toList();
+      final freshUsersInfo = await UserService().getUsersInfoByIds(unknownUserIds);
 
-      final freshUsersInfo = await UserService().getUsersInfoByIds(unknowUsers);
+      if (freshUsersInfo.isNotEmpty) {
+        final userCompanions = freshUsersInfo.map((userInfo) {
+          return UserCompanion(
+            id: Value(userInfo.id),
+            image: Value(userInfo.image),
+            name: Value(userInfo.name),
+            username: Value(userInfo.username),
+            thumb: Value(userInfo.thumb),
+            lastUpdated: Value(DateTime.now()),
+          );
+        }).toList();
 
-      for (var userInfo in freshUsersInfo) {
-        final userCompanion = UserCompanion(
-          id: Value(userInfo.id),
-          image: Value(userInfo.image),
-          name: Value(userInfo.name),
-          username: Value(userInfo.username),
-          thumb: Value(userInfo.thumb)
-        );
-
-        await createOrUpdateUser(userCompanion);
+        await database.batch((batch) {
+          batch.insertAllOnConflictUpdate(database.user, userCompanions);
+        });
       }
 
-      existingUsers = await (database.select(database.user)..where((user) => user.id.isIn(ids))).get();
-
-      return existingUsers;
-      
+      return await (database.select(database.user)..where((user) => user.id.isIn(ids))).get();
     } catch (e) {
+      debugPrint('Error in getUsersByIds: $e');
       rethrow;
     }
   }
