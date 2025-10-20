@@ -8,7 +8,7 @@ import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../enums/list_status.enum.dart' show ListStatus, failure;
+import '../../enums/list_status.enum.dart' show ListStatus;
 import '../../models/chat/chat_message_with_user.dart';
 
 part 'message_event.dart';

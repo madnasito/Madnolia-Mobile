@@ -1,6 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:drift/isolate.dart';
-import 'package:drift/native.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/notifications_config/notifications_config.schema.dart';

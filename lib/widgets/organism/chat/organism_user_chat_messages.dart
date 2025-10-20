@@ -49,7 +49,6 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
 
     try {
 
-      // TODO: Reload screen with streaming, save message on sockets service
       // final message = ChatMessage.fromJson(onData);
 
       // final messageData = ChatMessageRepository().createOrUpdate(message.toCompanion());

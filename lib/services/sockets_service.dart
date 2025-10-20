@@ -31,8 +31,6 @@ import '../models/invitation_model.dart' show Invitation;
 onStart(ServiceInstance service) async {
   debugPrint('Background service starting...');
 
-  final database = AppDatabase();
-
   // Load environment variables FIRST before Firebase initialization
   try {
     (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod");
