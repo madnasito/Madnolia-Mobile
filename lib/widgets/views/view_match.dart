@@ -308,8 +308,6 @@ class MoleculeRoomMessages extends StatefulWidget {
 class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   final _scrollController = ScrollController();
   late final MessageBloc _messageBloc;
-  late final FlutterBackgroundService _backgroundService;
-  StreamSubscription? _messageSubscription;
   late List<UserData> chatUsers;
 
   @override
@@ -317,28 +315,10 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
     super.initState();
     _messageBloc = context.read<MessageBloc>();
     _messageBloc.add(MessageFetched(roomId: widget.room, type: ChatMessageType.match));
-    _backgroundService = FlutterBackgroundService();
+    _messageBloc.add(WatchRoomMessages(roomId: widget.room));
     _scrollController.addListener(_onScroll);
-    _setupMessageListener();
     
     chatUsers = [];
-  }
-
-  void _setupMessageListener() {
-    _messageSubscription = _backgroundService.on("message").listen((onData) {
-
-    debugPrint("¡Invoking new message from view!");
-      // if (!mounted) return; // Verifica si el widget está montado
-      
-      // if (onData != null) {
-      //   final message = ChatMessageData.fromJson(onData);
-      //   if (message.conversation == widget.room && 
-      //       (_messageBloc.state.groupMessages.isEmpty || 
-      //        message.id != _messageBloc.state.groupMessages[0].id)) {
-      //     _messageBloc.add(AddRoomMessage(message: message));
-      //   }
-      // }
-    });
   }
 
 
@@ -346,10 +326,6 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   Widget build(BuildContext context) {
     return BlocBuilder<MessageBloc, MessageState>(
       builder: (context, state) {
-
-        if(state.status == ListStatus.success){
-          _messageBloc.add(WatchRoomMessages(roomId: widget.room));
-        }
 
         if (state.status == ListStatus.failure && state.roomMessages.isEmpty) {
           return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
@@ -361,7 +337,6 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
         else if (state.status == ListStatus.initial && state.roomMessages.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }else {
-          _messageBloc.add(WatchRoomMessages(roomId: widget.room));
           return BuildMessageList(scrollController: _scrollController, state: state);
         }
       },
@@ -374,7 +349,6 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   void dispose() {
     _scrollController.dispose();
     _messageBloc.add(RestoreState());
-    _messageSubscription?.cancel();
     super.dispose();
   }
 

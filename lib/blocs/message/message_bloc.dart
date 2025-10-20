@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:bloc_concurrency/bloc_concurrency.dart' show droppable;
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
@@ -37,7 +37,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
     on<UpdateUnreadUserChatCount>(_updateUnreadUserChatsCount);
 
-    on<WatchRoomMessages>(_watchRoomMessages, transformer: throttleDroppable(throttleDuration));
+    on<WatchRoomMessages>(_watchRoomMessages, transformer: restartable());
 
     on<RestoreState>(_restoreState);
   }
