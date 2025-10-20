@@ -4,7 +4,9 @@ import 'package:madnolia/database/database.dart';
 import '../../services/games_service.dart';
 
 class GamesRepository {
-  final database = AppDatabase();
+  final AppDatabase database;
+
+  GamesRepository(this.database);
   
   Future<int> createOrUpdateGame(GameCompanion game) async {
     try {

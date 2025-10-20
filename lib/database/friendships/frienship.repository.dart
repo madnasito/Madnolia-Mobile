@@ -5,7 +5,9 @@ import 'package:madnolia/services/friendship_service.dart';
 import '../database.dart';
 
 class FriendshipRepository {
-  final database = AppDatabase();
+  final AppDatabase database;
+
+  FriendshipRepository(this.database);
 
   final friendshipService = FriendshipService();
 

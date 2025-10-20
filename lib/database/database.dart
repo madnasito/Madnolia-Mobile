@@ -56,7 +56,7 @@ class AppDatabase extends _$AppDatabase {
     return driftDatabase(
       name: 'madnolia',
       native: const DriftNativeOptions(
-        // shareAcrossIsolates: true,
+        shareAcrossIsolates: true,
         isolateDebugLog: true,
       ),
     );

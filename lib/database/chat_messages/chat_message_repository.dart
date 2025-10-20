@@ -12,11 +12,16 @@ import '../../services/messages_service.dart';
 
 class ChatMessageRepository {
 
-  final database = AppDatabase();
-  final _conversationRepository = ConversationRepository();
+  final AppDatabase database;
+  late final ConversationRepository _conversationRepository;
 
   final _messagesService = MessagesService();
-  final _userRepository = UserRepository();
+  late final UserRepository _userRepository;
+
+  ChatMessageRepository(this.database) {
+    _conversationRepository = ConversationRepository(database);
+    _userRepository = UserRepository(database);
+  }
 
   Future<int> createOrUpdate(ChatMessageCompanion message) async {
     try {

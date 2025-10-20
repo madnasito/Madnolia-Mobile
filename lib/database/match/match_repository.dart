@@ -11,10 +11,15 @@ import '../database.dart';
 
 class MatchRepository {
 
-  final database = AppDatabase();
+  final AppDatabase database;
 
-  final _gamesRepository = GamesRepository();
-  final _userRepository = UserRepository();
+  late final GamesRepository _gamesRepository;
+  late final UserRepository _userRepository;
+
+  MatchRepository(this.database) {
+    _gamesRepository = GamesRepository(database);
+    _userRepository = UserRepository(database);
+  }
 
   MatchCompanion matchToCompanion(Match match) {
     return MatchCompanion(

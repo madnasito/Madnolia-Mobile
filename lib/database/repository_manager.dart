@@ -22,12 +22,12 @@ class RepositoryManager {
   late final UserRepository user;
 
   RepositoryManager._internal() : database = AppDatabase() {
-    chatMessage = ChatMessageRepository();
-    conversation = ConversationRepository();
-    friendship = FriendshipRepository();
-    games = GamesRepository();
-    match = MatchRepository();
-    user = UserRepository();
+    chatMessage = ChatMessageRepository(database);
+    conversation = ConversationRepository(database);
+    friendship = FriendshipRepository(database);
+    games = GamesRepository(database);
+    match = MatchRepository(database);
+    user = UserRepository(database);
   }
 
   static Future<void> reset() async {
