@@ -1,5 +1,5 @@
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/games/games.repository.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/models/match/minimal_match_model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
@@ -32,7 +32,7 @@ class GamePage extends StatelessWidget {
               child: Column(
                   children:[ 
                     FutureBuilder(
-                      future: GamesRepository().getGameById(game), 
+                      future: RepositoryManager().games.getGameById(game), 
                       builder: (BuildContext context, AsyncSnapshot<GameData> snapshot) {
                         if(snapshot.hasData){
                           final GameData game = snapshot.data!;

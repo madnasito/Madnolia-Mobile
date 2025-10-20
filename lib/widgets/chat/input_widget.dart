@@ -1,4 +1,4 @@
-import 'package:madnolia/database/users/user_repository.dart';
+import 'package:madnolia/database/repository_manager.dart';
 // import 'package:madnolia/models/chat_user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
@@ -39,7 +39,7 @@ class _InputGroupMessageState extends State<InputGroupMessage> {
   }
 
   Future<List<dynamic>> _fetchUsers() {
-    return UserRepository().getUsersByIds(widget.usersList);
+    return RepositoryManager().user.getUsersByIds(widget.usersList);
   }
 
   @override

@@ -8,9 +8,8 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/match/match_repository.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
@@ -32,6 +31,8 @@ import '../models/invitation_model.dart' show Invitation;
 onStart(ServiceInstance service) async {
   debugPrint('Background service starting...');
 
+  final database = AppDatabase();
+
   // Load environment variables FIRST before Firebase initialization
   try {
     (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod");
@@ -39,7 +40,8 @@ onStart(ServiceInstance service) async {
     debugPrint('Error loading dotenv in background service: $e');
   }
   
-  final chatMessageDbServices = ChatMessageRepository();
+  final chatMessageRepository = RepositoryManager().chatMessage;
+  final matchRepository = RepositoryManager().match;
   
   // Initialize Firebase after dotenv is loaded
   try {
@@ -158,7 +160,7 @@ onStart(ServiceInstance service) async {
 
       ChatMessage message = ChatMessage.fromJson(payload);
 
-      final messageDbSaved = await chatMessageDbServices.createOrUpdate(message.toCompanion());
+      final messageDbSaved = await chatMessageRepository.createOrUpdate(message.toCompanion());
 
       debugPrint('message saved: $messageDbSaved');
 
@@ -179,7 +181,7 @@ onStart(ServiceInstance service) async {
     });
   
   socket.on('sended_message', (payload) async  {
-    final messageDb = await chatMessageDbServices.messageSended(payload['uid'], payload['message']['id'], DateTime.parse(payload['message']['date']));
+    final messageDb = await chatMessageRepository.messageSended(payload['uid'], payload['message']['id'], DateTime.parse(payload['message']['date']));
     debugPrint('Message sended saved $messageDb');
   });
 
@@ -235,7 +237,7 @@ onStart(ServiceInstance service) async {
   socket.on("connection_rejected", (data) => service.invoke("connection_rejected"));
   socket.on("canceled_connection", (data) => service.invoke("canceled_connection"));
 
-  socket.on('match_cancelled', (data) async => await MatchRepository().updateMatchStatus(data['match'], MatchStatus.cancelled));
+  socket.on('match_cancelled', (data) async => await matchRepository.updateMatchStatus(data['match'], MatchStatus.cancelled));
 
   socket.onDisconnect((_) => {
    service.invoke("disconnected_socket")
@@ -281,7 +283,7 @@ onStart(ServiceInstance service) async {
   service.on("new_message").listen((onData) async {
     try {
       final message = CreateMessage.fromJson(onData!);
-      final result = await ChatMessageRepository().createOrUpdate(
+      final result = await chatMessageRepository.createOrUpdate(
         ChatMessageCompanion(
           content: Value(message.content),
           conversation: Value(message.conversation),
@@ -314,7 +316,7 @@ onStart(ServiceInstance service) async {
 
   service.on("logout").listen((onData) => socket.emit("logout"));
 
-  service.on("new_player_to_match").listen((onData) async => await MatchRepository().joinUser(onData?['match'], onData?['user']));
+  service.on("new_player_to_match").listen((onData) async => await matchRepository.joinUser(onData?['match'], onData?['user']));
 
   service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));
 

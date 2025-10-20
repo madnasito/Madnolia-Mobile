@@ -13,6 +13,9 @@ class MatchRepository {
 
   final database = AppDatabase();
 
+  final _gamesRepository = GamesRepository();
+  final _userRepository = UserRepository();
+
   MatchCompanion matchToCompanion(Match match) {
     return MatchCompanion(
       id: Value(match.id),
@@ -50,7 +53,7 @@ class MatchRepository {
     if (row == null) {
       // Data not found locally, fetch from remote
       final matchInfo = await MatchService().getMatch(matchId);
-      await GamesRepository().getGameById(matchInfo.game); // Ensures game is cached
+      await _gamesRepository.getGameById(matchInfo.game); // Ensures game is cached
       await createOrUpdateMatch(matchToCompanion(matchInfo)); // Caches match
 
       // Retry the query now that data should be in the DB
@@ -99,8 +102,8 @@ class MatchRepository {
       final matchInfo = await MatchService().getMatch(id);
 
       await Future.wait([
-        UserRepository().getUserById(matchInfo.user),
-        GamesRepository().getGameById(matchInfo.game)
+        _userRepository.getUserById(matchInfo.user),
+        _gamesRepository.getGameById(matchInfo.game)
       ]);
 
       final matchCompanion = MatchCompanion(

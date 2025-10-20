@@ -1,6 +1,7 @@
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/database/match/match_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/views/view_match.dart';
 
@@ -13,7 +14,7 @@ class MatchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScaffold(
       body: FutureBuilder(
-          future: MatchRepository().getMatchWithGame(id),
+          future: RepositoryManager().match.getMatchWithGame(id),
           builder: (BuildContext context, AsyncSnapshot<MatchWithGame> snapshot) {
 
             if (snapshot.hasData) {

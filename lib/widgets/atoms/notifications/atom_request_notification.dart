@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/users/user_repository.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
 
 class AtomRequestNotification extends StatelessWidget {
@@ -13,9 +13,9 @@ class AtomRequestNotification extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userDbServices = UserRepository();
+    final userRepository = RepositoryManager().user;
     return FutureBuilder(
-      future: userDbServices.getUserById(notification.sender),
+      future: userRepository.getUserById(notification.sender),
       builder: (context, snapshot) {
         if(snapshot.hasData){
           return  Container(

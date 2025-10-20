@@ -1,6 +1,8 @@
 import 'package:drift/drift.dart';
+import 'package:drift/isolate.dart';
+import 'package:drift/native.dart';
 import 'package:drift_flutter/drift_flutter.dart';
-import 'package:flutter/widgets.dart' show debugPrint;
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/notifications_config/notifications_config.schema.dart';
 import 'package:madnolia/database/users/user.schema.dart';
 import 'package:madnolia/database/friendships/friendship.schema.dart';
@@ -25,28 +27,48 @@ import 'notifications/notification.schema.dart';
 
 part 'database.g.dart';
 
-@DriftDatabase(tables: [User, Friendship, Match, ChatMessage, Attachment, Game, Notification, NotificationsConfig, Conversation])
 class AppDatabase extends _$AppDatabase {
-  static final AppDatabase _instance = AppDatabase._internal();
+  static AppDatabase? _instance;
+  static bool _initializing = false;
   
   factory AppDatabase() {
-    return _instance;
+    if (_instance != null) return _instance!;
+    
+    // Prevenir inicialización simultánea
+    if (_initializing) {
+      throw StateError('AppDatabase is already being initialized');
+    }
+    
+    _initializing = true;
+    try {
+      _instance = AppDatabase._internal();
+      return _instance!;
+    } finally {
+      _initializing = false;
+    }
   }
-
-  AppDatabase._internal([QueryExecutor? executor]) : super(executor ?? _openConnection());
 
   @override
   int get schemaVersion => 1;
 
-  // Puedes descomentar y usar este método si quieres una conexión por defecto:
+  AppDatabase._internal([QueryExecutor? executor]) : super(executor ?? _openConnection());
+
   static QueryExecutor _openConnection() {
     debugPrint('database connected');
     return driftDatabase(
       name: 'madnolia',
       native: const DriftNativeOptions(
-        shareAcrossIsolates: false,
+        // shareAcrossIsolates: true,
         isolateDebugLog: true,
       ),
     );
+  }
+
+  // Método para cerrar y resetear (útil para testing)
+  static Future<void> resetForTesting() async {
+    if (_instance != null) {
+      await _instance!.close();
+      _instance = null;
+    }
   }
 }

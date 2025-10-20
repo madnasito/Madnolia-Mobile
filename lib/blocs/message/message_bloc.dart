@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' show droppable;
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart' show debugPrint;
-import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
 import 'package:madnolia/database/database.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -23,7 +23,7 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
-  final _chatMessageRepository = ChatMessageRepository();
+  final _chatMessageRepository = RepositoryManager().chatMessage;
 
   MessageBloc() : super(MessageInitial()) {
     on<MessageFetched>(

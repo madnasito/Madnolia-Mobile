@@ -6,7 +6,7 @@ import 'package:flutter_translate/flutter_translate.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/match/match_repository.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/match/edit_match_model.dart';
 import 'package:madnolia/services/match_service.dart';
@@ -144,10 +144,10 @@ const OrganismEditMatchForm({super.key, required this.match, required this.game}
                         date: DateTime.parse(dateController.text).millisecondsSinceEpoch
                         );
 
-                      final matchDbServices = MatchRepository();
+                      final matchRepository = RepositoryManager().match;
                       final Match resp = await MatchService().updateMatch(match.id, body);
 
-                      await matchDbServices.createOrUpdateMatch(matchDbServices.matchToCompanion(resp));
+                      await matchRepository.createOrUpdateMatch(matchRepository.matchToCompanion(resp));
                       
                       isLoading = false;
 

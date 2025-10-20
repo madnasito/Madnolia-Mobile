@@ -3,7 +3,7 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/users/user_repository.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
 import 'package:madnolia/widgets/molecules/modal/molecule_modal_icon_button.dart';
@@ -19,7 +19,7 @@ class OrganismMatchInfoModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: UserRepository().getUserById(userId),
+      future: RepositoryManager().user.getUserById(userId),
       builder: (context, AsyncSnapshot<UserData> snapshot) {
 
         if(snapshot.hasData) {
