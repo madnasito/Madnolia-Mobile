@@ -114,13 +114,24 @@ class ChatMessageRepository {
 
   Future<List<ChatMessageData>> getMessagesInRoom({ required String conversationId, required ChatMessageType type, String? cursorId}) async {
     try {
+
+      debugPrint('Getting messages in room');
+      debugPrint('Messages type: $type');
+      debugPrint('Cursor: $cursorId');
+
       final query = database.select(database.chatMessage)
         ..where((tbl) => tbl.conversation.equals(conversationId));
 
       if (cursorId != null) {
+        debugPrint('Searching for cursor message with id: $cursorId');
         final cursorMessage = await (database.select(database.chatMessage)..where((tbl) => tbl.id.equals(cursorId))).getSingleOrNull();
         if (cursorMessage != null) {
-          query.where((tbl) => tbl.date.isSmallerThan(Variable(cursorMessage.date)));
+          debugPrint('Cursor message found: ${cursorMessage.id} with date ${cursorMessage.date}');
+          query.where((tbl) => tbl.date.isSmallerThan(Variable(cursorMessage.date)));        
+          debugPrint('Query: messages BEFORE ${cursorMessage.date}');
+
+        } else {
+          debugPrint('Cursor message with id $cursorId not found in local database');
         }
       }
 
@@ -128,6 +139,8 @@ class ChatMessageRepository {
         ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])
         ..limit(50)
       ).get();
+
+      debugPrint('Messages length: ${messages.length}');
 
       if (messages.length < 50) {
 
@@ -170,14 +183,12 @@ class ChatMessageRepository {
             ),
           );
         }
-
-        
       }
-            return messages;
-          } catch (e) {
-            rethrow;
-          }
-        }
+        return messages;
+      } catch (e) {
+        rethrow;
+      }
+    }
       
   Stream<List<ChatMessageWithUser>> watchMessagesInRoom({ required String conversationId}) async* {
     try {

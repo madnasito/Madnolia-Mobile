@@ -353,6 +353,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
   }
 
   void _onScroll() {
+    debugPrint('Is bottom: $_isBottom');
     if (_isBottom) {
       _messageBloc.add(MessageFetched(roomId: widget.room, type: ChatMessageType.match));
     }
