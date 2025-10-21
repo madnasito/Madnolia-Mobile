@@ -186,7 +186,10 @@ class ChatMessageRepository {
       ])
       ..where(database.chatMessage.conversation.equals(conversationId));
      
-      query.orderBy([OrderingTerm.desc(database.chatMessage.date)]);
+      query.orderBy([
+        OrderingTerm.desc(database.chatMessage.date),
+        OrderingTerm.desc(database.chatMessage.id),
+      ]);
 
       yield* query.watch().map((rows) {
         return rows.map((row) {
