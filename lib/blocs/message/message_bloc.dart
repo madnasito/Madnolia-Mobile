@@ -24,6 +24,7 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   final _chatMessageRepository = RepositoryManager().chatMessage;
+  final _conversationRepository = RepositoryManager().conversation;
 
   MessageBloc() : super(MessageInitial()) {
     on<MessageFetched>(
@@ -85,14 +86,17 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           cursorId: cursor
         );
 
-        if(messages.isEmpty){
+        final conversation = await _conversationRepository.get(event.roomId);
+        final bool conversationHasReachedEnd = conversation?.hasReachedEnd ?? false;
+
+        if(messages.isEmpty && conversationHasReachedEnd){
           return emit(state.copyWith(hasReachedMax: true));
         }
 
         emit(
           state.copyWith(
             status: ListStatus.success,
-            // roomMessages: [...state.roomMessages, ...messages],
+            hasReachedMax: messages.isEmpty && conversationHasReachedEnd, // Update hasReachedMax here
           )
         );
 

@@ -158,6 +158,12 @@ class ChatMessageRepository {
           default:
         }
 
+        debugPrint(messagesApi.length.toString());
+
+        for (var message in messagesApi) {
+          debugPrint(message.content);
+        }
+
         if (messagesApi.isNotEmpty) {
           final messageCompanions = messagesApi.map((m) => m.toCompanion()).toList();
           await createOrUpdateMultiple(messageCompanions);
@@ -175,7 +181,7 @@ class ChatMessageRepository {
           messages.addAll(newMessages);
         }
 
-        if(messagesApi.length < 50) {
+        if(messagesApi.isEmpty) {
           await _conversationRepository.createOrUpdate(
             ConversationCompanion(
               conversationId: Value(conversationId),
