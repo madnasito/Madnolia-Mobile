@@ -49,7 +49,12 @@ class MessagesService {
         queryParams['cursor'] = cursor;
       }
 
-      final resp = await _dio.post(url, data: queryParams, options: Options(headers: {"Authorization": "Bearer $token"}));
+      final resp = await _dio.post(
+        url,
+        data: queryParams,
+        options: Options(headers: {"Authorization": "Bearer $token"}
+        )
+      );
 
       return (resp.data as List).map((e) => ChatMessage.fromJson(e)).toList();
     } catch (e) {

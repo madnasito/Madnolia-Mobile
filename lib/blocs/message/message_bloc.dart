@@ -115,33 +115,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     ));
   }
 
-  // void _addIndividualMessage( AddIndividualMessage event, Emitter<MessageState> emit) => emit(
-  //   state.copyWith(
-  //     roomMessages: [event.message, ...state.roomMessages]
-  //   )
-  // );
-
-  // void _addRoomMessage( AddRoomMessage event, Emitter<MessageState> emit ) async {
-
-
-  //   emit(
-  //     state.copyWith(
-  //       roomMessages: [event.message, ...state.roomMessages],
-  //       // users: chatUsers
-  //     )
-  //   );
-  // }
-
-  // void _addRoomMessages(AddRoomMessages event, Emitter<MessageState> emit) async {
-  //   final stateMessages = state.roomMessages;
-  //   stateMessages.addAll(event.messages);
-  //   emit(
-  //     state.copyWith(
-  //       roomMessages:  stateMessages),
-  //       // users: chatUsers
-  //     );
-  // }
-
   void _updateUnreadUserChatsCount(UpdateUnreadUserChatCount event, Emitter<MessageState> emit) =>
   emit(
     state.copyWith(

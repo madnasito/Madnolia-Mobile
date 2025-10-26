@@ -5,8 +5,8 @@ import 'package:flutter_background_service/flutter_background_service.dart' show
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
-import 'package:madnolia/models/chat/user_messages.body.dart' show UserMessagesBody;
 import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart' show MoleculeUserChatMessagesList;
 
 class OrganismUserChatMessages extends StatefulWidget {
@@ -23,7 +23,6 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
   late final MessageBloc _messageBloc;
   late final FlutterBackgroundService _backgroundService;
   late final UserBloc userBloc;
-  int skip = 0;
   StreamSubscription? _messageSubscription;
 
   @override
@@ -41,6 +40,8 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
         _addMessage(onData);
       }
     });
+
+    _messageBloc.add(WatchRoomMessages(roomId: widget.id));
 
   }
 
@@ -108,10 +109,8 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
 
   void _onScroll() {
     if (_isBottom) {
-      skip += 10; // Increment skip for pagination
-      _messageBloc.add(UserMessageFetched(
-        messagesBody: UserMessagesBody(user: widget.user),
-      ));
+      _messageBloc.add(MessageFetched(roomId: widget.id, type: ChatMessageType.user)
+      );
     }
   }
 

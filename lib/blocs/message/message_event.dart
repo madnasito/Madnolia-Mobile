@@ -13,18 +13,11 @@ final class UserMessageFetched extends MessageEvent {
   const UserMessageFetched({ required this.messagesBody});
 }
 
-final class AddRoomMessages extends MessageEvent {
-  final List<ChatMessageData> messages;
-
-  const AddRoomMessages({required this.messages});
-}
-
 final class MessageFetched extends MessageEvent {
   final String roomId;
   final ChatMessageType type;
-  final String? cursorId;
 
-  const MessageFetched({ required this.roomId, required this.type, this.cursorId });
+  const MessageFetched({ required this.roomId, required this.type });
 }
 
 final class WatchRoomMessages extends MessageEvent {
