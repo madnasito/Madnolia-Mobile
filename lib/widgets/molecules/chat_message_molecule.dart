@@ -81,7 +81,7 @@ class MyMessageMolecule extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white.withValues(alpha: 0.6)),
                   ),
                   const SizedBox(width: 4),
-                  AtomMessageStatusIcon(status: messageData.status, size: 12),
+                  AtomMessageStatusIcon(status: messageData.status, size: 12, pending: messageData.pending,),
                 ],
               ),
             ],

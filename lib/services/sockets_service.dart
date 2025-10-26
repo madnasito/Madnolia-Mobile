@@ -28,7 +28,7 @@ import '../models/invitation_model.dart' show Invitation;
 
 
 @pragma('vm:entry-point')
-onStart(ServiceInstance service) async {
+Future<void> onStart(ServiceInstance service) async {
   debugPrint('Background service starting...');
 
   // Load environment variables FIRST before Firebase initialization
@@ -288,8 +288,9 @@ onStart(ServiceInstance service) async {
           creator: Value(userId!),
           date: Value(DateTime.now()),
           id: Value(message.id),
-          status: Value(ChatMessageStatus.queued),
-          type: Value(message.type)
+          status: Value(ChatMessageStatus.sent),
+          type: Value(message.type),
+          pending: Value(true)
         )
       );
 

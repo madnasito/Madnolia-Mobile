@@ -10,7 +10,7 @@ import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/services/sockets_service.dart';
 
-logoutApp(BuildContext context) async {
+Future<void> logoutApp(BuildContext context) async {
   const storage = FlutterSecureStorage();
   final chatsBloc = context.read<ChatsBloc>();
   final userBloc = context.read<UserBloc>();

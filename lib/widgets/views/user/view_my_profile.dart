@@ -66,7 +66,7 @@ class ViewMyProfile extends StatelessWidget {
     );
   }
 
-  _loadInfo(BuildContext context) async {
+  Future _loadInfo(BuildContext context) async {
   final userInfo = await UserService().getUserInfo();
 
   if (!context.mounted) return;

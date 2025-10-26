@@ -94,7 +94,7 @@ class _PlatformsViewState extends State<PlatformsView> {
     );
   }
 
-  List<Widget> loadPlatforms(value) {
+  List<Widget> loadPlatforms(int value) {
     switch (value) {
       case 1:
         return _toMap(nintendoItems);

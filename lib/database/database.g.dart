@@ -1825,6 +1825,212 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
   }
 }
 
+class $ConversationTable extends Conversation
+    with TableInfo<$ConversationTable, ConversationData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ConversationTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _conversationIdMeta =
+      const VerificationMeta('conversationId');
+  @override
+  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
+      'conversation_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _hasReachedEndMeta =
+      const VerificationMeta('hasReachedEnd');
+  @override
+  late final GeneratedColumn<bool> hasReachedEnd = GeneratedColumn<bool>(
+      'has_reached_end', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("has_reached_end" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [conversationId, hasReachedEnd];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'conversation';
+  @override
+  VerificationContext validateIntegrity(Insertable<ConversationData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('conversation_id')) {
+      context.handle(
+          _conversationIdMeta,
+          conversationId.isAcceptableOrUnknown(
+              data['conversation_id']!, _conversationIdMeta));
+    } else if (isInserting) {
+      context.missing(_conversationIdMeta);
+    }
+    if (data.containsKey('has_reached_end')) {
+      context.handle(
+          _hasReachedEndMeta,
+          hasReachedEnd.isAcceptableOrUnknown(
+              data['has_reached_end']!, _hasReachedEndMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {conversationId};
+  @override
+  ConversationData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ConversationData(
+      conversationId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}conversation_id'])!,
+      hasReachedEnd: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}has_reached_end'])!,
+    );
+  }
+
+  @override
+  $ConversationTable createAlias(String alias) {
+    return $ConversationTable(attachedDatabase, alias);
+  }
+}
+
+class ConversationData extends DataClass
+    implements Insertable<ConversationData> {
+  final String conversationId;
+  final bool hasReachedEnd;
+  const ConversationData(
+      {required this.conversationId, required this.hasReachedEnd});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['conversation_id'] = Variable<String>(conversationId);
+    map['has_reached_end'] = Variable<bool>(hasReachedEnd);
+    return map;
+  }
+
+  ConversationCompanion toCompanion(bool nullToAbsent) {
+    return ConversationCompanion(
+      conversationId: Value(conversationId),
+      hasReachedEnd: Value(hasReachedEnd),
+    );
+  }
+
+  factory ConversationData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ConversationData(
+      conversationId: serializer.fromJson<String>(json['conversationId']),
+      hasReachedEnd: serializer.fromJson<bool>(json['hasReachedEnd']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'conversationId': serializer.toJson<String>(conversationId),
+      'hasReachedEnd': serializer.toJson<bool>(hasReachedEnd),
+    };
+  }
+
+  ConversationData copyWith({String? conversationId, bool? hasReachedEnd}) =>
+      ConversationData(
+        conversationId: conversationId ?? this.conversationId,
+        hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
+      );
+  ConversationData copyWithCompanion(ConversationCompanion data) {
+    return ConversationData(
+      conversationId: data.conversationId.present
+          ? data.conversationId.value
+          : this.conversationId,
+      hasReachedEnd: data.hasReachedEnd.present
+          ? data.hasReachedEnd.value
+          : this.hasReachedEnd,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ConversationData(')
+          ..write('conversationId: $conversationId, ')
+          ..write('hasReachedEnd: $hasReachedEnd')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(conversationId, hasReachedEnd);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ConversationData &&
+          other.conversationId == this.conversationId &&
+          other.hasReachedEnd == this.hasReachedEnd);
+}
+
+class ConversationCompanion extends UpdateCompanion<ConversationData> {
+  final Value<String> conversationId;
+  final Value<bool> hasReachedEnd;
+  final Value<int> rowid;
+  const ConversationCompanion({
+    this.conversationId = const Value.absent(),
+    this.hasReachedEnd = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ConversationCompanion.insert({
+    required String conversationId,
+    this.hasReachedEnd = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : conversationId = Value(conversationId);
+  static Insertable<ConversationData> custom({
+    Expression<String>? conversationId,
+    Expression<bool>? hasReachedEnd,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (conversationId != null) 'conversation_id': conversationId,
+      if (hasReachedEnd != null) 'has_reached_end': hasReachedEnd,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ConversationCompanion copyWith(
+      {Value<String>? conversationId,
+      Value<bool>? hasReachedEnd,
+      Value<int>? rowid}) {
+    return ConversationCompanion(
+      conversationId: conversationId ?? this.conversationId,
+      hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (conversationId.present) {
+      map['conversation_id'] = Variable<String>(conversationId.value);
+    }
+    if (hasReachedEnd.present) {
+      map['has_reached_end'] = Variable<bool>(hasReachedEnd.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ConversationCompanion(')
+          ..write('conversationId: $conversationId, ')
+          ..write('hasReachedEnd: $hasReachedEnd, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ChatMessageTable extends ChatMessage
     with TableInfo<$ChatMessageTable, ChatMessageData> {
   @override
@@ -1887,6 +2093,16 @@ class $ChatMessageTable extends ChatMessage
       GeneratedColumn<int>('type', aliasedName, false,
               type: DriftSqlType.int, requiredDuringInsert: true)
           .withConverter<ChatMessageType>($ChatMessageTable.$convertertype);
+  static const VerificationMeta _pendingMeta =
+      const VerificationMeta('pending');
+  @override
+  late final GeneratedColumn<bool> pending = GeneratedColumn<bool>(
+      'pending', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("pending" IN (0, 1))'),
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -1897,7 +2113,8 @@ class $ChatMessageTable extends ChatMessage
         date,
         updatedAt,
         parentMessage,
-        type
+        type,
+        pending
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1950,6 +2167,10 @@ class $ChatMessageTable extends ChatMessage
           parentMessage.isAcceptableOrUnknown(
               data['parent_message']!, _parentMessageMeta));
     }
+    if (data.containsKey('pending')) {
+      context.handle(_pendingMeta,
+          pending.isAcceptableOrUnknown(data['pending']!, _pendingMeta));
+    }
     return context;
   }
 
@@ -1979,6 +2200,8 @@ class $ChatMessageTable extends ChatMessage
       type: $ChatMessageTable.$convertertype.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}type'])!),
+      pending: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}pending'])!,
     );
   }
 
@@ -2003,6 +2226,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
   final DateTime? updatedAt;
   final String? parentMessage;
   final ChatMessageType type;
+  final bool pending;
   const ChatMessageData(
       {required this.id,
       required this.status,
@@ -2012,7 +2236,8 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
       required this.date,
       this.updatedAt,
       this.parentMessage,
-      required this.type});
+      required this.type,
+      required this.pending});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -2034,6 +2259,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
     {
       map['type'] = Variable<int>($ChatMessageTable.$convertertype.toSql(type));
     }
+    map['pending'] = Variable<bool>(pending);
     return map;
   }
 
@@ -2052,6 +2278,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
           ? const Value.absent()
           : Value(parentMessage),
       type: Value(type),
+      pending: Value(pending),
     );
   }
 
@@ -2070,6 +2297,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
       parentMessage: serializer.fromJson<String?>(json['parentMessage']),
       type: $ChatMessageTable.$convertertype
           .fromJson(serializer.fromJson<int>(json['type'])),
+      pending: serializer.fromJson<bool>(json['pending']),
     );
   }
   @override
@@ -2087,6 +2315,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
       'parentMessage': serializer.toJson<String?>(parentMessage),
       'type':
           serializer.toJson<int>($ChatMessageTable.$convertertype.toJson(type)),
+      'pending': serializer.toJson<bool>(pending),
     };
   }
 
@@ -2099,7 +2328,8 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
           DateTime? date,
           Value<DateTime?> updatedAt = const Value.absent(),
           Value<String?> parentMessage = const Value.absent(),
-          ChatMessageType? type}) =>
+          ChatMessageType? type,
+          bool? pending}) =>
       ChatMessageData(
         id: id ?? this.id,
         status: status ?? this.status,
@@ -2111,6 +2341,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
         parentMessage:
             parentMessage.present ? parentMessage.value : this.parentMessage,
         type: type ?? this.type,
+        pending: pending ?? this.pending,
       );
   ChatMessageData copyWithCompanion(ChatMessageCompanion data) {
     return ChatMessageData(
@@ -2127,6 +2358,7 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
           ? data.parentMessage.value
           : this.parentMessage,
       type: data.type.present ? data.type.value : this.type,
+      pending: data.pending.present ? data.pending.value : this.pending,
     );
   }
 
@@ -2141,14 +2373,15 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
           ..write('date: $date, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('parentMessage: $parentMessage, ')
-          ..write('type: $type')
+          ..write('type: $type, ')
+          ..write('pending: $pending')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode => Object.hash(id, status, content, conversation, creator,
-      date, updatedAt, parentMessage, type);
+      date, updatedAt, parentMessage, type, pending);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2161,7 +2394,8 @@ class ChatMessageData extends DataClass implements Insertable<ChatMessageData> {
           other.date == this.date &&
           other.updatedAt == this.updatedAt &&
           other.parentMessage == this.parentMessage &&
-          other.type == this.type);
+          other.type == this.type &&
+          other.pending == this.pending);
 }
 
 class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
@@ -2174,6 +2408,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
   final Value<DateTime?> updatedAt;
   final Value<String?> parentMessage;
   final Value<ChatMessageType> type;
+  final Value<bool> pending;
   final Value<int> rowid;
   const ChatMessageCompanion({
     this.id = const Value.absent(),
@@ -2185,6 +2420,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
     this.updatedAt = const Value.absent(),
     this.parentMessage = const Value.absent(),
     this.type = const Value.absent(),
+    this.pending = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ChatMessageCompanion.insert({
@@ -2197,6 +2433,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
     this.updatedAt = const Value.absent(),
     this.parentMessage = const Value.absent(),
     required ChatMessageType type,
+    this.pending = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         status = Value(status),
@@ -2215,6 +2452,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
     Expression<DateTime>? updatedAt,
     Expression<String>? parentMessage,
     Expression<int>? type,
+    Expression<bool>? pending,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -2227,6 +2465,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
       if (updatedAt != null) 'updated_at': updatedAt,
       if (parentMessage != null) 'parent_message': parentMessage,
       if (type != null) 'type': type,
+      if (pending != null) 'pending': pending,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -2241,6 +2480,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
       Value<DateTime?>? updatedAt,
       Value<String?>? parentMessage,
       Value<ChatMessageType>? type,
+      Value<bool>? pending,
       Value<int>? rowid}) {
     return ChatMessageCompanion(
       id: id ?? this.id,
@@ -2252,6 +2492,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
       updatedAt: updatedAt ?? this.updatedAt,
       parentMessage: parentMessage ?? this.parentMessage,
       type: type ?? this.type,
+      pending: pending ?? this.pending,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2288,6 +2529,9 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
       map['type'] =
           Variable<int>($ChatMessageTable.$convertertype.toSql(type.value));
     }
+    if (pending.present) {
+      map['pending'] = Variable<bool>(pending.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2306,6 +2550,7 @@ class ChatMessageCompanion extends UpdateCompanion<ChatMessageData> {
           ..write('updatedAt: $updatedAt, ')
           ..write('parentMessage: $parentMessage, ')
           ..write('type: $type, ')
+          ..write('pending: $pending, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3411,212 +3656,6 @@ class NotificationsConfigCompanion
   }
 }
 
-class $ConversationTable extends Conversation
-    with TableInfo<$ConversationTable, ConversationData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $ConversationTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _conversationIdMeta =
-      const VerificationMeta('conversationId');
-  @override
-  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
-      'conversation_id', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
-  static const VerificationMeta _hasReachedEndMeta =
-      const VerificationMeta('hasReachedEnd');
-  @override
-  late final GeneratedColumn<bool> hasReachedEnd = GeneratedColumn<bool>(
-      'has_reached_end', aliasedName, false,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'CHECK ("has_reached_end" IN (0, 1))'),
-      defaultValue: const Constant(false));
-  @override
-  List<GeneratedColumn> get $columns => [conversationId, hasReachedEnd];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'conversation';
-  @override
-  VerificationContext validateIntegrity(Insertable<ConversationData> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('conversation_id')) {
-      context.handle(
-          _conversationIdMeta,
-          conversationId.isAcceptableOrUnknown(
-              data['conversation_id']!, _conversationIdMeta));
-    } else if (isInserting) {
-      context.missing(_conversationIdMeta);
-    }
-    if (data.containsKey('has_reached_end')) {
-      context.handle(
-          _hasReachedEndMeta,
-          hasReachedEnd.isAcceptableOrUnknown(
-              data['has_reached_end']!, _hasReachedEndMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {conversationId};
-  @override
-  ConversationData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ConversationData(
-      conversationId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}conversation_id'])!,
-      hasReachedEnd: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}has_reached_end'])!,
-    );
-  }
-
-  @override
-  $ConversationTable createAlias(String alias) {
-    return $ConversationTable(attachedDatabase, alias);
-  }
-}
-
-class ConversationData extends DataClass
-    implements Insertable<ConversationData> {
-  final String conversationId;
-  final bool hasReachedEnd;
-  const ConversationData(
-      {required this.conversationId, required this.hasReachedEnd});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['conversation_id'] = Variable<String>(conversationId);
-    map['has_reached_end'] = Variable<bool>(hasReachedEnd);
-    return map;
-  }
-
-  ConversationCompanion toCompanion(bool nullToAbsent) {
-    return ConversationCompanion(
-      conversationId: Value(conversationId),
-      hasReachedEnd: Value(hasReachedEnd),
-    );
-  }
-
-  factory ConversationData.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ConversationData(
-      conversationId: serializer.fromJson<String>(json['conversationId']),
-      hasReachedEnd: serializer.fromJson<bool>(json['hasReachedEnd']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'conversationId': serializer.toJson<String>(conversationId),
-      'hasReachedEnd': serializer.toJson<bool>(hasReachedEnd),
-    };
-  }
-
-  ConversationData copyWith({String? conversationId, bool? hasReachedEnd}) =>
-      ConversationData(
-        conversationId: conversationId ?? this.conversationId,
-        hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
-      );
-  ConversationData copyWithCompanion(ConversationCompanion data) {
-    return ConversationData(
-      conversationId: data.conversationId.present
-          ? data.conversationId.value
-          : this.conversationId,
-      hasReachedEnd: data.hasReachedEnd.present
-          ? data.hasReachedEnd.value
-          : this.hasReachedEnd,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ConversationData(')
-          ..write('conversationId: $conversationId, ')
-          ..write('hasReachedEnd: $hasReachedEnd')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(conversationId, hasReachedEnd);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is ConversationData &&
-          other.conversationId == this.conversationId &&
-          other.hasReachedEnd == this.hasReachedEnd);
-}
-
-class ConversationCompanion extends UpdateCompanion<ConversationData> {
-  final Value<String> conversationId;
-  final Value<bool> hasReachedEnd;
-  final Value<int> rowid;
-  const ConversationCompanion({
-    this.conversationId = const Value.absent(),
-    this.hasReachedEnd = const Value.absent(),
-    this.rowid = const Value.absent(),
-  });
-  ConversationCompanion.insert({
-    required String conversationId,
-    this.hasReachedEnd = const Value.absent(),
-    this.rowid = const Value.absent(),
-  }) : conversationId = Value(conversationId);
-  static Insertable<ConversationData> custom({
-    Expression<String>? conversationId,
-    Expression<bool>? hasReachedEnd,
-    Expression<int>? rowid,
-  }) {
-    return RawValuesInsertable({
-      if (conversationId != null) 'conversation_id': conversationId,
-      if (hasReachedEnd != null) 'has_reached_end': hasReachedEnd,
-      if (rowid != null) 'rowid': rowid,
-    });
-  }
-
-  ConversationCompanion copyWith(
-      {Value<String>? conversationId,
-      Value<bool>? hasReachedEnd,
-      Value<int>? rowid}) {
-    return ConversationCompanion(
-      conversationId: conversationId ?? this.conversationId,
-      hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
-      rowid: rowid ?? this.rowid,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (conversationId.present) {
-      map['conversation_id'] = Variable<String>(conversationId.value);
-    }
-    if (hasReachedEnd.present) {
-      map['has_reached_end'] = Variable<bool>(hasReachedEnd.value);
-    }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('ConversationCompanion(')
-          ..write('conversationId: $conversationId, ')
-          ..write('hasReachedEnd: $hasReachedEnd, ')
-          ..write('rowid: $rowid')
-          ..write(')'))
-        .toString();
-  }
-}
-
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3624,12 +3663,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $FriendshipTable friendship = $FriendshipTable(this);
   late final $GameTable game = $GameTable(this);
   late final $MatchTable match = $MatchTable(this);
+  late final $ConversationTable conversation = $ConversationTable(this);
   late final $ChatMessageTable chatMessage = $ChatMessageTable(this);
   late final $AttachmentTable attachment = $AttachmentTable(this);
   late final $NotificationTable notification = $NotificationTable(this);
   late final $NotificationsConfigTable notificationsConfig =
       $NotificationsConfigTable(this);
-  late final $ConversationTable conversation = $ConversationTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3639,11 +3678,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         friendship,
         game,
         match,
+        conversation,
         chatMessage,
         attachment,
         notification,
-        notificationsConfig,
-        conversation
+        notificationsConfig
       ];
 }
 
@@ -5198,6 +5237,137 @@ typedef $$MatchTableProcessedTableManager = ProcessedTableManager<
     (MatchData, $$MatchTableReferences),
     MatchData,
     PrefetchHooks Function({bool game, bool user})>;
+typedef $$ConversationTableCreateCompanionBuilder = ConversationCompanion
+    Function({
+  required String conversationId,
+  Value<bool> hasReachedEnd,
+  Value<int> rowid,
+});
+typedef $$ConversationTableUpdateCompanionBuilder = ConversationCompanion
+    Function({
+  Value<String> conversationId,
+  Value<bool> hasReachedEnd,
+  Value<int> rowid,
+});
+
+class $$ConversationTableFilterComposer
+    extends Composer<_$AppDatabase, $ConversationTable> {
+  $$ConversationTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get conversationId => $composableBuilder(
+      column: $table.conversationId,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get hasReachedEnd => $composableBuilder(
+      column: $table.hasReachedEnd, builder: (column) => ColumnFilters(column));
+}
+
+class $$ConversationTableOrderingComposer
+    extends Composer<_$AppDatabase, $ConversationTable> {
+  $$ConversationTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get conversationId => $composableBuilder(
+      column: $table.conversationId,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get hasReachedEnd => $composableBuilder(
+      column: $table.hasReachedEnd,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$ConversationTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ConversationTable> {
+  $$ConversationTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get conversationId => $composableBuilder(
+      column: $table.conversationId, builder: (column) => column);
+
+  GeneratedColumn<bool> get hasReachedEnd => $composableBuilder(
+      column: $table.hasReachedEnd, builder: (column) => column);
+}
+
+class $$ConversationTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $ConversationTable,
+    ConversationData,
+    $$ConversationTableFilterComposer,
+    $$ConversationTableOrderingComposer,
+    $$ConversationTableAnnotationComposer,
+    $$ConversationTableCreateCompanionBuilder,
+    $$ConversationTableUpdateCompanionBuilder,
+    (
+      ConversationData,
+      BaseReferences<_$AppDatabase, $ConversationTable, ConversationData>
+    ),
+    ConversationData,
+    PrefetchHooks Function()> {
+  $$ConversationTableTableManager(_$AppDatabase db, $ConversationTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ConversationTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ConversationTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ConversationTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> conversationId = const Value.absent(),
+            Value<bool> hasReachedEnd = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ConversationCompanion(
+            conversationId: conversationId,
+            hasReachedEnd: hasReachedEnd,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String conversationId,
+            Value<bool> hasReachedEnd = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              ConversationCompanion.insert(
+            conversationId: conversationId,
+            hasReachedEnd: hasReachedEnd,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$ConversationTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $ConversationTable,
+    ConversationData,
+    $$ConversationTableFilterComposer,
+    $$ConversationTableOrderingComposer,
+    $$ConversationTableAnnotationComposer,
+    $$ConversationTableCreateCompanionBuilder,
+    $$ConversationTableUpdateCompanionBuilder,
+    (
+      ConversationData,
+      BaseReferences<_$AppDatabase, $ConversationTable, ConversationData>
+    ),
+    ConversationData,
+    PrefetchHooks Function()>;
 typedef $$ChatMessageTableCreateCompanionBuilder = ChatMessageCompanion
     Function({
   required String id,
@@ -5209,6 +5379,7 @@ typedef $$ChatMessageTableCreateCompanionBuilder = ChatMessageCompanion
   Value<DateTime?> updatedAt,
   Value<String?> parentMessage,
   required ChatMessageType type,
+  Value<bool> pending,
   Value<int> rowid,
 });
 typedef $$ChatMessageTableUpdateCompanionBuilder = ChatMessageCompanion
@@ -5222,6 +5393,7 @@ typedef $$ChatMessageTableUpdateCompanionBuilder = ChatMessageCompanion
   Value<DateTime?> updatedAt,
   Value<String?> parentMessage,
   Value<ChatMessageType> type,
+  Value<bool> pending,
   Value<int> rowid,
 });
 
@@ -5307,6 +5479,9 @@ class $$ChatMessageTableFilterComposer
       get type => $composableBuilder(
           column: $table.type,
           builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<bool> get pending => $composableBuilder(
+      column: $table.pending, builder: (column) => ColumnFilters(column));
 
   $$UserTableFilterComposer get creator {
     final $$UserTableFilterComposer composer = $composerBuilder(
@@ -5401,6 +5576,9 @@ class $$ChatMessageTableOrderingComposer
   ColumnOrderings<int> get type => $composableBuilder(
       column: $table.type, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<bool> get pending => $composableBuilder(
+      column: $table.pending, builder: (column) => ColumnOrderings(column));
+
   $$UserTableOrderingComposer get creator {
     final $$UserTableOrderingComposer composer = $composerBuilder(
         composer: this,
@@ -5471,6 +5649,9 @@ class $$ChatMessageTableAnnotationComposer
 
   GeneratedColumnWithTypeConverter<ChatMessageType, int> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
+
+  GeneratedColumn<bool> get pending =>
+      $composableBuilder(column: $table.pending, builder: (column) => column);
 
   $$UserTableAnnotationComposer get creator {
     final $$UserTableAnnotationComposer composer = $composerBuilder(
@@ -5567,6 +5748,7 @@ class $$ChatMessageTableTableManager extends RootTableManager<
             Value<DateTime?> updatedAt = const Value.absent(),
             Value<String?> parentMessage = const Value.absent(),
             Value<ChatMessageType> type = const Value.absent(),
+            Value<bool> pending = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ChatMessageCompanion(
@@ -5579,6 +5761,7 @@ class $$ChatMessageTableTableManager extends RootTableManager<
             updatedAt: updatedAt,
             parentMessage: parentMessage,
             type: type,
+            pending: pending,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -5591,6 +5774,7 @@ class $$ChatMessageTableTableManager extends RootTableManager<
             Value<DateTime?> updatedAt = const Value.absent(),
             Value<String?> parentMessage = const Value.absent(),
             required ChatMessageType type,
+            Value<bool> pending = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ChatMessageCompanion.insert(
@@ -5603,6 +5787,7 @@ class $$ChatMessageTableTableManager extends RootTableManager<
             updatedAt: updatedAt,
             parentMessage: parentMessage,
             type: type,
+            pending: pending,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -6487,137 +6672,6 @@ typedef $$NotificationsConfigTableProcessedTableManager = ProcessedTableManager<
     ),
     NotificationsConfigData,
     PrefetchHooks Function()>;
-typedef $$ConversationTableCreateCompanionBuilder = ConversationCompanion
-    Function({
-  required String conversationId,
-  Value<bool> hasReachedEnd,
-  Value<int> rowid,
-});
-typedef $$ConversationTableUpdateCompanionBuilder = ConversationCompanion
-    Function({
-  Value<String> conversationId,
-  Value<bool> hasReachedEnd,
-  Value<int> rowid,
-});
-
-class $$ConversationTableFilterComposer
-    extends Composer<_$AppDatabase, $ConversationTable> {
-  $$ConversationTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<String> get conversationId => $composableBuilder(
-      column: $table.conversationId,
-      builder: (column) => ColumnFilters(column));
-
-  ColumnFilters<bool> get hasReachedEnd => $composableBuilder(
-      column: $table.hasReachedEnd, builder: (column) => ColumnFilters(column));
-}
-
-class $$ConversationTableOrderingComposer
-    extends Composer<_$AppDatabase, $ConversationTable> {
-  $$ConversationTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<String> get conversationId => $composableBuilder(
-      column: $table.conversationId,
-      builder: (column) => ColumnOrderings(column));
-
-  ColumnOrderings<bool> get hasReachedEnd => $composableBuilder(
-      column: $table.hasReachedEnd,
-      builder: (column) => ColumnOrderings(column));
-}
-
-class $$ConversationTableAnnotationComposer
-    extends Composer<_$AppDatabase, $ConversationTable> {
-  $$ConversationTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<String> get conversationId => $composableBuilder(
-      column: $table.conversationId, builder: (column) => column);
-
-  GeneratedColumn<bool> get hasReachedEnd => $composableBuilder(
-      column: $table.hasReachedEnd, builder: (column) => column);
-}
-
-class $$ConversationTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $ConversationTable,
-    ConversationData,
-    $$ConversationTableFilterComposer,
-    $$ConversationTableOrderingComposer,
-    $$ConversationTableAnnotationComposer,
-    $$ConversationTableCreateCompanionBuilder,
-    $$ConversationTableUpdateCompanionBuilder,
-    (
-      ConversationData,
-      BaseReferences<_$AppDatabase, $ConversationTable, ConversationData>
-    ),
-    ConversationData,
-    PrefetchHooks Function()> {
-  $$ConversationTableTableManager(_$AppDatabase db, $ConversationTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$ConversationTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$ConversationTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$ConversationTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback: ({
-            Value<String> conversationId = const Value.absent(),
-            Value<bool> hasReachedEnd = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              ConversationCompanion(
-            conversationId: conversationId,
-            hasReachedEnd: hasReachedEnd,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String conversationId,
-            Value<bool> hasReachedEnd = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              ConversationCompanion.insert(
-            conversationId: conversationId,
-            hasReachedEnd: hasReachedEnd,
-            rowid: rowid,
-          ),
-          withReferenceMapper: (p0) => p0
-              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
-              .toList(),
-          prefetchHooksCallback: null,
-        ));
-}
-
-typedef $$ConversationTableProcessedTableManager = ProcessedTableManager<
-    _$AppDatabase,
-    $ConversationTable,
-    ConversationData,
-    $$ConversationTableFilterComposer,
-    $$ConversationTableOrderingComposer,
-    $$ConversationTableAnnotationComposer,
-    $$ConversationTableCreateCompanionBuilder,
-    $$ConversationTableUpdateCompanionBuilder,
-    (
-      ConversationData,
-      BaseReferences<_$AppDatabase, $ConversationTable, ConversationData>
-    ),
-    ConversationData,
-    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6628,6 +6682,8 @@ class $AppDatabaseManager {
   $$GameTableTableManager get game => $$GameTableTableManager(_db, _db.game);
   $$MatchTableTableManager get match =>
       $$MatchTableTableManager(_db, _db.match);
+  $$ConversationTableTableManager get conversation =>
+      $$ConversationTableTableManager(_db, _db.conversation);
   $$ChatMessageTableTableManager get chatMessage =>
       $$ChatMessageTableTableManager(_db, _db.chatMessage);
   $$AttachmentTableTableManager get attachment =>
@@ -6636,6 +6692,4 @@ class $AppDatabaseManager {
       $$NotificationTableTableManager(_db, _db.notification);
   $$NotificationsConfigTableTableManager get notificationsConfig =>
       $$NotificationsConfigTableTableManager(_db, _db.notificationsConfig);
-  $$ConversationTableTableManager get conversation =>
-      $$ConversationTableTableManager(_db, _db.conversation);
 }

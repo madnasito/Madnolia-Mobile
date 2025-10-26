@@ -13,6 +13,7 @@ class ChatMessage extends Table {
   DateTimeColumn get updatedAt => dateTime().nullable()();
   TextColumn get parentMessage => text().nullable().references(ChatMessage, #id)();
   IntColumn get type => intEnum<ChatMessageType>()();
+  BoolColumn get pending => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};

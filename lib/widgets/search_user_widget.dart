@@ -185,7 +185,7 @@ class _SeatchUserState extends State<SeatchUser> {
     );
   }
 
-  _seatchUser(String user) {
+  Future _seatchUser(String user) {
     return UserService().searchUser(user);
   }
 }

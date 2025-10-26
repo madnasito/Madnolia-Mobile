@@ -61,6 +61,7 @@ class ChatMessageRepository {
           id: Value(newId),
           date: Value(date),
           status: Value(ChatMessageStatus.sent),
+          pending: Value(false)
         ),
       );
     } catch (e) {
@@ -176,7 +177,8 @@ class ChatMessageRepository {
             creator: m.creator,
             date: m.date,
             updatedAt: m.updatedAt,
-            type: m.type
+            type: m.type,
+            pending: false
           )).toList();
           messages.addAll(newMessages);
         }

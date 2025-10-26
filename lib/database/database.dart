@@ -25,6 +25,18 @@ import 'notifications/notification.schema.dart';
 
 part 'database.g.dart';
 
+@DriftDatabase(tables: [
+  User,
+  Friendship,
+  Match,
+  Conversation,
+  ChatMessage,
+  Attachment,
+  Game,
+  Notification,
+  NotificationsConfig
+])
+
 class AppDatabase extends _$AppDatabase {
   static AppDatabase? _instance;
   static bool _initializing = false;

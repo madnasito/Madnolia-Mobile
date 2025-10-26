@@ -30,7 +30,7 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
 
   }
 
-  _initState(InitialState event, Emitter<PlayerMatchesState> emit) {
+  void _initState(InitialState event, Emitter<PlayerMatchesState> emit) {
     final mainList = [
       LoadedMatches(type: MatchesFilterType.all, hasReachesMax: false, matches: [], status: ListStatus.initial),
       LoadedMatches(type: MatchesFilterType.created, hasReachesMax: false, matches: [], status: ListStatus.initial),
