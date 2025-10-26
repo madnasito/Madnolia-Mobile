@@ -198,6 +198,24 @@ class ChatMessageRepository {
       }
     }
       
+  Future<void> sync() async {
+    try {
+      final lastMessage = await (database.select(database.chatMessage)..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])).getSingleOrNull();
+
+      if (lastMessage == null) return;
+
+      final messages = await _messagesService.syncFromDate(date: lastMessage.date);
+
+      if (messages.isNotEmpty) {
+        final messageCompanions = messages.map((m) => m.toCompanion()).toList();
+        await createOrUpdateMultiple(messageCompanions);
+      }
+    } catch (e) {
+      debugPrint('Error in sync: $e');
+      rethrow;
+    }
+  }
+
   Stream<List<ChatMessageWithUser>> watchMessagesInRoom({ required String conversationId}) async* {
     try {
       final query = database.select(database.chatMessage).join([

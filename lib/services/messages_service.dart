@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
 import 'package:madnolia/models/chat/chat_message_model.dart';
@@ -13,6 +14,29 @@ class MessagesService {
 
   final String baseUrl = dotenv.get("API_URL");
 
+  Future<List<ChatMessage>> syncFromDate({required DateTime date }) async {
+    try {
+
+      final String url = "$baseUrl/messages/sync-from";
+      final Map<String, String> queryParams = {
+        'date': date.toIso8601String(),
+      };
+
+      final String? token = await _storage.read(key: "token");
+
+      final resp = await _dio.get(
+        url,
+        queryParameters: queryParams,
+        options: Options(headers: {"Authorization": "Bearer $token"})
+      );
+
+
+      return (resp.data as List).map((e) => ChatMessage.fromJson(e)).toList();
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
 
   Future<List<ChatMessage>> getMatchMessages(String id, String? cursor) async {
   try {
