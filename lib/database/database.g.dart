@@ -2996,9 +2996,17 @@ class $NotificationTable extends Notification
   late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
       'date', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, type, title, thumb, sender, path, read, date];
+      [id, type, title, thumb, sender, path, read, date, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -3048,6 +3056,10 @@ class $NotificationTable extends Notification
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
     return context;
   }
 
@@ -3074,6 +3086,8 @@ class $NotificationTable extends Notification
           .read(DriftSqlType.bool, data['${effectivePrefix}read'])!,
       date: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
   }
 
@@ -3096,6 +3110,7 @@ class NotificationData extends DataClass
   final String path;
   final bool read;
   final DateTime date;
+  final DateTime createdAt;
   const NotificationData(
       {required this.id,
       required this.type,
@@ -3104,7 +3119,8 @@ class NotificationData extends DataClass
       this.sender,
       required this.path,
       required this.read,
-      required this.date});
+      required this.date,
+      required this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -3121,6 +3137,7 @@ class NotificationData extends DataClass
     map['path'] = Variable<String>(path);
     map['read'] = Variable<bool>(read);
     map['date'] = Variable<DateTime>(date);
+    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -3135,6 +3152,7 @@ class NotificationData extends DataClass
       path: Value(path),
       read: Value(read),
       date: Value(date),
+      createdAt: Value(createdAt),
     );
   }
 
@@ -3151,6 +3169,7 @@ class NotificationData extends DataClass
       path: serializer.fromJson<String>(json['path']),
       read: serializer.fromJson<bool>(json['read']),
       date: serializer.fromJson<DateTime>(json['date']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -3166,6 +3185,7 @@ class NotificationData extends DataClass
       'path': serializer.toJson<String>(path),
       'read': serializer.toJson<bool>(read),
       'date': serializer.toJson<DateTime>(date),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
@@ -3177,7 +3197,8 @@ class NotificationData extends DataClass
           Value<String?> sender = const Value.absent(),
           String? path,
           bool? read,
-          DateTime? date}) =>
+          DateTime? date,
+          DateTime? createdAt}) =>
       NotificationData(
         id: id ?? this.id,
         type: type ?? this.type,
@@ -3187,6 +3208,7 @@ class NotificationData extends DataClass
         path: path ?? this.path,
         read: read ?? this.read,
         date: date ?? this.date,
+        createdAt: createdAt ?? this.createdAt,
       );
   NotificationData copyWithCompanion(NotificationCompanion data) {
     return NotificationData(
@@ -3198,6 +3220,7 @@ class NotificationData extends DataClass
       path: data.path.present ? data.path.value : this.path,
       read: data.read.present ? data.read.value : this.read,
       date: data.date.present ? data.date.value : this.date,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
 
@@ -3211,14 +3234,15 @@ class NotificationData extends DataClass
           ..write('sender: $sender, ')
           ..write('path: $path, ')
           ..write('read: $read, ')
-          ..write('date: $date')
+          ..write('date: $date, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
   int get hashCode =>
-      Object.hash(id, type, title, thumb, sender, path, read, date);
+      Object.hash(id, type, title, thumb, sender, path, read, date, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3230,7 +3254,8 @@ class NotificationData extends DataClass
           other.sender == this.sender &&
           other.path == this.path &&
           other.read == this.read &&
-          other.date == this.date);
+          other.date == this.date &&
+          other.createdAt == this.createdAt);
 }
 
 class NotificationCompanion extends UpdateCompanion<NotificationData> {
@@ -3242,6 +3267,7 @@ class NotificationCompanion extends UpdateCompanion<NotificationData> {
   final Value<String> path;
   final Value<bool> read;
   final Value<DateTime> date;
+  final Value<DateTime> createdAt;
   final Value<int> rowid;
   const NotificationCompanion({
     this.id = const Value.absent(),
@@ -3252,6 +3278,7 @@ class NotificationCompanion extends UpdateCompanion<NotificationData> {
     this.path = const Value.absent(),
     this.read = const Value.absent(),
     this.date = const Value.absent(),
+    this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   NotificationCompanion.insert({
@@ -3263,6 +3290,7 @@ class NotificationCompanion extends UpdateCompanion<NotificationData> {
     required String path,
     required bool read,
     required DateTime date,
+    this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         type = Value(type),
@@ -3280,6 +3308,7 @@ class NotificationCompanion extends UpdateCompanion<NotificationData> {
     Expression<String>? path,
     Expression<bool>? read,
     Expression<DateTime>? date,
+    Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -3291,6 +3320,7 @@ class NotificationCompanion extends UpdateCompanion<NotificationData> {
       if (path != null) 'path': path,
       if (read != null) 'read': read,
       if (date != null) 'date': date,
+      if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3304,6 +3334,7 @@ class NotificationCompanion extends UpdateCompanion<NotificationData> {
       Value<String>? path,
       Value<bool>? read,
       Value<DateTime>? date,
+      Value<DateTime>? createdAt,
       Value<int>? rowid}) {
     return NotificationCompanion(
       id: id ?? this.id,
@@ -3314,6 +3345,7 @@ class NotificationCompanion extends UpdateCompanion<NotificationData> {
       path: path ?? this.path,
       read: read ?? this.read,
       date: date ?? this.date,
+      createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3346,6 +3378,9 @@ class NotificationCompanion extends UpdateCompanion<NotificationData> {
     if (date.present) {
       map['date'] = Variable<DateTime>(date.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -3363,6 +3398,7 @@ class NotificationCompanion extends UpdateCompanion<NotificationData> {
           ..write('path: $path, ')
           ..write('read: $read, ')
           ..write('date: $date, ')
+          ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -6189,6 +6225,7 @@ typedef $$NotificationTableCreateCompanionBuilder = NotificationCompanion
   required String path,
   required bool read,
   required DateTime date,
+  Value<DateTime> createdAt,
   Value<int> rowid,
 });
 typedef $$NotificationTableUpdateCompanionBuilder = NotificationCompanion
@@ -6201,6 +6238,7 @@ typedef $$NotificationTableUpdateCompanionBuilder = NotificationCompanion
   Value<String> path,
   Value<bool> read,
   Value<DateTime> date,
+  Value<DateTime> createdAt,
   Value<int> rowid,
 });
 
@@ -6255,6 +6293,9 @@ class $$NotificationTableFilterComposer
   ColumnFilters<DateTime> get date => $composableBuilder(
       column: $table.date, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
   $$UserTableFilterComposer get sender {
     final $$UserTableFilterComposer composer = $composerBuilder(
         composer: this,
@@ -6306,6 +6347,9 @@ class $$NotificationTableOrderingComposer
   ColumnOrderings<DateTime> get date => $composableBuilder(
       column: $table.date, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
   $$UserTableOrderingComposer get sender {
     final $$UserTableOrderingComposer composer = $composerBuilder(
         composer: this,
@@ -6356,6 +6400,9 @@ class $$NotificationTableAnnotationComposer
 
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
   $$UserTableAnnotationComposer get sender {
     final $$UserTableAnnotationComposer composer = $composerBuilder(
@@ -6409,6 +6456,7 @@ class $$NotificationTableTableManager extends RootTableManager<
             Value<String> path = const Value.absent(),
             Value<bool> read = const Value.absent(),
             Value<DateTime> date = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               NotificationCompanion(
@@ -6420,6 +6468,7 @@ class $$NotificationTableTableManager extends RootTableManager<
             path: path,
             read: read,
             date: date,
+            createdAt: createdAt,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -6431,6 +6480,7 @@ class $$NotificationTableTableManager extends RootTableManager<
             required String path,
             required bool read,
             required DateTime date,
+            Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               NotificationCompanion.insert(
@@ -6442,6 +6492,7 @@ class $$NotificationTableTableManager extends RootTableManager<
             path: path,
             read: read,
             date: date,
+            createdAt: createdAt,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

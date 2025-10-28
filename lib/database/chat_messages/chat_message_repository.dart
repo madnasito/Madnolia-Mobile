@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/widgets.dart' show debugPrint;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/database/conversations/conversation_state_repository.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/users/user_repository.dart';
@@ -198,9 +199,10 @@ class ChatMessageRepository {
       }
     }
       
-  Future<void> sync() async {
+  Future<void> syncFromDate(DateTime date) async {
     try {
-      final lastMessage = await (database.select(database.chatMessage)..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])).getSingleOrNull();
+      final lastMessageList = await (database.select(database.chatMessage)..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])..limit(1)).get();
+      final lastMessage = lastMessageList.isNotEmpty ? lastMessageList.first : null;
 
       if (lastMessage == null) return;
 
@@ -209,6 +211,13 @@ class ChatMessageRepository {
       if (messages.isNotEmpty) {
         final messageCompanions = messages.map((m) => m.toCompanion()).toList();
         await createOrUpdateMultiple(messageCompanions);
+      }
+
+      // Sync messages untill it is done
+      if(messages.length == 50){
+        syncFromDate(messages.last.date);
+      }else {
+        await FlutterSecureStorage().write(key: 'lastSyncDate', value: '');
       }
     } catch (e) {
       debugPrint('Error in sync: $e');

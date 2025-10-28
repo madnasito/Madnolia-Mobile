@@ -11,6 +11,7 @@ class Notification extends Table {
   TextColumn get path => text()();
   BoolColumn get read => boolean()();
   DateTimeColumn get date => dateTime()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 
   @override
   Set<Column> get primaryKey => {id};

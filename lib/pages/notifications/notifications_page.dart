@@ -5,6 +5,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
+import 'package:madnolia/enums/notification_type.enum.dart';
 import 'package:madnolia/services/notifications_service.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/notifications/atom_invitation_notification.dart';
@@ -79,7 +80,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 userBloc.restoreNotifications();
                 return Column(
                   children: snapshot.data!.map((notification) =>
-                    notification.type == 0
+                    notification.type == NotificationType.request
                       ? AtomRequestNotification(notification: notification)
                       : AtomInvitationNotification(notification: notification, notificationsService: notificationsService,)
                   ).toList(),

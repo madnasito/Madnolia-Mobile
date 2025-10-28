@@ -4,6 +4,11 @@
 
 import 'dart:convert';
 
+import 'package:drift/drift.dart' as drift;
+import 'package:madnolia/enums/notification_type.enum.dart';
+
+import '../../database/database.dart' show NotificationCompanion;
+
 NotificationModel notificationModelFromJson(String str) => NotificationModel.fromJson(json.decode(str));
 
 String notificationModelToJson(NotificationModel data) => json.encode(data.toJson());
@@ -11,7 +16,7 @@ String notificationModelToJson(NotificationModel data) => json.encode(data.toJso
 class NotificationModel {
     String id;
     String user;
-    int type;
+    NotificationType type;
     String title;
     String thumb;
     String sender;
@@ -31,10 +36,14 @@ class NotificationModel {
         required this.date,
     });
 
-    factory NotificationModel.fromJson(Map<String, dynamic> json) => NotificationModel(
+    factory NotificationModel.fromJson(Map<String, dynamic> json) {
+
+      NotificationType type = NotificationType.values.firstWhere((e) => e.index == json["type"]);
+
+      return NotificationModel(
         id: json["_id"],
         user: json["user"],
-        type: json["type"],
+        type: type,
         title: json["title"],
         thumb: json["thumb"],
         sender: json["sender"],
@@ -42,11 +51,12 @@ class NotificationModel {
         read: json["read"],
         date: DateTime.parse(json["date"]),
     );
+    }
 
     Map<String, dynamic> toJson() => {
         "_id": id,
         "user": user,
-        "type": type,
+        "type": type.index,
         "title": title,
         "thumb": thumb,
         "sender": sender,
@@ -54,4 +64,17 @@ class NotificationModel {
         "read": read,
         "date": date.toIso8601String(),
     };
+
+    NotificationCompanion toCompanion() {
+        return NotificationCompanion(
+            id: drift.Value(id),
+            type: drift.Value(type),
+            title: drift.Value(title),
+            thumb: drift.Value(thumb),
+            sender: drift.Value(sender),
+            path: drift.Value(path),
+            read: drift.Value(read),
+            date: drift.Value(date),
+        );
+    }
 }

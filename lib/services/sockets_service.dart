@@ -140,6 +140,16 @@ Future<void> onStart(ServiceInstance service) async {
 
     service.invoke("connected_socket");
 
+    if(await storage.containsKey(key: 'lastSyncDate')) {
+      debugPrint('Starting syncing');
+      final String? dateString = await storage.read(key: 'lastSyncDate');
+      if(dateString != '' && dateString != null){
+        debugPrint('Starting syncing from date $dateString');
+        final date = DateTime.parse(dateString);
+        await chatMessageRepository.syncFromDate(date);
+      }
+    }
+
   });
 
   socket.on("added_to_match", (payload) => service.invoke("added_to_match", {"resp" : payload}));
@@ -237,9 +247,11 @@ Future<void> onStart(ServiceInstance service) async {
 
   socket.on('match_cancelled', (data) async => await matchRepository.updateMatchStatus(data['match'], MatchStatus.cancelled));
 
-  socket.onDisconnect((_) => {
-   service.invoke("disconnected_socket")
-  });
+  socket.onDisconnect((_) {
+    service.invoke("disconnected_socket");
+    storage.write(key: 'lastSyncDate', value: DateTime.now().toIso8601String());
+    }
+  );
 
   service.on("update_socket").listen((event) {
     debugPrint("Update socket");
