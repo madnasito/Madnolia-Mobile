@@ -4,6 +4,7 @@ import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/friendships/frienship.repository.dart';
 import 'package:madnolia/database/games/games.repository.dart';
 import 'package:madnolia/database/match/match_repository.dart';
+import 'package:madnolia/database/notifications/notification_repository.dart';
 import 'package:madnolia/database/users/user_repository.dart';
 
 class RepositoryManager {
@@ -20,6 +21,7 @@ class RepositoryManager {
   late final GamesRepository games;
   late final MatchRepository match;
   late final UserRepository user;
+  late final NotificationRepository notification;
 
   RepositoryManager._internal() : database = AppDatabase() {
     chatMessage = ChatMessageRepository(database);
@@ -28,6 +30,7 @@ class RepositoryManager {
     games = GamesRepository(database);
     match = MatchRepository(database);
     user = UserRepository(database);
+    notification = NotificationRepository(database);
   }
 
   static Future<void> reset() async {

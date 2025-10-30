@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
-import 'package:madnolia/models/notification/notification_model.dart';
 import 'package:madnolia/services/notifications_service.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 
 class AtomInvitationNotification extends StatelessWidget {
-  final NotificationModel notification;
+  
+  final NotificationData notification;
   final NotificationsService notificationsService;
+
   const AtomInvitationNotification({super.key, required this.notification, required this.notificationsService});
 
   @override
   Widget build(BuildContext context) {
     final userRepository = RepositoryManager().user;
     return FutureBuilder(
-      future: userRepository.getUserById(notification.sender),
+      future: userRepository.getUserById(notification.sender!),
       builder: (context, snapshot) {
         if(snapshot.hasData){ 
           return Dismissible(

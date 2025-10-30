@@ -5,6 +5,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/notification_type.enum.dart';
 import 'package:madnolia/services/notifications_service.dart';
 import 'package:madnolia/style/text_style.dart';
@@ -53,6 +54,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
   @override
   Widget build(BuildContext context) {
+    final notificationRepository = RepositoryManager().notification;
     return CustomScaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -61,7 +63,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             CenterTitleAtom(text: translate("NOTIFICATIONS.TITLE"), textStyle: neonTitleText,),
             const SizedBox(height: 10),
             FutureBuilder(
-              future: NotificationsService().getUserNotifications(),
+              future: notificationRepository.getUserNotifications(reload: true),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
