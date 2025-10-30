@@ -41,7 +41,7 @@ class NotificationRepository {
     }
   }
 
-  Future<void> insertOrUpdateMany (List <NotificationCompanion> notifications) async {
+  Future<void> insertOrUpdateMany(List <NotificationCompanion> notifications) async {
     try {
 
       final notificationsWithSenders = notifications.where((n) => n.sender.value != null).toList();

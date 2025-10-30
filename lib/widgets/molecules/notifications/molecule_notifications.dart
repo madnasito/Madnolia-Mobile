@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:madnolia/enums/notification_type.enum.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
 import 'package:madnolia/services/notifications_service.dart';
 import 'package:madnolia/widgets/atoms/notifications/atom_invitation_notification.dart';
@@ -18,7 +19,7 @@ class MoleculeNotifications extends StatelessWidget {
     return ListView.builder(
       itemCount: notifications.length,
       itemBuilder: (BuildContext context, int index) {
-        if(notifications[index].type == 0) {
+        if(notifications[index].type == NotificationType.invitation) {
           return AtomInvitationNotification(notification: notifications[index], notificationsService: notificationsService, );
         } else {
           return AtomRequestNotification(notification: notifications[index]);
