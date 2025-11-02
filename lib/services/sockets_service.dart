@@ -40,6 +40,7 @@ Future<void> onStart(ServiceInstance service) async {
   
   final chatMessageRepository = RepositoryManager().chatMessage;
   final matchRepository = RepositoryManager().match;
+  final notificationsRepository = RepositoryManager().notification;
   
   // Initialize Firebase after dotenv is loaded
   try {
@@ -245,6 +246,14 @@ Future<void> onStart(ServiceInstance service) async {
   socket.on("connection_rejected", (data) => service.invoke("connection_rejected"));
   socket.on("canceled_connection", (data) => service.invoke("canceled_connection"));
 
+  socket.on('notification_deleted', (data) async {
+    try {
+      await notificationsRepository.deleteNotification(id: data);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  });
+
   socket.on('match_cancelled', (data) async => await matchRepository.updateMatchStatus(data['match'], MatchStatus.cancelled));
 
   socket.onDisconnect((_) {
@@ -348,6 +357,21 @@ Future<void> onStart(ServiceInstance service) async {
   service.on("answer_room_call").listen((onData) => socket.emit("answer_room_call", onData));
 
   service.on("room_ice_candidate").listen((onData) => socket.emit("room_ice_candidate", onData));
+
+  service.on("delete_notification").listen((onData) {
+    try {
+      final String id = onData?['id'];
+
+      socket.emitWithAck('delete_notification', id, ack: (value) async {
+        debugPrint('Deleted notification socket, $id');
+        debugPrint(value.toString());
+        await notificationsRepository.deleteNotification(id: id);
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    
+  });
 
   service.on("delete_chat_notifications").listen((onData) => LocalNotificationsService.deleteRoomMessages(onData?["room"]));
 

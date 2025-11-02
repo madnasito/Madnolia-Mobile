@@ -71,6 +71,15 @@ class NotificationRepository {
     }
   }
 
+
+  Future<int> deleteNotifications() async {
+    try {
+      return (database.delete(database.notification)).go();
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
   Stream<List<NotificationData>> watchAllNotifications() {
     try {
       return database.select(database.notification)

@@ -29,6 +29,7 @@ Future<void> logoutApp(BuildContext context) async {
   RepositoryManager().user.deleteUsers();
   RepositoryManager().match.deleteMatches();
   RepositoryManager().friendship.deleteFriendships();
+  RepositoryManager().notification.deleteNotifications();
   if(!context.mounted) return;
   stopBackgroundService();
   await storage.deleteAll();

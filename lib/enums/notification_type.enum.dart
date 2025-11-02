@@ -1,5 +1,5 @@
 enum NotificationType {
-  invitation,
   request,
+  invitation,
   system
 }

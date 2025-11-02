@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
-import 'package:madnolia/services/notifications_service.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 
 class AtomInvitationNotification extends StatelessWidget {
   
   final NotificationData notification;
-  final NotificationsService notificationsService;
+  final FlutterBackgroundService backgroundService;
 
-  const AtomInvitationNotification({super.key, required this.notification, required this.notificationsService});
+  const AtomInvitationNotification({super.key, required this.notification, required this.backgroundService});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class AtomInvitationNotification extends StatelessWidget {
             key: UniqueKey(),
             confirmDismiss: (direction) async {
               try {
-                await notificationsService.deleteNotification(notification.id);
+                backgroundService.invoke('delete_notification', {'id': notification.id});
                 return true;
               } catch (e) {
                 return false;
