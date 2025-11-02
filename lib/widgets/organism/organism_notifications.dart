@@ -20,27 +20,40 @@ class OrganismNotifications extends StatelessWidget {
     notificationsBloc.add(LoadNotifications());
 
     switch (notificationsBloc.state.status ) {
+      
       case ListStatus.initial:
         return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
+      
       case ListStatus.success:
         // Message when there is no notification
         if(notificationsBloc.state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.EMPTY"))));
-        
-        final userBloc = context.watch<UserBloc>();
-        // avoid multiple notifications services instances
-        final notificationsService = NotificationsService();
-
-        userBloc.restoreNotifications();
-        return Column(
-          children: notificationsBloc.state.data.map((notification) =>
-            notification.type == NotificationType.request
-              ? AtomRequestNotification(notification: notification)
-              : AtomInvitationNotification(notification: notification, notificationsService: notificationsService,)
-          ).toList(),
-        );
-      case ListStatus.failure:
-        return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.ERROR_LOADING"))));
+        return NotificationsLoader();
       
+      case ListStatus.failure:
+        if(notificationsBloc.state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.ERROR_LOADING"))));
+        return NotificationsLoader();
     }
+  }
+}
+
+class NotificationsLoader extends StatelessWidget {
+  const NotificationsLoader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final notificationsBloc = context.watch<NotificationsBloc>();
+    
+    final userBloc = context.watch<UserBloc>();
+    // avoid multiple notifications services instances
+    final notificationsService = NotificationsService();
+    userBloc.restoreNotifications();
+    return Column(
+      children: notificationsBloc.state.data.map((notification) =>
+        notification.type == NotificationType.request
+          ? AtomRequestNotification(notification: notification)
+          : AtomInvitationNotification(notification: notification, notificationsService: notificationsService,)
+      ).toList(),
+    );
   }
 }
