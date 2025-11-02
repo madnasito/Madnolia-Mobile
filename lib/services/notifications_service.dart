@@ -11,11 +11,15 @@ class NotificationsService {
   final String baseUrl = dotenv.get("API_URL");
   final dio = Dio();
 
-  Future<List<NotificationModel>> getUserNotifications() async {
+  Future<List<NotificationModel>> getUserNotifications({String? cursor}) async {
     try {
       final String? token = await _storage.read(key: "token");
 
-      final response = await dio.get("$baseUrl/notifications", options: Options(headers: {"Authorization": "Bearer $token"}));
+      final response = await dio.get(
+        "$baseUrl/notifications",
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+        queryParameters: cursor != null ? {'cursor': cursor} : null
+      );
 
       List<NotificationModel> notifications = List<Map<String, dynamic>>.from(response.data)
       .map((e) => NotificationModel.fromJson(e))

@@ -15,9 +15,9 @@ class NotificationRepository {
     _userRepository = UserRepository(database);
   }
 
-  Future<List<NotificationData>> getUserNotifications({bool? reload}) async {
+  Future<List<NotificationData>> getUserNotifications({String? cursorId, bool? reload}) async {
     try {
-      if(reload == true) await updateData();
+      if(reload == true) await updateData(cursorId);
 
       List<NotificationData> notificationsData = await database.select(database.notification).get();
 
@@ -28,9 +28,9 @@ class NotificationRepository {
     }
   }
 
-  Future<void> updateData() async {
+  Future<void> updateData(String? cursorId) async {
     try {
-      List<NotificationModel> apiNotifications = await _notificationsService.getUserNotifications();
+      List<NotificationModel> apiNotifications = await _notificationsService.getUserNotifications(cursor: cursorId);
 
       List<NotificationCompanion> notificationsCompanion = apiNotifications.map((n) => n.toCompanion()).toList();
 
@@ -53,6 +53,28 @@ class NotificationRepository {
       return await database.batch((batch) {
         batch.insertAllOnConflictUpdate(database.notification, notifications);
       });
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+  
+  Future<int> deleteNotification({required String id }) async {
+    try {
+      return (database.delete(
+        database.notification
+      )..where((t) => t.id.equals(id)))
+      .go();
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Stream<List<NotificationData>> watchAllNotifications() {
+    try {
+      return database.select(database.notification)
+      .watch();
     } catch (e) {
       debugPrint(e.toString());
       rethrow;

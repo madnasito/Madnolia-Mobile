@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
 import 'package:madnolia/types/app_lifecycle_state.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
@@ -121,29 +122,30 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getIt<MessageBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<PlatformGamesBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<ChatsBloc>()),
+        BlocProvider(create: (BuildContext context) => getIt<NotificationsBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<PlayerMatchesBloc>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
       ],
       child:MessageProvider(
-              child: Portal(
-                child: MaterialApp.router(
-                  theme: ThemeData(
-                    brightness: Brightness.dark,
-                  ),
-                  title: 'madnolia',
-                  routerConfig: router,
-                  localizationsDelegates: [
-                    GlobalCupertinoLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    localizationDelegate
-                  ],
-                  supportedLocales: localizationDelegate.supportedLocales,
-                  locale: localizationDelegate.currentLocale,
-                  key: navigatorKey,
-                ),
-              ),
+        child: Portal(
+          child: MaterialApp.router(
+            theme: ThemeData(
+              brightness: Brightness.dark,
+            ),
+            title: 'madnolia',
+            routerConfig: router,
+            localizationsDelegates: [
+              GlobalCupertinoLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              localizationDelegate
+            ],
+            supportedLocales: localizationDelegate.supportedLocales,
+            locale: localizationDelegate.currentLocale,
+            key: navigatorKey,
+          ),
+        ),
           ),
         ),
       

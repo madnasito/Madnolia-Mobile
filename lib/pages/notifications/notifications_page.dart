@@ -2,16 +2,10 @@ import 'dart:async' show StreamSubscription;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/blocs/user/user_bloc.dart';
-import 'package:madnolia/database/repository_manager.dart';
-import 'package:madnolia/enums/notification_type.enum.dart';
-import 'package:madnolia/services/notifications_service.dart';
 import 'package:madnolia/style/text_style.dart';
-import 'package:madnolia/widgets/atoms/notifications/atom_invitation_notification.dart';
-import 'package:madnolia/widgets/atoms/notifications/atom_request_notification.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
+import 'package:madnolia/widgets/organism/organism_notifications.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 class NotificationsPage extends StatefulWidget {
@@ -54,7 +48,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
   }
   @override
   Widget build(BuildContext context) {
-    final notificationRepository = RepositoryManager().notification;
+
     return CustomScaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -62,33 +56,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
             const SizedBox(height: 20),
             CenterTitleAtom(text: translate("NOTIFICATIONS.TITLE"), textStyle: neonTitleText,),
             const SizedBox(height: 10),
-            FutureBuilder(
-              future: notificationRepository.getUserNotifications(reload: true),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
-                }
-                if (snapshot.hasError || snapshot.data == null) {
-                  return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.ERROR_LOADING"))));
-                }
-                if (snapshot.data!.isEmpty) {
-                  return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.EMPTY"))));
-                }
-                final userBloc = context.watch<UserBloc>();
-
-                // avoid multiple notifications services instances
-                final notificationsService = NotificationsService();
-
-                userBloc.restoreNotifications();
-                return Column(
-                  children: snapshot.data!.map((notification) =>
-                    notification.type == NotificationType.request
-                      ? AtomRequestNotification(notification: notification)
-                      : AtomInvitationNotification(notification: notification, notificationsService: notificationsService,)
-                  ).toList(),
-                );
-              },
-            ),
+            OrganismNotifications()
           ],
         ),
       )
