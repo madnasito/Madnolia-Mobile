@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
@@ -19,7 +20,13 @@ class NotificationRepository {
     try {
       if(reload == true) await updateData(cursorId);
 
-      List<NotificationData> notificationsData = await database.select(database.notification).get();
+      List<NotificationData> notificationsData = await (database.select(database.notification)
+      ..orderBy([
+          (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
+          (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)
+        ])
+      )
+      .get();
 
       return notificationsData;
     } catch (e) {

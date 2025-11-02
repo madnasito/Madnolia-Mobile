@@ -41,7 +41,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
       bool hasReachedMax = false;
 
-      if(notifications.length < 50) hasReachedMax = true;
+      if(notifications.length < 20) hasReachedMax = true;
       emit(
         state.copyWith(
           data: notifications,
