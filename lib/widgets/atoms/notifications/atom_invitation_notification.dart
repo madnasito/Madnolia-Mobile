@@ -74,7 +74,7 @@ class AtomInvitationNotification extends StatelessWidget {
                 ),
           );
             } else {
-              return CircularProgressIndicator();
+              return CircularProgressIndicator.adaptive();
             }
           }
       

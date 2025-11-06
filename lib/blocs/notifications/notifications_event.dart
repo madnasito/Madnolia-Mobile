@@ -21,3 +21,5 @@ class DeleteNotification extends NotificationsEvent {
 
   const DeleteNotification({required this.id});
 }
+
+class RestoreNotificationsState extends NotificationsEvent {}

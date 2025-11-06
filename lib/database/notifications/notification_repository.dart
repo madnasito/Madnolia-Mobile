@@ -20,13 +20,67 @@ class NotificationRepository {
     try {
       if(reload == true) await updateData(cursorId);
 
+      if(cursorId == null) {
+        // Getting latest notifications
+        List<NotificationData> notificationsData = await (database.select(database.notification)
+          ..orderBy([
+              (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
+              (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)
+            ])
+          ..limit(20)
+        )
+        .get();
+
+        return notificationsData;
+      }
+
+      // When a cursorId is provided we should return notifications that come after
+      // the cursor in the same ordering (date desc, id desc). To do that we first
+      // fetch the cursor notification to obtain its date, then query for rows
+      // with (date < cursorDate) OR (date == cursorDate AND id < cursorId)
+      // which represents items after the cursor when ordering desc by date then id.
+      final cursorNotification = await (database.select(database.notification)
+        ..where((t) => t.id.equals(cursorId)))
+      .getSingleOrNull();
+
+      if (cursorNotification == null) {
+        // If the cursor id doesn't exist in local DB, return empty list.
+        return <NotificationData>[];
+      }
+
+      final DateTime cursorDate = cursorNotification.date;
+
       List<NotificationData> notificationsData = await (database.select(database.notification)
-      ..orderBy([
+        ..where((t) =>
+          // Use bitwise operators to combine boolean expressions (drift overloads
+          // & and | for Expression<bool>), avoiding the instance .and/.or methods.
+          t.date.isSmallerThanValue(cursorDate) | (t.date.equals(cursorDate) & t.id.isSmallerThanValue(cursorId))
+        )
+        ..orderBy([
           (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
           (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)
         ])
+        ..limit(20)
       )
       .get();
+
+      if(notificationsData.length < 20) {
+        await updateData(cursorId);
+
+        notificationsData = await (database.select(database.notification)
+          ..where((t) =>
+            // Use bitwise operators to combine boolean expressions (drift overloads
+            // & and | for Expression<bool>), avoiding the instance .and/.or methods.
+            t.date.isSmallerThanValue(cursorDate) | (t.date.equals(cursorDate) & t.id.isSmallerThanValue(cursorId))
+          )
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
+            (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)
+          ])
+          ..limit(20)
+        )
+        .get();
+      }
 
       return notificationsData;
     } catch (e) {
@@ -45,6 +99,7 @@ class NotificationRepository {
 
     } catch (e) {
       debugPrint(e.toString());
+      rethrow;
     }
   }
 
@@ -56,7 +111,7 @@ class NotificationRepository {
       List<String> senders = notificationsWithSenders.map((n) => n.sender.value!).toList();
 
       // Verifyng all senders
-      _userRepository.getUsersByIds(senders);
+      await _userRepository.getUsersByIds(senders);
       return await database.batch((batch) {
         batch.insertAllOnConflictUpdate(database.notification, notifications);
       });

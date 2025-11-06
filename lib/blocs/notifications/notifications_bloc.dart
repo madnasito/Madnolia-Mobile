@@ -24,27 +24,55 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   NotificationsBloc() : super(NotificationsState()) {
     on<LoadNotifications>( _loadNotifications, transformer: throttleDroppable(throttleDuration));
 
+    on<RestoreNotificationsState>(_restore);
+
     on<WatchNotifications>(_watchNotifications);
   }
 
+  void _restore(
+    RestoreNotificationsState event,
+    Emitter<NotificationsState> emit
+  ){
+    emit(
+      state.copyWith(
+        data: [],
+        hasReachedMax: false,
+        status: ListStatus.initial
+      )
+    );
+  }
+
   Future _loadNotifications(LoadNotifications event,Emitter<NotificationsState> emit) async {
-    try {  
+    try {
+
+      if (state.hasReachedMax) return;
+
       String? cursorId;
-      if(event.reload == false && state.data.isNotEmpty) {
+
+      if(event.reload == false && state.data.isNotEmpty && state.status != ListStatus.initial) {
         cursorId = state.data.last.id;
       }
 
+      final isReload = state.status == ListStatus.initial || event.reload;
+
       final notifications = await _notificationsRepository.getUserNotifications(
-        reload: state.status == ListStatus.initial ? true : event.reload,
+        reload: isReload,
         cursorId: cursorId
       );
 
       bool hasReachedMax = false;
 
       if(notifications.length < 20) hasReachedMax = true;
+
+      List<NotificationData> stateNotifications = [];
+
+      stateNotifications.addAll(state.data);
+
+      stateNotifications.addAll(notifications);
+      
       emit(
         state.copyWith(
-          data: notifications,
+          data: stateNotifications,
           hasReachedMax: hasReachedMax,
           status: ListStatus.success
         )

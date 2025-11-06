@@ -16,43 +16,86 @@ class OrganismNotifications extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final notificationsBloc = context.watch<NotificationsBloc>();
-    notificationsBloc.add(LoadNotifications());
-
-    switch (notificationsBloc.state.status ) {
-      
-      case ListStatus.initial:
-        return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
-      
-      case ListStatus.success:
-        // Message when there is no notification
-        if(notificationsBloc.state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.EMPTY"))));
-        return NotificationsLoader();
-      
-      case ListStatus.failure:
-        if(notificationsBloc.state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.ERROR_LOADING"))));
-        return NotificationsLoader();
-    }
+    return BlocBuilder<NotificationsBloc, NotificationsState>(
+      builder: (context, state) {
+        switch (state.status) {
+          
+          case ListStatus.initial:
+            return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
+          
+          case ListStatus.success:
+            // Message when there is no notification
+            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.EMPTY"))));
+            return NotificationsLoader();
+          
+          case ListStatus.failure:
+            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.ERROR_LOADING"))));
+            return NotificationsLoader();
+        }
+      },
+    );
   }
 }
 
-class NotificationsLoader extends StatelessWidget {
+class NotificationsLoader extends StatefulWidget {
   const NotificationsLoader({super.key});
+
+  @override
+  State<NotificationsLoader> createState() => _NotificationsLoaderState();
+}
+
+class _NotificationsLoaderState extends State<NotificationsLoader> {
+  late final _scrollController = ScrollController();
+  late final NotificationsBloc notificationsBloc;
+  
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    notificationsBloc = context.read<NotificationsBloc>();
+    notificationsBloc.add(LoadNotifications());
+    // notificationsBloc.add(WatchNotifications());
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
 
-    final notificationsBloc = context.watch<NotificationsBloc>();
+    
     final backgroundService = FlutterBackgroundService();
     
     final userBloc = context.watch<UserBloc>();
     userBloc.restoreNotifications();
-    return Column(
-      children: notificationsBloc.state.data.map((notification) =>
-        notification.type == NotificationType.request
+
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: notificationsBloc.state.data.length,
+      physics: const AlwaysScrollableScrollPhysics(),
+      controller: _scrollController,
+      itemBuilder: (context, index) {
+        final notification = notificationsBloc.state.data[index];
+        return notification.type == NotificationType.request
           ? AtomRequestNotification(notification: notification)
-          : AtomInvitationNotification(notification: notification, backgroundService: backgroundService)
-      ).toList(),
+          : AtomInvitationNotification(notification: notification, backgroundService: backgroundService);
+      },
     );
+  }
+
+  void _onScroll() {
+    debugPrint('Is bottom: $_isBottom');
+    if (_isBottom) {
+      notificationsBloc.add(LoadNotifications());
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    return _scrollController.offset >=
+    (_scrollController.position.maxScrollExtent * 0.9);
   }
 }

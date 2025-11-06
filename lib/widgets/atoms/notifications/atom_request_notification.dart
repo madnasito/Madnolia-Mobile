@@ -80,7 +80,7 @@ class AtomRequestNotification extends StatelessWidget {
             ),
           );
         } else {
-          return CircularProgressIndicator();
+          return CircularProgressIndicator.adaptive();
         }
       },
     );
