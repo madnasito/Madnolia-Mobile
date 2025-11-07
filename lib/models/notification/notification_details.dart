@@ -1,11 +1,11 @@
 import 'package:madnolia/database/database.dart';
 
-class NotificationWithUser {
+class NotificationDetails {
   final NotificationData notification;
-  final NotificationData user;
+  final UserData? user;
 
-  NotificationWithUser({
+  NotificationDetails({
     required this.notification,
-    required this.user,
+    this.user,
   });
 }

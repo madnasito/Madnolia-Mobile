@@ -2,9 +2,9 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
-import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/list_status.enum.dart';
+import 'package:madnolia/models/notification/notification_details.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 part 'notifications_event.dart';
@@ -50,7 +50,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       String? cursorId;
 
       if(event.reload == false && state.data.isNotEmpty && state.status != ListStatus.initial) {
-        cursorId = state.data.last.id;
+        cursorId = state.data.last.notification.id;
       }
 
       final isReload = state.status == ListStatus.initial || event.reload;
@@ -64,7 +64,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
       if(notifications.length < 20) hasReachedMax = true;
 
-      List<NotificationData> stateNotifications = [];
+      List<NotificationDetails> stateNotifications = [];
 
       stateNotifications.addAll(state.data);
 

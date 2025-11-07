@@ -19,7 +19,7 @@ class NotificationModel {
     NotificationType type;
     String title;
     String thumb;
-    String sender;
+    String? sender;
     String path;
     bool read;
     DateTime date;
@@ -30,7 +30,7 @@ class NotificationModel {
         required this.type,
         required this.title,
         required this.thumb,
-        required this.sender,
+        this.sender,
         required this.path,
         required this.read,
         required this.date,

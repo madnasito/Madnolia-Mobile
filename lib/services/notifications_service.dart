@@ -18,7 +18,7 @@ class NotificationsService {
       final response = await dio.get(
         "$baseUrl/notifications",
         options: Options(headers: {"Authorization": "Bearer $token"}),
-        queryParameters: cursor != null ? {'cursor': cursor} : null
+        queryParameters: cursor != null ? {'from': cursor} : null
       );
 
       List<NotificationModel> notifications = List<Map<String, dynamic>>.from(response.data)

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
 
+import '../../models/notification/notification_details.dart';
 import '../../services/notifications_service.dart';
 import '../users/user_repository.dart';
 class NotificationRepository {
@@ -16,73 +17,54 @@ class NotificationRepository {
     _userRepository = UserRepository(database);
   }
 
-  Future<List<NotificationData>> getUserNotifications({String? cursorId, bool? reload}) async {
+  Future<List<NotificationDetails>> getUserNotifications({String? cursorId, bool? reload}) async {
     try {
       if(reload == true) await updateData(cursorId);
 
-      if(cursorId == null) {
-        // Getting latest notifications
-        List<NotificationData> notificationsData = await (database.select(database.notification)
-          ..orderBy([
-              (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
-              (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)
-            ])
-          ..limit(20)
-        )
-        .get();
+      final query = database.select(database.notification).join([
+        leftOuterJoin(database.user, database.user.id.equalsExp(database.notification.sender)),
+      ]);
 
-        return notificationsData;
+      if (cursorId != null) {
+        final cursorNotification = await (database.select(database.notification)
+          ..where((t) => t.id.equals(cursorId)))
+        .getSingleOrNull();
+
+        if (cursorNotification != null) {
+          final cursorDate = cursorNotification.date;
+          query.where(
+            database.notification.date.isSmallerThanValue(cursorDate) |
+            (database.notification.date.equals(cursorDate) & database.notification.id.isSmallerThanValue(cursorId))
+          );
+        }
       }
 
-      // When a cursorId is provided we should return notifications that come after
-      // the cursor in the same ordering (date desc, id desc). To do that we first
-      // fetch the cursor notification to obtain its date, then query for rows
-      // with (date < cursorDate) OR (date == cursorDate AND id < cursorId)
-      // which represents items after the cursor when ordering desc by date then id.
-      final cursorNotification = await (database.select(database.notification)
-        ..where((t) => t.id.equals(cursorId)))
-      .getSingleOrNull();
-
-      if (cursorNotification == null) {
-        // If the cursor id doesn't exist in local DB, return empty list.
-        return <NotificationData>[];
-      }
-
-      final DateTime cursorDate = cursorNotification.date;
-
-      List<NotificationData> notificationsData = await (database.select(database.notification)
-        ..where((t) =>
-          // Use bitwise operators to combine boolean expressions (drift overloads
-          // & and | for Expression<bool>), avoiding the instance .and/.or methods.
-          t.date.isSmallerThanValue(cursorDate) | (t.date.equals(cursorDate) & t.id.isSmallerThanValue(cursorId))
-        )
+      query
         ..orderBy([
-          (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
-          (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)
-        ])
-        ..limit(20)
-      )
-      .get();
-
-      if(notificationsData.length < 20) {
-        await updateData(cursorId);
-
-        notificationsData = await (database.select(database.notification)
-          ..where((t) =>
-            // Use bitwise operators to combine boolean expressions (drift overloads
-            // & and | for Expression<bool>), avoiding the instance .and/.or methods.
-            t.date.isSmallerThanValue(cursorDate) | (t.date.equals(cursorDate) & t.id.isSmallerThanValue(cursorId))
-          )
-          ..orderBy([
-            (t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc),
-            (t) => OrderingTerm(expression: t.id, mode: OrderingMode.desc)
+            OrderingTerm(expression: database.notification.date, mode: OrderingMode.desc),
+            OrderingTerm(expression: database.notification.id, mode: OrderingMode.desc)
           ])
-          ..limit(20)
-        )
-        .get();
+        ..limit(20);
+
+      final results = await query.get();
+
+      if (results.length < 20 && cursorId != null) {
+        await updateData(cursorId);
+        final newResults = await query.get();
+        return newResults.map((row) {
+          return NotificationDetails(
+            notification: row.readTable(database.notification),
+            user: row.readTableOrNull(database.user),
+          );
+        }).toList();
       }
 
-      return notificationsData;
+      return results.map((row) {
+        return NotificationDetails(
+          notification: row.readTable(database.notification),
+          user: row.readTableOrNull(database.user),
+        );
+      }).toList();
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
@@ -142,10 +124,16 @@ class NotificationRepository {
       rethrow;
     }
   }
-  Stream<List<NotificationData>> watchAllNotifications() {
+  Stream<List<NotificationDetails>> watchAllNotifications() {
     try {
-      return database.select(database.notification)
-      .watch();
+      return database.select(database.notification).join([
+        leftOuterJoin(database.user, database.user.id.equalsExp(database.notification.sender)),
+      ]).watch().map((rows) => rows.map((row) {
+        return NotificationDetails(
+          notification: row.readTable(database.notification),
+          user: row.readTableOrNull(database.user),
+        );
+      }).toList());
     } catch (e) {
       debugPrint(e.toString());
       rethrow;

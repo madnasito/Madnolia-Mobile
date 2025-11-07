@@ -78,10 +78,11 @@ class _NotificationsLoaderState extends State<NotificationsLoader> {
       physics: const AlwaysScrollableScrollPhysics(),
       controller: _scrollController,
       itemBuilder: (context, index) {
-        final notification = notificationsBloc.state.data[index];
-        return notification.type == NotificationType.request
-          ? AtomRequestNotification(notification: notification)
-          : AtomInvitationNotification(notification: notification, backgroundService: backgroundService);
+        final data = notificationsBloc.state.data[index];
+        return data.notification.type == NotificationType.request
+          ? AtomRequestNotification(data: data
+          )
+          : AtomInvitationNotification(data: data, backgroundService: backgroundService);
       },
     );
   }
