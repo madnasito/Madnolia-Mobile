@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
+import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 
 class MoleculeMatchesFilterButtons extends StatelessWidget {
@@ -9,7 +9,7 @@ class MoleculeMatchesFilterButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PlayerMatchesBloc, PlayerMatchesState>(
+    return BlocBuilder<MatchesBloc, MatchesState>(
       builder: (context, state) {
         return SegmentedButton(
           showSelectedIcon: false,
@@ -55,7 +55,7 @@ class MoleculeMatchesFilterButtons extends StatelessWidget {
           ],
           selected: <MatchesFilterType>{state.selectedType},
           onSelectionChanged: (value) => context
-            .read<PlayerMatchesBloc>()
+            .read<MatchesBloc>()
             .add(UpdateFilterType(type: value.first)
           ),
         );

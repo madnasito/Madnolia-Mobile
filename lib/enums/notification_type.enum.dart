@@ -1,5 +1,5 @@
 enum NotificationType {
   request,
-  invitation,
+  matchInvitation,
   system
 }

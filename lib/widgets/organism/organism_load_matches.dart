@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
+import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/enums/list_status.enum.dart';
 import 'package:madnolia/widgets/molecules/lists/molecule_matches_cards.dart';
 
@@ -10,7 +10,7 @@ class OrganismLoadMatches extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PlayerMatchesBloc, PlayerMatchesState>(
+    return BlocBuilder<MatchesBloc, MatchesState>(
       builder: (context, state) {
         try {
           final matchesState = state.matchesState.firstWhere(
@@ -24,7 +24,7 @@ class OrganismLoadMatches extends StatelessWidget {
           );
 
           if (matchesState.status == ListStatus.initial) {
-            context.read<PlayerMatchesBloc>().add(
+            context.read<MatchesBloc>().add(
                   UpdateFilterType(type: state.selectedType),
                 );
             return const Center(child: CircularProgressIndicator());

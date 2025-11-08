@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/blocs/blocs.dart';
-import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
+import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/models/match/create_match_model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
@@ -216,7 +216,7 @@ class MatchFormView extends StatelessWidget {
                         matchMinutesCubit.restoreMinutes();
                         matchUsersCubit.restore();
                         if(!context.mounted) return;
-                        final playerMatches = context.read<PlayerMatchesBloc>();
+                        final playerMatches = context.read<MatchesBloc>();
                         playerMatches.add(RestoreMatchesState());
                         if (!context.mounted) return;
                         formKey.currentState?.reset();

@@ -9,8 +9,8 @@ import 'package:stream_transform/stream_transform.dart';
 
 import '../../enums/sort_type.enum.dart';
 
-part 'player_matches_event.dart';
-part 'player_matches_state.dart';
+part 'matches_event.dart';
+part 'matches_state.dart';
 
 const matchesThrottleDuration = Duration(milliseconds: 100);
 
@@ -20,8 +20,8 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
   };
 }
 
-class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
-  PlayerMatchesBloc() : super(PlayerMatchesInitial()) {
+class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
+  MatchesBloc() : super(PlayerMatchesInitial()) {
 
     on<FetchMatchesType>(_fetchMatches, transformer: throttleDroppable(matchesThrottleDuration)); 
     on<InitialState>(_initState);
@@ -30,7 +30,7 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
 
   }
 
-  void _initState(InitialState event, Emitter<PlayerMatchesState> emit) {
+  void _initState(InitialState event, Emitter<MatchesState> emit) {
     final mainList = [
       LoadedMatches(type: MatchesFilterType.all, hasReachesMax: false, matches: [], status: ListStatus.initial),
       LoadedMatches(type: MatchesFilterType.created, hasReachesMax: false, matches: [], status: ListStatus.initial),
@@ -45,7 +45,7 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
     );
   }
 
-  void _restoreState(RestoreMatchesState event, Emitter<PlayerMatchesState> emit){
+  void _restoreState(RestoreMatchesState event, Emitter<MatchesState> emit){
     emit(
       state.copyWith(
         lastUpdate: 0,
@@ -54,7 +54,7 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
       )
     );
   }
-  void _updateFilterType(UpdateFilterType event, Emitter<PlayerMatchesState> emit) {
+  void _updateFilterType(UpdateFilterType event, Emitter<MatchesState> emit) {
   // First emit the new selected type
   emit(state.copyWith(selectedType: event.type));
 
@@ -92,7 +92,7 @@ class PlayerMatchesBloc extends Bloc<PlayerMatchesEvent, PlayerMatchesState> {
     }
   }
 
-  Future _fetchMatches(FetchMatchesType event, Emitter<PlayerMatchesState> emit) async {
+  Future _fetchMatches(FetchMatchesType event, Emitter<MatchesState> emit) async {
   final int index = state.matchesState.indexWhere((e) => e.type == event.filter.type);
   final currentMatchesState = state.matchesState[index];
 

@@ -1,23 +1,23 @@
-part of 'player_matches_bloc.dart';
+part of 'matches_bloc.dart';
 
-class PlayerMatchesState extends Equatable {
+class MatchesState extends Equatable {
 
   final List<LoadedMatches> matchesState;
   final MatchesFilterType selectedType;
   final int lastUpdate;
 
-  const PlayerMatchesState({
+  const MatchesState({
     this.matchesState = const [],
     this.selectedType = MatchesFilterType.all,
     this.lastUpdate = 0
   });
   
-  PlayerMatchesState copyWith({
+  MatchesState copyWith({
     List<LoadedMatches>? matchesState,
     MatchesFilterType? selectedType,
     int? lastUpdate
   }) {
-    return PlayerMatchesState (
+    return MatchesState (
       matchesState: matchesState ?? this.matchesState,
       selectedType: selectedType ?? this.selectedType,
       lastUpdate: lastUpdate ?? this.lastUpdate
@@ -29,7 +29,7 @@ class PlayerMatchesState extends Equatable {
 }
 
 
-final class PlayerMatchesInitial extends PlayerMatchesState {}
+final class PlayerMatchesInitial extends MatchesState {}
 
 class LoadedMatches extends Equatable {
   final MatchesFilterType type;

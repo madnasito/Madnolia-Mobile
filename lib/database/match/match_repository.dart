@@ -79,6 +79,9 @@ class MatchRepository {
   Future<int> joinUser(String matchId, String userId) async {
     try {
       final match = await (database.select(database.match)..where((m) => m.id.equals(matchId))).getSingle();
+
+      await _userRepository.getUserById(userId);
+      
       final updatedJoined = List<String>.from(match.joined)..add(userId);
 
       final updatedMatch = MatchCompanion(

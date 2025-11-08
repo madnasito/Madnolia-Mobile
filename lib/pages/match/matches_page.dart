@@ -4,7 +4,7 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/blocs/player_matches/player_matches_bloc.dart';
+import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/atom_styled_text.dart';
@@ -24,20 +24,20 @@ class MatchesPage extends StatefulWidget {
 class _MatchesPageState extends State<MatchesPage> {
 
   late final _scrollController = ScrollController();
-  late final PlayerMatchesBloc playerMatchesBloc;
+  late final MatchesBloc matchesBloc;
 
   @override
   void initState() {
     _scrollController.addListener(_onScroll);
-    playerMatchesBloc = context.read<PlayerMatchesBloc>();
+    matchesBloc = context.read<MatchesBloc>();
     super.initState();
   }
 
   void _onScroll() {
     if (_isBottom) {
-      final matchesState = playerMatchesBloc.state.matchesState.firstWhere((e) => e.type == playerMatchesBloc.state.selectedType);
-      playerMatchesBloc.add(FetchMatchesType(
-        filter: MatchesFilter(type: playerMatchesBloc.state.selectedType, sort: SortType.desc, skip: matchesState.matches.length)
+      final matchesState = matchesBloc.state.matchesState.firstWhere((e) => e.type == matchesBloc.state.selectedType);
+      matchesBloc.add(FetchMatchesType(
+        filter: MatchesFilter(type: matchesBloc.state.selectedType, sort: SortType.desc, skip: matchesState.matches.length)
       ));
     }
   }
@@ -57,16 +57,16 @@ class _MatchesPageState extends State<MatchesPage> {
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<PlayerMatchesBloc, PlayerMatchesState>(
+    return BlocListener<MatchesBloc, MatchesState>(
       listener: (context, state) {
         if (state.matchesState.isEmpty) {
-          context.read<PlayerMatchesBloc>().add(InitialState());
+          context.read<MatchesBloc>().add(InitialState());
         }
       },
       child: CustomScaffold(
         body: CustomMaterialIndicator(
           onRefresh: () async { 
-              context.read<PlayerMatchesBloc>().add(InitialState());
+              context.read<MatchesBloc>().add(InitialState());
              },
              backgroundColor: Colors.white,
              indicatorBuilder: (context, controller) {

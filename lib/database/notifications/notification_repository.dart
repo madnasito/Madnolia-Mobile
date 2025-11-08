@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
 
+import '../../enums/notification_type.enum.dart';
 import '../../models/notification/notification_details.dart';
 import '../../services/notifications_service.dart';
 import '../users/user_repository.dart';
@@ -119,6 +120,26 @@ class NotificationRepository {
   Future<int> deleteNotifications() async {
     try {
       return (database.delete(database.notification)).go();
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<int> deleteOldInvitationNotifications() async {
+    try {
+      final eightMonthsAgo = DateTime.now().subtract(const Duration(days: 8 * 30)); // Approximate 8 months
+      return (database.delete(database.notification)..where((t) => t.type.equals(NotificationType.matchInvitation.index) & t.date.isSmallerThanValue(eightMonthsAgo))).go();
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<int> deleteOldNotifications() async {
+    try {
+      final eightMonthsAgo = DateTime.now().subtract(const Duration(days: 8 * 30)); // Approximate 8 months
+      return (database.delete(database.notification)..where((t) => t.date.isSmallerThanValue(eightMonthsAgo))).go();
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
