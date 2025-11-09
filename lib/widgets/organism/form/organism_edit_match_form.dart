@@ -17,6 +17,7 @@ import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
 import 'package:madnolia/widgets/molecules/modal/molecule_modal_icon_button.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:toast/toast.dart';
+import '../../../database/utils/match_converter.dart';
 import '../../../models/match/match_model.dart';
 
 import '../../../style/text_style.dart';
@@ -147,7 +148,7 @@ const OrganismEditMatchForm({super.key, required this.match, required this.game}
                       final matchRepository = RepositoryManager().match;
                       final Match resp = await MatchService().updateMatch(match.id, body);
 
-                      await matchRepository.createOrUpdateMatch(matchRepository.matchToCompanion(resp));
+                      await matchRepository.createOrUpdateMatch(matchToCompanion(resp));
                       
                       isLoading = false;
 

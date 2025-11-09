@@ -4,6 +4,9 @@
 
 import 'dart:convert';
 
+import 'package:drift/drift.dart';
+import 'package:madnolia/database/database.dart';
+
 import '../../enums/platforms_id.enum.dart';
 
 Game gameFromJson(String str) => Game.fromJson(json.decode(str));
@@ -52,4 +55,18 @@ class Game {
         "description": description,
         "platforms": List<dynamic>.from(platforms.map((x) => x.id)),
     };
+
+    GameCompanion toCompanion() {
+      return GameCompanion(
+        id: Value(id),
+        name: Value(name),
+        platforms: Value(platforms),
+        screenshots: Value(screenshots),
+        slug: Value(slug),
+        apiId: Value(gameId),
+        background: Value(background),
+        description: Value(description),
+        lastUpdated: Value(DateTime.now()),
+      );
+    }
 }

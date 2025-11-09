@@ -36,7 +36,7 @@ class _MatchesPageState extends State<MatchesPage> {
   void _onScroll() {
     if (_isBottom) {
       final matchesState = matchesBloc.state.matchesState.firstWhere((e) => e.type == matchesBloc.state.selectedType);
-      matchesBloc.add(FetchMatchesType(
+      matchesBloc.add(LoadMatches(
         filter: MatchesFilter(type: matchesBloc.state.selectedType, sort: SortType.desc, skip: matchesState.matches.length)
       ));
     }

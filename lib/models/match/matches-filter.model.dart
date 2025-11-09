@@ -4,16 +4,20 @@
 
 import 'package:madnolia/enums/sort_type.enum.dart' show SortType;
 
+import '../../enums/platforms_id.enum.dart';
+
 class MatchesFilter {
   final MatchesFilterType type;
   final SortType sort;
   final int skip;
-  final int? platform;
+  final int limit;
+  final PlatformId? platform;
 
   MatchesFilter({
     required this.type,
     required this.sort,
     required this.skip,
+    this.limit = 10,
     this.platform,
   });
 
@@ -22,15 +26,8 @@ class MatchesFilter {
     "type": type.name, // Convert enum to string
     "sort": sort.name, // Convert enum to string
     "skip": skip,
-    "platform": platform,
-  };
-
-  // For WorkManager data passing
-  Map<String, dynamic> toWorkData() => {
-    'type': type.index, // Store enum index
-    'sort': sort.index,
-    'skip': skip,
-    'platform': platform,
+    "limit": limit,
+    "platform": platform?.id,
   };
 
   factory MatchesFilter.fromWorkData(Map<String, dynamic> data) {
@@ -38,7 +35,8 @@ class MatchesFilter {
       type: MatchesFilterType.values[data['type']],
       sort: SortType.values[data['sort']],
       skip: data['skip'],
-      platform: data['platform'],
+      limit: data['limit'],
+      platform: data['platform'].map((x) => PlatformId.values.firstWhere((e) => e.id == x)),
     );
   }
 }

@@ -7,7 +7,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:madnolia/models/game/platform_game.dart';
 import 'package:madnolia/models/match/edit_match_model.dart';
-import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:madnolia/models/platform/platform_with_game_matches.dart';
 import '../models/match/match_model.dart';
@@ -35,7 +34,7 @@ class MatchService {
     }
   }
 
-  Future<List<MatchWithGame>> getMatches(MatchesFilter payload) async {
+  Future<List<Match>> getMatches(MatchesFilter payload) async {
 
     try {
       final String? token = await _storage.read(key: "token");
@@ -47,8 +46,8 @@ class MatchService {
         data: payload.toJson()
       );
 
-      final List<MatchWithGame> matches = (response.data as List)
-        .map<MatchWithGame>((e) => MatchWithGame.fromJson(e))
+      final List<Match> matches = (response.data as List)
+        .map<Match>((e) => Match.fromJson(e))
         .toList();
 
       return matches;

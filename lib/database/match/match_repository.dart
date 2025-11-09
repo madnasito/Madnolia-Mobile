@@ -1,18 +1,25 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/database/games/games.repository.dart';
 import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/services/match_service.dart';
 
+import '../../enums/sort_type.enum.dart';
 import '../../models/match/match_model.dart';
 
+import '../../models/match/match_with_game_model.dart';
+import '../../models/match/matches-filter.model.dart';
 import '../database.dart';
+import '../utils/match_converter.dart';
 
 class MatchRepository {
 
   final AppDatabase database;
 
+  final MatchService _matchService = MatchService();
+  final _storage = FlutterSecureStorage();
   late final GamesRepository _gamesRepository;
   late final UserRepository _userRepository;
 
@@ -21,28 +28,33 @@ class MatchRepository {
     _userRepository = UserRepository(database);
   }
 
-  MatchCompanion matchToCompanion(Match match) {
-    return MatchCompanion(
-      id: Value(match.id),
-      game: Value(match.game),
-      title: Value(match.title),
-      platform: Value(match.platform),
-      date: Value(DateTime.fromMillisecondsSinceEpoch(match.date)),
-      user: Value(match.user),
-      description: Value(match.description),
-      duration: Value(match.duration),
-      private: Value(match.private),
-      tournament: Value(match.tournament),
-      status: Value(match.status),
-      joined: Value(match.joined),
-      inviteds: Value(match.inviteds),
-    );
-  }
-
   Future<int> createOrUpdateMatch(MatchCompanion match) async {
     try {
       return await database.into(database.match).insertOnConflictUpdate(match);
     } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> insertOrUpdateMany(List <MatchCompanion> matches) async {
+    try {
+
+      final List<String> users = matches.map((match) => match.user.value).toSet().toList();
+
+      List<String> games = matches.map((match) => match.game.value).toSet().toList();
+
+      // Verifyng all senders
+      await _userRepository.getUsersByIds(users);
+
+      // Verifyng all games
+      await _gamesRepository.getGamesByIds(games);
+
+
+      return await database.batch((batch) {
+        batch.insertAllOnConflictUpdate(database.match, matches);
+      });
+    } catch (e) {
+      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -75,7 +87,67 @@ class MatchRepository {
     return MatchWithGame(match: matchData, game: gameData);
   }
 
+  Future<List<MatchWithGame>> getMatchesWithGame({required MatchesFilter filter, required bool reload}) async {
+    final currentUserId = await _storage.read(key: 'userId');
 
+    if(currentUserId == null) throw "No user Id";
+
+    if(reload == true) await updateData(filter);
+
+    final select = database.select(database.match);
+
+    if (filter.type == MatchesFilterType.created) {
+      select.where((tbl) => tbl.user.equals(currentUserId));
+    } else if (filter.type == MatchesFilterType.joined) {
+      select.where((tbl) => tbl.joined.contains(currentUserId));
+    } else {
+      select.where((tbl) => tbl.user.equals(currentUserId) | tbl.joined.contains(currentUserId));
+    }
+
+    if (filter.platform != null) {
+      select.where((tbl) => tbl.platform.equals(filter.platform!.id)); // Assuming PlatformId has an 'id' property
+    }
+
+    select
+      ..limit(filter.limit, offset: filter.skip)
+      ..orderBy([
+        (m) {
+          final orderTerm = filter.sort == SortType.asc
+              ? OrderingTerm.asc(m.date)
+              : OrderingTerm.desc(m.date);
+          return orderTerm;
+        }
+      ]);
+
+    final joinedQuery = select.join([
+      innerJoin(database.game, database.game.id.equalsExp(database.match.game))
+    ]);
+
+    final rows = await joinedQuery.get();
+
+    if(rows.length < filter.limit && reload == false) {
+      await updateData(filter);
+      return getMatchesWithGame(filter: filter, reload: false);
+    }
+
+    return rows.map((row) {
+      final matchData = row.readTable(database.match);
+      final gameData = row.readTable(database.game);
+      return MatchWithGame(match: matchData, game: gameData);
+    }).toList();
+  }
+
+  Future updateData(MatchesFilter filter) async {
+    try {
+      List<Match> apiMatches = await _matchService.getMatches(filter);
+
+      final matchCompanions = apiMatches.map((match) => matchToCompanion(match)).toList();
+
+      return await insertOrUpdateMany(matchCompanions);
+    } catch (e) {
+      rethrow;
+    }
+  }
   Future<int> joinUser(String matchId, String userId) async {
     try {
       final match = await (database.select(database.match)..where((m) => m.id.equals(matchId))).getSingle();
@@ -114,21 +186,7 @@ class MatchRepository {
         _gamesRepository.getGameById(matchInfo.game)
       ]);
 
-      final matchCompanion = MatchCompanion(
-        id: Value(matchInfo.id),
-        game: Value(matchInfo.game),
-        user: Value(matchInfo.user),
-        date: Value(DateTime.fromMillisecondsSinceEpoch(matchInfo.date)),
-        title: Value(matchInfo.title),
-        platform: Value(matchInfo.platform),
-        description: Value(matchInfo.description),
-        duration: Value(matchInfo.duration),
-        private: Value(matchInfo.private),
-        status: Value(matchInfo.status),
-        joined: Value(matchInfo.joined),
-        inviteds: Value(matchInfo.inviteds),
-        lastUpdated: Value(DateTime.now()),
-      );
+      final matchCompanion = matchToCompanion(matchInfo);
 
       await createOrUpdateMatch(matchCompanion);
 
@@ -155,10 +213,4 @@ class MatchRepository {
   Future<int> deleteMatches() async {
     return await database.managers.match.delete();
   }
-}
-
-class MatchWithGame {
-  final MatchData match;
-  final GameData game;
-  MatchWithGame({required this.match, required this.game});
 }

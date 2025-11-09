@@ -17,7 +17,8 @@ class UpdateFilterType extends MatchesEvent {
   const UpdateFilterType({required this.type});
 }
 
-class FetchMatchesType extends MatchesEvent {
+class LoadMatches extends MatchesEvent {
+  final bool reload;
   final MatchesFilter filter;
-  const FetchMatchesType({required this.filter});
+  const LoadMatches({required this.filter, this.reload = false});
 }

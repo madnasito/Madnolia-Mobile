@@ -108,7 +108,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
               ) : Container(),
               (counter == 0 && controller.text.isNotEmpty)
                   ? FutureBuilder(
-                      future: GamesService.getGames(
+                      future: GamesService.searchGames(
                           title: controller.text.toString(),
                           platform: "$platformId"),
                       builder:

@@ -13,7 +13,7 @@ class MinimalMatch {
   String id;
   String title;
   int platform;
-  int date;
+  DateTime date;
 
   MinimalMatch(
       {this.id = "",
@@ -26,7 +26,7 @@ class MinimalMatch {
         id: json["_id"],
         title: json["title"],
         platform: json["platform"],
-        date: json["date"],
+        date: DateTime.parse(json["date"]).toLocal(),
       );
 
   Map<String, dynamic> toJson() => {

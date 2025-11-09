@@ -29,9 +29,9 @@ class GameCard extends StatelessWidget {
 }
 
 class MatchCard extends StatelessWidget {
-  final MatchWithGame match;
+  final MatchWithGame data;
 
-  const MatchCard({super.key, required this.match});
+  const MatchCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class MatchCard extends StatelessWidget {
     Color statusColor;
     String statusText;
 
-    switch (match.status) {
+    switch (data.match.status) {
       case MatchStatus.waiting:
         statusColor = Colors.amberAccent; // Color para "en espera"
         statusText = translate('MATCH.STATUS.WAITING');
@@ -74,10 +74,10 @@ class MatchCard extends StatelessWidget {
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      AtomGameImage(name: match.game.name, background: match.game.background),
+      AtomGameImage(name: data.game.name, background: data.game.background),
       SizedBox(height: 10),
       Text(
-        match.title,
+        data.match.title,
         style: TextStyle(
           color: Colors.cyanAccent,
           fontSize: 18,
@@ -87,7 +87,7 @@ class MatchCard extends StatelessWidget {
       SizedBox(height: 4),
       Text(
         DateFormat('EEEE, d MMMM yyyy - hh:mm a').format(
-          DateTime.fromMillisecondsSinceEpoch(match.date),
+          data.match.date,
         ),
         style: TextStyle(
           color: Colors.white70,

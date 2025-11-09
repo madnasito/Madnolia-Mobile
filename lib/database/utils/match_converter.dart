@@ -10,7 +10,7 @@ MatchCompanion matchToCompanion(Match match) {
     game: Value(match.game),
     title: Value(match.title),
     platform: Value(match.platform),
-    date: Value(DateTime.fromMillisecondsSinceEpoch(match.date)),
+    date: Value(match.date.toLocal()),
     user: Value(match.user),
     description: Value(match.description),
     duration: Value(match.duration),

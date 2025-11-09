@@ -14,22 +14,22 @@ class MoleculeMatchesCards extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       shrinkWrap: true,
       itemCount: matches.length,
-      itemBuilder: (context, index) => AtomMatchCard(match: matches[index]),
+      itemBuilder: (context, index) => AtomMatchCard(data: matches[index]),
     );
   }
 }
 
 class AtomMatchCard extends StatelessWidget {
-  final MatchWithGame match;
+  final MatchWithGame data;
 
-  const AtomMatchCard({super.key, required this.match});
+  const AtomMatchCard({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => GoRouter.of(context).push('/match/${match.id}'),
+      onTap: () => GoRouter.of(context).push('/match/${data.match.id}'),
       child: MatchCard(
-        match: match,
+        data: data,
       ),
     );
   }

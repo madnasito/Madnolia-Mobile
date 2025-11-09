@@ -59,7 +59,22 @@ class GamesService {
     }
   }
 
-  static Future getGames({required String title, required String platform}) async {
+  Future<List<Game>> getGamesByIds(List<String> gamesIds) async {
+    try {
+      final url = "$apiUrl/games/get-by-ids";
+
+
+      final response = await _dio.post(url, data: {"ids": gamesIds});
+
+      final List<Game> games = (response.data as List).map((e) => Game.fromJson(e)).toList();
+
+      return games;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  static Future searchGames({required String title, required String platform}) async {
     return RawgService().searchGame(game: title, platform: platform);
   }
 

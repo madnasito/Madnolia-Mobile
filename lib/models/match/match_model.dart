@@ -12,7 +12,7 @@ class Match {
     String id;
     String game;
     PlatformId platform;
-    int date;
+    DateTime date;
     String user;
     List<String> inviteds;
     String title;
@@ -65,7 +65,7 @@ class Match {
         id: json["_id"],
         game: json["game"],
         platform: PlatformId.values.firstWhere((e) => e.id == json["platform"]),
-        date: json["date"],
+        date: DateTime.parse(json["date"]),
         user: json["user"],
         inviteds: List<String>.from(json["inviteds"].map((x) => x)),
         title: json["title"],

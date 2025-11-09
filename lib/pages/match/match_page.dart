@@ -1,7 +1,7 @@
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/database/match/match_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/database/repository_manager.dart';
+import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/views/view_match.dart';
 
