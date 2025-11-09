@@ -176,8 +176,8 @@ class MatchFormView extends StatelessWidget {
                           duration: 3);
                     }
                     
-                    int formDate =
-                        DateTime.parse(dateController.text).millisecondsSinceEpoch;
+                    // int formDate =
+                    //     DateTime.parse(dateController.text).millisecondsSinceEpoch;
 
                     if (formKey.currentState?.saveAndValidate() == false) {
                       setState(() => uploading = false);
@@ -190,7 +190,7 @@ class MatchFormView extends StatelessWidget {
                     CreateMatch match = CreateMatch(
                       title: name,
                       description: description,
-                      date: formDate,
+                      date: DateTime.parse(dateController.text).toUtc(),
                       inviteds: matchUsersCubit.getUsersId(),
                       game: game.id,
                       platform: platformId,
