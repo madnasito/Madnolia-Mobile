@@ -3,23 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:madnolia/blocs/chats/chats_bloc.dart';
-import 'package:madnolia/blocs/user/user_bloc.dart';
-import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-class AtomIndividualMessage extends StatefulWidget {
+import '../../../blocs/chats/chats_bloc.dart';
+import '../../../database/database.dart';
+import '../../../models/chat/update_recipient_model.dart';
+
+class AtomNotMyIndividualMessage extends StatefulWidget {
   final ChatMessageData message;
-  const AtomIndividualMessage({super.key, required this.message});
+  const AtomNotMyIndividualMessage({super.key, required this.message});
 
   @override
-  State<AtomIndividualMessage> createState() => _AtomIndividualMessageState();
+  State<AtomNotMyIndividualMessage> createState() => _AtomNotMyIndividualMessageState();
 }
 
-class _AtomIndividualMessageState extends State<AtomIndividualMessage>
-    with SingleTickerProviderStateMixin {
+class _AtomNotMyIndividualMessageState extends State<AtomNotMyIndividualMessage> with SingleTickerProviderStateMixin {
+
   late AnimationController animationController;
   late FlutterBackgroundService backgroundService;
 
@@ -40,27 +41,28 @@ class _AtomIndividualMessageState extends State<AtomIndividualMessage>
 
   @override
   Widget build(BuildContext context) {
-    final myId = context.read<UserBloc>().state.id;
     final chatsBloc = context.watch<ChatsBloc>();
 
     return VisibilityDetector(
       key: Key(widget.message.id),
       onVisibilityChanged: (info) {
-        if(info.visibleFraction > 0 && widget.message.status == ChatMessageStatus.sent && widget.message.creator != myId) {
+        if(info.visibleFraction > 0 && widget.message.status == ChatMessageStatus.sent) {
           debugPrint('${widget.message.content}: ${widget.message.status}');
-          backgroundService.invoke('update_recipient_status', {'id': widget.message.id, 'status': ChatMessageStatus.read.index});
+          backgroundService.invoke(
+            'update_recipient_status',
+            UpdateRecipientModel(id: widget.message.id, status: ChatMessageStatus.read).toJson()
+          );
           chatsBloc.add(UpdateRecipientStatus(messageId: widget.message.id, status: ChatMessageStatus.read));
         }
       },
       child: Align(
-        alignment:
-          widget.message.creator == myId ? Alignment.centerRight : Alignment.centerLeft,
+        alignment: Alignment.centerLeft,
           child: Container( // Removed Flexible
             padding: const EdgeInsets.all(8),
             margin: const EdgeInsets.all(2),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: widget.message.creator == myId ? Colors.lightBlueAccent : Colors.white54, width: 0.5),
+              border: Border.all(color: Colors.white54, width: 0.5),
             ),
             child: ExpandableText(
               widget.message.content,

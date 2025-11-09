@@ -15,6 +15,7 @@ import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
+import 'package:madnolia/models/chat/update_recipient_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart' show MatchReady;
 import 'package:madnolia/services/firebase_messaging_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
@@ -194,7 +195,16 @@ Future<void> onStart(ServiceInstance service) async {
     debugPrint('Message sended saved $messageDb');
   });
 
-  socket.on("update_recipient_status", (data) => service.invoke("update_recipient_status", data));
+  socket.on("update_recipient_status", (payload) async {
+    try {
+      
+      final data = UpdateRecipientModel.fromJson(payload);
+      await chatMessageRepository.updateMessageStatus(data.id, data.status);
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  } );
 
   socket.on("invitation", (data) async {
       try {
