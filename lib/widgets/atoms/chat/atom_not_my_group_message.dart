@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImageProvider;
 import 'package:flutter/material.dart';
 
-class AtomNotMyMessage extends StatelessWidget {
+class AtomNotMyGroupMessage extends StatelessWidget {
     final String thumb;
     final String text;
     final bool mainMessage;
     final bool groupMessage;
   
-  const AtomNotMyMessage({super.key, required this.thumb, required this.text, required this.mainMessage, this.groupMessage = false});
+  const AtomNotMyGroupMessage({super.key, required this.thumb, required this.text, required this.mainMessage, this.groupMessage = false});
 
   @override
   Widget build(BuildContext context) {

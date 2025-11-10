@@ -8,12 +8,12 @@ import 'package:madnolia/widgets/atoms/icons/message_status_icon.dart';
 // import 'package:madnolia/utils/user_db_util.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl;
 
-class MyMessageMolecule extends StatelessWidget {
+class MyGroupMessageMolecule extends StatelessWidget {
   final UserData user;
   final ChatMessageData messageData;
   final bool mainMessage;
 
-  const MyMessageMolecule({
+  const MyGroupMessageMolecule({
     super.key,
     required this.messageData,
     required this.mainMessage,
@@ -100,12 +100,12 @@ class MyMessageMolecule extends StatelessWidget {
   }
 }
 
-class NotMyMessageMolecule extends StatelessWidget {
+class NotMyGroupMessageMolecule extends StatelessWidget {
   final UserData? user;
   final ChatMessageData messageData;
   final bool mainMessage;
 
-  const NotMyMessageMolecule(
+  const NotMyGroupMessageMolecule(
       {super.key,
       this.user,
       required this.messageData,

@@ -18,7 +18,6 @@ class MoleculeUserChatMessagesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final String myUserId = context.read<UserBloc>().state.id;
 
     return ListView.builder(
@@ -27,11 +26,25 @@ class MoleculeUserChatMessagesList extends StatelessWidget {
       reverse: true,
       itemBuilder: (context, index) {
         if (index < state.roomMessages.length) {
-          return state.roomMessages[index].chatMessage.creator == myUserId 
-          ? AtomMyIndividualMessage(message: state.roomMessages[index].chatMessage)
-          : AtomNotMyIndividualMessage(message: state.roomMessages[index].chatMessage);
+          final currentMessage = state.roomMessages[index].chatMessage;
+          bool mainMessage = false;
+
+          if (index == 0) {
+            mainMessage = true;
+          } else {
+            final previousMessage = state.roomMessages[index - 1].chatMessage;
+            if (previousMessage.creator != currentMessage.creator) {
+              mainMessage = true;
+            }
+          }
+
+          return currentMessage.creator == myUserId
+              ? AtomMyIndividualMessage(
+                  message: currentMessage, mainMessage: mainMessage)
+              : AtomNotMyIndividualMessage(
+                  message: currentMessage, mainMessage: mainMessage);
         }
-        
+
         // Only show loading indicator at the bottom if we're loading more
         return isLoading
             ? const Padding(

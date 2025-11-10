@@ -47,8 +47,8 @@ class _GroupChatMessageOrganismState extends State<GroupChatMessageOrganism> wit
                   parent: animationController, curve: Curves.easeInOut),
               child: Container(
                 child: widget.user.id == userState.id
-                    ? MyMessageMolecule(user: widget.user, messageData: widget.messageData, mainMessage: widget.mainMessage)
-                    : NotMyMessageMolecule(user: widget.user, messageData: widget.messageData, mainMessage: widget.mainMessage),
+                    ? MyGroupMessageMolecule(user: widget.user, messageData: widget.messageData, mainMessage: widget.mainMessage)
+                    : NotMyGroupMessageMolecule(user: widget.user, messageData: widget.messageData, mainMessage: widget.mainMessage),
               ),
             ),
           );

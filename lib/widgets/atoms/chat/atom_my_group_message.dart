@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 
-class AtomMyMessage extends StatelessWidget {
+class AtomMyGroupMessage extends StatelessWidget {
   final ChatMessageData messageData;
   final UserData userData;
   final bool mainMessage;
 
-  const AtomMyMessage({super.key, required this.messageData, required this.mainMessage, required this.userData});
+  const AtomMyGroupMessage({super.key, required this.messageData, required this.mainMessage, required this.userData});
 
   @override
   Widget build(BuildContext context) {
