@@ -187,7 +187,7 @@ class ChatMessageRepository {
         if(messagesApi.isEmpty) {
           await _conversationRepository.createOrUpdate(
             ConversationCompanion(
-              conversationId: Value(conversationId),
+              id: Value(conversationId),
               hasReachedEnd: Value(true),
             ),
           );

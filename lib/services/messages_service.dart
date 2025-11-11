@@ -67,7 +67,7 @@ class MessagesService {
       final String? token = await _storage.read(key: "token");
 
       final Map<String, String> queryParams = {
-        'user': userId,
+        'conversation': userId,
       };
       if (cursor != null) {
         queryParams['cursor'] = cursor;
@@ -87,7 +87,7 @@ class MessagesService {
   }
 
   Future<List<UserChat>> getChats(int page) async {
-  try {
+    try {
       final url = "$baseUrl/messages";
       final String? token = await _storage.read(key: "token");
       final resp = await _dio.get(

@@ -1831,11 +1831,10 @@ class $ConversationTable extends Conversation
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ConversationTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _conversationIdMeta =
-      const VerificationMeta('conversationId');
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String> conversationId = GeneratedColumn<String>(
-      'conversation_id', aliasedName, false,
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _hasReachedEndMeta =
       const VerificationMeta('hasReachedEnd');
@@ -1848,7 +1847,7 @@ class $ConversationTable extends Conversation
           'CHECK ("has_reached_end" IN (0, 1))'),
       defaultValue: const Constant(false));
   @override
-  List<GeneratedColumn> get $columns => [conversationId, hasReachedEnd];
+  List<GeneratedColumn> get $columns => [id, hasReachedEnd];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1859,13 +1858,10 @@ class $ConversationTable extends Conversation
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('conversation_id')) {
-      context.handle(
-          _conversationIdMeta,
-          conversationId.isAcceptableOrUnknown(
-              data['conversation_id']!, _conversationIdMeta));
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
-      context.missing(_conversationIdMeta);
+      context.missing(_idMeta);
     }
     if (data.containsKey('has_reached_end')) {
       context.handle(
@@ -1877,13 +1873,13 @@ class $ConversationTable extends Conversation
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {conversationId};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   ConversationData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ConversationData(
-      conversationId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}conversation_id'])!,
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       hasReachedEnd: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}has_reached_end'])!,
     );
@@ -1897,21 +1893,20 @@ class $ConversationTable extends Conversation
 
 class ConversationData extends DataClass
     implements Insertable<ConversationData> {
-  final String conversationId;
+  final String id;
   final bool hasReachedEnd;
-  const ConversationData(
-      {required this.conversationId, required this.hasReachedEnd});
+  const ConversationData({required this.id, required this.hasReachedEnd});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['conversation_id'] = Variable<String>(conversationId);
+    map['id'] = Variable<String>(id);
     map['has_reached_end'] = Variable<bool>(hasReachedEnd);
     return map;
   }
 
   ConversationCompanion toCompanion(bool nullToAbsent) {
     return ConversationCompanion(
-      conversationId: Value(conversationId),
+      id: Value(id),
       hasReachedEnd: Value(hasReachedEnd),
     );
   }
@@ -1920,7 +1915,7 @@ class ConversationData extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ConversationData(
-      conversationId: serializer.fromJson<String>(json['conversationId']),
+      id: serializer.fromJson<String>(json['id']),
       hasReachedEnd: serializer.fromJson<bool>(json['hasReachedEnd']),
     );
   }
@@ -1928,21 +1923,19 @@ class ConversationData extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'conversationId': serializer.toJson<String>(conversationId),
+      'id': serializer.toJson<String>(id),
       'hasReachedEnd': serializer.toJson<bool>(hasReachedEnd),
     };
   }
 
-  ConversationData copyWith({String? conversationId, bool? hasReachedEnd}) =>
+  ConversationData copyWith({String? id, bool? hasReachedEnd}) =>
       ConversationData(
-        conversationId: conversationId ?? this.conversationId,
+        id: id ?? this.id,
         hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
       );
   ConversationData copyWithCompanion(ConversationCompanion data) {
     return ConversationData(
-      conversationId: data.conversationId.present
-          ? data.conversationId.value
-          : this.conversationId,
+      id: data.id.present ? data.id.value : this.id,
       hasReachedEnd: data.hasReachedEnd.present
           ? data.hasReachedEnd.value
           : this.hasReachedEnd,
@@ -1952,54 +1945,52 @@ class ConversationData extends DataClass
   @override
   String toString() {
     return (StringBuffer('ConversationData(')
-          ..write('conversationId: $conversationId, ')
+          ..write('id: $id, ')
           ..write('hasReachedEnd: $hasReachedEnd')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(conversationId, hasReachedEnd);
+  int get hashCode => Object.hash(id, hasReachedEnd);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ConversationData &&
-          other.conversationId == this.conversationId &&
+          other.id == this.id &&
           other.hasReachedEnd == this.hasReachedEnd);
 }
 
 class ConversationCompanion extends UpdateCompanion<ConversationData> {
-  final Value<String> conversationId;
+  final Value<String> id;
   final Value<bool> hasReachedEnd;
   final Value<int> rowid;
   const ConversationCompanion({
-    this.conversationId = const Value.absent(),
+    this.id = const Value.absent(),
     this.hasReachedEnd = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ConversationCompanion.insert({
-    required String conversationId,
+    required String id,
     this.hasReachedEnd = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : conversationId = Value(conversationId);
+  }) : id = Value(id);
   static Insertable<ConversationData> custom({
-    Expression<String>? conversationId,
+    Expression<String>? id,
     Expression<bool>? hasReachedEnd,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (conversationId != null) 'conversation_id': conversationId,
+      if (id != null) 'id': id,
       if (hasReachedEnd != null) 'has_reached_end': hasReachedEnd,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   ConversationCompanion copyWith(
-      {Value<String>? conversationId,
-      Value<bool>? hasReachedEnd,
-      Value<int>? rowid}) {
+      {Value<String>? id, Value<bool>? hasReachedEnd, Value<int>? rowid}) {
     return ConversationCompanion(
-      conversationId: conversationId ?? this.conversationId,
+      id: id ?? this.id,
       hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
       rowid: rowid ?? this.rowid,
     );
@@ -2008,8 +1999,8 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (conversationId.present) {
-      map['conversation_id'] = Variable<String>(conversationId.value);
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
     }
     if (hasReachedEnd.present) {
       map['has_reached_end'] = Variable<bool>(hasReachedEnd.value);
@@ -2023,7 +2014,7 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
   @override
   String toString() {
     return (StringBuffer('ConversationCompanion(')
-          ..write('conversationId: $conversationId, ')
+          ..write('id: $id, ')
           ..write('hasReachedEnd: $hasReachedEnd, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -5275,13 +5266,13 @@ typedef $$MatchTableProcessedTableManager = ProcessedTableManager<
     PrefetchHooks Function({bool game, bool user})>;
 typedef $$ConversationTableCreateCompanionBuilder = ConversationCompanion
     Function({
-  required String conversationId,
+  required String id,
   Value<bool> hasReachedEnd,
   Value<int> rowid,
 });
 typedef $$ConversationTableUpdateCompanionBuilder = ConversationCompanion
     Function({
-  Value<String> conversationId,
+  Value<String> id,
   Value<bool> hasReachedEnd,
   Value<int> rowid,
 });
@@ -5295,9 +5286,8 @@ class $$ConversationTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<String> get conversationId => $composableBuilder(
-      column: $table.conversationId,
-      builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<bool> get hasReachedEnd => $composableBuilder(
       column: $table.hasReachedEnd, builder: (column) => ColumnFilters(column));
@@ -5312,9 +5302,8 @@ class $$ConversationTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<String> get conversationId => $composableBuilder(
-      column: $table.conversationId,
-      builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<bool> get hasReachedEnd => $composableBuilder(
       column: $table.hasReachedEnd,
@@ -5330,8 +5319,8 @@ class $$ConversationTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<String> get conversationId => $composableBuilder(
-      column: $table.conversationId, builder: (column) => column);
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
 
   GeneratedColumn<bool> get hasReachedEnd => $composableBuilder(
       column: $table.hasReachedEnd, builder: (column) => column);
@@ -5363,22 +5352,22 @@ class $$ConversationTableTableManager extends RootTableManager<
           createComputedFieldComposer: () =>
               $$ConversationTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
-            Value<String> conversationId = const Value.absent(),
+            Value<String> id = const Value.absent(),
             Value<bool> hasReachedEnd = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ConversationCompanion(
-            conversationId: conversationId,
+            id: id,
             hasReachedEnd: hasReachedEnd,
             rowid: rowid,
           ),
           createCompanionCallback: ({
-            required String conversationId,
+            required String id,
             Value<bool> hasReachedEnd = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ConversationCompanion.insert(
-            conversationId: conversationId,
+            id: id,
             hasReachedEnd: hasReachedEnd,
             rowid: rowid,
           ),
