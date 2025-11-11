@@ -96,12 +96,16 @@ class MatchRepository {
 
     final select = database.select(database.match);
 
-    if (filter.type == MatchesFilterType.created) {
-      select.where((tbl) => tbl.user.equals(currentUserId));
-    } else if (filter.type == MatchesFilterType.joined) {
-      select.where((tbl) => tbl.joined.contains(currentUserId));
-    } else {
-      select.where((tbl) => tbl.user.equals(currentUserId) | tbl.joined.contains(currentUserId));
+    switch (filter.type) {
+      case MatchesFilterType.all:
+        select.where((tbl) => tbl.user.equals(currentUserId) | tbl.joined.contains(currentUserId));
+        break;
+      case MatchesFilterType.created:
+        select.where((tbl) => tbl.user.equals(currentUserId));  
+        break;
+      case MatchesFilterType.joined:
+        select.where((tbl) => tbl.joined.contains(currentUserId));
+        break;
     }
 
     if (filter.platform != null) {
@@ -123,11 +127,11 @@ class MatchRepository {
       innerJoin(database.game, database.game.id.equalsExp(database.match.game))
     ]);
 
-    final rows = await joinedQuery.get();
+    var rows = await joinedQuery.get();
 
-    if(rows.length < filter.limit && reload == false) {
+    if (rows.isEmpty && !reload) {
       await updateData(filter);
-      return getMatchesWithGame(filter: filter, reload: false);
+      rows = await joinedQuery.get();
     }
 
     return rows.map((row) {
