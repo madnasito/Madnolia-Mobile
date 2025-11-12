@@ -41,9 +41,11 @@ class MatchService {
       
       Response response;
 
+      final payloadJson = payload.toJson();
+
       response = await dio.get('$baseUrl/match/player-matches',
         options: Options(headers: {"Authorization": "Bearer $token"}),
-        queryParameters: payload.toJson()
+        queryParameters: payloadJson
       );
 
       final List<Match> matches = (response.data as List)

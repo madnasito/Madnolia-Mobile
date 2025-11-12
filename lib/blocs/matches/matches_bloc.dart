@@ -79,7 +79,7 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
   if (matchesState.status != ListStatus.success || matchesState.matches.isEmpty || now.difference(lastUpdate).inMinutes < 6) {
     add(LoadMatches(
       filter: MatchesFilter(
-        skip: matchesState.matches.length,
+        cursor: matchesState.matches.isNotEmpty ? matchesState.matches.last.match.id : null,
         sort: SortType.desc,
         type: event.type,
         platform: null,

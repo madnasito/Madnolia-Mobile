@@ -112,8 +112,19 @@ class MatchRepository {
       select.where((tbl) => tbl.platform.equals(filter.platform!.id)); // Assuming PlatformId has an 'id' property
     }
 
+    if (filter.cursor != null) {
+      final cursorMatch = await (database.select(database.match)..where((m) => m.id.equals(filter.cursor!))).getSingleOrNull();
+      if (cursorMatch != null) {
+        if (filter.sort == SortType.desc) {
+          select.where((tbl) => tbl.date.isSmallerThanValue(cursorMatch.date));
+        } else {
+          select.where((tbl) => tbl.date.isBiggerThanValue(cursorMatch.date));
+        }
+      }
+    }
+
     select
-      ..limit(filter.limit, offset: filter.skip)
+      ..limit(filter.limit)
       ..orderBy([
         (m) {
           final orderTerm = filter.sort == SortType.asc

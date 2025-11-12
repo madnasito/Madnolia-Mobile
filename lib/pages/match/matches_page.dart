@@ -37,7 +37,7 @@ class _MatchesPageState extends State<MatchesPage> {
     if (_isBottom) {
       final matchesState = matchesBloc.state.matchesState.firstWhere((e) => e.type == matchesBloc.state.selectedType);
       matchesBloc.add(LoadMatches(
-        filter: MatchesFilter(type: matchesBloc.state.selectedType, sort: SortType.desc, skip: matchesState.matches.length)
+        filter: MatchesFilter(type: matchesBloc.state.selectedType, sort: SortType.desc, cursor: matchesState.matches.isNotEmpty ? matchesState.matches.last.match.id : null)
       ));
     }
   }
