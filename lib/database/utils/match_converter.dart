@@ -19,5 +19,6 @@ MatchCompanion matchToCompanion(Match match) {
     status: Value(match.status),
     joined: Value(match.joined),
     inviteds: Value(match.inviteds),
+    createdAt: Value(match.createdAt.toLocal())
   );
 }

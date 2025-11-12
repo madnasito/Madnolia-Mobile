@@ -1223,6 +1223,12 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
       GeneratedColumn<String>('inviteds', aliasedName, false,
               type: DriftSqlType.string, requiredDuringInsert: true)
           .withConverter<List<String>>($MatchTable.$converterinviteds);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
   static const VerificationMeta _lastUpdatedMeta =
       const VerificationMeta('lastUpdated');
   @override
@@ -1246,6 +1252,7 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
         status,
         joined,
         inviteds,
+        createdAt,
         lastUpdated
       ];
   @override
@@ -1313,6 +1320,12 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
           tournament.isAcceptableOrUnknown(
               data['tournament']!, _tournamentMeta));
     }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
     if (data.containsKey('last_updated')) {
       context.handle(
           _lastUpdatedMeta,
@@ -1356,6 +1369,8 @@ class $MatchTable extends Match with TableInfo<$MatchTable, MatchData> {
       inviteds: $MatchTable.$converterinviteds.fromSql(attachedDatabase
           .typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}inviteds'])!),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       lastUpdated: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}last_updated'])!,
     );
@@ -1390,6 +1405,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
   final MatchStatus status;
   final List<String> joined;
   final List<String> inviteds;
+  final DateTime createdAt;
   final DateTime lastUpdated;
   const MatchData(
       {required this.id,
@@ -1405,6 +1421,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
       required this.status,
       required this.joined,
       required this.inviteds,
+      required this.createdAt,
       required this.lastUpdated});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1435,6 +1452,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
       map['inviteds'] =
           Variable<String>($MatchTable.$converterinviteds.toSql(inviteds));
     }
+    map['created_at'] = Variable<DateTime>(createdAt);
     map['last_updated'] = Variable<DateTime>(lastUpdated);
     return map;
   }
@@ -1456,6 +1474,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
       status: Value(status),
       joined: Value(joined),
       inviteds: Value(inviteds),
+      createdAt: Value(createdAt),
       lastUpdated: Value(lastUpdated),
     );
   }
@@ -1479,6 +1498,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           .fromJson(serializer.fromJson<int>(json['status'])),
       joined: serializer.fromJson<List<String>>(json['joined']),
       inviteds: serializer.fromJson<List<String>>(json['inviteds']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       lastUpdated: serializer.fromJson<DateTime>(json['lastUpdated']),
     );
   }
@@ -1501,6 +1521,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           serializer.toJson<int>($MatchTable.$converterstatus.toJson(status)),
       'joined': serializer.toJson<List<String>>(joined),
       'inviteds': serializer.toJson<List<String>>(inviteds),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
       'lastUpdated': serializer.toJson<DateTime>(lastUpdated),
     };
   }
@@ -1519,6 +1540,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           MatchStatus? status,
           List<String>? joined,
           List<String>? inviteds,
+          DateTime? createdAt,
           DateTime? lastUpdated}) =>
       MatchData(
         id: id ?? this.id,
@@ -1534,6 +1556,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
         status: status ?? this.status,
         joined: joined ?? this.joined,
         inviteds: inviteds ?? this.inviteds,
+        createdAt: createdAt ?? this.createdAt,
         lastUpdated: lastUpdated ?? this.lastUpdated,
       );
   MatchData copyWithCompanion(MatchCompanion data) {
@@ -1553,6 +1576,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
       status: data.status.present ? data.status.value : this.status,
       joined: data.joined.present ? data.joined.value : this.joined,
       inviteds: data.inviteds.present ? data.inviteds.value : this.inviteds,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       lastUpdated:
           data.lastUpdated.present ? data.lastUpdated.value : this.lastUpdated,
     );
@@ -1574,6 +1598,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           ..write('status: $status, ')
           ..write('joined: $joined, ')
           ..write('inviteds: $inviteds, ')
+          ..write('createdAt: $createdAt, ')
           ..write('lastUpdated: $lastUpdated')
           ..write(')'))
         .toString();
@@ -1594,6 +1619,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
       status,
       joined,
       inviteds,
+      createdAt,
       lastUpdated);
   @override
   bool operator ==(Object other) =>
@@ -1612,6 +1638,7 @@ class MatchData extends DataClass implements Insertable<MatchData> {
           other.status == this.status &&
           other.joined == this.joined &&
           other.inviteds == this.inviteds &&
+          other.createdAt == this.createdAt &&
           other.lastUpdated == this.lastUpdated);
 }
 
@@ -1629,6 +1656,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
   final Value<MatchStatus> status;
   final Value<List<String>> joined;
   final Value<List<String>> inviteds;
+  final Value<DateTime> createdAt;
   final Value<DateTime> lastUpdated;
   final Value<int> rowid;
   const MatchCompanion({
@@ -1645,6 +1673,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
     this.status = const Value.absent(),
     this.joined = const Value.absent(),
     this.inviteds = const Value.absent(),
+    this.createdAt = const Value.absent(),
     this.lastUpdated = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1662,6 +1691,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
     required MatchStatus status,
     required List<String> joined,
     required List<String> inviteds,
+    required DateTime createdAt,
     this.lastUpdated = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
@@ -1675,7 +1705,8 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
         private = Value(private),
         status = Value(status),
         joined = Value(joined),
-        inviteds = Value(inviteds);
+        inviteds = Value(inviteds),
+        createdAt = Value(createdAt);
   static Insertable<MatchData> custom({
     Expression<String>? id,
     Expression<String>? game,
@@ -1690,6 +1721,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
     Expression<int>? status,
     Expression<String>? joined,
     Expression<String>? inviteds,
+    Expression<DateTime>? createdAt,
     Expression<DateTime>? lastUpdated,
     Expression<int>? rowid,
   }) {
@@ -1707,6 +1739,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
       if (status != null) 'status': status,
       if (joined != null) 'joined': joined,
       if (inviteds != null) 'inviteds': inviteds,
+      if (createdAt != null) 'created_at': createdAt,
       if (lastUpdated != null) 'last_updated': lastUpdated,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1726,6 +1759,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
       Value<MatchStatus>? status,
       Value<List<String>>? joined,
       Value<List<String>>? inviteds,
+      Value<DateTime>? createdAt,
       Value<DateTime>? lastUpdated,
       Value<int>? rowid}) {
     return MatchCompanion(
@@ -1742,6 +1776,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
       status: status ?? this.status,
       joined: joined ?? this.joined,
       inviteds: inviteds ?? this.inviteds,
+      createdAt: createdAt ?? this.createdAt,
       lastUpdated: lastUpdated ?? this.lastUpdated,
       rowid: rowid ?? this.rowid,
     );
@@ -1793,6 +1828,9 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
       map['inviteds'] = Variable<String>(
           $MatchTable.$converterinviteds.toSql(inviteds.value));
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
     if (lastUpdated.present) {
       map['last_updated'] = Variable<DateTime>(lastUpdated.value);
     }
@@ -1818,6 +1856,7 @@ class MatchCompanion extends UpdateCompanion<MatchData> {
           ..write('status: $status, ')
           ..write('joined: $joined, ')
           ..write('inviteds: $inviteds, ')
+          ..write('createdAt: $createdAt, ')
           ..write('lastUpdated: $lastUpdated, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -4795,6 +4834,7 @@ typedef $$MatchTableCreateCompanionBuilder = MatchCompanion Function({
   required MatchStatus status,
   required List<String> joined,
   required List<String> inviteds,
+  required DateTime createdAt,
   Value<DateTime> lastUpdated,
   Value<int> rowid,
 });
@@ -4812,6 +4852,7 @@ typedef $$MatchTableUpdateCompanionBuilder = MatchCompanion Function({
   Value<MatchStatus> status,
   Value<List<String>> joined,
   Value<List<String>> inviteds,
+  Value<DateTime> createdAt,
   Value<DateTime> lastUpdated,
   Value<int> rowid,
 });
@@ -4897,6 +4938,9 @@ class $$MatchTableFilterComposer extends Composer<_$AppDatabase, $MatchTable> {
       get inviteds => $composableBuilder(
           column: $table.inviteds,
           builder: (column) => ColumnWithTypeConverterFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnFilters(column));
@@ -4984,6 +5028,9 @@ class $$MatchTableOrderingComposer
   ColumnOrderings<String> get inviteds => $composableBuilder(
       column: $table.inviteds, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => ColumnOrderings(column));
 
@@ -5070,6 +5117,9 @@ class $$MatchTableAnnotationComposer
   GeneratedColumnWithTypeConverter<List<String>, String> get inviteds =>
       $composableBuilder(column: $table.inviteds, builder: (column) => column);
 
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
   GeneratedColumn<DateTime> get lastUpdated => $composableBuilder(
       column: $table.lastUpdated, builder: (column) => column);
 
@@ -5150,6 +5200,7 @@ class $$MatchTableTableManager extends RootTableManager<
             Value<MatchStatus> status = const Value.absent(),
             Value<List<String>> joined = const Value.absent(),
             Value<List<String>> inviteds = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> lastUpdated = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -5167,6 +5218,7 @@ class $$MatchTableTableManager extends RootTableManager<
             status: status,
             joined: joined,
             inviteds: inviteds,
+            createdAt: createdAt,
             lastUpdated: lastUpdated,
             rowid: rowid,
           ),
@@ -5184,6 +5236,7 @@ class $$MatchTableTableManager extends RootTableManager<
             required MatchStatus status,
             required List<String> joined,
             required List<String> inviteds,
+            required DateTime createdAt,
             Value<DateTime> lastUpdated = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -5201,6 +5254,7 @@ class $$MatchTableTableManager extends RootTableManager<
             status: status,
             joined: joined,
             inviteds: inviteds,
+            createdAt: createdAt,
             lastUpdated: lastUpdated,
             rowid: rowid,
           ),

@@ -22,6 +22,7 @@ class Match {
     bool private;
     String? tournament;
     MatchStatus status;
+    DateTime createdAt;
 
     Match({
         required this.id,
@@ -36,7 +37,8 @@ class Match {
         required this.joined,
         required this.private,
         required this.tournament,
-        required this.status
+        required this.status,
+        required this.createdAt,
     });
 
     factory Match.fromJson(Map<String, dynamic> json) {
@@ -74,7 +76,8 @@ class Match {
         joined: List<String>.from(json["joined"].map((x) => x)),
         private: json["private"],
         tournament: json["tournament"],
-        status: matchStatus
+        status: matchStatus,
+        createdAt: DateTime.parse(json["createdAt"])
       );
 
     } 
@@ -92,5 +95,6 @@ class Match {
         "private": private,
         "tournament": tournament,
         "status": status,
+        "createdAt": createdAt.toUtc(),
     };
 }
