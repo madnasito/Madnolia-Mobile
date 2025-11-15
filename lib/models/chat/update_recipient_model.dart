@@ -21,7 +21,7 @@ class UpdateRecipientModel {
 
     factory UpdateRecipientModel.fromJson(Map<String, dynamic> json) => UpdateRecipientModel(
         id: json["id"],
-        status: ChatMessageStatus.values.firstWhere((e) => e == json["status"]),
+        status: ChatMessageStatus.values[json["status"]],
     );
 
     Map<String, dynamic> toJson() => {

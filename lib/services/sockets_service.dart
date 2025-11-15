@@ -195,7 +195,7 @@ Future<void> onStart(ServiceInstance service) async {
     debugPrint('Message sended saved $messageDb');
   });
 
-  socket.on("update_recipient_status", (payload) async {
+  socket.on("message_recipient_update", (payload) async {
     try {
       
       final data = UpdateRecipientModel.fromJson(payload);
