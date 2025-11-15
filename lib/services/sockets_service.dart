@@ -341,6 +341,7 @@ Future<void> onStart(ServiceInstance service) async {
   });
 
   service.on("leave_room").listen((onData) {
+    debugPrint("LEAVE ROOM");
     currentRoom = "";
   });
 

@@ -75,7 +75,7 @@ class ChatMessage {
         conversation: json["conversation"],
         creator: json["creator"],
         date: DateTime.parse(json["date"]),
-        updatedAt: json.containsKey("updatedAt") ? DateTime.parse(json["updatedAt"]) : null,
+        updatedAt: (json.containsKey("updatedAt") && json['updatedAt'] != null) ? DateTime.parse(json["updatedAt"]) : null,
       );
     }
 
