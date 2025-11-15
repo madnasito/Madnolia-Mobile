@@ -25,4 +25,13 @@ class ConversationRepository {
       rethrow;
     }
   }
+
+  Future<void> deleteConversations() async {
+    try {
+      await database.delete(database.conversation).go();
+    } catch (e) {
+      debugPrint('Error in delete conversations: $e');
+      rethrow;
+    }
+  }
 }

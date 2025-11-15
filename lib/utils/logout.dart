@@ -25,11 +25,13 @@ Future<void> logoutApp(BuildContext context) async {
   matchesBloc.add(RestoreMatchesState());
   chatsBloc.add(RestoreUserChats());
   platformGamesBloc.add(RestorePlatformsGamesState());
-  RepositoryManager().games.deleteAllGames();
-  RepositoryManager().user.deleteUsers();
-  RepositoryManager().match.deleteMatches();
-  RepositoryManager().friendship.deleteFriendships();
-  RepositoryManager().notification.deleteNotifications();
+  await RepositoryManager().games.deleteAllGames();
+  await RepositoryManager().user.deleteUsers();
+  await RepositoryManager().match.deleteMatches();
+  await RepositoryManager().friendship.deleteFriendships();
+  await RepositoryManager().notification.deleteNotifications();
+  await RepositoryManager().chatMessage.deleteMessages();
+  await RepositoryManager().conversation.deleteConversations();
   if(!context.mounted) return;
   stopBackgroundService();
   await storage.deleteAll();
