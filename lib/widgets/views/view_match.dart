@@ -95,6 +95,7 @@ class _ViewMatchState extends State<ViewMatch> {
     _socketConnectedSubscription?.cancel();
     
     backgroundService.invoke("disconnect_chat");
+    backgroundService.invoke("leave_room");
     // backgroundService.invoke("new_player_to_match");
     userBloc.updateChatRoom("");
     super.dispose();
