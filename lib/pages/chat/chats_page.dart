@@ -3,13 +3,10 @@ import 'dart:math' as math;
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/enums/list_status.enum.dart';
-import 'package:madnolia/enums/chat_message_type.enum.dart';
-import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_users_chats.dart';
@@ -80,28 +77,13 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
   }
 
   void _setupMessageListener() {
-    final service = FlutterBackgroundService();
     final chatsBloc = context.read<ChatsBloc>();
 
     // Initialize if needed
     if (chatsBloc.state.status == ListStatus.initial) {
       chatsBloc.add(UserChatsFetched());
       chatsBloc.add(WatchUserChats());
-    }
-
-    // Listen for new messages
-    _messageSubscription = service.on('message').listen((onData) {
-      if (onData != null) {
-        final message = ChatMessage.fromJson(onData);
-        if (message.type == ChatMessageType.user) {
-          // chatsBloc.add(AddIndividualMessage(message: message));
-          setState(() {
-            
-          });
-        }
-      }
-    });
-    
+    }    
   }
 
   @override
