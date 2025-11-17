@@ -47,6 +47,74 @@ class FriendshipRepository {
 
   }
 
+  Future <List<FriendshipData>> getFriendshipsByIds({required List<String> ids, bool reload = false }) async {
+    try {
+      final now = DateTime.now();
+      
+      if (reload) {
+        final apiFriendships = await friendshipService.getFriendshipsByIds(ids);
+        final storage = const FlutterSecureStorage();
+        final String? userId = await storage.read(key: "userId");
+
+        for (final friendshipInfo in apiFriendships) {
+          final String notMe = friendshipInfo.user1 == userId ? friendshipInfo.user2 : friendshipInfo.user1;
+
+          final friendshipCompanion = FriendshipCompanion(
+            id: Value(friendshipInfo.id),
+            user: Value(notMe),
+            createdAt: Value(friendshipInfo.createdAt),
+            status: Value(friendshipInfo.status),
+            lastUpdated: Value(now),
+          );
+          await createOrUpdateFriendship(friendshipCompanion);
+        }
+        final allFriendships = await (database.select(database.friendship)..where((f) => f.id.isIn(ids))).get();
+        return allFriendships;
+      }
+
+
+      final List<String> idsToFetch = [];
+
+      // Check local database for existing and fresh friendships
+      final existingFriendships = await (database.select(database.friendship)..where((f) => f.id.isIn(ids))).get();
+
+      for (final id in ids) {
+        final existing = existingFriendships.where((f) => f.id == id).firstOrNull;
+        if (existing == null) {
+          idsToFetch.add(id);
+        }
+      }
+
+      // Fetch remaining friendships from API
+      if (idsToFetch.isNotEmpty) {
+        final apiFriendships = await friendshipService.getFriendshipsByIds(idsToFetch);
+
+        final storage = const FlutterSecureStorage();
+        final String? userId = await storage.read(key: "userId");
+
+        for (final friendshipInfo in apiFriendships) {
+          final String notMe = friendshipInfo.user1 == userId ? friendshipInfo.user2 : friendshipInfo.user1;
+
+          final friendshipCompanion = FriendshipCompanion(
+            id: Value(friendshipInfo.id),
+            user: Value(notMe),
+            createdAt: Value(friendshipInfo.createdAt),
+            status: Value(friendshipInfo.status),
+            lastUpdated: Value(now),
+          );
+          await createOrUpdateFriendship(friendshipCompanion);
+        }
+      }
+
+      // Retrieve all requested friendships from local database
+      final allFriendships = await (database.select(database.friendship)..where((f) => f.id.isIn(ids))).get();
+      return allFriendships;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
   Future<FriendshipData> getFriendshipByUserId(String id) async {
     try {
       final now = DateTime.now();

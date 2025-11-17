@@ -10,7 +10,7 @@ import 'package:madnolia/models/chat_user_model.dart';
 
 
 class AtomUserChat extends StatelessWidget {
-  final UserChat userChat;
+  final UserChatModel userChat;
   
   const AtomUserChat({
     super.key, 

@@ -1,12 +1,15 @@
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/database/conversations/conversation_state_repository.dart';
 import 'package:madnolia/database/database.dart';
+import 'package:madnolia/database/friendships/frienship.repository.dart';
 import 'package:madnolia/database/users/user_repository.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_with_user.dart';
+import 'package:madnolia/models/chat/user_chat.dart';
 
 import '../../models/chat/chat_message_model.dart';
 import '../../services/messages_service.dart';
@@ -18,10 +21,12 @@ class ChatMessageRepository {
 
   final _messagesService = MessagesService();
   late final UserRepository _userRepository;
+  late final FriendshipRepository _friendshipRepository;
 
   ChatMessageRepository(this.database) {
     _conversationRepository = ConversationRepository(database);
     _userRepository = UserRepository(database);
+    _friendshipRepository = FriendshipRepository(database);
   }
 
   Future<int> createOrUpdate(ChatMessageCompanion message) async {
@@ -224,6 +229,60 @@ class ChatMessageRepository {
       rethrow;
     }
   }
+
+  Future<List<UserChat>> getUsersChats({required int page, bool reload = false}) async {
+
+    try {
+
+      if(reload) {
+        final apiChats = await MessagesService().getChats(page);
+
+        final List<String> conversationIds = apiChats.map((e) => e.message.conversation).toList();
+
+        await _friendshipRepository.getFriendshipsByIds(ids: conversationIds, reload: true);
+
+        final List<ChatMessage> apiMessages = apiChats.map((e) => e.message).toList();
+        final messageCompanions = apiMessages.map((m) => m.toCompanion()).toList();
+        await createOrUpdateMultiple(messageCompanions);
+        
+      }
+
+      final query = database.select(database.chatMessage)
+        ..where((tbl) => tbl.type.equals(ChatMessageType.user.index));
+
+      final allMessages = await query.get();
+
+      final groupedMessages = groupBy(allMessages, (m) => m.conversation);
+
+      final latestMessages = groupedMessages.values.map((messages) {
+        messages.sort((a, b) => b.date.compareTo(a.date));
+        return messages.first;
+      }).toList();
+
+      latestMessages.sort((a, b) => b.date.compareTo(a.date));
+
+      final userChats = await Future.wait(latestMessages.map((message) async {
+        final friendship = await _friendshipRepository.getFriendshipById(message.conversation);
+        final user = await _userRepository.getUserById(friendship.user);
+        final conversation = await _conversationRepository.get(message.conversation);
+        return UserChat(
+          user: user,
+          unreadCount: conversation?.unreadCount ?? 0,
+          message: message,
+        );
+      }));
+
+      return userChats;
+
+      } catch (e) {
+
+        debugPrint(e.toString());
+
+        rethrow;
+
+      }
+
+    }
 
   Stream<List<ChatMessageWithUser>> watchMessagesInRoom({ required String conversationId}) async* {
     try {

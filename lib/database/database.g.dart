@@ -1875,6 +1875,14 @@ class $ConversationTable extends Conversation
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
       'id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _unreadCountMeta =
+      const VerificationMeta('unreadCount');
+  @override
+  late final GeneratedColumn<int> unreadCount = GeneratedColumn<int>(
+      'unread_count', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   static const VerificationMeta _hasReachedEndMeta =
       const VerificationMeta('hasReachedEnd');
   @override
@@ -1886,7 +1894,7 @@ class $ConversationTable extends Conversation
           'CHECK ("has_reached_end" IN (0, 1))'),
       defaultValue: const Constant(false));
   @override
-  List<GeneratedColumn> get $columns => [id, hasReachedEnd];
+  List<GeneratedColumn> get $columns => [id, unreadCount, hasReachedEnd];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1901,6 +1909,12 @@ class $ConversationTable extends Conversation
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
+    }
+    if (data.containsKey('unread_count')) {
+      context.handle(
+          _unreadCountMeta,
+          unreadCount.isAcceptableOrUnknown(
+              data['unread_count']!, _unreadCountMeta));
     }
     if (data.containsKey('has_reached_end')) {
       context.handle(
@@ -1919,6 +1933,8 @@ class $ConversationTable extends Conversation
     return ConversationData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      unreadCount: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}unread_count'])!,
       hasReachedEnd: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}has_reached_end'])!,
     );
@@ -1933,12 +1949,17 @@ class $ConversationTable extends Conversation
 class ConversationData extends DataClass
     implements Insertable<ConversationData> {
   final String id;
+  final int unreadCount;
   final bool hasReachedEnd;
-  const ConversationData({required this.id, required this.hasReachedEnd});
+  const ConversationData(
+      {required this.id,
+      required this.unreadCount,
+      required this.hasReachedEnd});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    map['unread_count'] = Variable<int>(unreadCount);
     map['has_reached_end'] = Variable<bool>(hasReachedEnd);
     return map;
   }
@@ -1946,6 +1967,7 @@ class ConversationData extends DataClass
   ConversationCompanion toCompanion(bool nullToAbsent) {
     return ConversationCompanion(
       id: Value(id),
+      unreadCount: Value(unreadCount),
       hasReachedEnd: Value(hasReachedEnd),
     );
   }
@@ -1955,6 +1977,7 @@ class ConversationData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ConversationData(
       id: serializer.fromJson<String>(json['id']),
+      unreadCount: serializer.fromJson<int>(json['unreadCount']),
       hasReachedEnd: serializer.fromJson<bool>(json['hasReachedEnd']),
     );
   }
@@ -1963,18 +1986,23 @@ class ConversationData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'unreadCount': serializer.toJson<int>(unreadCount),
       'hasReachedEnd': serializer.toJson<bool>(hasReachedEnd),
     };
   }
 
-  ConversationData copyWith({String? id, bool? hasReachedEnd}) =>
+  ConversationData copyWith(
+          {String? id, int? unreadCount, bool? hasReachedEnd}) =>
       ConversationData(
         id: id ?? this.id,
+        unreadCount: unreadCount ?? this.unreadCount,
         hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
       );
   ConversationData copyWithCompanion(ConversationCompanion data) {
     return ConversationData(
       id: data.id.present ? data.id.value : this.id,
+      unreadCount:
+          data.unreadCount.present ? data.unreadCount.value : this.unreadCount,
       hasReachedEnd: data.hasReachedEnd.present
           ? data.hasReachedEnd.value
           : this.hasReachedEnd,
@@ -1985,51 +2013,62 @@ class ConversationData extends DataClass
   String toString() {
     return (StringBuffer('ConversationData(')
           ..write('id: $id, ')
+          ..write('unreadCount: $unreadCount, ')
           ..write('hasReachedEnd: $hasReachedEnd')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, hasReachedEnd);
+  int get hashCode => Object.hash(id, unreadCount, hasReachedEnd);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ConversationData &&
           other.id == this.id &&
+          other.unreadCount == this.unreadCount &&
           other.hasReachedEnd == this.hasReachedEnd);
 }
 
 class ConversationCompanion extends UpdateCompanion<ConversationData> {
   final Value<String> id;
+  final Value<int> unreadCount;
   final Value<bool> hasReachedEnd;
   final Value<int> rowid;
   const ConversationCompanion({
     this.id = const Value.absent(),
+    this.unreadCount = const Value.absent(),
     this.hasReachedEnd = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ConversationCompanion.insert({
     required String id,
+    this.unreadCount = const Value.absent(),
     this.hasReachedEnd = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id);
   static Insertable<ConversationData> custom({
     Expression<String>? id,
+    Expression<int>? unreadCount,
     Expression<bool>? hasReachedEnd,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (unreadCount != null) 'unread_count': unreadCount,
       if (hasReachedEnd != null) 'has_reached_end': hasReachedEnd,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   ConversationCompanion copyWith(
-      {Value<String>? id, Value<bool>? hasReachedEnd, Value<int>? rowid}) {
+      {Value<String>? id,
+      Value<int>? unreadCount,
+      Value<bool>? hasReachedEnd,
+      Value<int>? rowid}) {
     return ConversationCompanion(
       id: id ?? this.id,
+      unreadCount: unreadCount ?? this.unreadCount,
       hasReachedEnd: hasReachedEnd ?? this.hasReachedEnd,
       rowid: rowid ?? this.rowid,
     );
@@ -2040,6 +2079,9 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (unreadCount.present) {
+      map['unread_count'] = Variable<int>(unreadCount.value);
     }
     if (hasReachedEnd.present) {
       map['has_reached_end'] = Variable<bool>(hasReachedEnd.value);
@@ -2054,6 +2096,7 @@ class ConversationCompanion extends UpdateCompanion<ConversationData> {
   String toString() {
     return (StringBuffer('ConversationCompanion(')
           ..write('id: $id, ')
+          ..write('unreadCount: $unreadCount, ')
           ..write('hasReachedEnd: $hasReachedEnd, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -5321,12 +5364,14 @@ typedef $$MatchTableProcessedTableManager = ProcessedTableManager<
 typedef $$ConversationTableCreateCompanionBuilder = ConversationCompanion
     Function({
   required String id,
+  Value<int> unreadCount,
   Value<bool> hasReachedEnd,
   Value<int> rowid,
 });
 typedef $$ConversationTableUpdateCompanionBuilder = ConversationCompanion
     Function({
   Value<String> id,
+  Value<int> unreadCount,
   Value<bool> hasReachedEnd,
   Value<int> rowid,
 });
@@ -5342,6 +5387,9 @@ class $$ConversationTableFilterComposer
   });
   ColumnFilters<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get unreadCount => $composableBuilder(
+      column: $table.unreadCount, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<bool> get hasReachedEnd => $composableBuilder(
       column: $table.hasReachedEnd, builder: (column) => ColumnFilters(column));
@@ -5359,6 +5407,9 @@ class $$ConversationTableOrderingComposer
   ColumnOrderings<String> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<int> get unreadCount => $composableBuilder(
+      column: $table.unreadCount, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<bool> get hasReachedEnd => $composableBuilder(
       column: $table.hasReachedEnd,
       builder: (column) => ColumnOrderings(column));
@@ -5375,6 +5426,9 @@ class $$ConversationTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get unreadCount => $composableBuilder(
+      column: $table.unreadCount, builder: (column) => column);
 
   GeneratedColumn<bool> get hasReachedEnd => $composableBuilder(
       column: $table.hasReachedEnd, builder: (column) => column);
@@ -5407,21 +5461,25 @@ class $$ConversationTableTableManager extends RootTableManager<
               $$ConversationTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> id = const Value.absent(),
+            Value<int> unreadCount = const Value.absent(),
             Value<bool> hasReachedEnd = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ConversationCompanion(
             id: id,
+            unreadCount: unreadCount,
             hasReachedEnd: hasReachedEnd,
             rowid: rowid,
           ),
           createCompanionCallback: ({
             required String id,
+            Value<int> unreadCount = const Value.absent(),
             Value<bool> hasReachedEnd = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               ConversationCompanion.insert(
             id: id,
+            unreadCount: unreadCount,
             hasReachedEnd: hasReachedEnd,
             rowid: rowid,
           ),

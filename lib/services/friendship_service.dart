@@ -43,4 +43,25 @@ class FriendshipService {
     }
   }
 
+  Future<List<Friendship>> getFriendshipsByIds(List<String> ids) async {
+    try {
+      final url = "$baseUrl/friendship/friendships-by-ids";
+      
+      final String? token = await _storage.read(key: 'token');
+
+      final resp = await Dio().post(
+        url,
+        options: Options(headers: {"Authorization": 'Bearer $token'},
+        ), 
+        data: {"ids": ids}
+      );
+
+      final List<Friendship> friendships = (resp.data as List).map((f) => Friendship.fromJson(f)).toList();
+
+      return friendships;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
 }

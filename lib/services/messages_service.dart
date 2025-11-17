@@ -86,7 +86,7 @@ class MessagesService {
     }
   }
 
-  Future<List<UserChat>> getChats(int page) async {
+  Future<List<UserChatModel>> getChats(int page) async {
     try {
       final url = "$baseUrl/messages";
       final String? token = await _storage.read(key: "token");
@@ -96,8 +96,8 @@ class MessagesService {
       );
 
       // Explicit type casting solution
-      final List<UserChat> chats = (resp.data as List)
-          .map<UserChat>((e) => UserChat.fromJson(e))
+      final List<UserChatModel> chats = (resp.data as List)
+          .map<UserChatModel>((e) => UserChatModel.fromJson(e))
           .toList();
 
       return chats;

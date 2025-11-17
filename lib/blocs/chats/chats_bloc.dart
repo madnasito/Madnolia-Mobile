@@ -58,7 +58,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     if(existsMessage == -1) return;
 
     // Create a new list to ensure immutability
-    final List<UserChat> chats = List.from(state.usersChats);
+    final List<UserChatModel> chats = List.from(state.usersChats);
 
     chats[existsMessage].message.status = event.status;
 
@@ -83,21 +83,21 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     
 
     // Create a new list to ensure immutability
-    final List<UserChat> updatedChats = List.from(state.usersChats);
+    final List<UserChatModel> updatedChats = List.from(state.usersChats);
     
     // Find index of existing chat if it exists
     final existingChatIndex = updatedChats.indexWhere(
       (chat) => chat.message.conversation == event.message.conversation
     );
 
-    UserChat chatState;
+    UserChatModel chatState;
 
     if(existingChatIndex != -1) {
       chatState = state.usersChats.firstWhere((e) => e.message.conversation == event.message.conversation);
       chatState.message = event.message;
       updatedChats.removeWhere((e) => e.message.conversation == event.message.conversation);
     } else {
-      chatState = UserChat(id: event.message.conversation, unreadCount: 1, message: event.message);
+      chatState = UserChatModel(id: event.message.conversation, unreadCount: 1, message: event.message);
     }
 
     updatedChats.insert(0, chatState);

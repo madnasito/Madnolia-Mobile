@@ -6,22 +6,22 @@ import 'dart:convert';
 
 import 'package:madnolia/models/chat/chat_message_model.dart';
 
-UserChat userChatFromJson(String str) => UserChat.fromJson(json.decode(str));
+UserChatModel userChatFromJson(String str) => UserChatModel.fromJson(json.decode(str));
 
-String userChatToJson(UserChat data) => json.encode(data.toJson());
+String userChatToJson(UserChatModel data) => json.encode(data.toJson());
 
-class UserChat {
+class UserChatModel {
     String id;
     int unreadCount;
     ChatMessage message;
 
-    UserChat({
+    UserChatModel({
         required this.id,
         required this.unreadCount,
         required this.message,
     });
 
-    factory UserChat.fromJson(Map<String, dynamic> json) => UserChat(
+    factory UserChatModel.fromJson(Map<String, dynamic> json) => UserChatModel(
         id: json["_id"],
         unreadCount: json["unreadCount"],
         message: ChatMessage.fromJson(json["message"]),

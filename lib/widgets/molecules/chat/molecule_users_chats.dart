@@ -5,7 +5,7 @@ import 'package:madnolia/models/chat/user_chat_model.dart';
 import 'package:madnolia/widgets/atoms/chat/atom_user_chat.dart' show AtomUserChat;
 
 class MoleculeUsersChats extends StatelessWidget {
-  final List<UserChat> usersChats;
+  final List<UserChatModel> usersChats;
   const MoleculeUsersChats({super.key, required this.usersChats});
 
   @override
