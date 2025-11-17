@@ -1,14 +1,12 @@
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:intl/intl.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
-import '../../../blocs/chats/chats_bloc.dart';
 import '../../../database/database.dart';
 import '../../../models/chat/update_recipient_model.dart';
 
@@ -36,7 +34,6 @@ class _AtomNotMyIndividualMessageState
 
   @override
   Widget build(BuildContext context) {
-    final chatsBloc = context.watch<ChatsBloc>();
     final maxWidth = MediaQuery.of(context).size.width * 0.75;
 
     return VisibilityDetector(
@@ -50,8 +47,6 @@ class _AtomNotMyIndividualMessageState
               UpdateRecipientModel(
                       id: widget.message.id, status: ChatMessageStatus.read)
                   .toJson());
-          chatsBloc.add(UpdateRecipientStatus(
-              messageId: widget.message.id, status: ChatMessageStatus.read));
         }
       },
       child: Align(

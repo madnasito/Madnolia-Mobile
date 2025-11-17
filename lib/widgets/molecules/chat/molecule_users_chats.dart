@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/blocs.dart';
-import 'package:madnolia/models/chat/user_chat_model.dart';
+import 'package:madnolia/models/chat/user_chat.dart';
 import 'package:madnolia/widgets/atoms/chat/atom_user_chat.dart' show AtomUserChat;
 
 class MoleculeUsersChats extends StatelessWidget {
-  final List<UserChatModel> usersChats;
+  final List<UserChat> usersChats;
   const MoleculeUsersChats({super.key, required this.usersChats});
 
   @override

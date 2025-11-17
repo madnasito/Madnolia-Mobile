@@ -230,12 +230,12 @@ class ChatMessageRepository {
     }
   }
 
-  Future<List<UserChat>> getUsersChats({required int page, bool reload = false}) async {
+  Future<List<UserChat>> getUsersChats({required int skip, bool reload = false}) async {
 
     try {
 
       if(reload) {
-        final apiChats = await MessagesService().getChats(page);
+        final apiChats = await MessagesService().getChats(skip);
 
         final List<String> conversationIds = apiChats.map((e) => e.message.conversation).toList();
 
@@ -249,7 +249,7 @@ class ChatMessageRepository {
 
       final query = database.select(database.chatMessage)
         ..where((tbl) => tbl.type.equals(ChatMessageType.user.index));
-
+        
       final allMessages = await query.get();
 
       final groupedMessages = groupBy(allMessages, (m) => m.conversation);
@@ -306,6 +306,62 @@ class ChatMessageRepository {
       });
     } catch (e) {
       debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
+  // ...existing code...
+  Stream<List<UserChat>> watchUserChats() {
+    try {
+      // Primero obtenemos por cada conversación la fecha máxima (último mensaje)
+      final groupedQuery = (database.selectOnly(database.chatMessage)
+        ..addColumns([database.chatMessage.conversation, database.chatMessage.date.max()])
+        ..where(database.chatMessage.type.equals(ChatMessageType.user.index))
+        ..groupBy([database.chatMessage.conversation]));
+
+      return groupedQuery.watch().asyncMap((rows) async {
+        // rows: cada fila contiene conversation + max(date)
+        final convDates = <MapEntry<String, DateTime>>[];
+        for (final row in rows) {
+          final conv = row.read(database.chatMessage.conversation) as String;
+          final maxDate = row.read(database.chatMessage.date.max()) as DateTime;
+          convDates.add(MapEntry(conv, maxDate));
+        }
+
+        // Por cada (conversation, maxDate) obtenemos el ChatMessageData completo
+        final latestMessages = <ChatMessageData>[];
+        for (final e in convDates) {
+          final msg = await (database.select(database.chatMessage)
+            ..where((t) => t.conversation.equals(e.key) & t.date.equals(e.value))
+            ..orderBy([(t) => OrderingTerm.desc(t.date)]) // Asegúrate de ordenar
+            ..limit(1)) // Limitar a 1 resultado
+            .getSingleOrNull(); // Cambia a getSingleOrNull() para evitar el error
+          if (msg != null) latestMessages.add(msg);
+        }
+
+        // Ordenar por fecha descendente y construir UserChat
+        latestMessages.sort((a, b) => b.date.compareTo(a.date));
+        final userChats = <UserChat>[];
+        for (final lastMessage in latestMessages) {
+          try {
+            final friendship = await _friendshipRepository.getFriendshipById(lastMessage.conversation);
+            final user = await _userRepository.getUserById(friendship.user);
+            final conversation = await _conversationRepository.get(lastMessage.conversation);
+
+            userChats.add(UserChat(
+              user: user,
+              unreadCount: conversation?.unreadCount ?? 0,
+              message: lastMessage,
+            ));
+          } catch (e) {
+            debugPrint('watchUserChats: error procesando ${lastMessage.conversation}: $e');
+          }
+        }
+
+        return userChats;
+      });
+    } catch (e) {
+      debugPrint('Error in watchUserChats: $e');
       rethrow;
     }
   }

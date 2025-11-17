@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
-import 'package:madnolia/models/chat/chat_message_model.dart';
-import 'package:madnolia/models/chat/user_chat_model.dart';
-import 'package:madnolia/services/messages_service.dart';
+import 'package:madnolia/models/chat/user_chat.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 part 'chats_event.dart';
@@ -19,22 +20,45 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
+
+  final ChatMessageRepository _chatMessageRepository = RepositoryManager().chatMessage;
+
   ChatsBloc() : super(ChatsInitial()) {
 
     on<UserChatsFetched>(_onFetchUserChats, transformer: throttleDroppable(chatsThrottleDuration));
-    on<AddIndividualMessage>(_addIndividualMessage);
+    on<WatchUserChats>(_watchUserChats);
     on<RestoreUserChats>(_restoreState);
-    on<UpdateRecipientStatus>(_updateListStatus);
+    // on<UpdateRecipientStatus>(_updateListStatus);
     
+  }
+
+  Future<void> _watchUserChats (WatchUserChats event, Emitter<ChatsState> emit) async {
+    try {
+      debugPrint('Watch user chats bloc');
+      await emit.forEach(
+        _chatMessageRepository.watchUserChats(),
+        onData: (chats) => state.copyWith(usersChats: chats),
+        onError: (error, stackTrace) {
+          debugPrint(error.toString());
+          debugPrint(stackTrace.toString());
+          return state.copyWith(status: ListStatus.failure);
+        }
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
   }
 
   Future _onFetchUserChats(UserChatsFetched event, Emitter<ChatsState> emit) async {
     if(state.hasReachedMax) return;
 
     try {
-      // final int skip = state.usersChats.length % 30 == 0 ? state.usersChats.length / 30 : 0;
+      final int skip = state.usersChats.length;
 
-      final chats = await MessagesService().getChats(0);
+      final isReload = state.status == ListStatus.initial || event.reload;
+
+      final chats = await _chatMessageRepository.getUsersChats(skip: skip, reload: isReload );
 
       if(chats.length < 30){
         emit(state.copyWith(hasReachedMax: true));
@@ -43,30 +67,12 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       emit(
         state.copyWith(
           status: ListStatus.success,
-          usersChats: [...state.usersChats, ...chats]
+          // usersChats: [...state.usersChats, ...chats]
         )
       );
     } catch (e) {
       emit(state.copyWith(status: ListStatus.failure));
     }
-  }
-
-  void _updateListStatus(UpdateRecipientStatus event, Emitter<ChatsState> emit) {
-
-    final existsMessage = state.usersChats.indexWhere((e) => e.message.id == event.messageId);
-
-    if(existsMessage == -1) return;
-
-    // Create a new list to ensure immutability
-    final List<UserChatModel> chats = List.from(state.usersChats);
-
-    chats[existsMessage].message.status = event.status;
-
-    emit(
-      state.copyWith(
-        usersChats: chats
-      )
-    );
   }
 
   void _restoreState(RestoreUserChats event, Emitter<ChatsState> emit) {
@@ -75,36 +81,6 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         status: ListStatus.initial,
         hasReachedMax: false,
         usersChats: []
-      )
-    );
-  }
-
-  void _addIndividualMessage( AddIndividualMessage event, Emitter<ChatsState> emit) {
-    
-
-    // Create a new list to ensure immutability
-    final List<UserChatModel> updatedChats = List.from(state.usersChats);
-    
-    // Find index of existing chat if it exists
-    final existingChatIndex = updatedChats.indexWhere(
-      (chat) => chat.message.conversation == event.message.conversation
-    );
-
-    UserChatModel chatState;
-
-    if(existingChatIndex != -1) {
-      chatState = state.usersChats.firstWhere((e) => e.message.conversation == event.message.conversation);
-      chatState.message = event.message;
-      updatedChats.removeWhere((e) => e.message.conversation == event.message.conversation);
-    } else {
-      chatState = UserChatModel(id: event.message.conversation, unreadCount: 1, message: event.message);
-    }
-
-    updatedChats.insert(0, chatState);
-
-    emit(
-      state.copyWith(
-        usersChats: updatedChats
       )
     );
   }

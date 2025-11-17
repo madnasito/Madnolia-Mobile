@@ -44,7 +44,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   }
 
 
-  Future _watchRoomMessages(
+  Future<void> _watchRoomMessages(
     WatchRoomMessages event,
     Emitter<MessageState> emit) async {
 

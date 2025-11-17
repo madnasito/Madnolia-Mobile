@@ -8,21 +8,14 @@ sealed class ChatsEvent extends Equatable {
 }
 
 class UserChatsFetched extends ChatsEvent {
-
+  final bool reload;
+  const UserChatsFetched({ this.reload = false });
 }
 
 class RestoreUserChats extends ChatsEvent {}
 
-class AddIndividualMessage extends ChatsEvent {
-  final ChatMessage message;
 
-  const AddIndividualMessage({ required this.message});
-}
-
-class ReadChat extends ChatsEvent {
-  final String conversation;
-  const ReadChat({ required this.conversation });
-}
+class WatchUserChats extends ChatsEvent {}
 
 class UpdateRecipientStatus extends ChatsEvent {
   final String messageId;

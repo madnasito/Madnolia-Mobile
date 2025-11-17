@@ -86,13 +86,16 @@ class MessagesService {
     }
   }
 
-  Future<List<UserChatModel>> getChats(int page) async {
+  Future<List<UserChatModel>> getChats(int skip) async {
     try {
       final url = "$baseUrl/messages";
       final String? token = await _storage.read(key: "token");
       final resp = await _dio.get(
         url, 
-        options: Options(headers: {"Authorization": "Bearer $token"})
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+        queryParameters: {
+          'skip': skip
+        }
       );
 
       // Explicit type casting solution

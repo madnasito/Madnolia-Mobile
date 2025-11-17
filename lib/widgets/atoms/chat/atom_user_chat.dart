@@ -5,12 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
-import 'package:madnolia/models/chat/user_chat_model.dart';
+import 'package:madnolia/models/chat/user_chat.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 
 
 class AtomUserChat extends StatelessWidget {
-  final UserChatModel userChat;
+  final UserChat userChat;
   
   const AtomUserChat({
     super.key, 
@@ -21,7 +21,7 @@ class AtomUserChat extends StatelessWidget {
   Widget build(BuildContext context) {
     final friendshipRepository = RepositoryManager().friendship;
     return FutureBuilder<FriendshipData>(
-      future: friendshipRepository.getFriendshipById(userChat.id),
+      future: friendshipRepository.getFriendshipById(userChat.message.conversation),
       builder: (BuildContext context, AsyncSnapshot<FriendshipData> friendshipSnapshot) {
         if (friendshipSnapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

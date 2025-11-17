@@ -86,6 +86,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
     // Initialize if needed
     if (chatsBloc.state.status == ListStatus.initial) {
       chatsBloc.add(UserChatsFetched());
+      chatsBloc.add(WatchUserChats());
     }
 
     // Listen for new messages
@@ -93,7 +94,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
       if (onData != null) {
         final message = ChatMessage.fromJson(onData);
         if (message.type == ChatMessageType.user) {
-          chatsBloc.add(AddIndividualMessage(message: message));
+          // chatsBloc.add(AddIndividualMessage(message: message));
           setState(() {
             
           });
