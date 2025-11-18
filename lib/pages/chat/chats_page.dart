@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
@@ -62,7 +61,6 @@ class _ChatListWithUpdates extends StatefulWidget {
 }
 
 class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
-  StreamSubscription? _messageSubscription;
 
   @override
   void initState() {
@@ -72,7 +70,6 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
 
   @override
   void dispose() {
-    _messageSubscription?.cancel();
     super.dispose();
   }
 
