@@ -1,6 +1,6 @@
-import 'dart:math' as math;
+// import 'dart:math' as math;
 
-import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+// import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
@@ -18,24 +18,26 @@ class ChatsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
-      body: CustomMaterialIndicator(
-        autoRebuild: false,
-        onRefresh: () async{
-          final chatsBloc = context.read<ChatsBloc>();
-          chatsBloc.add(RestoreUserChats());
-          chatsBloc.add( UserChatsFetched());
-        },
-        backgroundColor: Colors.white,
-         indicatorBuilder: (context, controller) {
-          return Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: CircularProgressIndicator(
-              color: Colors.lightBlue,
-              value: controller.state.isLoading ? null : math.min(controller.value, 1.0),
-            ),
-          );
-        },
-        child: Column(
+      body: 
+      // CustomMaterialIndicator(
+        // autoRebuild: false,
+        // onRefresh: () async{
+        //   final chatsBloc = context.read<ChatsBloc>();
+        //   chatsBloc.add(RestoreUserChats());
+        //   chatsBloc.add( UserChatsFetched());
+        // },
+        // backgroundColor: Colors.white,
+        //  indicatorBuilder: (context, controller) {
+        //   return Padding(
+        //     padding: const EdgeInsets.all(6.0),
+        //     child: CircularProgressIndicator(
+        //       color: Colors.lightBlue,
+        //       value: controller.state.isLoading ? null : math.min(controller.value, 1.0),
+        //     ),
+        //   );
+        // },
+        // child: 
+        Column(
           children: [
             const SizedBox(height: 10),
             CenterTitleAtom(
@@ -48,7 +50,7 @@ class ChatsPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
+      // ),
     );
   }
 }

@@ -211,7 +211,7 @@ class ChatMessageRepository {
 
       if (lastMessage == null) return;
 
-      final messages = await _messagesService.syncFromDate(date: lastMessage.date);
+      final messages = await _messagesService.syncFromDate(date: lastMessage.date.toUtc());
 
       if (messages.isNotEmpty) {
         final messageCompanions = messages.map((m) => m.toCompanion()).toList();
@@ -220,7 +220,7 @@ class ChatMessageRepository {
 
       // Sync messages untill it is done
       if(messages.length == 50){
-        syncFromDate(messages.last.date);
+        syncFromDate(messages.last.date.toUtc());
       }else {
         await FlutterSecureStorage().write(key: 'lastSyncDate', value: '');
       }

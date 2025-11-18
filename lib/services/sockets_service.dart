@@ -148,7 +148,7 @@ Future<void> onStart(ServiceInstance service) async {
       if(dateString != '' && dateString != null){
         debugPrint('Starting syncing from date $dateString');
         final date = DateTime.parse(dateString);
-        await chatMessageRepository.syncFromDate(date);
+        await chatMessageRepository.syncFromDate(date.toUtc());
       }
     }
 
@@ -268,7 +268,7 @@ Future<void> onStart(ServiceInstance service) async {
 
   socket.onDisconnect((_) {
     service.invoke("disconnected_socket");
-    storage.write(key: 'lastSyncDate', value: DateTime.now().toIso8601String());
+    storage.write(key: 'lastSyncDate', value: DateTime.now().toUtc().toIso8601String());
     }
   );
 
