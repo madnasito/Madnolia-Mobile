@@ -154,6 +154,8 @@ Future<void> onStart(ServiceInstance service) async {
 
   });
 
+  socket.on('update_availability', (payload) => service.invoke('update_availability', {'availability': payload}));
+
   socket.on("added_to_match", (payload) => service.invoke("added_to_match", {"resp" : payload}));
 
   socket.on("left_match", (payload) => service.invoke("left_match", {"resp" : payload}));
@@ -344,6 +346,8 @@ Future<void> onStart(ServiceInstance service) async {
     debugPrint("LEAVE ROOM");
     currentRoom = "";
   });
+
+  service.on('update_availability').listen((onData) => socket.emit('update_availability', onData?['availability']));
 
   service.on("logout").listen((onData) => socket.emit("logout"));
 

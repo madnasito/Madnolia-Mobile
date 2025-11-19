@@ -27,6 +27,11 @@ class UserUpdateChatRoom extends UserEvent {
   const UserUpdateChatRoom({required this.chatRoom});
 }
 
+class UserUpdateAvailability extends UserEvent {
+  final UserAvailability availability;
+  const UserUpdateAvailability({required this.availability});
+}
+
 class AddNotifications extends UserEvent {
   final int value;
   const AddNotifications({required this.value});

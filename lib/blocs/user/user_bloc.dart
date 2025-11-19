@@ -46,6 +46,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       if(event is AddNotifications) emit(state.copyWith(notifications: event.value));
 
       if(event is RestoreNotifications) emit(state.copyWith(notifications: 0));
+
+      if(event is UserUpdateAvailability) emit(state.copyWith(availability: event.availability));
     });
   }
   
@@ -55,6 +57,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     service.invoke("update_username", {"username": user.username});
     add(UserLoadInfo(userModel: user));
   }
+
+  void updateAvailability(UserAvailability event) => add(UserUpdateAvailability(availability: event));
+  
 
   void updateImages(String thumbImage, String image){
     add(UserUpdateImage(thumbImage: thumbImage, image: image));
