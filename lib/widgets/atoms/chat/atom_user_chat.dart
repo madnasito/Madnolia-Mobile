@@ -18,31 +18,41 @@ class AtomUserChat extends StatelessWidget {
     final isUnreadStatus = userChat.message.status == ChatMessageStatus.sent || userChat.message.status == ChatMessageStatus.delivered;
     final hasUnread = isNotMyMessage && isUnreadStatus;
 
-    // Cyberpunk/Minimalist Conditional Decoration
+    // --- Redesigned Decorations for a more subtle, futuristic look ---
+
+    // A subtle glow for unread messages, less 'scandalous'
     final unreadBoxDecoration = BoxDecoration(
-      color: const Color(0xFF00FFFF).withValues(alpha: 0.1), // Distinct background for unread
+      color: Colors.black.withValues(alpha: 0.4),
       borderRadius: BorderRadius.circular(15),
-      border: Border.all(color: const Color(0xFF00FFFF).withValues(alpha: 0.8), width: 1.5),
+      border: Border.all(color: const Color(0xFF00FFFF).withValues(alpha:  0.2), width: 1),
       boxShadow: [
         BoxShadow(
-          color: const Color(0xFF00FFFF).withValues(alpha: 0.2),
-          blurRadius: 4,
+          color: const Color(0xFF00FFFF).withValues(alpha:  0.15),
+          blurRadius: 8,
+          spreadRadius: -2,
+        ),
+        BoxShadow(
+          color: const Color(0xFF000000).withValues(alpha: 0.5),
+          blurRadius: 5,
+          spreadRadius: -3,
         ),
       ],
     );
 
     final readBoxDecoration = BoxDecoration(
-      color: Colors.black.withValues(alpha: 0.3), // More transparent background
+      color: Colors.black.withValues(alpha: 0.3),
       borderRadius: BorderRadius.circular(15),
       border: Border.all(color: Colors.grey[800]!.withValues(alpha: 0.5), width: 1),
     );
 
+    // Subtle glow for the avatar
     final unreadAvatarDecoration = BoxDecoration(
       shape: BoxShape.circle,
+      border: Border.all(color: const Color(0xFF00FFFF).withValues(alpha: 0.5), width: 1),
       boxShadow: [
         BoxShadow(
-          color: const Color(0xFF00FFFF).withValues(alpha: 0.6),
-          blurRadius: 3,
+          color: const Color(0xFF00FFFF).withValues(alpha:  0.2),
+          blurRadius: 4,
         )
       ]
     );
@@ -85,16 +95,16 @@ class AtomUserChat extends StatelessWidget {
                     children: [
                       if (hasUnread)
                         Container(
-                          width: 8,
-                          height: 8,
+                          width: 6,
+                          height: 6,
                           margin: const EdgeInsets.only(right: 8),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: const Color(0xFF00FFFF),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF00FFFF).withValues(alpha: 0.7),
-                                blurRadius: 3,
+                                color: const Color(0xFF00FFFF).withValues(alpha: 0.6),
+                                blurRadius: 4,
                               ),
                             ],
                           ),
@@ -107,10 +117,10 @@ class AtomUserChat extends StatelessWidget {
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
                           shadows: hasUnread ? [
-                            const Shadow(
-                              blurRadius: 3.0,
-                              color: Color(0xFF00FFFF),
-                              offset: Offset(0, 0),
+                            Shadow(
+                              blurRadius: 5.0,
+                              color: const Color(0xFF00FFFF).withValues(alpha: 0.5),
+                              offset: const Offset(0, 0),
                             ),
                           ] : null,
                         ),
@@ -119,7 +129,7 @@ class AtomUserChat extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Padding(
-                    padding: EdgeInsets.only(left: hasUnread ? 16 : 0),
+                    padding: EdgeInsets.only(left: hasUnread ? 14 : 0),
                     child: Text(
                       userChat.message.content,
                       maxLines: 1,
