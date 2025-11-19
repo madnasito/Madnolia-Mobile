@@ -24,7 +24,7 @@ class AtomUserChat extends StatelessWidget {
     final unreadBoxDecoration = BoxDecoration(
       color: Colors.black.withValues(alpha: 0.4),
       borderRadius: BorderRadius.circular(15),
-      border: Border.all(color: const Color(0xFF00FFFF).withValues(alpha:  0.2), width: 1),
+      border: Border.all(color: const Color(0xFF00FFFF).withValues(alpha: 0.3), width: 1),
       boxShadow: [
         BoxShadow(
           color: const Color(0xFF00FFFF).withValues(alpha:  0.15),
