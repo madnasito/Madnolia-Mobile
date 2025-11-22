@@ -159,16 +159,32 @@ class NotificationRepository {
   }
   Stream<List<NotificationDetails>> watchAllNotifications() {
     try {
-      return database.select(database.notification).join([
+      debugPrint('Starting to watch notifications from database');
+      
+      // Build joined query first, then apply ordering via cascade
+      final query = database.select(database.notification).join([
         leftOuterJoin(database.user, database.user.id.equalsExp(database.notification.sender)),
-      ]).watch().map((rows) => rows.map((row) {
-        return NotificationDetails(
-          notification: row.readTable(database.notification),
-          user: row.readTableOrNull(database.user),
-        );
-      }).toList());
+      ]);
+
+      query
+        .orderBy([
+            OrderingTerm(expression: database.notification.date, mode: OrderingMode.desc),
+            OrderingTerm(expression: database.notification.id, mode: OrderingMode.desc)
+          ]);
+
+      return query.watch().map((rows) {
+        final notifications = rows.map((row) {
+          return NotificationDetails(
+            notification: row.readTable(database.notification),
+            user: row.readTableOrNull(database.user),
+          );
+        }).toList();
+        
+        debugPrint('Database stream emitted ${notifications.length} notifications');
+        return notifications;
+      });
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('Error in watchAllNotifications: $e');
       rethrow;
     }
   }

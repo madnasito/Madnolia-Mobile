@@ -63,16 +63,9 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       bool hasReachedMax = false;
 
       if(notifications.length < 20) hasReachedMax = true;
-
-      List<NotificationDetails> stateNotifications = [];
-
-      stateNotifications.addAll(state.data);
-
-      stateNotifications.addAll(notifications);
       
       emit(
         state.copyWith(
-          data: stateNotifications,
           hasReachedMax: hasReachedMax,
           status: ListStatus.success
         )
@@ -89,24 +82,30 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   }
 
   void _watchNotifications(
-    WatchNotifications event,
-    Emitter<NotificationsState> emit
-  ) async {
-    try {
-      debugPrint('Watch notifications');
-      await emit.forEach(
-        _notificationsRepository.watchAllNotifications(),
-        onData: (notifications) => state.copyWith(data: notifications),
-        onError: (error, stackTrace) {
-          debugPrint(error.toString());
-          debugPrint(stackTrace.toString());
-          return state.copyWith(status: ListStatus.failure);
-        }
-      );
-    } catch (e) {
-      debugPrint(e.toString());
-      rethrow;
-    }
+  WatchNotifications event,
+  Emitter<NotificationsState> emit
+) async {
+  try {
+    debugPrint('Watch notifications started');
+    
+    await emit.forEach(
+      _notificationsRepository.watchAllNotifications(),
+      onData: (List<NotificationDetails> notifications) {
+        debugPrint('Stream received ${notifications.length} notifications');
+        return state.copyWith(
+          data: notifications,
+        );
+      },
+      onError: (error, stackTrace) {
+        debugPrint('Stream error: $error');
+        debugPrint(stackTrace.toString());
+        return state.copyWith(status: ListStatus.failure);
+      }
+    );
+  } catch (e) {
+    debugPrint('Watch notifications error: $e');
+    emit(state.copyWith(status: ListStatus.failure));
   }
+}
 
 }
