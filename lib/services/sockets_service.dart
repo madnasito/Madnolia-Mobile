@@ -16,6 +16,7 @@ import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat/update_recipient_model.dart';
+import 'package:madnolia/models/friendship/connection_request.dart';
 import 'package:madnolia/models/match/match_ready_model.dart' show MatchReady;
 import 'package:madnolia/services/firebase_messaging_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
@@ -253,9 +254,28 @@ Future<void> onStart(ServiceInstance service) async {
 
   // Events for handle user connections
   socket.on("new_request_connection", (data) => service.invoke("new_request_connection", data));
-  socket.on("connection_accepted", (data) => service.invoke("connection_accepted"));
+  socket.on("connection_accepted", (data) async {
+    try {
+      final connectionRequest = ConnectionRequest.fromJson(data);
+      if(userId == connectionRequest.sender) return;
+      final int deletedNotification = await notificationsRepository.deleteRequestNotification(senderId: connectionRequest.sender);
+      debugPrint('Deleted request notification: $deletedNotification');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    // service.invoke("connection_accepted", data);
+  } );
   socket.on("removed_partner", (data) => service.invoke("removed_partner"));
-  socket.on("connection_rejected", (data) => service.invoke("connection_rejected"));
+  socket.on("connection_rejected", (data) async {
+    try {
+      final connectionRequest = ConnectionRequest.fromJson(data);
+      if(userId == connectionRequest.sender) return;
+      final int deletedNotification = await notificationsRepository.deleteRequestNotification(senderId: connectionRequest.sender);
+      debugPrint('Deleted request notification: $deletedNotification');
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  } );
   socket.on("canceled_connection", (data) => service.invoke("canceled_connection"));
 
   socket.on('notification_deleted', (data) async {

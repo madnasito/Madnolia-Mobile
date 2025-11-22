@@ -116,6 +116,18 @@ class NotificationRepository {
     }
   }
 
+  Future<int> deleteRequestNotification({required String senderId }) async {
+    try {
+      return (database.delete(
+        database.notification
+      )..where((t) => t.sender.equals(senderId) & t.type.equals(NotificationType.request.index)))
+      .go();
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
 
   Future<int> deleteNotifications() async {
     try {
