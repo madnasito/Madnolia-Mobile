@@ -44,7 +44,7 @@ class UserChatPage extends StatelessWidget {
               } else if(snapshot.hasError) {
                 return Center(child: Text(translate('CHAT.ERRORS.LOADING_CHAT')));
               } else {
-                return Center(child: CircularProgressIndicator());
+                return Center(heightFactor: 2, child: CircularProgressIndicator());
               }
           },),
         );

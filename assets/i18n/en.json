@@ -55,7 +55,11 @@
         "PASSWORD2": "Repeat password",
         "PLATFORMS": "Platforms",
         "REPLY": "Reply",
-        "MARK_AS_READ": "Mark as read"
+        "MARK_AS_READ": "Mark as read",
+        "NEW_PASSWORD": "New password"
+    },
+    "BUTTONS": {
+      "UPDATE_PASSWORD": "Update password"
     },
     "VALIDATIONS": {
         "REQUIRED": "This field is required",
@@ -118,7 +122,9 @@
   "RECOVER_PASSWORD": {
     "TITLE": "Recover your password",
     "RECOVER_PASSWORD": "Recover password",
-    "EMAIL_SENDED": "Email sended!"
+    "EMAIL_SENDED": "Email sended!",
+    "ERROR_GETTING_INFO": "There was an error getting recovering password info",
+    "HOME_PAGE_REDIRECTING": "Redirecting to Home Page..."
     },
   "LOGIN":{
     "WELCOME": "Welcome, Player",

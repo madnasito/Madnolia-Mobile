@@ -202,4 +202,18 @@ class UserService {
       rethrow;
     }
   }
+
+  Future<User> getUserInfoByExternalToken({required String token}) async {
+    try {
+      final url = "$baseUrl/user/info";
+
+      final response = await dio.get(url,
+       options: Options(headers:  {"Authorization": "Bearer $token"}));
+
+      return User.fromJson(response.data);
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
 }

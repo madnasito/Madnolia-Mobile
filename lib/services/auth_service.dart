@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/models/auth/register_model.dart';
@@ -14,6 +15,7 @@ class AuthService {
 
   final _storage = const FlutterSecureStorage();
   final String apiUrl = dotenv.get("API_URL");
+  final _dio = Dio();
 
   Future login(String username, String password) async {
     try {
@@ -100,8 +102,6 @@ class AuthService {
 
   Future<void> _initializeAndStartService() async {
     try {
-      // Esperar un momento para asegurar que el token esté guardado
-      await Future.delayed(const Duration(milliseconds: 500));
       
       // Verificar que el token realmente exista
       final token = await _storage.read(key: "token");
@@ -114,17 +114,11 @@ class AuthService {
       
       // Inicializar canales de notificación primero y esperar
       await LocalNotificationsService.initialize();
-      debugPrint('Canales de notificación inicializados');
-      
-      // Esperar un poco más para asegurar que todo esté listo
-      await Future.delayed(const Duration(milliseconds: 500));
       
       // Inicializar el servicio
       await initializeService();
       debugPrint('Servicio configurado');
       
-      // Esperar antes de iniciar
-      await Future.delayed(const Duration(milliseconds: 300));
       
       // Iniciar el servicio directamente
       startBackgroundService();
@@ -154,6 +148,27 @@ class AuthService {
       return {};
     } catch (e) {
       return {"Error": true, "message": "NETWORK_ERROR"};
+    }
+  }
+
+  Future<Map<String, dynamic>> updatePassword({required String token, required Map<String, String> body }) async {
+    try {
+      final url = "$apiUrl/auth/update-password";
+      final response = await _dio.patch(
+        url,
+        data: body,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      final Map<String, dynamic> respBody = response.data;
+      return respBody;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
     }
   }
 }

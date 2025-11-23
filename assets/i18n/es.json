@@ -54,7 +54,11 @@
             "PASSWORD2": "Repita la Contraseña",
             "PLATFORMS": "Plataformas",
             "REPLY": "Responder",
-            "MARK_AS_READ": "Marcar como leido"
+            "MARK_AS_READ": "Marcar como leido",
+            "NEW_PASSWORD": "Nueva contraseña"
+        },
+        "BUTTONS": {
+            "UPDATE_PASSWORD": "Actualizar contraseña"
         },
         "VALIDATIONS": {
             "REQUIRED": "Este campo es requerido",
@@ -114,7 +118,9 @@
     "RECOVER_PASSWORD": {
         "TITLE": "Recupera tu contraseña",
         "RECOVER_PASSWORD": "Recuperar contraseña",
-        "EMAIL_SENDED": "¡Correo enviado!"
+        "EMAIL_SENDED": "¡Correo enviado!",
+        "ERROR_GETTING_INFO": "Hubo un error al cargar la recuperacion de contraseña",
+        "HOME_PAGE_REDIRECTING": "Redirigiendo a la pagina principal..."
     },
     "LOGIN":{
         "WELCOME": "Ingresar",
