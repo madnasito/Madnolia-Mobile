@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/message/message_bloc.dart';
+import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
@@ -18,6 +19,7 @@ Future<void> logoutApp(BuildContext context) async {
   final backgroundService = FlutterBackgroundService();
   final matchesBloc = context.read<MatchesBloc>();
   final platformGamesBloc = context.read<PlatformGamesBloc>();
+  final notificationsBloc = context.read<NotificationsBloc>();
   backgroundService.invoke('logout');
   backgroundService.invoke("delete_all_notifications");
   userBloc.logOutUser();
@@ -25,6 +27,7 @@ Future<void> logoutApp(BuildContext context) async {
   matchesBloc.add(RestoreMatchesState());
   chatsBloc.add(RestoreUserChats());
   platformGamesBloc.add(RestorePlatformsGamesState());
+  notificationsBloc.add(RestoreNotificationsState());
   await RepositoryManager().games.deleteAllGames();
   await RepositoryManager().user.deleteUsers();
   await RepositoryManager().match.deleteMatches();
