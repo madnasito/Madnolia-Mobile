@@ -16,10 +16,10 @@ class OrganismRecoverPasswordForm extends StatefulWidget {
 
 class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordForm> {
   bool _isLoading = false; // Estado para controlar la carga
+  final formKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormBuilderState>();
     return FormBuilder(
       key: formKey,
       child: Column(
