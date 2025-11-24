@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -43,14 +44,20 @@ class LocalNotificationsService {
         );
 
      {
-          final androidPlugin = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
-          
-          // Verificar si ya tenemos los permisos
-          final bool granted = await androidPlugin?.areNotificationsEnabled() ?? false;
-          
-          if (!granted) {
-            await androidPlugin?.requestNotificationsPermission();
-          }
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      final androidInfo = await deviceInfo.androidInfo;
+      final version = androidInfo.version.sdkInt;
+      debugPrint(version.toString());
+      if(version > 32){
+        final androidPlugin = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+        
+        // Verificar si ya tenemos los permisos
+        final bool granted = await androidPlugin?.areNotificationsEnabled() ?? false;
+        
+        if (!granted) {
+          await androidPlugin?.requestNotificationsPermission();
+        }
+      }
       }
 
         
