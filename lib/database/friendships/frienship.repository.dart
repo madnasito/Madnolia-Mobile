@@ -118,7 +118,8 @@ class FriendshipRepository {
   Future<FriendshipData> getFriendshipByUserId(String id) async {
     try {
       final now = DateTime.now();
-      final existingFriendship  = await (database.select(database.friendship)..where((f) => f.user.equals(id))).getSingleOrNull();
+      final existingFriendships  = await (database.select(database.friendship)..where((f) => f.user.equals(id))).get();
+      final existingFriendship = existingFriendships.isNotEmpty ? existingFriendships.first : null;
 
       if(existingFriendship != null && now.difference(existingFriendship.lastUpdated).inHours < 1) {
         return existingFriendship;
@@ -140,7 +141,7 @@ class FriendshipRepository {
 
       await createOrUpdateFriendship(friendshipCompanion);
 
-      final friendship = await (database.select(database.friendship)..where((friendship) => friendship.id.equals(id))).getSingle();
+      final friendship = await (database.select(database.friendship)..where((friendship) => friendship.id.equals(friendshipInfo.id))).getSingle();
       return friendship;
     } catch (e) {
       debugPrint(e.toString());
