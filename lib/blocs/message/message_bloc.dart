@@ -90,7 +90,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         final bool conversationHasReachedEnd = conversation?.hasReachedEnd ?? false;
 
         if(messages.isEmpty && conversationHasReachedEnd){
-          return emit(state.copyWith(hasReachedMax: true));
+          return emit(state.copyWith(hasReachedMax: true, status: ListStatus.success));
         }
 
         emit(
