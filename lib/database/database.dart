@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
@@ -65,6 +67,7 @@ class AppDatabase extends _$AppDatabase {
 
   static QueryExecutor _openConnection() {
     debugPrint('database connected');
+     driftRuntimeOptions.defaultSerializer = const CustomValueSerializer();
     return driftDatabase(
       name: 'madnolia',
       native: const DriftNativeOptions(
@@ -82,3 +85,98 @@ class AppDatabase extends _$AppDatabase {
     }
   }
 }
+
+class CustomValueSerializer extends ValueSerializer {
+  const CustomValueSerializer();
+
+  @override
+  T fromJson<T>(dynamic json) {
+    if (json == null) {
+      return null as T;
+    }
+
+    // Manejar específicamente List<String>
+    final tString = T.toString();
+    if (tString == 'List<String>' || tString == 'List<String>?') {
+      if (json is List) {
+        return json.map((item) => item.toString()).cast<String>().toList() as T;
+      } else if (json is String) {
+        // Por si viene como string JSON
+        try {
+          final parsed = jsonDecode(json) as List;
+          return parsed.map((item) => item.toString()).cast<String>().toList() as T;
+        } catch (e) {
+          return [] as T;
+        }
+      }
+      return [] as T;
+    }
+
+    // Manejar List<dynamic> explícitamente
+    if (T.toString().startsWith('List<') && json is List) {
+      // Para cualquier tipo de lista, hacer conversión segura
+      final typeString = T.toString();
+      if (typeString.contains('String')) {
+        return json.map((item) => item.toString()).cast<String>().toList() as T;
+      }
+      // Puedes agregar más casos específicos aquí si es necesario
+    }
+
+    // Copiar el comportamiento por defecto para otros tipos
+    final typeList = <T>[];
+
+    if (typeList is List<DateTime?>) {
+      if (json is int) {
+        return DateTime.fromMillisecondsSinceEpoch(json) as T;
+      } else {
+        return DateTime.parse(json.toString()) as T;
+      }
+    }
+
+    if (typeList is List<double?> && json is int) {
+      return json.toDouble() as T;
+    }
+
+    if (typeList is List<Uint8List?> && json is! Uint8List) {
+      final asList = (json as List).cast<int>();
+      return Uint8List.fromList(asList) as T;
+    }
+
+    // Fallback: intentar el cast directo
+    try {
+      return json as T;
+    } catch (e) {
+      // Si falla, retornar valor por defecto según el tipo
+      return _getDefaultValue<T>();
+    }
+  }
+
+  @override
+  dynamic toJson<T>(T value) {
+    if (value == null) return null;
+
+    // Manejar List<String> específicamente
+    if (value is List<String>) {
+      return value;
+    }
+
+    // Comportamiento por defecto para otros tipos
+    if (value is DateTime) {
+      return value.toIso8601String();
+    }
+
+    if (value is Uint8List) {
+      return value.toList();
+    }
+
+    return value;
+  }
+  T _getDefaultValue<T>() {
+    final tString = T.toString();
+    if (tString == 'List<String>' || tString == 'List<String>?') {
+      return [] as T;
+    }
+    // Agregar más tipos según necesites
+    return null as T;
+  }
+  }
