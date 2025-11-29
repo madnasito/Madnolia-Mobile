@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart' show FormBuilder, FormBuilderState;
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/services/mail_service.dart' show MailService;
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
+import 'package:toastification/toastification.dart';
 
 class OrganismRecoverPasswordForm extends StatefulWidget {
   const OrganismRecoverPasswordForm({super.key});
@@ -41,6 +43,7 @@ class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordFor
             isLoading: _isLoading, // Pasamos el estado de carga al botón
             onPressed: () async {
               try {
+                //Simple to use, no global configuration
                 setState(() => _isLoading = true);
                 
                 formKey.currentState?.saveAndValidate();
@@ -66,16 +69,12 @@ class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordFor
                   showErrorServerAlert(context, resp);
                 } else {
                   setState(() => _isLoading = false);
-                  showDialog(
-                    context: context, 
-                    builder: (context) => Center(
-                      child: AlertDialog(
-                        icon: Icon(Icons.check_circle_outline_rounded),
-                        iconColor: Colors.greenAccent,
-                        title: Text(translate("RECOVER_PASSWORD.EMAIL_SENDED")),
-                        backgroundColor: Colors.black54,
-                      ),
-                    )
+                  formKey.currentState?.reset();
+                  toastification.show(
+                    context: context, // optional if you use ToastificationWrapper
+                    title: Text(translate("RECOVER_PASSWORD.EMAIL_SENDED")),
+                    autoCloseDuration: const Duration(seconds: 5),
+                    style: ToastificationStyle.fillColored,
                   );
                 }
               } catch (e) {
