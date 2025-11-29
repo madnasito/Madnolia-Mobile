@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 
 class StringListConverter extends TypeConverter<List<String>, String> {
   const StringListConverter();
@@ -16,7 +17,7 @@ class StringListConverter extends TypeConverter<List<String>, String> {
         return e.toString();
       }).toList();
     } catch (e) {
-      print('Error parsing string list: $e');
+      debugPrint('Error parsing string list: $e');
       return [];
     }
   }
