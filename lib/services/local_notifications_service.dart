@@ -335,6 +335,7 @@ class LocalNotificationsService {
         MatchData matchDb = MatchData.fromJson(json.decode(details.payload!));
         final context = navigatorKey.currentContext;
         GoRouter.of(context!).push("/match/${matchDb.id}");
+        return;
       } catch (e) {
         debugPrint(e.toString());
       }
