@@ -21,7 +21,7 @@ class OrganismLoginForm extends StatelessWidget {
       child: Column(
         children: [
         MoleculeTextField(
-          label: translate("REGISTER.USERNAME"),
+          label: translate("FORM.INPUT.USERNAME_EMAIL"),
           name: "username",
           icon: Icons.person_2_outlined,
           onChanged: (value) {

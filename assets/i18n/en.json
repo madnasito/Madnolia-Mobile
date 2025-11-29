@@ -56,7 +56,8 @@
         "PLATFORMS": "Platforms",
         "REPLY": "Reply",
         "MARK_AS_READ": "Mark as read",
-        "NEW_PASSWORD": "New password"
+        "NEW_PASSWORD": "New password",
+        "USERNAME_EMAIL":"Username or Email"
     },
     "BUTTONS": {
       "UPDATE_PASSWORD": "Update password"

@@ -55,7 +55,8 @@
             "PLATFORMS": "Plataformas",
             "REPLY": "Responder",
             "MARK_AS_READ": "Marcar como leido",
-            "NEW_PASSWORD": "Nueva contraseña"
+            "NEW_PASSWORD": "Nueva contraseña",
+            "USERNAME_EMAIL":"Nombre de Usuario o Correo"
         },
         "BUTTONS": {
             "UPDATE_PASSWORD": "Actualizar contraseña"
