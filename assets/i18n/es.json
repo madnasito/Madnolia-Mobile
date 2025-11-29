@@ -320,6 +320,7 @@
       "SELECT_FILE": "Seleccionar archivo",
       "FILE": "Archivo",
       "RELOAD": "Recargar",
+      "RECOVERING_PASSWORD_FOR": "Recuperando contraseña para {name}",
       "KEEPING_CONNECTIONS": "Manteniendo conexiones activas",
       "ACCEPT": "Aceptar",
       "CANCEL": "Cancelar",

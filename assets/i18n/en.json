@@ -326,6 +326,7 @@
       "SELECT_FILE": "Select file",
       "FILE": "File",
       "RELOAD": "Reload",
+      "RECOVERING_PASSWORD_FOR": "Recovering password for {name}",
       "KEEPING_CONNECTIONS": "Keeping connections active",
       "ACCEPT": "Accept",
       "CANCEL": "Cancel",

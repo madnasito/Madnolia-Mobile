@@ -38,7 +38,7 @@ class RecoverPasswordTokenPage extends StatelessWidget {
                       )
                     ),
                   SizedBox(height: 15),
-                  Text('Recovering password for ${snapshot.data?.name}', 
+                  Text(translate('UTILS.RECOVERING_PASSWORD_FOR', args: {'name': snapshot.data?.name}), 
                     style: Theme.of(context).textTheme.titleMedium
                   ),
                   const SizedBox(height: 15),
