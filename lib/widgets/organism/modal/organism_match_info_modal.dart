@@ -12,14 +12,13 @@ import 'package:madnolia/widgets/molecules/modal/molecule_modal_icon_button.dart
 class OrganismMatchInfoModal extends StatelessWidget {
 
   final MatchData match;
-  final String userId;
 
-  const OrganismMatchInfoModal({super.key, required this.match, required this.userId});
+  const OrganismMatchInfoModal({super.key, required this.match});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: RepositoryManager().user.getUserById(userId),
+      future: RepositoryManager().user.getUserById(match.user),
       builder: (context, AsyncSnapshot<UserData> snapshot) {
 
         if(snapshot.hasData) {

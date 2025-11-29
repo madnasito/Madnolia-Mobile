@@ -20,7 +20,7 @@ class OrganismMatchInfo extends StatelessWidget {
     final now = DateTime.now();
 
     if (match.date.isBefore(now) || userId != match.user) {
-      return OrganismMatchInfoModal(match: match, userId: userId);
+      return OrganismMatchInfoModal(match: match);
     }
 
     if (match.status == MatchStatus.cancelled || match.status == MatchStatus.finished) {
