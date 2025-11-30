@@ -125,7 +125,8 @@
     "RECOVER_PASSWORD": "Recover password",
     "EMAIL_SENDED": "Email sended!",
     "ERROR_GETTING_INFO": "There was an error getting recovering password info",
-    "HOME_PAGE_REDIRECTING": "Redirecting to Home Page..."
+    "HOME_PAGE_REDIRECTING": "Redirecting to Home Page...",
+    "PASSWORD_UPDATED": "Password updated successfully"
     },
   "LOGIN":{
     "WELCOME": "Welcome, Player",

@@ -33,12 +33,9 @@ class AuthService {
         // IMPORTANTE: Guardar el token PRIMERO antes de iniciar el servicio
         await _storage.write(key: "token", value: respBody["token"]);
         await _storage.write(key: "userId", value: respBody["user"]["_id"]);
-        
-        // Esperar un momento para asegurar que el token esté guardado
-        await Future.delayed(const Duration(milliseconds: 300));
-        
+                
         // Inicializar y iniciar el servicio
-        await _initializeAndStartService();
+        await initializeAndStartService();
         
         // Forzar una verificación inmediata del lifecycle manager
         await AppLifecycleManager().forceServiceCheck();
@@ -86,7 +83,7 @@ class AuthService {
         await Future.delayed(const Duration(milliseconds: 300));
         
         // Inicializar y iniciar el servicio
-        await _initializeAndStartService();
+        await initializeAndStartService();
         
         // Forzar una verificación inmediata del lifecycle manager
         await AppLifecycleManager().forceServiceCheck();
@@ -100,7 +97,7 @@ class AuthService {
     }
   }
 
-  Future<void> _initializeAndStartService() async {
+  Future<void> initializeAndStartService() async {
     try {
       
       // Verificar que el token realmente exista

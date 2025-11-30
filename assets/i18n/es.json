@@ -121,7 +121,8 @@
         "RECOVER_PASSWORD": "Recuperar contraseña",
         "EMAIL_SENDED": "¡Correo enviado!",
         "ERROR_GETTING_INFO": "Hubo un error al cargar la recuperacion de contraseña",
-        "HOME_PAGE_REDIRECTING": "Redirigiendo a la pagina principal..."
+        "HOME_PAGE_REDIRECTING": "Redirigiendo a la pagina principal...",
+        "PASSWORD_UPDATED": "Contraseña actualizada exitosamente"
     },
     "LOGIN":{
         "WELCOME": "Ingresar",

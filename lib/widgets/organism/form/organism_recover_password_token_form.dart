@@ -10,7 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:madnolia/services/auth_service.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
-import 'package:toast/toast.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../molecules/buttons/molecule_form_button.dart' show MoleculeFormButton;
 
@@ -27,7 +27,6 @@ class _OrganismRecoverPasswordTokenFormState extends State<OrganismRecoverPasswo
   final formKey = GlobalKey<FormBuilderState>();
   @override
   Widget build(BuildContext context) {
-    ToastContext().init(context);
     return FormBuilder(
       key: formKey,
       child: Column(
@@ -84,13 +83,20 @@ class _OrganismRecoverPasswordTokenFormState extends State<OrganismRecoverPasswo
                     setState(() => _isLoading = false);
                     final storage = FlutterSecureStorage();
                     await storage.write(key: 'token', value: resp['token']);
-                    Toast.show(
-                      "Password updated",
-                      gravity: 100,
-                      border: Border.all(color: Colors.blueAccent),
-                      textStyle: const TextStyle(fontSize: 18),
-                    duration: 2);
-                    Timer(const Duration(seconds: 2), () => GoRouter.of(context).go('/'));
+
+                    await storage.write(key: "userId", value: resp["user"]["_id"]);
+                
+                    // Inicializar y iniciar el servicio
+                    await AuthService().initializeAndStartService();
+
+                    if(!context.mounted) return;
+                    toastification.show(
+                      context: context, // optional if you use ToastificationWrapper
+                      title: Text(translate("RECOVER_PASSWORD.PASSWORD_UPDATED")),
+                      autoCloseDuration: const Duration(seconds: 5),
+                      style: ToastificationStyle.fillColored,
+                    );
+                    Timer(const Duration(seconds: 2), () => GoRouter.of(context).go('/home-user'));
                   }
                 }
               } catch (e) {
