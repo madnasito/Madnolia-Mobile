@@ -24,7 +24,7 @@ class MinimalGame {
     });
 
     factory MinimalGame.fromJson(Map<String, dynamic> json) => MinimalGame(
-        id: json["_id"],
+        id: json.containsKey('_id') ? json["_id"] : '',
         name: json["name"],
         background: json["background"],
         slug: json["slug"],
