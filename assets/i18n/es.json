@@ -352,7 +352,8 @@
         "REPORT_EXISTS": "Espera \n Ya has reportado a este usuario",
         "LOADING_GAME": "Error cargando el juego, vuelva a intentarlo",
         "EMAIL_DATE_LIMIT": "Debe esperar al menos 15 dias para poder actualizar su correo",
-        "IMAGE_DATA": "Hubo un problema al cargar esta imagen \nPor favor, suba otra imagen"
+        "IMAGE_DATA": "Hubo un problema al cargar esta imagen \nPor favor, suba otra imagen",
+        "INVALID_CREDENTIALS": "Usuario o contraseña incorrectos"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verifica tu conexión"
