@@ -127,7 +127,7 @@
     "ERROR_GETTING_INFO": "There was an error getting recovering password info",
     "HOME_PAGE_REDIRECTING": "Redirecting to Home Page...",
     "PASSWORD_UPDATED": "Password updated successfully"
-    },
+  },
   "LOGIN":{
     "WELCOME": "Welcome, Player",
     "BUTTON": "Login",

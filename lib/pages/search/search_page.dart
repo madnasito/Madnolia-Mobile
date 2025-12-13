@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
@@ -19,36 +18,17 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   late int counter;
   late final TextEditingController searchController;
-  StreamSubscription? _requestSub;
-  StreamSubscription? _acceptSub;
-  StreamSubscription? _cancelSub;
-  final _backgroundService = FlutterBackgroundService();
 
   @override
   void initState() {
     super.initState();
     searchController = TextEditingController();
     counter = 0;
-    _setupStreamListeners();
   }
 
-  void _setupStreamListeners() {
-    _requestSub = _backgroundService.on('new_request_connection').listen((_) {
-      if (mounted) setState(() {});
-    });
-    _acceptSub = _backgroundService.on('connection_accepted').listen((_) {
-      if (mounted) setState(() {});
-    });
-    _cancelSub = _backgroundService.on('canceled_connection').listen((_) {
-      if (mounted) setState(() {});
-    });
-  }
 
   @override
   void dispose() {
-    _requestSub?.cancel();
-    _acceptSub?.cancel();
-    _cancelSub?.cancel();
     searchController.dispose();
     counter = 0;
     super.dispose();
