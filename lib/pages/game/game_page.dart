@@ -97,51 +97,51 @@ class GamePage extends StatelessWidget {
 
   ListView _matchesList(List<MinimalMatch> matches, int platform) {
     return ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: matches.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin:
-                          const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                      decoration: BoxDecoration(
-                          color: Colors.black26,
-                          border: Border.all(color: Colors.blue, width: 1),
-                          borderRadius: BorderRadius.circular(20)),
-                      child: ListTile(
-                        onTap: () => GoRouter.of(context)
-                            .push("/match/${matches[index].id}"),
-                        title: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(matches[index].title, style: const TextStyle(fontSize: 20, overflow: TextOverflow.fade),),
-                            SvgPicture.asset(
-                              getPlatformInfo(platform).path,
-                              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                              width: 60,
-                            )
-                          ],
-                        ),
-                        shape: const CircleBorder(),
-                        subtitle: matches[index].date.isAfter(DateTime.now()) ?
-                        Text(
-                          matches[index].date
-                          .toString()
-                          .substring(0, 16),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: Color.fromARGB(255, 176, 229, 255)),
-                        ) :
-                        const Text(
-                          "Currently running!",
-                          style: TextStyle(color: Color.fromARGB(255, 142, 255, 236), fontSize: 17),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    );
-                  },
-                );
+      physics: const BouncingScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: matches.length,
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          margin:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+          decoration: BoxDecoration(
+              color: Colors.black26,
+              border: Border.all(color: Colors.blue, width: 1),
+              borderRadius: BorderRadius.circular(20)),
+          child: ListTile(
+            onTap: () => GoRouter.of(context)
+                .push("/match/${matches[index].id}"),
+            title: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(matches[index].title, style: const TextStyle(fontSize: 20, overflow: TextOverflow.fade),),
+                SvgPicture.asset(
+                  getPlatformInfo(platform).path,
+                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  width: 60,
+                )
+              ],
+            ),
+            shape: const CircleBorder(),
+            subtitle: matches[index].date.isAfter(DateTime.now()) ?
+            Text(
+              matches[index].date
+              .toString()
+              .substring(0, 16),
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Color.fromARGB(255, 176, 229, 255)),
+            ) :
+            Text(
+              translate(translate('MATCH.STATUS.RUNNING')),
+              style: TextStyle(color: Color.fromARGB(255, 142, 255, 236), fontSize: 17),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<List<MinimalMatch>> _loadMatches(String game, int platform) async {
