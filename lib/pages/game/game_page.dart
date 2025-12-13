@@ -1,5 +1,6 @@
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
+import 'package:madnolia/enums/platforms_id.enum.dart';
 import 'package:madnolia/models/match/minimal_match_model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
@@ -145,10 +146,9 @@ class GamePage extends StatelessWidget {
   }
 
   Future<List<MinimalMatch>> _loadMatches(String game, int platform) async {
-    final List info =
-        await MatchService().getMatchesByPlatformAndGame(platform, game);
+    final List<MinimalMatch> matches  =
+        await MatchService().getMatchesByPlatformAndGame(platform: PlatformId.values.firstWhere((element) => element.id == platform), game: game);
 
-    final List<MinimalMatch> matches = info.map((e) => MinimalMatch.fromJson(e)).toList();
     return matches;
   }
   

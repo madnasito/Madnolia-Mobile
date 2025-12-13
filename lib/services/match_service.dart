@@ -5,11 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:madnolia/enums/platforms_id.enum.dart';
 import 'package:madnolia/models/game/platform_game.dart';
 import 'package:madnolia/models/match/edit_match_model.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:madnolia/models/platform/platform_with_game_matches.dart';
 import '../models/match/match_model.dart';
+import '../models/match/minimal_match_model.dart';
 
 
 class MatchService {
@@ -78,8 +80,25 @@ class MatchService {
       matchGetListRequest("platform/$platform");
 
   // Get a game match specifing a game & platform
-  Future getMatchesByPlatformAndGame(int platform, String game) =>
-      matchGetListRequest("by-platform-and-game/$platform/$game");
+  Future<List<MinimalMatch>> getMatchesByPlatformAndGame( 
+    {required PlatformId platform, required String game, int skip = 0}
+  ) async{
+    try {
+      final response = await dio.get(
+        '$baseUrl/match/by-platform-and-game/${platform.id}/$game',
+        queryParameters: {
+          'skip': skip,
+        }
+      );
+
+      final List<MinimalMatch> matches = (response.data as List).map((e) => MinimalMatch.fromJson(e)).toList();
+      
+      return matches;
+
+    } catch (e) {
+      rethrow;
+    }
+  }  
 
   Future createMatch(Map match) => matchPostRequest("create", match);
 
