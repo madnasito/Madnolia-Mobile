@@ -102,11 +102,15 @@ class _AtomGroupChatInputState extends State<AtomGroupChatInput> {
           style:  const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             filled: true, // Enable the filling of the background
-            fillColor: Colors.black38, // Set the desired dark background color
+            fillColor: const Color.fromARGB(12, 255, 255, 255), // Set the desired dark background color
             contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
             hintText: translate('CHAT.MESSAGE'),
             hintStyle: const TextStyle(color: Colors.white70), // Optional: Change hint text color
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide.none,
+              gapPadding: 4
+            ),
           ),
           onChanged: widget.onChanged,
         );

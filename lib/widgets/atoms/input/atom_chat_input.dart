@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_translate/flutter_translate.dart';
 class AtomChatInput extends StatelessWidget {
 
   final TextEditingController controller;
@@ -11,11 +12,15 @@ class AtomChatInput extends StatelessWidget {
       controller: controller,
         decoration: InputDecoration(
         filled: true, // Enable the filling of the background
-        fillColor: Colors.black38, // Set the desired dark background color
+        fillColor: const Color.fromARGB(12, 255, 255, 255), // Set the desired dark background color
         contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        hintText: "Message",
+        hintText: translate('CHAT.MESSAGE'),
         hintStyle: const TextStyle(color: Colors.white70), // Optional: Change hint text color
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
+          gapPadding: 4
+        ),
       ),
       style: const TextStyle(color: Colors.white), // Optional: Change text color
     );
