@@ -86,9 +86,9 @@ class MessagesService {
     }
   }
 
-  Future<List<UserChatModel>> getChats(int skip) async {
+  Future<List<UserChatModel>> getUsersChats(int skip) async {
     try {
-      final url = "$baseUrl/messages";
+      final url = "$baseUrl/messages/users";
       final String? token = await _storage.read(key: "token");
       final resp = await _dio.get(
         url, 

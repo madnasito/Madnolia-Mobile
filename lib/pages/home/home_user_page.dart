@@ -157,7 +157,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       if(platformsGamesBloc.state.platformGames.isEmpty) platformsGamesBloc.add(LoadPlatforms(platforms: user.platforms));
 
       if(messageBloc.state.unreadUserChats == 0) {
-        final chats = await MessagesService().getChats(0);
+        final chats = await MessagesService().getUsersChats(0);
         for (var chat in chats) {
           if(chat.message.creator != userBloc.state.id && chat.message.status == ChatMessageStatus.sent) messageBloc.add(UpdateUnreadUserChatCount(value: 1));
         }

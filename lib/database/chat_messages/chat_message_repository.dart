@@ -235,7 +235,7 @@ class ChatMessageRepository {
     try {
 
       if(reload) {
-        final apiChats = await MessagesService().getChats(skip);
+        final apiChats = await MessagesService().getUsersChats(skip);
 
         final List<String> conversationIds = apiChats.map((e) => e.message.conversation).toList();
 
