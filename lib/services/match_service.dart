@@ -11,7 +11,6 @@ import 'package:madnolia/models/match/edit_match_model.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:madnolia/models/platform/platform_with_game_matches.dart';
 import '../models/match/match_model.dart';
-import '../models/match/minimal_match_model.dart';
 
 
 class MatchService {
@@ -80,7 +79,7 @@ class MatchService {
       matchGetListRequest("platform/$platform");
 
   // Get a game match specifing a game & platform
-  Future<List<MinimalMatch>> getMatchesByPlatformAndGame( 
+  Future<List<Match>> getMatchesByPlatformAndGame( 
     {required PlatformId platform, required String game, int skip = 0}
   ) async{
     try {
@@ -91,7 +90,7 @@ class MatchService {
         }
       );
 
-      final List<MinimalMatch> matches = (response.data as List).map((e) => MinimalMatch.fromJson(e)).toList();
+      final List<Match> matches = (response.data as List).map((e) => Match.fromJson(e)).toList();
       
       return matches;
 
@@ -105,10 +104,12 @@ class MatchService {
   Future editMatch(String id, Map body) => matchPatchRequest("update/$id", body);
 
   Future<Match> updateMatch(String id, EditMatchModel body ) async {
+
+    String token = await _storage.read(key: "token") ?? "";
     final response = await dio.patch('$baseUrl/match/update/$id',
       data: body.toJson(),
       options: Options(
-        headers: {"Authorization": "Bearer ${_storage.read(key: "token")}"}
+        headers: {"Authorization": "Bearer $token"}
       )
     );
 

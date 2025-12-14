@@ -22,86 +22,95 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-
-  late PlatformGameMatchesBloc platformGameMatchesBloc;
-  late PlatformId platformId;
+  late final PlatformGameMatchesBloc platformGameMatchesBloc;
+  late final PlatformId platformId;
+  final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     platformGameMatchesBloc = context.read<PlatformGameMatchesBloc>();
-
-    platformId = PlatformId.values.firstWhere((element) => element.id == widget.platform);
-
-    platformGameMatchesBloc.add(LoadPlatformGameMatches(platformId: platformId, gameId: widget.game));
+    platformId =
+        PlatformId.values.firstWhere((element) => element.id == widget.platform);
+    platformGameMatchesBloc
+        .add(LoadPlatformGameMatches(platformId: platformId, gameId: widget.game));
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     platformGameMatchesBloc.add(RestorePlatformGameMatches());
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (_isBottom) {
+      platformGameMatchesBloc.add(
+          LoadPlatformGameMatches(platformId: platformId, gameId: widget.game));
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    return _scrollController.offset >=
+        (_scrollController.position.maxScrollExtent * 0.9);
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return CustomScaffold(
-        body:  
-            SingleChildScrollView(
-              child: Column(
-                  children:[ 
-                    FutureBuilder(
-                      future: RepositoryManager().games.getGameById(widget.game), 
-                      builder: (BuildContext context, AsyncSnapshot<GameData> snapshot) {
-                        if(snapshot.hasData){
-                          final GameData game = snapshot.data!;
-                          return  Column(
-                              children: [
-                                AtomGameImage(name: game.name, background: game.background),
-                                Container(
-                                  margin: const EdgeInsets.symmetric(vertical: 4),
-                                  padding: const EdgeInsets.all(8.0),
-                                  decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.topCenter,
-                                      colors: [
-                                      Colors.black12,
-                                      Colors.black26,
-                                      Colors.black,
-                                      Colors.black26,
-                                      Colors.black12
-                                    ])
-                                  ),
-                                  child: ExpandableText(
-                                    game.description,
-                                    expandText: translate("UTILS.SHOW_MORE"),
-                                    collapseText: translate("UTILS.SHOW_LESS"),
-                                    maxLines: 6,
-                                    animation: true,
-                                    collapseOnTextTap: true,
-                                    expandOnTextTap: true,
-                                    urlStyle: const TextStyle(
-                                      color: Color.fromARGB(255, 169, 145, 255)
-                                    ),
-                                    ),
-                                    
-                                ),
-                                Text(getPlatformInfo(widget.platform).name),
-                              ],
-                            );
-                        }else{
-                          return const Center(child: CircularProgressIndicator());
-                        }
-                      }
-                    ),
-                    OrganismPlatformGameMatches(platform: platformId, gameId: widget.game)
-                  ],
-                ),
-            ),
-            
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
+          children: [
+            FutureBuilder(
+                future: RepositoryManager().games.getGameById(widget.game),
+                builder: (BuildContext context, AsyncSnapshot<GameData> snapshot) {
+                  if (snapshot.hasData) {
+                    final GameData game = snapshot.data!;
+                    return Column(
+                      children: [
+                        AtomGameImage(
+                            name: game.name, background: game.background),
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.topCenter,
+                                  colors: [
+                                Colors.black12,
+                                Colors.black26,
+                                Colors.black,
+                                Colors.black26,
+                                Colors.black12
+                              ])),
+                          child: ExpandableText(
+                            game.description,
+                            expandText: translate("UTILS.SHOW_MORE"),
+                            collapseText: translate("UTILS.SHOW_LESS"),
+                            maxLines: 6,
+                            animation: true,
+                            collapseOnTextTap: true,
+                            expandOnTextTap: true,
+                            urlStyle: const TextStyle(
+                                color: Color.fromARGB(255, 169, 145, 255)),
+                          ),
+                        ),
+                        Text(getPlatformInfo(widget.platform).name),
+                      ],
+                    );
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                }),
+            OrganismPlatformGameMatches(
+                platform: platformId, gameId: widget.game)
+          ],
+        ),
+      ),
     );
-
-    
   }
 }

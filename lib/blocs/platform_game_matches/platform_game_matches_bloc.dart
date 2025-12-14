@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:madnolia/enums/platforms_id.enum.dart';
-import 'package:madnolia/models/match/minimal_match_model.dart';
+import 'package:madnolia/models/match/match_model.dart';
 import 'package:madnolia/services/match_service.dart';
 
 import '../../enums/list_status.enum.dart';
@@ -32,9 +32,9 @@ class PlatformGameMatchesBloc extends Bloc<PlatformGameMatchesEvent, PlatformGam
 
       if (state.hasReachedMax) return;
       
-      final List<MinimalMatch> currentMatches = state.gameMatches;
+      final List<Match> currentMatches = state.gameMatches;
 
-      final List<MinimalMatch> apiMatches = await _matchService.getMatchesByPlatformAndGame(platform:  event.platformId,game:  event.gameId, skip: state.gameMatches.length);
+      final List<Match> apiMatches = await _matchService.getMatchesByPlatformAndGame(platform:  event.platformId,game:  event.gameId, skip: state.gameMatches.length);
 
       bool hasReachedMax = state.hasReachedMax;
 

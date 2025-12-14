@@ -2,18 +2,18 @@ part of 'platform_game_matches_bloc.dart';
 
 class PlatformGameMatchesState extends Equatable {
 
-  final List<MinimalMatch> gameMatches;
+  final List<Match> gameMatches;
   final bool hasReachedMax;
   final ListStatus status;
 
   const PlatformGameMatchesState({
-    this.gameMatches = const <MinimalMatch>[],
+    this.gameMatches = const <Match>[],
     this.hasReachedMax = false,
     this.status = ListStatus.initial
   });
 
   PlatformGameMatchesState copyWith({
-    List<MinimalMatch>? gameMatches,
+    List<Match>? gameMatches,
     bool? hasReachedMax,
     ListStatus? status
   }){
