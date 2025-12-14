@@ -28,6 +28,7 @@ import 'package:madnolia/pages/user/user_profile_page.dart';
 import 'package:madnolia/services/sockets_service.dart';
 
 
+import '../pages/chat/page_user_friendships.dart';
 import '../pages/home/home_user_page.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -82,6 +83,13 @@ final GoRouter router = GoRouter(
           name: 'login',
           builder: (BuildContext context, GoRouterState state) {
             return const LoginPage();
+          },
+        ),
+        GoRoute(
+          path: 'friendships',
+          name: 'friendships',
+          builder: (BuildContext context, GoRouterState state) {
+            return const PageUserFriendships();
           },
         ),
         GoRoute(

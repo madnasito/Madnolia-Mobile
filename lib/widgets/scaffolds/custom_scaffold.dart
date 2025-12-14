@@ -10,7 +10,8 @@ import 'package:madnolia/widgets/organism/menu/organism_drawer.dart';
 
 class CustomScaffold extends StatelessWidget {
   final Widget body;
-  const CustomScaffold({super.key, required this.body});
+  final Widget? floatingActionButton;
+  const CustomScaffold({super.key, required this.body, this.floatingActionButton});
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +60,9 @@ class CustomScaffold extends StatelessWidget {
             )
         ],
       ),
+      floatingActionButton: floatingActionButton,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
       body: Background(
         child: SafeArea(
           child: body

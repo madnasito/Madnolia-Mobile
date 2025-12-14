@@ -1,9 +1,11 @@
 // import 'dart:math' as math;
 
 // import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_translate/flutter_translate.dart';
+import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/enums/list_status.enum.dart';
 import 'package:madnolia/style/text_style.dart';
@@ -19,24 +21,6 @@ class ChatsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScaffold(
       body: 
-      // CustomMaterialIndicator(
-        // autoRebuild: false,
-        // onRefresh: () async{
-        //   final chatsBloc = context.read<ChatsBloc>();
-        //   chatsBloc.add(RestoreUserChats());
-        //   chatsBloc.add( UserChatsFetched());
-        // },
-        // backgroundColor: Colors.white,
-        //  indicatorBuilder: (context, controller) {
-        //   return Padding(
-        //     padding: const EdgeInsets.all(6.0),
-        //     child: CircularProgressIndicator(
-        //       color: Colors.lightBlue,
-        //       value: controller.state.isLoading ? null : math.min(controller.value, 1.0),
-        //     ),
-        //   );
-        // },
-        // child: 
         Column(
           children: [
             const SizedBox(height: 10),
@@ -50,7 +34,29 @@ class ChatsPage extends StatelessWidget {
             ),
           ],
         ),
-      // ),
+      floatingActionButton: IconButton(
+        onPressed: () => context.pushNamed('friendships'), 
+        icon: Container(
+          decoration: BoxDecoration(
+            color: Colors.blueAccent,
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blueAccent.withValues(alpha: 0.6),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(12),
+          child: const Icon(
+            Icons.person_add,
+            color: Colors.white,
+            size: 28,
+          ),
+        )
+      ),
     );
   }
 }
