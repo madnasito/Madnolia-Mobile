@@ -47,72 +47,75 @@ class _AtomGroupChatInputState extends State<AtomGroupChatInput> {
           return const Center(child: Text("Error loading users"));
         }        
 
-        return FlutterMentions(
-          mentions: [
-            Mention(
-              disableMarkup: true,
-              trigger: '@',
-              style: const TextStyle(
-                color: Colors.amber,
-              ),
-              data: asyncSnapshot.data!
-                  .map((e) => {
-                        "display": e.username,
-                        "full_name": e.name,
-                        "photo": e.thumb,
-                      })
-                  .toList(),
-              matchAll: false,
-              suggestionBuilder: (data) {
-                return Container(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Wrap(
-                    children: <Widget>[
-                      SizedBox(
-                        width: screenWidth * 0.1,
-                      ),
-                      CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          data['photo'],
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: FlutterMentions(
+            mentions: [
+              Mention(
+                disableMarkup: true,
+                trigger: '@',
+                style: const TextStyle(
+                  color: Colors.amber,
+                ),
+                data: asyncSnapshot.data!
+                    .map((e) => {
+                          "display": e.username,
+                          "full_name": e.name,
+                          "photo": e.thumb,
+                        })
+                    .toList(),
+                matchAll: false,
+                suggestionBuilder: (data) {
+                  return Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Wrap(
+                      children: <Widget>[
+                        SizedBox(
+                          width: screenWidth * 0.1,
                         ),
-                      ),
-                      const SizedBox(
-                        width: 20.0,
-                      ),
-                      Column(
-                        children: <Widget>[
-                          Text(data['full_name']),
-                          Text('@${data['display']}'),
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              },
-            )
-          ],
-          suggestionPosition: SuggestionPosition.Top,
-          maxLines: 5,
-          minLines: 1,
-          suggestionListDecoration: BoxDecoration(
-            color: Colors.black26,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          key: widget.inputKey,
-          style:  const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            filled: true, // Enable the filling of the background
-            fillColor: const Color.fromARGB(12, 255, 255, 255), // Set the desired dark background color
-            contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-            hintText: translate('CHAT.MESSAGE'),
-            hintStyle: const TextStyle(color: Colors.white70), // Optional: Change hint text color
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide.none,
-              gapPadding: 4
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            data['photo'],
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20.0,
+                        ),
+                        Column(
+                          children: <Widget>[
+                            Text(data['full_name']),
+                            Text('@${data['display']}'),
+                          ],
+                        )
+                      ],
+                    ),
+                  );
+                },
+              )
+            ],
+            suggestionPosition: SuggestionPosition.Top,
+            maxLines: 5,
+            minLines: 1,
+            suggestionListDecoration: BoxDecoration(
+              color: Colors.black26,
+              borderRadius: BorderRadius.circular(20),
             ),
+            key: widget.inputKey,
+            style:  const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              filled: true, // Enable the filling of the background
+              fillColor: const Color.fromARGB(12, 255, 255, 255), // Set the desired dark background color
+              contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              hintText: translate('CHAT.MESSAGE'),
+              hintStyle: const TextStyle(color: Colors.white70), // Optional: Change hint text color
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: BorderSide.none,
+                gapPadding: 4
+              ),
+            ),
+            onChanged: widget.onChanged,
           ),
-          onChanged: widget.onChanged,
         );
       }
     );
