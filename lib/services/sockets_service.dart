@@ -371,7 +371,7 @@ Future<void> onStart(ServiceInstance service) async {
 
   service.on("logout").listen((onData) => socket.emit("logout"));
 
-  service.on("new_player_to_match").listen((onData) async => await matchRepository.joinUser(onData?['match'], onData?['user']));
+  service.on("new_player_to_match").listen((onData) async => await matchRepository.joinUser(onData?['match'], onData?['player']));
 
   service.on("join_to_match").listen((onData) => socket.emit("join_to_match", onData?["match"]));
 

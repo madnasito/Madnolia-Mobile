@@ -3,26 +3,17 @@ import 'dart:async' show StreamSubscription;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
-import 'package:madnolia/enums/match-status.enum.dart';
-import 'package:madnolia/models/chat/create_message_model.dart';
-import 'package:madnolia/services/match_service.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'package:madnolia/blocs/message/message_bloc.dart';
-import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
-import 'package:madnolia/widgets/chat/input_widget.dart';
-import 'package:madnolia/widgets/form_button.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
-import 'package:uuid/uuid.dart';
-
 import '../../enums/chat_message_type.enum.dart';
+import '../molecules/chat/molecule_match_chat_input.dart';
 
 class ViewMatch extends StatefulWidget {
   final MatchData match;
@@ -33,15 +24,14 @@ class ViewMatch extends StatefulWidget {
   State<ViewMatch> createState() => _ViewMatchState();
 }
 
+
 class _ViewMatchState extends State<ViewMatch> {
   bool isInMatch = false;
   bool socketConnected = true;
-  bool _isLoading = false;
-  String? _errorMessage;
   late UserBloc userBloc;
   late final FlutterBackgroundService backgroundService;
+  late MatchData _match;
   
-  StreamSubscription? _newPlayerSubscription;
   StreamSubscription? _addedToMatchSubscription;
   StreamSubscription? _socketDisconnectedSubscription;
   StreamSubscription? _socketConnectedSubscription;
@@ -49,6 +39,7 @@ class _ViewMatchState extends State<ViewMatch> {
   @override
   void initState() {
     super.initState();
+    _match = widget.match;
     userBloc = context.read<UserBloc>();
     backgroundService = FlutterBackgroundService();
     _initializeServices();
@@ -58,12 +49,6 @@ class _ViewMatchState extends State<ViewMatch> {
     backgroundService.invoke("init");
     
     // Guarda las suscripciones para poder cancelarlas después
-    _newPlayerSubscription = backgroundService.on("new_player_to_match").listen((data) {
-      if(data?["match"] != widget.match.id) return;
-      setState(() {
-        
-      });
-    });
     
     _addedToMatchSubscription = backgroundService.on("added_to_match").listen((data) {
       if (!mounted) return;
@@ -73,7 +58,7 @@ class _ViewMatchState extends State<ViewMatch> {
       }
     });
     
-    backgroundService.invoke("init_chat", {"room": widget.match.id});
+    backgroundService.invoke("init_chat", {"room": _match.id});
     
     _socketDisconnectedSubscription = backgroundService.on("disconnected_socket").listen((_) {
       if (mounted) setState(() => socketConnected = false);
@@ -83,13 +68,12 @@ class _ViewMatchState extends State<ViewMatch> {
       if (mounted) setState(() => socketConnected = true);
     });
     
-    userBloc.updateChatRoom(widget.match.id);
+    userBloc.updateChatRoom(_match.id);
   }
 
   @override
   void dispose() {
     // Cancela todas las suscripciones
-    _newPlayerSubscription?.cancel();
     _addedToMatchSubscription?.cancel();
     _socketDisconnectedSubscription?.cancel();
     _socketConnectedSubscription?.cancel();
@@ -106,8 +90,16 @@ class _ViewMatchState extends State<ViewMatch> {
     return Column(
       children: [
         _buildMatchHeader(),
-        Expanded(child: MoleculeRoomMessages(room: widget.match.id)),
-        _buildBottomRow(context),
+        Expanded(child: MoleculeRoomMessages(room: _match.id)),
+        MoleculeMatchChatInput(
+          match: _match,
+          conversation: _match.id, messageType: ChatMessageType.match,
+          onMatchUpdated: (newMatch) {
+            setState(() {
+              _match = newMatch;
+            });
+          },
+        ),
       ],
     );
   }
@@ -123,7 +115,7 @@ class _ViewMatchState extends State<ViewMatch> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.match.title,
+                  _match.title,
                   style: const TextStyle(fontSize: 20),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -154,150 +146,27 @@ class _ViewMatchState extends State<ViewMatch> {
                 // final String apiUrl = dotenv.get("SOCKETS_URL");
                 final params = ShareParams(
                   title: translate("SHARE.TITLE"),
-                  // uri: Uri.tryParse("https://madnolia.app/match/${widget.match.id}"),
-                  // subject: "🎮 Let's play ${widget.match.game.name}",
+                  // uri: Uri.tryParse("https://madnolia.app/match/${_match.id}"),
+                  // subject: "🎮 Let's play ${widget.game.name}",
                   text: translate("SHARE.TEXT", args: {
                     "gameName": widget.game.name,
-                    "match": "https://madnolia.app/match/${widget.match.id}"
+                    "match": "https://madnolia.app/match/${_match.id}"
                     })
-                  // uri: Uri.parse('https://madnolia.app/match/${widget.match.id}')
+                  // uri: Uri.parse('https://madnolia.app/match/${_match.id}')
                 );
       
                 final result = await SharePlus.instance.share(params);
       
                 debugPrint(result.status.toString());
               }, icon: Icon(Icons.share_outlined)),
-              OrganismMatchInfo(match: widget.match, game: widget.game, userId: widget.match.user,),
+              OrganismMatchInfo(match: _match, game: widget.game, userId: _match.user,),
             ],
           ),
         ],
       ),
     );
   }
-
-  Widget _buildBottomRow(BuildContext context) {
-    final bloc = MessageProvider.of(context);
-    final userState = userBloc.state;
-    final GlobalKey<FlutterMentionsState> messageKey = GlobalKey();
-
-    if(widget.match.status == MatchStatus.cancelled || widget.match.status == MatchStatus.finished) { 
-      return Container(
-        width: double.infinity,
-        color: Colors.black87,
-        padding: const EdgeInsets.all(16),
-        child: Text(translate('MATCH.MATCH_ENDED'), textAlign: TextAlign.center,),
-      );
-    }
-
-    final isOwnerOrMember = userState.id == widget.match.user || 
-        widget.match.joined.any((e) => userState.id == e) || 
-        isInMatch;
-
-    if (!isOwnerOrMember) {
-      if (_isLoading) {
-        return const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Center(child: CircularProgressIndicator()),
-        );
-      }
-
-      return Column(
-        children: [
-          if (_errorMessage != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                _errorMessage!,
-                style: const TextStyle(color: Colors.red),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          FormButton(
-            text: translate('MATCH.JOIN_TO_MATCH'),
-            color: Colors.transparent,
-            onPressed: () async {
-              setState(() {
-                _isLoading = true;
-                _errorMessage = null;
-              });
-              try {
-                final resp = await MatchService().join(widget.match.id);
-                debugPrint(resp.toString());
-
-                await RepositoryManager().match.joinUser(widget.match.id, userState.id);
-
-                setState(() {
-                  isInMatch = true;
-                  _isLoading = false;
-                });
-
-              } catch (e) {
-                debugPrint(e.toString());
-                setState(() {
-                  _errorMessage = translate('MATCH.ERRORS.JOIN_FAILED');
-                  _isLoading = false;
-                });
-              }
-            },
-          ),
-        ],
-      );
-    }
-
-    return _buildMessageInput(bloc, messageKey, socketConnected);
-  }
-
-  Widget _buildMessageInput(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey, bool socketConnected) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    final List<String> usersLists = widget.match.joined.where((member) => member != userBloc.state.id).toList();
-    if(userBloc.state.id != widget.match.user) usersLists.add(widget.match.user);
-    
-    return Wrap(
-      children: [
-        Container(
-          width: screenWidth * 0.8,
-          margin: const EdgeInsets.only(right: 8),
-          child: InputGroupMessage(
-            inputKey: messageKey,
-            usersList: usersLists,
-            stream: bloc.messageStream,
-            placeholder: translate('CHAT.MESSAGE'),
-            onChanged: bloc.changeMessage,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          child: ElevatedButton(
-            onPressed: () => _handleSubmit(bloc, messageKey, socketConnected),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              shape: const StadiumBorder(),
-              side: const BorderSide(color: Color.fromARGB(255, 65, 169, 255)),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-            child: const Icon(Icons.send_outlined),
-          ),
-        ),
-        socketConnected ? Container() :  Container(
-          width: double.infinity,
-          margin: const EdgeInsets.only(bottom: 8),
-          child: Text(translate("ERRORS.NETWORK.VERIFY_CONNECTION", ), textAlign: TextAlign.center,))
-      ],
-    );
-  }
-
-  void _handleSubmit(MessageInputBloc bloc, GlobalKey<FlutterMentionsState> messageKey, socketConnected) {
-    if (bloc.message.isEmpty || !socketConnected) return;
-    final id = const Uuid().v4();
-    backgroundService.invoke(
-      "new_message", 
-      CreateMessage(id: id, conversation: widget.match.id, content: bloc.message, type: ChatMessageType.match).toJson()
-    );
-    bloc.changeMessage("");
-    messageKey.currentState?.controller?.clear();
-  }
 }
-
 class MoleculeRoomMessages extends StatefulWidget {
   final String room;
   const MoleculeRoomMessages({super.key, required this.room});

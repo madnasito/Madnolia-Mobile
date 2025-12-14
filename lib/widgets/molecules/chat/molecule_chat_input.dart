@@ -58,7 +58,7 @@ class _MoleculeChatInputState extends State<MoleculeChatInput> {
               final String id = const Uuid().v4();
               backgroundService.invoke(
                 "new_message", 
-                CreateMessage(id: id, conversation: widget.conversation, content: inputController.text, type: ChatMessageType.user).toJson()
+                CreateMessage(id: id, conversation: widget.conversation, content: inputController.text, type: widget.messageType).toJson()
               );
 
               inputController.text = '';
