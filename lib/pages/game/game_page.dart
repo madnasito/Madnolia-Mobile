@@ -1,39 +1,57 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/blocs/platform_game_matches/platform_game_matches_bloc.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/platforms_id.enum.dart';
-import 'package:madnolia/models/match/minimal_match_model.dart';
-import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:madnolia/widgets/organism/organism_platform_game_matches.dart';
 
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_translate/flutter_translate.dart';
-import 'package:go_router/go_router.dart';
-
 import '../../utils/platforms.dart';
 
-class GamePage extends StatelessWidget {
-  const GamePage({super.key});
+class GamePage extends StatefulWidget {
+  final String game;
+  final int platform;
+  const GamePage({super.key, required this.game, required this.platform});
+
+  @override
+  State<GamePage> createState() => _GamePageState();
+}
+
+class _GamePageState extends State<GamePage> {
+
+  late PlatformGameMatchesBloc platformGameMatchesBloc;
+  late PlatformId platformId;
+
+  @override
+  void initState() {
+    super.initState();
+    platformGameMatchesBloc = context.read<PlatformGameMatchesBloc>();
+
+    platformId = PlatformId.values.firstWhere((element) => element.id == widget.platform);
+
+    platformGameMatchesBloc.add(LoadPlatformGameMatches(platformId: platformId, gameId: widget.game));
+  }
+
+  @override
+  void dispose() {
+    platformGameMatchesBloc.add(RestorePlatformGameMatches());
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if(GoRouterState.of(context).extra == null) context.go("/home-user");
-    final Map data = GoRouterState.of(context).extra as Map;
-
-    final String game = data["game"];
-    final int platform = data["platform"];
-
-    // final gameDataBloc = context.watch<GameDataBloc>();
-
+    
     return CustomScaffold(
         body:  
             SingleChildScrollView(
               child: Column(
                   children:[ 
                     FutureBuilder(
-                      future: RepositoryManager().games.getGameById(game), 
+                      future: RepositoryManager().games.getGameById(widget.game), 
                       builder: (BuildContext context, AsyncSnapshot<GameData> snapshot) {
                         if(snapshot.hasData){
                           final GameData game = snapshot.data!;
@@ -69,7 +87,7 @@ class GamePage extends StatelessWidget {
                                     ),
                                     
                                 ),
-                                Text(getPlatformInfo(platform).name),
+                                Text(getPlatformInfo(widget.platform).name),
                               ],
                             );
                         }else{
@@ -77,16 +95,7 @@ class GamePage extends StatelessWidget {
                         }
                       }
                     ),
-                    FutureBuilder(
-                      future: _loadMatches(game, platform),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          return _matchesList(snapshot.data, platform);
-                        } else {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-                      },
-                    ),
+                    OrganismPlatformGameMatches(platform: platformId, gameId: widget.game)
                   ],
                 ),
             ),
@@ -95,61 +104,4 @@ class GamePage extends StatelessWidget {
 
     
   }
-
-  ListView _matchesList(List<MinimalMatch> matches, int platform) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      itemCount: matches.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          margin:
-              const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-          decoration: BoxDecoration(
-              color: Colors.black26,
-              border: Border.all(color: Colors.blue, width: 1),
-              borderRadius: BorderRadius.circular(20)),
-          child: ListTile(
-            onTap: () => GoRouter.of(context)
-                .push("/match/${matches[index].id}"),
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(matches[index].title, style: const TextStyle(fontSize: 20, overflow: TextOverflow.fade),),
-                SvgPicture.asset(
-                  getPlatformInfo(platform).path,
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                  width: 60,
-                )
-              ],
-            ),
-            shape: const CircleBorder(),
-            subtitle: matches[index].date.isAfter(DateTime.now()) ?
-            Text(
-              matches[index].date
-              .toString()
-              .substring(0, 16),
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Color.fromARGB(255, 176, 229, 255)),
-            ) :
-            Text(
-              translate(translate('MATCH.STATUS.RUNNING')),
-              style: TextStyle(color: Color.fromARGB(255, 142, 255, 236), fontSize: 17),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<List<MinimalMatch>> _loadMatches(String game, int platform) async {
-    final List<MinimalMatch> matches  =
-        await MatchService().getMatchesByPlatformAndGame(platform: PlatformId.values.firstWhere((element) => element.id == platform), game: game);
-
-    return matches;
-  }
-  
 }

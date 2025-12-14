@@ -183,7 +183,16 @@ final GoRouter router = GoRouter(
           builder: (context, state) => RecoverPasswordTokenPage(token: state.pathParameters['token'].toString(),),
         ),
         GoRoute(
-            path: "game", name: "game", builder: (context, state) => const GamePage()),
+            path: "platform/:platform/:game", name: "game", builder: (context, state) {
+              try {
+                int platform = int.parse(state.pathParameters['platform'].toString());
+                String game = state.pathParameters['game'].toString();
+                return GamePage(game: game, platform: platform);
+              } catch (e) {
+                context.go("/home-user");
+                return const SizedBox.shrink();
+              }
+            } ),
         GoRoute(path: "search_game", name: "search game", builder: (context, state) => const SearchGamePage())
       ],
     ),

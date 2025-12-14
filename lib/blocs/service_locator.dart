@@ -18,5 +18,6 @@ Future<void> serviceLocatorInit() async {
   getIt.registerSingleton(ChatsBloc());
   getIt.registerSingleton(NotificationsBloc());
   getIt.registerSingleton(MatchesBloc());
+  getIt.registerSingleton(PlatformGameMatchesBloc());
 }
 

@@ -124,6 +124,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getIt<ChatsBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<NotificationsBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<MatchesBloc>()),
+        BlocProvider(create: (BuildContext context) => getIt<PlatformGameMatchesBloc>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
       ],

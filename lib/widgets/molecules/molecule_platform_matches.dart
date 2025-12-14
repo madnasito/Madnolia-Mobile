@@ -39,10 +39,12 @@ class MoleculePlatformMatches extends StatelessWidget {
               return GestureDetector(
                 onTap: (){
                   GoRouter.of(context)
-                    .push("/game", extra: {
-                      "platform": platform,
-                      "game": platformState.games[index].id
-                    });
+                    .push("/platform/$platform/${platformState.games[index].id}"
+                    //  extra: {
+                    //   "platform": platform,
+                    //   "game": platformState.games[index].id
+                    // }
+                    );
                 },
                 child: GameCard(
                   name: game.name,

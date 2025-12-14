@@ -5,6 +5,8 @@ import 'package:madnolia/enums/platforms_id.enum.dart';
 import 'package:madnolia/models/match/minimal_match_model.dart';
 import 'package:madnolia/services/match_service.dart';
 
+import '../../enums/list_status.enum.dart';
+
 part 'platform_game_matches_event.dart';
 part 'platform_game_matches_state.dart';
 
@@ -18,25 +20,43 @@ class PlatformGameMatchesBloc extends Bloc<PlatformGameMatchesEvent, PlatformGam
   Future<void> _restoreState(RestorePlatformGameMatches event, emit) async {
     emit(
       state.copyWith(
-        gameMatches: []
+        gameMatches: [],
+        hasReachedMax: false,
+        status: ListStatus.initial
       )
     );
   }
 
   Future<void> _loadPlatformGameMatches(LoadPlatformGameMatches event, Emitter<PlatformGameMatchesState> emit) async {
     try {
-      final List info = await _matchService.getMatchesByPlatformAndGame(platform:  event.platformId,game:  event.gameId, skip: state.gameMatches.length);
 
-      final List<MinimalMatch> matches = info.map((e) => MinimalMatch.fromJson(e)).toList();
+      if (state.hasReachedMax) return;
+      
+      final List<MinimalMatch> currentMatches = state.gameMatches;
+
+      final List<MinimalMatch> apiMatches = await _matchService.getMatchesByPlatformAndGame(platform:  event.platformId,game:  event.gameId, skip: state.gameMatches.length);
+
+      bool hasReachedMax = state.hasReachedMax;
+
+      if (apiMatches.length < 20) {
+        hasReachedMax = true;
+      }
 
       emit(
         state.copyWith(
-          gameMatches: matches
+          gameMatches: [...currentMatches, ...apiMatches],
+          hasReachedMax: hasReachedMax,
+          status: ListStatus.success
         )
       );
       
     } catch (e) {
       debugPrint(e.toString());
+      emit(
+        state.copyWith(
+          status: ListStatus.failure
+        )
+      );
       rethrow;
     }
   } 
