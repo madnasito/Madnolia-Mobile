@@ -2,7 +2,6 @@ import 'package:madnolia/models/auth/register_model.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:madnolia/blocs/register_provider.dart';
 import 'package:madnolia/widgets/organism/form/organism_register_form.dart';
 import 'package:madnolia/widgets/organism/form/organism_select_platform.dart' show OrganismSelectPlatform;
 import 'package:madnolia/widgets/background.dart';
@@ -14,7 +13,6 @@ class RegisterPage extends StatefulWidget {
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
-  final bloc = RegisterBloc();
   final RegisterModel registerModel =
       RegisterModel(email: "", name: "", password: "", platforms: [], username: "");
 }

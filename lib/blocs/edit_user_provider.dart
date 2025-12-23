@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/edit_user_bloc.dart';
 
-export 'package:madnolia/blocs/register_bloc.dart';
 
 class EditUserProvider extends InheritedWidget {
   final editUserBloc = EditUserBloc();

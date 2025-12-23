@@ -309,6 +309,11 @@
           "SUCCESS": "Updated platforms!"
       }
   },
+  "FRIENDS": {
+    "TITLE": "Friends",
+    "EMPTY": "You have no friends yet",
+    "ERROR_LOADING": "Error loading friends"
+  },
   "REPORTS": {
     "CREATED": "Report created",
     "REPORT_USER": "Report this user",

@@ -7,13 +7,28 @@ import 'package:madnolia/models/friendship/friendship_model.dart';
 class FriendshipService {
   final _storage = const FlutterSecureStorage();
 
-  final String baseUrl = dotenv.get("API_URL");
+  final String baseUrl = '${dotenv.get("API_URL")}/friendship';
+
+  Future<List<Friendship>> getAllFriendships() async {
+    try {
+      final url = "$baseUrl/all";
+
+      final String? token = await _storage.read(key: 'token');
+
+      final resp = await Dio().get(url, options: Options(headers: {"Authorization": 'Bearer $token'}));
+      final List<Friendship> friendships = (resp.data as List).map((f) => Friendship.fromJson(f)).toList();
+      return friendships;
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
 
   Future<Friendship> getFriendwhipWithUser(String userId) async {
 
     try {
       
-      final url = "$baseUrl/friendship/with?user=$userId";
+      final url = "$baseUrl/with?user=$userId";
       final String? token = await _storage.read(key: "token");
 
       final resp = await Dio().get(url, options: Options(headers: {"Authorization": "Bearer $token"}));
@@ -28,7 +43,7 @@ class FriendshipService {
 
   Future<Friendship> getFriendshipById(String id) async {
     try {
-      final url = "$baseUrl/friendship/get?id=$id";
+      final url = "$baseUrl/get?id=$id";
 
       final String? token = await _storage.read(key: 'token');
 
@@ -45,7 +60,7 @@ class FriendshipService {
 
   Future<List<Friendship>> getFriendshipsByIds(List<String> ids) async {
     try {
-      final url = "$baseUrl/friendship/friendships-by-ids";
+      final url = "$baseUrl/friendships-by-ids";
       
       final String? token = await _storage.read(key: 'token');
 

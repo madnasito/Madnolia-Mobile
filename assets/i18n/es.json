@@ -260,6 +260,11 @@
         "MATCH_READY": "Partida lista",
         "MATCH_STARTED": "{name} ha empezado"
     },
+    "FRIENDS": {
+        "TITLE": "Amigos",
+        "EMPTY": "Aun no tienes amigos",
+        "ERROR_LOADING": "Error cargando amigos"
+    },
     "PROFILE":{
         "YOU": "Perfil",
         "TITLE": "Perfil",

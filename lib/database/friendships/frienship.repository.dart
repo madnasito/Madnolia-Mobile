@@ -12,6 +12,40 @@ class FriendshipRepository {
 
   final friendshipService = FriendshipService();
 
+  Future<List<FriendshipData>> getAllFriendships({bool reload = false }) async {
+    try {
+      final now = DateTime.now();
+      final existingFriendships = await database.select(database.friendship).get();
+
+      if (existingFriendships.isNotEmpty && now.difference(existingFriendships.first.lastUpdated).inHours < 1 && !reload) {
+        return existingFriendships;
+      }
+
+      final friendships = await friendshipService.getAllFriendships();
+
+      for (final friendship in friendships) {
+        final storage = const FlutterSecureStorage();
+        final String? userId = await storage.read(key: "userId");
+        final String notMe = friendship.user1 == userId ? friendship.user2 : friendship.user1;
+
+        final friendshipCompanion = FriendshipCompanion(
+          id: Value(friendship.id),
+          user: Value(notMe),
+          createdAt: Value(friendship.createdAt),
+          status: Value(friendship.status),
+          lastUpdated: Value(now),
+        );
+
+        await createOrUpdateFriendship(friendshipCompanion);
+      }
+
+      return await database.select(database.friendship).get();
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
   Future<FriendshipData> getFriendshipById(String id) async {
 
     try {

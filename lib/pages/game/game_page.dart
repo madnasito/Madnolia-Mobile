@@ -78,15 +78,17 @@ class _GamePageState extends State<GamePage> {
                           padding: const EdgeInsets.all(8.0),
                           decoration: const BoxDecoration(
                               gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.topCenter,
-                                  colors: [
-                                Colors.black12,
-                                Colors.black26,
-                                Colors.black,
-                                Colors.black26,
-                                Colors.black12
-                              ])),
+                                begin: Alignment.topCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.black12,
+                                  Colors.black26,
+                                  Colors.black,
+                                  Colors.black26,
+                                  Colors.black12
+                                ]
+                              )
+                            ),
                           child: ExpandableText(
                             game.description,
                             expandText: translate("UTILS.SHOW_MORE"),
