@@ -12,16 +12,23 @@ class FriendshipRepository {
 
   final friendshipService = FriendshipService();
 
-  Future<List<FriendshipData>> getAllFriendships({bool reload = false }) async {
+  Future<List<FriendshipData>> getAllFriendships({bool reload = false, page = 0 }) async {
     try {
       final now = DateTime.now();
-      final existingFriendships = await database.select(database.friendship).get();
+      int offset = page * 20;
+      final existingFriendships = await (database.select(database.friendship)
+      ..limit( 20, offset: offset)
+      ..orderBy([
+        (f) => OrderingTerm(expression: f.createdAt, mode: OrderingMode.desc)
+      ]))
+      .get();
+
 
       if (existingFriendships.isNotEmpty && now.difference(existingFriendships.first.lastUpdated).inHours < 1 && !reload) {
         return existingFriendships;
       }
 
-      final friendships = await friendshipService.getAllFriendships();
+      final friendships = await friendshipService.getAllFriendships(page: page);
 
       for (final friendship in friendships) {
         final storage = const FlutterSecureStorage();

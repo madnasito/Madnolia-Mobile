@@ -28,7 +28,7 @@ class FriendshipsBloc extends Bloc<FriendshipsEvent, FriendshipsState> {
 
       debugPrint(currentData.toString());
 
-      final List<FriendshipData> apiData = await _friendshipRepository.getAllFriendships(reload: event.reload);
+      final List<FriendshipData> apiData = await _friendshipRepository.getAllFriendships(reload: event.reload, page: state.page);
 
       debugPrint('Api data ${currentData.toString()}');
 
@@ -38,15 +38,16 @@ class FriendshipsBloc extends Bloc<FriendshipsEvent, FriendshipsState> {
 
       bool hasReachedMax = state.hasReachedMax;
 
-      // if (apiData.length < 20) {
+      if (apiData.length < 20) {
         hasReachedMax = true;
-      // }
+      }
 
       emit(
         state.copyWith(
           friendshipsUsers: [...currentData, ...usersData],
           hasReachedMax: hasReachedMax,
-          status: ListStatus.success
+          status: ListStatus.success,
+          page: state.page + 1
         )
       );
 
@@ -67,7 +68,8 @@ class FriendshipsBloc extends Bloc<FriendshipsEvent, FriendshipsState> {
       state.copyWith(
         friendshipsUsers: [],
         hasReachedMax: false,
-        status: ListStatus.initial
+        status: ListStatus.initial,
+        page: 0
       )
     );
   }

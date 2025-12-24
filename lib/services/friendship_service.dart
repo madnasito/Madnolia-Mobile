@@ -9,13 +9,18 @@ class FriendshipService {
 
   final String baseUrl = '${dotenv.get("API_URL")}/friendship';
 
-  Future<List<Friendship>> getAllFriendships() async {
+  Future<List<Friendship>> getAllFriendships({int page = 0}) async {
     try {
       final url = "$baseUrl/all";
 
       final String? token = await _storage.read(key: 'token');
 
-      final resp = await Dio().get(url, options: Options(headers: {"Authorization": 'Bearer $token'}));
+      final resp = await Dio().get(
+        url,
+        options: Options(headers: {"Authorization": 'Bearer $token'}),
+        queryParameters: {"page": page}
+      );
+      
       final List<Friendship> friendships = (resp.data as List).map((f) => Friendship.fromJson(f)).toList();
       return friendships;
     } catch (e) {
