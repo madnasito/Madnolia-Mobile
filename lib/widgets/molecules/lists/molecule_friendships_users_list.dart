@@ -51,6 +51,7 @@ class _MoleculeFriendshipsUsersListState extends State<MoleculeFriendshipsUsersL
     
     final friendshipsBloc = context.watch<FriendshipsBloc>();
     final List<UserData> users = friendshipsBloc.state.friendshipsUsers;
+    final bool hasReachedMax = friendshipsBloc.state.hasReachedMax;
 
     return FadeInUp(
         duration: const Duration(milliseconds: 300),
@@ -58,8 +59,20 @@ class _MoleculeFriendshipsUsersListState extends State<MoleculeFriendshipsUsersL
         child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.all(8.0),
-        itemCount: users.length,
+        itemCount: hasReachedMax ? users.length : users.length + 1,
         itemBuilder: (BuildContext context, int index) {
+
+          if (index >= users.length) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              ),
+            );
+          }
+
           final user = users[index];
           return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
