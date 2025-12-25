@@ -25,6 +25,7 @@ class PageUserFriendships extends StatelessWidget {
           children: [
             const SizedBox(height: 10),
             CenterTitleAtom(text: translate('FRIENDS.TITLE')),
+            const SizedBox(height: 10),
             Expanded(
               child: OrganismFriendships(),
             )

@@ -15,19 +15,24 @@ class FriendshipRepository {
   Future<List<FriendshipData>> getAllFriendships({bool reload = false, page = 0 }) async {
     try {
       final now = DateTime.now();
+      debugPrint('Getting friendships from repository, page: $page, reload: $reload');
       int offset = page * 20;
-      final existingFriendships = await (database.select(database.friendship)
-      ..limit( 20, offset: offset)
-      ..orderBy([
-        (f) => OrderingTerm(expression: f.createdAt, mode: OrderingMode.desc)
-      ]))
-      .get();
 
+      // // If not forcing a reload, check for fresh data in the local database first.
+      // if (!reload) {
+      //   final existingFriendships = await (database.select(database.friendship)
+      //         ..limit(20, offset: offset)
+      //         ..orderBy([(f) => OrderingTerm(expression: f.createdAt, mode: OrderingMode.desc)]))
+      //       .get();
 
-      if (existingFriendships.isNotEmpty && now.difference(existingFriendships.first.lastUpdated).inHours < 1 && !reload) {
-        return existingFriendships;
-      }
+      //   // If fresh data exists, return it to avoid a network call.
+      //   if (existingFriendships.isNotEmpty && now.difference(existingFriendships.first.lastUpdated).inHours < 1) {
+      //     debugPrint('Returning friendships from cache.');
+      //     return existingFriendships;
+      //   }
+      // }
 
+      // If reloading or local data is stale, fetch from the API.
       final friendships = await friendshipService.getAllFriendships(page: page);
 
       for (final friendship in friendships) {
@@ -46,7 +51,11 @@ class FriendshipRepository {
         await createOrUpdateFriendship(friendshipCompanion);
       }
 
-      return await database.select(database.friendship).get();
+      // Return the freshly updated data from the database.
+      return await (database.select(database.friendship)
+            ..limit(20, offset: offset)
+            ..orderBy([(f) => OrderingTerm(expression: f.createdAt, mode: OrderingMode.desc)]))
+          .get();
     } catch (e) {
       debugPrint(e.toString());
       rethrow;

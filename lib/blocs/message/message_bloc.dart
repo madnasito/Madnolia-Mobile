@@ -69,6 +69,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   Future<void> _onFetchRoomMessages(
     MessageFetched event,
     Emitter<MessageState> emit) async {
+      debugPrint('Fetching room messages...');
       debugPrint('Has reached max: ${state.hasReachedMax}');
       if (state.hasReachedMax) return;
 

@@ -20,23 +20,30 @@ class FriendshipsBloc extends Bloc<FriendshipsEvent, FriendshipsState> {
 
   Future<void> _loadFriendships(LoadFriendships event, Emitter<FriendshipsState> emit) async {
 
+    final bool isReload = event.reload;
+
     try {
       debugPrint('Loading friendships...');
-      if(state.hasReachedMax) return;
+      if(state.hasReachedMax && !isReload) return;
 
-      final List<UserData> currentData = state.friendshipsUsers;
+      final int page = isReload ? 0 : state.page;
+      final List<UserData> currentData = isReload ? [] : state.friendshipsUsers;
 
       debugPrint(currentData.toString());
 
-      final List<FriendshipData> apiData = await _friendshipRepository.getAllFriendships(reload: event.reload, page: state.page);
+      final List<FriendshipData> apiData = await _friendshipRepository.getAllFriendships(reload: isReload, page: page);
 
-      debugPrint('Api data ${currentData.toString()}');
+      debugPrint('Api data ${apiData.toString()}');
 
-      final usersData = await _userRepository.getUsersByIds(apiData.map((f) => f.user).toList());
+      List<UserData> usersData = await _userRepository.getUsersByIds(apiData.map((f) => f.user).toList());
+
+      usersData.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
 
       debugPrint('User data ${usersData.toString()}');
 
-      bool hasReachedMax = state.hasReachedMax;
+      bool hasReachedMax = false;
+
+      debugPrint('Api data length ${apiData.length}');
 
       if (apiData.length < 20) {
         hasReachedMax = true;
@@ -47,7 +54,7 @@ class FriendshipsBloc extends Bloc<FriendshipsEvent, FriendshipsState> {
           friendshipsUsers: [...currentData, ...usersData],
           hasReachedMax: hasReachedMax,
           status: ListStatus.success,
-          page: state.page + 1
+          page: page + 1
         )
       );
 
