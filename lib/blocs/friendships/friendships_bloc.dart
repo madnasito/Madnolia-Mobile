@@ -76,7 +76,7 @@ class FriendshipsBloc extends Bloc<FriendshipsEvent, FriendshipsState> {
         friendshipsUsers: [],
         hasReachedMax: false,
         status: ListStatus.initial,
-        page: 0
+        page: 1
       )
     );
   }

@@ -11,7 +11,7 @@ class FriendshipsState extends Equatable {
     this.friendshipsUsers = const <UserData>[],
     this.hasReachedMax = false,
     this.status = ListStatus.initial,
-    this.page = 0,
+    this.page = 1,
   });
 
   FriendshipsState copyWith({

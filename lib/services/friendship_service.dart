@@ -9,7 +9,7 @@ class FriendshipService {
 
   final String baseUrl = '${dotenv.get("API_URL")}/friendship';
 
-  Future<List<Friendship>> getAllFriendships({int page = 0}) async {
+  Future<List<Friendship>> getAllFriendships({int page = 1}) async {
     try {
       final url = "$baseUrl/all";
 

@@ -12,11 +12,11 @@ class FriendshipRepository {
 
   final friendshipService = FriendshipService();
 
-  Future<List<FriendshipData>> getAllFriendships({bool reload = false, page = 0 }) async {
+  Future<List<FriendshipData>> getAllFriendships({bool reload = false, page = 1 }) async {
     try {
       final now = DateTime.now();
       debugPrint('Getting friendships from repository, page: $page, reload: $reload');
-      int offset = page * 20;
+      int offset = (page - 1) * 20;
 
       // // If not forcing a reload, check for fresh data in the local database first.
       // if (!reload) {
