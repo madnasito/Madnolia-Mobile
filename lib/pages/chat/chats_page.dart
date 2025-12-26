@@ -85,7 +85,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
 
     // Initialize if needed
     if (chatsBloc.state.status == ListStatus.initial) {
-      chatsBloc.add(UserChatsFetched());
+      chatsBloc.add(UserChatsFetched(reload: true));
       chatsBloc.add(WatchUserChats());
     }    
   }
