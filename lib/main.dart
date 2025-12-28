@@ -8,7 +8,6 @@ import 'package:madnolia/types/app_lifecycle_state.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/game_data/game_data_bloc.dart';
-import 'package:madnolia/blocs/message_provider.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
@@ -16,13 +15,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart' show GlobalCupertinoLocalizations, GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
 import 'package:madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+ import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +32,10 @@ void main() async {
   
   // Load environment variables first
   (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   
   
   serviceLocatorInit();
@@ -52,6 +58,7 @@ void main() async {
     fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
     supportedLocales: supportedLangs,
   );
+
   
   try {
     if(await getToken() is String) {
@@ -77,6 +84,21 @@ void main() async {
 
   // Inicializar el observer del ciclo de vida
   AppLifecycleManager().initialize();
+
+  // Get current app version
+  final packageInfo = await PackageInfo.fromPlatform();
+  final currentVersion = packageInfo.version;
+  
+
+  debugPrint('Current app version: $currentVersion');
+
+  // Fetch remote config
+  final remoteConfig = FirebaseRemoteConfig.instance;
+  await remoteConfig.fetchAndActivate();
+  final forceUpdateVersion = remoteConfig.getString('force_update_for_version_mobile');
+
+
+  debugPrint('Force update version from remote config: $forceUpdateVersion');
 
   runApp(LocalizedApp(delegate, const AppWrapper()));
 }
@@ -113,6 +135,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var localizationDelegate = LocalizedApp.of(context).delegate;
+
     return LocalizationProvider(
       state: LocalizationProvider.of(context).state,
       
@@ -130,28 +153,37 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
       ],
-      child:MessageProvider(
-        child: Portal(
-          child: MaterialApp.router(
-            theme: ThemeData(
-              brightness: Brightness.dark,
+      child: MaterialApp.router(
+              theme: ThemeData(
+                brightness: Brightness.dark,
+              ),
+              title: 'madnolia',
+              routerConfig: router,
+              localizationsDelegates: [
+                GlobalCupertinoLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                localizationDelegate
+              ],
+              supportedLocales: localizationDelegate.supportedLocales,
+              locale: localizationDelegate.currentLocale,
+              key: navigatorKey,
             ),
-            title: 'madnolia',
-            routerConfig: router,
-            localizationsDelegates: [
-              GlobalCupertinoLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              localizationDelegate
-            ],
-            supportedLocales: localizationDelegate.supportedLocales,
-            locale: localizationDelegate.currentLocale,
-            key: navigatorKey,
-          ),
         ),
-          ),
-        ),
-      
     );
     }
 }
+
+// A simple app that only shows the upgrader screen.
+// class ForcedUpdateApp extends StatelessWidget {
+//   const ForcedUpdateApp({super.key});
+
+//    @override
+//    Widget build(BuildContext context) {
+//      return MaterialApp(
+//        home: UpgradeAlert(
+//          child: Scaffold(body: Center(child: Text('Checking for updates...'))),
+//        ),
+//      );
+//    }
+//  }

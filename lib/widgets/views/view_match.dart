@@ -14,6 +14,8 @@ import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
 import '../../enums/chat_message_type.enum.dart';
 import '../molecules/chat/molecule_match_chat_input.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
+
 
 class ViewMatch extends StatefulWidget {
   final MatchData match;
@@ -87,20 +89,22 @@ class _ViewMatchState extends State<ViewMatch> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildMatchHeader(),
-        Expanded(child: MoleculeRoomMessages(room: _match.id)),
-        MoleculeMatchChatInput(
-          match: _match,
-          conversation: _match.id, messageType: ChatMessageType.match,
-          onMatchUpdated: (newMatch) {
-            setState(() {
-              _match = newMatch;
-            });
-          },
-        ),
-      ],
+    return Portal(
+      child: Column(
+        children: [
+          _buildMatchHeader(),
+          Expanded(child: MoleculeRoomMessages(room: _match.id)),
+          MoleculeMatchChatInput(
+            match: _match,
+            conversation: _match.id, messageType: ChatMessageType.match,
+            onMatchUpdated: (newMatch) {
+              setState(() {
+                _match = newMatch;
+              });
+            },
+          ),
+        ],
+      ),
     );
   }
 
