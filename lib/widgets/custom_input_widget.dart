@@ -89,7 +89,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       focusColor: Colors.yellow,
       elevation: 20,
       isDense: true,
-      value: widget.value,
+      initialValue: widget.value,
       style: const TextStyle(
         decoration: TextDecoration.underline,
         fontSize: 15,
