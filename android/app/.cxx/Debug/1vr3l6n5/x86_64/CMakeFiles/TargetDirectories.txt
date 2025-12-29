@@ -1,2 +1,0 @@
-/home/madna/Documents/Madnolia/madnolia-mobile/android/app/.cxx/Debug/1vr3l6n5/x86_64/CMakeFiles/edit_cache.dir
-/home/madna/Documents/Madnolia/madnolia-mobile/android/app/.cxx/Debug/1vr3l6n5/x86_64/CMakeFiles/rebuild_cache.dir

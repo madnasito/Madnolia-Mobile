@@ -1,2 +1,0 @@
-/home/madna/Documents/Madnolia/madnolia-mobile/android/app/.cxx/RelWithDebInfo/605i3w5e/armeabi-v7a/CMakeFiles/edit_cache.dir
-/home/madna/Documents/Madnolia/madnolia-mobile/android/app/.cxx/RelWithDebInfo/605i3w5e/armeabi-v7a/CMakeFiles/rebuild_cache.dir
