@@ -98,8 +98,7 @@ class AtomProfilePicture extends StatelessWidget {
                                       error is ClientException
                                           ? SizedBox()
                                           : Text(
-                                              translate(
-                                                  'ERRORS.SERVER.IMAGE_DATA'),
+                                              t.ERRORS.SERVER.IMAGE_DATA,
                                               style:
                                                   TextStyle(color: Colors.red),
                                             )

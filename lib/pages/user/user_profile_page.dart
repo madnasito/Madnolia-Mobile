@@ -123,7 +123,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                   icon: Icons.description_outlined,
                                                   validator: FormBuilderValidators.compose([
                                                     FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
-                                                    FormBuilderValidators.maxLength(100, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '100'}))
+                                                    FormBuilderValidators.maxLength(100, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: 100)),
                                                   ]),
                                                 ),
                                                 const SizedBox(height: 20),
