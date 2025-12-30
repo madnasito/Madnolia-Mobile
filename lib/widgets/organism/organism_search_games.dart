@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/widgets/atoms/input/atom_search_input.dart';
 
 class OrganismSearchGames extends StatelessWidget {
@@ -18,7 +18,7 @@ class OrganismSearchGames extends StatelessWidget {
             child: AtomSearchInput(
               searchController: searchController,
               placeholder:
-                translate("CREATE_MATCH.SEARCH_GAME"),
+                t.CREATE_MATCH.SEARCH_GAME,
               onChanged: (value) {},
             ),
           )

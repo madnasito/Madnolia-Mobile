@@ -1,6 +1,6 @@
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,8 +46,8 @@ class AtomMyIndividualMessage extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 8.0),
                 child: ExpandableText(
                   message.content,
-                  expandText: "↓ ${translate('UTILS.SHOW_MORE')}",
-                  collapseText: "↑ ${translate('UTILS.SHOW_LESS')}",
+                  expandText: "↓ ${t.UTILS.SHOW_MORE}",
+                  collapseText: "↑ ${t.UTILS.SHOW_LESS}",
                   maxLines: 6,
                   animation: true,
                   collapseOnTextTap: true,

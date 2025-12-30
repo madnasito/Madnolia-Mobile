@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 
 void showAlert(BuildContext context, String message) {
   showDialog(
@@ -41,10 +41,10 @@ void showErrorServerAlert(BuildContext context, Map resp){
 
   if( resp['message'] is String){
     String message = resp["message"];
-    showAlert(context, translate("ERRORS.SERVER.$message"));
+    showAlert(context, t.ERRORS.SERVER.$message);
   }else if(resp['message'] is List){
     String message = resp["message"][0];
-    showAlert(context, translate("ERRORS.SERVER.$message"));
+    showAlert(context, t.ERRORS.SERVER.$message);
   } else {
     showAlert(context, resp['message'][0]);
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/database/repository_manager.dart';
@@ -42,7 +42,7 @@ class UserChatPage extends StatelessWidget {
                   ),
                 );
               } else if(snapshot.hasError) {
-                return Center(child: Text(translate('CHAT.ERRORS.LOADING_CHAT')));
+                return Center(child: Text(t.CHAT.ERRORS.LOADING_CHAT));
               } else {
                 return Center(heightFactor: 2, child: CircularProgressIndicator());
               }

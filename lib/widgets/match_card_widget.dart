@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:flutter/material.dart';
@@ -73,19 +73,19 @@ class MatchCard extends StatelessWidget {
     switch (data.match.status) {
       case MatchStatus.waiting:
         statusColor = Colors.amberAccent; // Color para "en espera"
-        statusText = translate('MATCH.STATUS.WAITING');
+        statusText = t.MATCH.STATUS.WAITING;
         break;
       case MatchStatus.running:
         statusColor = Colors.greenAccent; // Color para "en curso"
-        statusText = translate('MATCH.STATUS.RUNNING');
+        statusText = t.MATCH.STATUS.RUNNING;
         break;
       case MatchStatus.finished:
         statusColor = Colors.blueGrey; // Color para "terminado"
-        statusText = translate('MATCH.STATUS.FINISHED');
+        statusText = t.MATCH.STATUS.FINISHED;
         break;
       case MatchStatus.cancelled:
         statusColor = Colors.redAccent; // Color para "cancelado"
-        statusText = translate('MATCH.STATUS.CANCELLED');
+        statusText = t.MATCH.STATUS.CANCELLED;
         break;
     }
 

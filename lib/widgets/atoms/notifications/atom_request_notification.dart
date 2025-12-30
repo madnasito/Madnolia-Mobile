@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImageProvider;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import '../../../models/notification/notification_details.dart';
 
 class AtomRequestNotification extends StatelessWidget {
@@ -49,7 +49,7 @@ class AtomRequestNotification extends StatelessWidget {
               Text("@${data.user?.username}", textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: const Color.fromARGB(255, 158, 157, 80)),)
             ],
           ),
-          content:  Text(translate('NOTIFICATIONS.ACCEPT_REQUEST_TITLE'), textAlign: TextAlign.center,),
+          content:  Text(t.NOTIFICATIONS.ACCEPT_REQUEST_TITLE, textAlign: TextAlign.center,),
           actions: [
             TextButton(
               onPressed: () {
@@ -57,7 +57,7 @@ class AtomRequestNotification extends StatelessWidget {
                 backgroundService.invoke('reject_connection', {'user': data.user?.id});
                 Navigator.pop(context, 'Cancel');
               } ,
-              child: Text(translate('UTILS.REJECT'), style: TextStyle(color: Colors.redAccent)),
+              child: Text(t.UTILS.REJECT, style: TextStyle(color: Colors.redAccent)),
             ),
               TextButton(
                 onPressed: () {
@@ -65,7 +65,7 @@ class AtomRequestNotification extends StatelessWidget {
                   backgroundService.invoke('accept_connection', {'user': data.user?.id});
                   Navigator.pop(context, 'OK');
                   },
-                child: Text(translate('UTILS.ACCEPT'), style: TextStyle(color: Colors.greenAccent)),
+                child: Text(t.UTILS.ACCEPT, style: TextStyle(color: Colors.greenAccent)),
               ),
           ],
         );

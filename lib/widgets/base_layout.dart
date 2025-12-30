@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
@@ -101,12 +101,12 @@ class BaseLayout extends StatelessWidget {
                 const SizedBox(height: 230),
                 _MenuButton(
                   icon: Icon(Icons.bolt_outlined, size: 40,color: Colors.white),
-                  title: translate("HEADER.MATCH"),
+                  title: t.HEADER.MATCH,
                   route: "/new",
                 ),
                 _MenuButton(
                   icon: Icon(CupertinoIcons.gamecontroller, size: 40, color: Colors.white),
-                  title: translate('MATCHES.TITLE'),
+                  title: t.MATCHES.TITLE,
                   route: "/matches",
                 ),
                 _MenuButton(
@@ -118,7 +118,7 @@ class BaseLayout extends StatelessWidget {
                   ] 
                   ),
                   title:
-                      translate("HEADER.NOTIFICATIONS"),
+                      t.HEADER.NOTIFICATIONS,
                   route: "/notifications",
                 ),
                 _MenuButton(
@@ -136,7 +136,7 @@ class BaseLayout extends StatelessWidget {
                 ),
                 _MenuButton(
                     icon: Icon(Icons.person_outline_outlined, size: 40, color: Colors.white),
-                    title: translate("HEADER.PROFILE"),
+                    title: t.HEADER.PROFILE,
                     route: "/me"),
                 const SizedBox(height: 230),
               ],
@@ -172,7 +172,7 @@ class BaseLayout extends StatelessWidget {
                         size: 30,
                       ),
                       Text(
-                        translate('HEADER.LOGOUT'),
+                        t.HEADER.LOGOUT,
                         style: TextStyle(fontSize: 15),
                       )
                     ],

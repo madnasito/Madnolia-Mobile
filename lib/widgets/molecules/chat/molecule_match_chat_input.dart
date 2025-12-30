@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
@@ -43,7 +43,7 @@ class _MoleculeMatchChatInputState extends State<MoleculeMatchChatInput> {
         width: double.infinity,
         color: Colors.black87,
         padding: const EdgeInsets.all(16),
-        child: Text(translate('MATCH.MATCH_ENDED'), textAlign: TextAlign.center,),
+        child: Text(t.MATCH.MATCH_ENDED, textAlign: TextAlign.center,),
       );
     }
     

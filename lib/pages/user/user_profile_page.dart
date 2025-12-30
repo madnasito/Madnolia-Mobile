@@ -13,7 +13,7 @@ import 'package:madnolia/widgets/alert_widget.dart' show showErrorServerAlert, s
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_connection_button.dart';
 import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 
 class UserProfilePage extends StatefulWidget {
   final String id;
@@ -68,7 +68,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                               const Icon(Icons.flag, size: 24),
                                               const SizedBox(width: 8),
                                               Text(
-                                                '${translate("REPORTS.REPORT_TO")} ${user.name}',
+                                                '${t.REPORTS.REPORT_TO} ${user.name}',
                                                 style: const TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
@@ -84,10 +84,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                               children: [
                                                 FormBuilderDropdown<ReportType>(
                                                   validator: FormBuilderValidators.compose([
-                                                    FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                                                    FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
                                                   ]),
                                                   hint: Text(
-                                                    translate('REPORTS.SELECT_TYPE'),
+                                                    t.REPORTS.SELECT_TYPE,
                                                     style: const TextStyle(decoration: TextDecoration.none),
                                                   ),
                                                   dropdownColor: Colors.black54,
@@ -108,21 +108,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                   items: [
                                                     DropdownMenuItem(
                                                       value: ReportType.spam,
-                                                      child: Text(translate('REPORTS.SPAM'), style: TextStyle(decoration: TextDecoration.none)),
+                                                      child: Text(t.REPORTS.SPAM, style: TextStyle(decoration: TextDecoration.none)),
                                                     ),
                                                     DropdownMenuItem(
                                                       value: ReportType.childAbuse,
-                                                      child: Text(translate('REPORTS.CHILD_ABUSE'), style: TextStyle(decoration: TextDecoration.none)),
+                                                      child: Text(t.REPORTS.CHILD_ABUSE, style: TextStyle(decoration: TextDecoration.none)),
                                                     ),
                                                   ],
                                                 ),
                                                 const SizedBox(height: 20),
                                                 MoleculeTextField(
                                                   name: 'description',
-                                                  label: translate('UTILS.DESCRIPTION'),
+                                                  label: t.UTILS.DESCRIPTION,
                                                   icon: Icons.description_outlined,
                                                   validator: FormBuilderValidators.compose([
-                                                    FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                                                    FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
                                                     FormBuilderValidators.maxLength(100, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '100'}))
                                                   ]),
                                                 ),
@@ -131,7 +131,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                   allowMultiple: false,
                                                   decoration: InputDecoration(
                                                     prefixIcon: const Icon(Icons.image_outlined),
-                                                    labelText: translate('UTILS.FILE'),
+                                                    labelText: t.UTILS.FILE,
                                                     disabledBorder: InputBorder.none,
                                                     errorBorder: errorBorder,
                                                     border: defaultBorder,
@@ -141,7 +141,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                   name: 'media',
                                                   validator: FormBuilderValidators.compose(
                                                     [
-                                                      FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED'))
+                                                      FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED)
                                                     ]
                                                   ),
                                                   previewImages: true,
@@ -151,7 +151,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                       selector: Row(
                                                         children: [
                                                           Icon(Icons.attach_file_rounded),
-                                                          Text(translate('UTILS.SELECT_FILE'))
+                                                          Text(t.UTILS.SELECT_FILE)
                                                         ],
                                                       ),
                                                     ),
@@ -191,7 +191,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
                                                         if(context.mounted) {
                                                           Navigator.of(context).pop();
-                                                          showSuccesfulAlert(context, translate('REPORTS.CREATED'));
+                                                          showSuccesfulAlert(context, t.REPORTS.CREATED);
                                                         }
                                                       } catch (e) {
                                                         if(context.mounted) {
@@ -221,7 +221,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                               color: Colors.white,
                                                             ),
                                                           )
-                                                        : Text(translate("REPORTS.SUBMIT")),
+                                                        : Text(t.REPORTS.SUBMIT),
                                                   ),
                                                 ),
                                               ],
@@ -244,7 +244,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       children: [
                         Icon(Icons.flag, color: Colors.red),
                         SizedBox(width: 8),
-                        Text(translate('REPORTS.REPORT_USER')),
+                        Text(t.REPORTS.REPORT_USER),
                       ],
                     ),
                   ),
@@ -252,7 +252,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Center(child: Text(translate('ERRORS.LOCAL.LOADING_USER')));
+            return Center(child: Text(t.ERRORS.LOCAL.LOADING_USER));
           } else {
             return const Center(child: CircularProgressIndicator());
           }

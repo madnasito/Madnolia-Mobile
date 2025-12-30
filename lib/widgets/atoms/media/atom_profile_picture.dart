@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:http/http.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -43,7 +43,7 @@ class AtomProfilePicture extends StatelessWidget {
                 hideBottomControls: true,
               ),
               IOSUiSettings(
-                title: translate('PROFILE.USER_PAGE.CROP_IMAGE'),
+                title: t.PROFILE.USER_PAGE.CROP_IMAGE,
                 aspectRatioLockEnabled: true,
               ),
             ],

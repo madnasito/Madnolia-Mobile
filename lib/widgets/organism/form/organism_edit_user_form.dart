@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
@@ -42,11 +42,11 @@ class OrganismEditUserForm extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
               name: "name",
-              label: translate("FORM.INPUT.NAME"),
+              label: t.FORM.INPUT.NAME,
               icon: Icons.abc_rounded,
               initialValue: nameController.text,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
                 FormBuilderValidators.minLength(1, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '1'})),
                 FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'})) 
               ]),
@@ -56,12 +56,12 @@ class OrganismEditUserForm extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
               name: "username",
-              label: translate("FORM.INPUT.USERNAME"),
+              label: t.FORM.INPUT.USERNAME,
               icon: Icons.account_circle_outlined,
               initialValue: usernameController.text,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
-                FormBuilderValidators.username(errorText: translate('FORM.VALIDATIONS.USERNAME_INVALID')),
+                FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
+                FormBuilderValidators.username(errorText: t.FORM.VALIDATIONS.USERNAME_INVALID),
                 // FormBuilderValidators.notEqual(notValidUser)
               ]),
             ),
@@ -70,13 +70,13 @@ class OrganismEditUserForm extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
               name: "email",
-              label: translate("FORM.INPUT.EMAIL"),
+              label: t.FORM.INPUT.EMAIL,
               icon: Icons.email_outlined,
               initialValue: emailController.text,
               keyboardType: TextInputType.emailAddress,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
-                FormBuilderValidators.email(errorText: translate('FORM.VALIDATIONS.INVALID_EMAIL')),
+                FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
+                FormBuilderValidators.email(errorText: t.FORM.VALIDATIONS.INVALID_EMAIL),
                 // FormBuilderValidators.notEqual(notValidEmail)
               ])
             ),
@@ -88,7 +88,7 @@ class OrganismEditUserForm extends StatelessWidget {
     // icon: Icons.shield, // O Icons.visibility, o Icons.toggle_on
     
     name: 'availability',
-    label: translate('PROFILE.USER_PAGE.INVITATIONS.TITLE'),
+    label: t.PROFILE.USER_PAGE.INVITATIONS.TITLE,
     items: availabilityOptions.map((option) {
       // CAMBIO 2: Items con estilo neón y más visuales.
       return DropdownMenuItem(
@@ -103,7 +103,7 @@ class OrganismEditUserForm extends StatelessWidget {
             ),
             const SizedBox(width: 12), 
             Text(
-              translate('PROFILE.USER_PAGE.INVITATIONS.${option.name.toUpperCase()}')
+              t.PROFILE.USER_PAGE.INVITATIONS.${option.name.toUpperCase()}
             ),
           ],
         ),
@@ -115,7 +115,7 @@ class OrganismEditUserForm extends StatelessWidget {
 
           StatefulBuilder(
             builder: (context, setState) =>  MoleculeFormButton(
-              text: translate('PROFILE.USER_PAGE.UPDATE'),
+              text: t.PROFILE.USER_PAGE.UPDATE,
               isLoading: loading,
               onPressed: () async {
                 try {
@@ -139,7 +139,7 @@ class OrganismEditUserForm extends StatelessWidget {
                   final userBloc = context.read<UserBloc>();
                   final platformGamesBloc = context.read<PlatformGamesBloc>();
             
-                  Toast.show(translate("PROFILE.USER_PAGE.UPDATED"), gravity: 20, duration: 2 );
+                  Toast.show(t.PROFILE.USER_PAGE.UPDATED, gravity: 20, duration: 2 );
             
                   userBloc.loadInfo(newUser);
                   

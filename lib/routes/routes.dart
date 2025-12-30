@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/pages/auth/recover_password_page.dart';
 import 'package:madnolia/pages/auth/recover_password_token_page.dart';
 import 'package:madnolia/pages/chat/user_chat_page.dart';
@@ -178,7 +178,7 @@ final GoRouter router = GoRouter(
                 if (snapshot.hasData) {
                   return MatchPage(id: state.pathParameters['id'].toString());
                 } else if(snapshot.hasError){
-                  return Center(child: Text(translate('MATCH.ERROR_LOADING')));
+                  return Center(child: Text(t.MATCH.ERROR_LOADING));
                 }else {
                   return Center(child: CircularProgressIndicator(),);
                 }

@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/style/button_style.dart';
 import 'package:madnolia/style/text_style.dart';
@@ -42,13 +42,13 @@ class HomePage extends StatelessWidget {
                           children: [
                             TextButtonMolecule(
                               onPressed: () => context.go("/login"),
-                              text: translate("HEADER.LOGIN"),
+                              text: t.HEADER.LOGIN,
                               textStye: yellowTextStyle,
                               buttonStyle: borderedYellowStyle
                             ),
                             TextButtonMolecule(
                               onPressed: () => context.go("/register"),
-                              text: translate("HEADER.REGISTER"),
+                              text: t.HEADER.REGISTER,
                               textStye: blueTextStyle,
                               buttonStyle: borderedBlueStyle
                             )
@@ -56,12 +56,12 @@ class HomePage extends StatelessWidget {
                         )
                       ])),
                   AtomStyledText(
-                    text: translate("PRESENTATION.TITLE"),
+                    text: t.PRESENTATION.TITLE,
                     style: presentationTitle,
                     textAlign: TextAlign.right),
                   const SizedBox(height: 30),
                   AtomStyledText(
-                    text: translate("PRESENTATION.SUBTITLE"),
+                    text: t.PRESENTATION.SUBTITLE,
                     style: presentationSubtitle,
                     textAlign: TextAlign.right),
                 ],

@@ -3,7 +3,7 @@ import 'dart:math' as math show min;
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:madnolia/style/text_style.dart';
@@ -86,7 +86,7 @@ class _MatchesPageState extends State<MatchesPage> {
               children: [
                 const SizedBox(height: 10),
                 AtomStyledText(
-                  text: translate("PROFILE.MATCHES"),
+                  text: t.PROFILE.MATCHES,
                   style: neonTitleText,
                   textAlign: TextAlign.center,
                 ),

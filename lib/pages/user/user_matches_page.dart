@@ -1,7 +1,7 @@
 // import 'package:madnolia/models/match/match_with_game_model.dart';
 // import 'package:madnolia/services/match_service.dart';
 // import 'package:flutter/material.dart';
-// import 'package:flutter_translate/flutter_translate.dart';
+// import 'package:madnolia/i18n/strings.g.dart';
 // import 'package:go_router/go_router.dart';
 // import 'package:madnolia/style/text_style.dart';
 // import 'package:madnolia/widgets/alert_widget.dart';
@@ -25,7 +25,7 @@
 //               Container(
 //                 padding: const EdgeInsets.all(20),
 //                 width: double.infinity,
-//                 child: CenterTitleAtom(text: translate("PROFILE.MATCHES_PAGE.TITLE"), textStyle: neonTitleText,),
+//                 child: CenterTitleAtom(text: t.PROFILE.MATCHES_PAGE.TITLE, textStyle: neonTitleText,),
 //               ),
 //               FutureBuilder(
 //                 future: MatchService().getUserMatches(),

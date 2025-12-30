@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 
 import '../../blocs/friendships/friendships_bloc.dart';
 import '../../enums/list_status.enum.dart';
@@ -30,7 +30,7 @@ class _OrganismFriendshipsState extends State<OrganismFriendships> {
         return const Center(child: CircularProgressIndicator());
       case ListStatus.failure:
         if (friendshipsBloc.state.friendshipsUsers.isEmpty) {
-          return Center(child: Text(translate('FRIENDS.ERROR_LOADING')));
+          return Center(child: Text(t.FRIENDS.ERROR_LOADING));
         } else {
           return const MoleculeFriendshipsUsersList();
         }
@@ -38,7 +38,7 @@ class _OrganismFriendshipsState extends State<OrganismFriendships> {
         if (friendshipsBloc.state.friendshipsUsers.isNotEmpty) {
           return const MoleculeFriendshipsUsersList();
         } else {
-          return Center(child: Text(translate('FRIENDS.EMPTY')));
+          return Center(child: Text(t.FRIENDS.EMPTY));
         }
     }
   }

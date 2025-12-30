@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/utils/get_availability_data.dart';
@@ -62,7 +62,7 @@ class MoleculeMenuAvatar extends StatelessWidget {
                                 Icon(getIconForAvailability(availability), color: getColorForAvailability(availability), size: 15),
                                 const SizedBox(width: 12),
                                 Text(
-                                  translate("PROFILE.AVAILABILITY.${availability.name.toUpperCase()}"),
+                                  t.PROFILE.AVAILABILITY.${availability.name.toUpperCase()},
                                 ),
                               ],
                             ),
@@ -78,7 +78,7 @@ class MoleculeMenuAvatar extends StatelessWidget {
                                 Icon(getIconForAvailability(availability), color: getColorForAvailability(availability), size: 15),
                                 const SizedBox(width: 12),
                                 Text(
-                                  translate("PROFILE.AVAILABILITY.${availability.name.toUpperCase()}"),
+                                  t.PROFILE.AVAILABILITY.${availability.name.toUpperCase()},
                                 ),
                               ],
                             ),

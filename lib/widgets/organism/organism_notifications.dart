@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
 import 'package:madnolia/enums/list_status.enum.dart';
 
@@ -25,11 +25,11 @@ class OrganismNotifications extends StatelessWidget {
           
           case ListStatus.success:
             // Message when there is no notification
-            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.EMPTY"))));
+            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.NOTIFICATIONS.EMPTY)));
             return NotificationsLoader();
           
           case ListStatus.failure:
-            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(translate("NOTIFICATIONS.ERROR_LOADING"))));
+            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.NOTIFICATIONS.ERROR_LOADING)));
             return NotificationsLoader();
         }
       },

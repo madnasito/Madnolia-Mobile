@@ -199,14 +199,12 @@ class _TranslationsCreateMatchEs implements TranslationsCreateMatchEn {
 	@override String get MATCH_CREATED => '¡Partida creada!';
 	@override String get DATE_ERROR => 'Cree una fecha y hora correctas';
 	@override String get TITLE_EMPTY => 'Escriba el titulo';
-	@override String get DURATION => 'Duración: {duration} minutos';
+	@override String DURATION({required Object duration}) => 'Duración: ${duration} minutos';
   
    @override
-   // TODO: implement ERROR
    String get ERROR => throw UnimplementedError();
   
    @override
-   // TODO: implement UPLOADING_MESSAGE
    String get UPLOADING_MESSAGE => throw UnimplementedError();
 }
 
@@ -274,7 +272,7 @@ class _TranslationsConnectionsEs implements TranslationsConnectionsEn {
 	@override String get EMPTY => 'Sin conexiones';
 	@override String get LOADING => 'Cargando conexiones';
 	@override late final _TranslationsConnectionsErrorsEs ERRORS = _TranslationsConnectionsErrorsEs._(_root);
-	@override String get HAVE_A_REQUEST => 'Tienes una solicitud para {name}';
+	@override String HAVE_A_REQUEST({required Object name}) => 'Tienes una solicitud para ${name}';
 	@override late final _TranslationsConnectionsRequestsEs REQUESTS = _TranslationsConnectionsRequestsEs._(_root);
 }
 
@@ -302,7 +300,7 @@ class _TranslationsChatEs implements TranslationsChatEn {
 	@override String get MESSAGES => 'Mensajes';
 	@override String get MESSAGE => 'Mensaje';
 	@override String get NO_MESSAGES => 'Sin mensajes';
-	@override String get SAY_HI_TO => 'Di hola a {name}';
+	@override String SAY_HI_TO({required Object name}) => 'Di hola a ${name}';
 	@override String get SAY_HI => 'Saluda';
 	@override late final _TranslationsChatErrorsEs ERRORS = _TranslationsChatErrorsEs._(_root);
 }
@@ -333,11 +331,11 @@ class _TranslationsNotificationsEs implements TranslationsNotificationsEn {
 	@override String get ERROR_LOADING => 'Error cargando notificaciones';
 	@override String get MATCH_INVITATION => 'Invitacion a partida';
 	@override String get INVITED_TO => 'Fuiste invitado a:';
-	@override String get CONNECTION_REQUEST => '{name} quiere conectar contigo';
+	@override String CONNECTION_REQUEST({required Object name}) => '${name} quiere conectar contigo';
 	@override String get ACCEPT_REQUEST_TITLE => '¿Aceptar solicitud?';
 	@override String get INVITATION_TO_MATCH => 'Tienes una invitacion para: ';
 	@override String get MATCH_READY => 'Partida lista';
-	@override String get MATCH_STARTED => '{name} ha empezado';
+	@override String MATCH_STARTED({required Object name}) => '${name} ha empezado';
 }
 
 // Path: FRIENDS
@@ -400,7 +398,7 @@ class _TranslationsUtilsEs implements TranslationsUtilsEn {
 	@override String get SELECT_FILE => 'Seleccionar archivo';
 	@override String get FILE => 'Archivo';
 	@override String get RELOAD => 'Recargar';
-	@override String get RECOVERING_PASSWORD_FOR => 'Recuperando contraseña para {name}';
+	@override String RECOVERING_PASSWORD_FOR({required Object name}) => 'Recuperando contraseña para ${name}';
 	@override String get KEEPING_CONNECTIONS => 'Manteniendo conexiones activas';
 	@override String get ACCEPT => 'Aceptar';
 	@override String get CANCEL => 'Cancelar';
@@ -443,8 +441,8 @@ class _TranslationsShareEs implements TranslationsShareEn {
 
 	// Translations
 	@override String get TITLE => '⚡️ ¡Comparte esta partida!';
-	@override String get SUBJECT => '🎮 Juguemos {name}';
-	@override String get TEXT => '🎮 Juguemos {gameName} \n⚡️ Unete aqui: {match}';
+	@override String SUBJECT({required Object name}) => '🎮 Juguemos ${name}';
+	@override String TEXT({required Object gameName, required Object match}) => '🎮 Juguemos ${gameName} \n⚡️ Unete aqui: ${match}';
 }
 
 // Path: REGISTER.VALIDATIONS
@@ -504,9 +502,9 @@ class _TranslationsFormValidationsEs implements TranslationsFormValidationsEn {
 	@override String get INVALID_INPUT => 'Entrada no válida';
 	@override String get TOO_SHORT => 'Muy corto';
 	@override String get TOO_LONG => 'Muy largo';
-	@override String get MIN_LENGTH => 'Mínimo {count} caracteres';
-	@override String get MAX_LENGTH => 'Máximo {count} caracteres';
-	@override String get MIN_MAX_LENGTH => 'Entre {min} y {max} caracteres';
+	@override String MIN_LENGTH({required Object count}) => 'Mínimo ${count} caracteres';
+	@override String MAX_LENGTH({required Object count}) => 'Máximo ${count} caracteres';
+	@override String MIN_MAX_LENGTH({required Object min, required Object max}) => 'Entre ${min} y ${max} caracteres';
 	@override String get ONLY_LETTERS => 'Solo letras permitidas';
 	@override String get ONLY_NUMBERS => 'Solo números permitidos';
 	@override String get LETTERS_AND_NUMBERS => 'Solo letras y números permitidos';
@@ -519,7 +517,7 @@ class _TranslationsFormValidationsEs implements TranslationsFormValidationsEn {
 	@override String get INVALID_TIME => 'Hora no válida';
 	@override String get PASSWORDS_DONT_MATCH => 'Las contraseñas no coinciden';
 	@override String get PASSWORD_TOO_WEAK => 'Contraseña muy débil';
-	@override String get PASSWORD_MIN_LENGTH => 'La contraseña debe tener al menos {count} caracteres';
+	@override String PASSWORD_MIN_LENGTH({required Object count}) => 'La contraseña debe tener al menos ${count} caracteres';
 	@override String get PASSWORD_REQUIREMENTS => 'La contraseña debe incluir mayúsculas, minúsculas y números';
 	@override String get USERNAME_INVALID => 'Nombre de usuario no válido';
 	@override String get USERNAME_TOO_SHORT => 'Nombre de usuario muy corto';
@@ -529,13 +527,13 @@ class _TranslationsFormValidationsEs implements TranslationsFormValidationsEn {
 	@override String get INVALID_NAME => 'Nombre no válido';
 	@override String get NAME_TOO_LONG => 'Nombre muy largo';
 	@override String get INVALID_AGE => 'Edad no válida';
-	@override String get MIN_AGE => 'Edad mínima: {age} años';
-	@override String get MAX_AGE => 'Edad máxima: {age} años';
+	@override String MIN_AGE({required Object age}) => 'Edad mínima: ${age} años';
+	@override String MAX_AGE({required Object age}) => 'Edad máxima: ${age} años';
 	@override String get NUMERIC_ONLY => 'Solo valores numéricos';
 	@override String get POSITIVE_NUMBER => 'Debe ser un número positivo';
 	@override String get INVALID_RANGE => 'Valor fuera del rango permitido';
-	@override String get MIN_VALUE => 'Valor mínimo: {value}';
-	@override String get MAX_VALUE => 'Valor máximo: {value}';
+	@override String MIN_VALUE({required Object value}) => 'Valor mínimo: ${value}';
+	@override String MAX_VALUE({required Object value}) => 'Valor máximo: ${value}';
 	@override String get WHITESPACE_NOT_ALLOWED => 'No se permiten espacios en blanco';
 	@override String get MUST_CONTAIN_UPPERCASE => 'Debe contener al menos una mayúscula';
 	@override String get MUST_CONTAIN_LOWERCASE => 'Debe contener al menos una minúscula';
@@ -620,7 +618,7 @@ class _TranslationsConnectionsRequestsEs implements TranslationsConnectionsReque
 	@override String get PENDING => 'Pendiente';
 	@override String get ACCEPT => 'Aceptar';
 	@override String get REJECT => 'Rechazar';
-	@override String get USER_WANTS_TO_CONNECT => '{name} quiere conectar contigo';
+	@override String USER_WANTS_TO_CONNECT({required Object name}) => '${name} quiere conectar contigo';
 	@override String get ACCEPT_REQUEST => '¿Aceptar solicitud?';
 	@override String get WANT_TO_CANCELL => '¿Deseas cancelar la solicitud?';
 	@override String get CANCEL => 'Cancelar solicitud';
@@ -842,9 +840,9 @@ extension on TranslationsEs {
 			'FORM.VALIDATIONS.INVALID_INPUT' => 'Entrada no válida',
 			'FORM.VALIDATIONS.TOO_SHORT' => 'Muy corto',
 			'FORM.VALIDATIONS.TOO_LONG' => 'Muy largo',
-			'FORM.VALIDATIONS.MIN_LENGTH' => 'Mínimo {count} caracteres',
-			'FORM.VALIDATIONS.MAX_LENGTH' => 'Máximo {count} caracteres',
-			'FORM.VALIDATIONS.MIN_MAX_LENGTH' => 'Entre {min} y {max} caracteres',
+			'FORM.VALIDATIONS.MIN_LENGTH' => ({required Object count}) => 'Mínimo ${count} caracteres',
+			'FORM.VALIDATIONS.MAX_LENGTH' => ({required Object count}) => 'Máximo ${count} caracteres',
+			'FORM.VALIDATIONS.MIN_MAX_LENGTH' => ({required Object min, required Object max}) => 'Entre ${min} y ${max} caracteres',
 			'FORM.VALIDATIONS.ONLY_LETTERS' => 'Solo letras permitidas',
 			'FORM.VALIDATIONS.ONLY_NUMBERS' => 'Solo números permitidos',
 			'FORM.VALIDATIONS.LETTERS_AND_NUMBERS' => 'Solo letras y números permitidos',
@@ -857,7 +855,7 @@ extension on TranslationsEs {
 			'FORM.VALIDATIONS.INVALID_TIME' => 'Hora no válida',
 			'FORM.VALIDATIONS.PASSWORDS_DONT_MATCH' => 'Las contraseñas no coinciden',
 			'FORM.VALIDATIONS.PASSWORD_TOO_WEAK' => 'Contraseña muy débil',
-			'FORM.VALIDATIONS.PASSWORD_MIN_LENGTH' => 'La contraseña debe tener al menos {count} caracteres',
+			'FORM.VALIDATIONS.PASSWORD_MIN_LENGTH' => ({required Object count}) => 'La contraseña debe tener al menos ${count} caracteres',
 			'FORM.VALIDATIONS.PASSWORD_REQUIREMENTS' => 'La contraseña debe incluir mayúsculas, minúsculas y números',
 			'FORM.VALIDATIONS.USERNAME_INVALID' => 'Nombre de usuario no válido',
 			'FORM.VALIDATIONS.USERNAME_TOO_SHORT' => 'Nombre de usuario muy corto',
@@ -867,13 +865,13 @@ extension on TranslationsEs {
 			'FORM.VALIDATIONS.INVALID_NAME' => 'Nombre no válido',
 			'FORM.VALIDATIONS.NAME_TOO_LONG' => 'Nombre muy largo',
 			'FORM.VALIDATIONS.INVALID_AGE' => 'Edad no válida',
-			'FORM.VALIDATIONS.MIN_AGE' => 'Edad mínima: {age} años',
-			'FORM.VALIDATIONS.MAX_AGE' => 'Edad máxima: {age} años',
+			'FORM.VALIDATIONS.MIN_AGE' => ({required Object age}) => 'Edad mínima: ${age} años',
+			'FORM.VALIDATIONS.MAX_AGE' => ({required Object age}) => 'Edad máxima: ${age} años',
 			'FORM.VALIDATIONS.NUMERIC_ONLY' => 'Solo valores numéricos',
 			'FORM.VALIDATIONS.POSITIVE_NUMBER' => 'Debe ser un número positivo',
 			'FORM.VALIDATIONS.INVALID_RANGE' => 'Valor fuera del rango permitido',
-			'FORM.VALIDATIONS.MIN_VALUE' => 'Valor mínimo: {value}',
-			'FORM.VALIDATIONS.MAX_VALUE' => 'Valor máximo: {value}',
+			'FORM.VALIDATIONS.MIN_VALUE' => ({required Object value}) => 'Valor mínimo: ${value}',
+			'FORM.VALIDATIONS.MAX_VALUE' => ({required Object value}) => 'Valor máximo: ${value}',
 			'FORM.VALIDATIONS.WHITESPACE_NOT_ALLOWED' => 'No se permiten espacios en blanco',
 			'FORM.VALIDATIONS.MUST_CONTAIN_UPPERCASE' => 'Debe contener al menos una mayúscula',
 			'FORM.VALIDATIONS.MUST_CONTAIN_LOWERCASE' => 'Debe contener al menos una minúscula',
@@ -922,7 +920,7 @@ extension on TranslationsEs {
 			'CREATE_MATCH.MATCH_CREATED' => '¡Partida creada!',
 			'CREATE_MATCH.DATE_ERROR' => 'Cree una fecha y hora correctas',
 			'CREATE_MATCH.TITLE_EMPTY' => 'Escriba el titulo',
-			'CREATE_MATCH.DURATION' => 'Duración: {duration} minutos',
+			'CREATE_MATCH.DURATION' => ({required Object duration}) => 'Duración: ${duration} minutos',
 			'MATCH.MATCH_UPDATED' => 'Partida actualizada',
 			'MATCH.ERROR_LOADING' => 'Error cargando partida',
 			'MATCH.JOIN_TO_MATCH' => 'Unirse a la partida',
@@ -953,7 +951,7 @@ extension on TranslationsEs {
 			'CONNECTIONS.EMPTY' => 'Sin conexiones',
 			'CONNECTIONS.LOADING' => 'Cargando conexiones',
 			'CONNECTIONS.ERRORS.LOADING' => 'Error cargando conexiones',
-			'CONNECTIONS.HAVE_A_REQUEST' => 'Tienes una solicitud para {name}',
+			'CONNECTIONS.HAVE_A_REQUEST' => ({required Object name}) => 'Tienes una solicitud para ${name}',
 			'CONNECTIONS.REQUESTS.TITLE' => 'Solicitudes',
 			'CONNECTIONS.REQUESTS.ACCEPTED' => 'Aceptada',
 			'CONNECTIONS.REQUESTS.ADD' => 'Añadir',
@@ -962,7 +960,7 @@ extension on TranslationsEs {
 			'CONNECTIONS.REQUESTS.PENDING' => 'Pendiente',
 			'CONNECTIONS.REQUESTS.ACCEPT' => 'Aceptar',
 			'CONNECTIONS.REQUESTS.REJECT' => 'Rechazar',
-			'CONNECTIONS.REQUESTS.USER_WANTS_TO_CONNECT' => '{name} quiere conectar contigo',
+			'CONNECTIONS.REQUESTS.USER_WANTS_TO_CONNECT' => ({required Object name}) => '${name} quiere conectar contigo',
 			'CONNECTIONS.REQUESTS.ACCEPT_REQUEST' => '¿Aceptar solicitud?',
 			'CONNECTIONS.REQUESTS.WANT_TO_CANCELL' => '¿Deseas cancelar la solicitud?',
 			'CONNECTIONS.REQUESTS.CANCEL' => 'Cancelar solicitud',
@@ -974,7 +972,7 @@ extension on TranslationsEs {
 			'CHAT.MESSAGES' => 'Mensajes',
 			'CHAT.MESSAGE' => 'Mensaje',
 			'CHAT.NO_MESSAGES' => 'Sin mensajes',
-			'CHAT.SAY_HI_TO' => 'Di hola a {name}',
+			'CHAT.SAY_HI_TO' => ({required Object name}) => 'Di hola a ${name}',
 			'CHAT.SAY_HI' => 'Saluda',
 			'CHAT.ERRORS.LOADING' => 'Error cargando mensajes',
 			'CHAT.ERRORS.LOADING_CHAT' => 'Error cargando el chat',
@@ -991,11 +989,11 @@ extension on TranslationsEs {
 			'NOTIFICATIONS.ERROR_LOADING' => 'Error cargando notificaciones',
 			'NOTIFICATIONS.MATCH_INVITATION' => 'Invitacion a partida',
 			'NOTIFICATIONS.INVITED_TO' => 'Fuiste invitado a:',
-			'NOTIFICATIONS.CONNECTION_REQUEST' => '{name} quiere conectar contigo',
+			'NOTIFICATIONS.CONNECTION_REQUEST' => ({required Object name}) => '${name} quiere conectar contigo',
 			'NOTIFICATIONS.ACCEPT_REQUEST_TITLE' => '¿Aceptar solicitud?',
 			'NOTIFICATIONS.INVITATION_TO_MATCH' => 'Tienes una invitacion para: ',
 			'NOTIFICATIONS.MATCH_READY' => 'Partida lista',
-			'NOTIFICATIONS.MATCH_STARTED' => '{name} ha empezado',
+			'NOTIFICATIONS.MATCH_STARTED' => ({required Object name}) => '${name} ha empezado',
 			'FRIENDS.TITLE' => 'Amigos',
 			'FRIENDS.EMPTY' => 'Aun no tienes amigos',
 			'FRIENDS.ERROR_LOADING' => 'Error cargando amigos',
@@ -1043,7 +1041,7 @@ extension on TranslationsEs {
 			'UTILS.SELECT_FILE' => 'Seleccionar archivo',
 			'UTILS.FILE' => 'Archivo',
 			'UTILS.RELOAD' => 'Recargar',
-			'UTILS.RECOVERING_PASSWORD_FOR' => 'Recuperando contraseña para {name}',
+			'UTILS.RECOVERING_PASSWORD_FOR' => ({required Object name}) => 'Recuperando contraseña para ${name}',
 			'UTILS.KEEPING_CONNECTIONS' => 'Manteniendo conexiones activas',
 			'UTILS.ACCEPT' => 'Aceptar',
 			'UTILS.CANCEL' => 'Cancelar',
@@ -1075,8 +1073,8 @@ extension on TranslationsEs {
 			'ERRORS.LOCAL.LOADING_USERS' => 'Error cargando usuarios',
 			'ERRORS.LOCAL.LOADING_USER' => 'Error cargando usuario',
 			'SHARE.TITLE' => '⚡️ ¡Comparte esta partida!',
-			'SHARE.SUBJECT' => '🎮 Juguemos {name}',
-			'SHARE.TEXT' => '🎮 Juguemos {gameName} \n⚡️ Unete aqui: {match}',
+			'SHARE.SUBJECT' => ({required Object name}) => '🎮 Juguemos ${name}',
+			'SHARE.TEXT' => ({required Object gameName, required Object match}) => '🎮 Juguemos ${gameName} \n⚡️ Unete aqui: ${match}',
 			_ => null,
 		};
 	}

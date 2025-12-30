@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/services/auth_service.dart';
@@ -32,19 +32,19 @@ class _OrganismRecoverPasswordTokenFormState extends State<OrganismRecoverPasswo
       child: Column(
         children: [
           MoleculeTextField(
-            label: translate("FORM.INPUT.NEW_PASSWORD"),
+            label: t.FORM.INPUT.NEW_PASSWORD,
             name: "password",
             isPassword: true,
             icon: Icons.lock_outline_rounded,
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+              FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
               FormBuilderValidators.minLength(6, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '6'})),
-              FormBuilderValidators.maxLength(40, errorText: translate('FORM.VALIDATIONS.INVALID_LENGTH')) 
+              FormBuilderValidators.maxLength(40, errorText: t.FORM.VALIDATIONS.INVALID_LENGTH) 
             ])
           ),
           SizedBox(height: 15),
           MoleculeFormButton(
-            text: translate("FORM.BUTTONS.UPDATE_PASSWORD"), 
+            text: t.FORM.BUTTONS.UPDATE_PASSWORD, 
             color: Colors.transparent, 
             isLoading: _isLoading, // Pasamos el estado de carga al botón
             onPressed: () async {
@@ -92,7 +92,7 @@ class _OrganismRecoverPasswordTokenFormState extends State<OrganismRecoverPasswo
                     if(!context.mounted) return;
                     toastification.show(
                       context: context, // optional if you use ToastificationWrapper
-                      title: Text(translate("RECOVER_PASSWORD.PASSWORD_UPDATED")),
+                      title: Text(t.RECOVER_PASSWORD.PASSWORD_UPDATED),
                       autoCloseDuration: const Duration(seconds: 5),
                       style: ToastificationStyle.fillColored,
                     );

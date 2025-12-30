@@ -3,7 +3,7 @@
 // import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/enums/list_status.enum.dart';
@@ -24,7 +24,7 @@ class ChatsPage extends StatelessWidget {
           children: [
             const SizedBox(height: 10),
             CenterTitleAtom(
-              text: translate("CHAT.MESSAGES"), 
+              text: t.CHAT.MESSAGES, 
               textStyle: neonTitleText,
             ),
             const SizedBox(height: 10),
@@ -101,7 +101,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
           ? MoleculeUsersChats(usersChats: state.usersChats)
           : SingleChildScrollView(
             physics: AlwaysScrollableScrollPhysics(),
-            child: Center(child: Text(translate('CHAT.NO_MESSAGES'))
+            child: Center(child: Text(t.CHAT.NO_MESSAGES)
                     ),
           );
         } else if (state.status == ListStatus.failure && 
@@ -109,7 +109,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
           return SingleChildScrollView(
             
             physics: AlwaysScrollableScrollPhysics(),
-            child: Center(child: Text(translate('CHAT.ERRORS.LOADING'))));
+            child: Center(child: Text(t.CHAT.ERRORS.LOADING_CHAT)));
         } else {
           // Show existing chats even if there was a subsequent error
           return MoleculeUsersChats(usersChats: state.usersChats);

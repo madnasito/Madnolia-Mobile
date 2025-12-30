@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
@@ -46,7 +46,7 @@ class OrganismDeleteAccountButton extends StatelessWidget {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(translate("ALERT.YOU_SURE"), textAlign: TextAlign.center),
+                  Text(t.ALERT.YOU_SURE, textAlign: TextAlign.center),
                   const SizedBox(height: 20),
                   FormBuilder(
                     key: formKey, 
@@ -54,11 +54,11 @@ class OrganismDeleteAccountButton extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: MoleculeTextField(
                         name: 'password',
-                        label: translate("FORM.INPUT.PASSWORD"),
+                        label: t.FORM.INPUT.PASSWORD,
                         isPassword: true,
                         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+                          FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
                         ])
                       ),
                     ),
@@ -68,7 +68,7 @@ class OrganismDeleteAccountButton extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context), 
-                  child: Text(translate('ALERT.CANCEL'))
+                  child: Text(t.ALERT.CANCEL)
                 ),
                 TextButton(
                   onPressed: () async {
@@ -86,7 +86,7 @@ class OrganismDeleteAccountButton extends StatelessWidget {
                       // Corrección aquí: verifica correctamente la respuesta
                       if (resp['ok'] == true) {
                         Toast.show(
-                          translate("PROFILE.USER_PAGE.ACCOUNT_DELETED"),
+                          t.PROFILE.USER_PAGE.ACCOUNT_DELETED,
                           gravity: 20,
                           border: Border.all(color: Colors.red, width: 2),
                           duration: 5
@@ -112,7 +112,7 @@ class OrganismDeleteAccountButton extends StatelessWidget {
                     }
                   }, 
                   child: Text(
-                    translate("ALERT.DELETE_MY_ACCOUNT"), 
+                    t.ALERT.DELETE_MY_ACCOUNT, 
                     style: TextStyle(color: Colors.red),
                   )
                 )
@@ -122,7 +122,7 @@ class OrganismDeleteAccountButton extends StatelessWidget {
         );  
       }, 
       child: Text(
-        translate("PROFILE.USER_PAGE.DELETE_ACCOUNT"), 
+        t.PROFILE.USER_PAGE.DELETE_ACCOUNT, 
         style: TextStyle(color: Colors.redAccent),
       ),
     );

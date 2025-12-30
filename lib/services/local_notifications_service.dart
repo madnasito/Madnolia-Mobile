@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
@@ -148,7 +148,7 @@ class LocalNotificationsService {
 
       final Person me = Person(
         key: currentUserDb.id,
-        name: translate("UTILS.YOU"),
+        name: t.UTILS.YOU,
         icon: ByteArrayAndroidIcon(currentUserImage),
       );
 
@@ -186,12 +186,12 @@ class LocalNotificationsService {
           actions: [
             AndroidNotificationAction(
               message.id,
-              translate("FORM.INPUT.REPLY"),
-              inputs: [AndroidNotificationActionInput(label: translate("CHAT.MESSAGE"), allowFreeFormInput: true)],
+              t.FORM.INPUT.REPLY,
+              inputs: [AndroidNotificationActionInput(label: t.CHAT.MESSAGE, allowFreeFormInput: true)],
             ),
             AndroidNotificationAction(
               message.id,
-              translate("FORM.INPUT.MARK_AS_READ"),
+              t.FORM.INPUT.MARK_AS_READ,
             )
           ],
           styleInformation: MessagingStyleInformation(
@@ -280,10 +280,10 @@ class LocalNotificationsService {
             groupKey: "gfg",          
             playSound: true, 
             icon: 'ic_notifications',
-            subText: translate("NOTIFICATIONS.MATCH_INVITATION"),
+            subText: t.NOTIFICATIONS.MATCH_INVITATION,
             styleInformation: BigPictureStyleInformation(
               icon,
-              contentTitle: "${translate('NOTIFICATIONS.INVITED_TO')} ${invitation.name}",
+              contentTitle: "${t.NOTIFICATIONS.INVITED_TO} ${invitation.name}",
               summaryText: "@${userDb.username}",
             ),
             // styleInformation: BigPictureStyleInformation(bigPicture),
@@ -314,7 +314,7 @@ class LocalNotificationsService {
             priority: Priority.high),
       );
       await _notificationsPlugin.show(
-        id, translate('NOTIFICATIONS.MATCH_READY'),
+        id, t.NOTIFICATIONS.MATCH_READY,
         translate('NOTIFICATIONS.MATCH_STARTED', args: {'name': payload.title}),
         notificationDetails,
         payload: json.encode(matchDb.toJson()));

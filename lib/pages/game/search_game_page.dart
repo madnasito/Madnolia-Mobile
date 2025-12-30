@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/atoms/input/atom_search_input.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
@@ -50,7 +50,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
                 child: AtomSearchInput(
                   searchController: controller,
                   placeholder:
-                      translate("CREATE_MATCH.SEARCH_GAME"),
+                      t.CREATE_MATCH.SEARCH_GAME,
                   onChanged: (value) async {
                     debugPrint(controller.text);
                     counter++;
@@ -74,14 +74,14 @@ class _SearchGamePageState extends State<SearchGamePage> {
                     return Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [Text(translate('CREATE_MATCH.LOADING_RECOMENDATIONS')), CircularProgressIndicator()],),
+                        children: [Text(t.CREATE_MATCH.LOADING_RECOMENDATIONS), CircularProgressIndicator()],),
                     );
                   }else if(snapshot.data!.isNotEmpty){
                     return Expanded(
                       child:  Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(translate("RECOMMENDATIONS.FOR_YOU"), style: TextStyle(fontSize: 15),),
+                        Text(t.RECOMMENDATIONS.FOR_YOU, style: TextStyle(fontSize: 15),),
                         const SizedBox(height: 20),
                         Flexible(child: GamesListMolecule(
                           games: snapshot.data!,
@@ -95,7 +95,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: Text(translate('RECOMMENDATIONS.EMPTY'),
+                          child: Text(t.RECOMMENDATIONS.EMPTY,
                           textAlign: TextAlign.center
                           )
                         ),
@@ -135,11 +135,11 @@ class _SearchGamePageState extends State<SearchGamePage> {
                               : (controller.text.length > 3) ? 
                               Padding(
                                 padding: const EdgeInsets.all(12.0),
-                                child: Text(translate("CREATE_MATCH.EMPTY_SEARCH"), textAlign: TextAlign.center,)
+                                child: Text(t.CREATE_MATCH.EMPTY_SEARCH, textAlign: TextAlign.center,)
                               ) : 
                               Padding(
                                 padding: const EdgeInsets.all(12.0),
-                                child: Text(translate('CREATE_MATCH.SEARCH_HINT'), textAlign: TextAlign.center,)
+                                child: Text(t.CREATE_MATCH.SEARCH_HINT, textAlign: TextAlign.center,)
                               )
                             );
                         } else {

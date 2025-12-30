@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/organism/form/organism_login_form.dart';
 import 'package:madnolia/widgets/scaffolds/unloged_scaffold.dart';
-import '../../i18n/strings.g.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 
 import '../../widgets/atoms/text_atoms/center_title_atom.dart';
 
@@ -34,7 +34,7 @@ class LoginPage extends StatelessWidget {
               const SizedBox(height: 30),
               GestureDetector(
                 onTap: () => context.pushNamed('recover-password'),
-                child: FadeIn(delay: const Duration(milliseconds: 350),child: Text(translate("LOGIN.FORGOT_PASSWORD"), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue), ), )),
+                child: FadeIn(delay: const Duration(milliseconds: 350),child: Text(t.LOGIN.FORGOT_PASSWORD, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue), ), )),
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

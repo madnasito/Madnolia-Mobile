@@ -69,9 +69,9 @@
         "INVALID_INPUT": "Invalid input",
         "TOO_SHORT": "Too short",
         "TOO_LONG": "Too long",
-        "MIN_LENGTH": "Minimum {count} characters",
-        "MAX_LENGTH": "Maximum {count} characters",
-        "MIN_MAX_LENGTH": "Between {min} and {max} characters",
+        "MIN_LENGTH": "Minimum $count characters",
+        "MAX_LENGTH": "Maximum $count characters",
+        "MIN_MAX_LENGTH": "Between $min and $max characters",
         "ONLY_LETTERS": "Only letters allowed",
         "ONLY_NUMBERS": "Only numbers allowed",
         "LETTERS_AND_NUMBERS": "Only letters and numbers allowed",
@@ -84,7 +84,7 @@
         "INVALID_TIME": "Invalid time",
         "PASSWORDS_DONT_MATCH": "Passwords don't match",
         "PASSWORD_TOO_WEAK": "Password too weak",
-        "PASSWORD_MIN_LENGTH": "Password must be at least {count} characters",
+        "PASSWORD_MIN_LENGTH": "Password must be at least $count characters",
         "PASSWORD_REQUIREMENTS": "Password must include uppercase, lowercase and numbers",
         "USERNAME_INVALID": "Invalid username",
         "USERNAME_TOO_SHORT": "Username too short",
@@ -94,13 +94,13 @@
         "INVALID_NAME": "Invalid name",
         "NAME_TOO_LONG": "Name too long",
         "INVALID_AGE": "Invalid age",
-        "MIN_AGE": "Minimum age: {age} years",
-        "MAX_AGE": "Maximum age: {age} years",
+        "MIN_AGE": "Minimum age: $age years",
+        "MAX_AGE": "Maximum age: $age years",
         "NUMERIC_ONLY": "Numeric values only",
         "POSITIVE_NUMBER": "Must be a positive number",
         "INVALID_RANGE": "Value out of allowed range",
-        "MIN_VALUE": "Minimum value: {value}",
-        "MAX_VALUE": "Maximum value: {value}",
+        "MIN_VALUE": "Minimum value: $value",
+        "MAX_VALUE": "Maximum value: $value",
         "WHITESPACE_NOT_ALLOWED": "Whitespace not allowed",
         "MUST_CONTAIN_UPPERCASE": "Must contain at least one uppercase letter",
         "MUST_CONTAIN_LOWERCASE": "Must contain at least one lowercase letter",
@@ -163,7 +163,7 @@
       "UPLOADING_MESSAGE": "The match is creating",
       "ERROR": "Error creating the match",
       "TITLE_EMPTY": "Title is required",
-      "DURATION": "Duration: {duration} minutes"
+      "DURATION": "Duration: $duration minutes"
   },
   "MATCH": {
     "MATCH_UPDATED": "Match updated",
@@ -208,7 +208,7 @@
       "LOADING_ERROR": "Error loading connections",
       "NO_CONNECTIONS": "No connections found"
     },
-    "HAVE_A_REQUEST": "You have requested a connection to {name}",
+    "HAVE_A_REQUEST": "You have requested a connection to $name",
     "REQUESTS": {
       "TITLE": "Requests",
       "ACCEPTED": "Accepted",
@@ -218,7 +218,7 @@
       "PENDING": "Pending",
       "ACCEPT": "Accept",
       "REJECT": "Reject",
-      "USER_WANTS_TO_CONNECT": "{name} wants to connect with you",
+      "USER_WANTS_TO_CONNECT": "$name wants to connect with you",
       "ACCEPT_REQUEST": "Accept request?",
       "WANT_TO_CANCELL": "Do you want to cancel the request?",
       "CANCEL": "Cancel request"
@@ -237,7 +237,7 @@
     "MESSAGES": "Messages",
     "MESSAGE": "Message",
     "NO_MESSAGES": "No messages",
-    "SAY_HI_TO": "Say hi to {name}",
+    "SAY_HI_TO": "Say hi to $name",
     "SAY_HI": "Say hi",
     "ERRORS": {
       "LOADING_ERROR": "Error loading messages",
@@ -260,11 +260,11 @@
       "ERROR_LOADING": "Error loading notifications",
       "MATCH_INVITATION": "Match Invitation",
       "INVITED_TO": "You are invited to",
-      "CONNECTION_REQUEST": "{name} wants connect with you",
+      "CONNECTION_REQUEST": "$name wants connect with you",
       "ACCEPT_REQUEST_TITLE": "Accept request?",
       "INVITATION_TO_MATCH": "You have a new invitation to:",
       "MATCH_READY": "Match ready",
-      "MATCH_STARTED": "{name} has started"
+      "MATCH_STARTED": "$name has started"
   },
   "PROFILE":{
       "YOU": "You",
@@ -332,7 +332,7 @@
       "SELECT_FILE": "Select file",
       "FILE": "File",
       "RELOAD": "Reload",
-      "RECOVERING_PASSWORD_FOR": "Recovering password for {name}",
+      "RECOVERING_PASSWORD_FOR": "Recovering password for $name",
       "KEEPING_CONNECTIONS": "Keeping connections active",
       "ACCEPT": "Accept",
       "CANCEL": "Cancel",
@@ -376,8 +376,8 @@
   },
   "SHARE": {
     "TITLE": "⚡️ Share this match!",
-    "SUBJECT": "🎮 Let's play {name}",
-    "TEXT": "🎮 Let's play {gameName} \n⚡️ Join now here: {match}"
+    "SUBJECT": "🎮 Let's play $name",
+    "TEXT": "🎮 Let's play $gameName \n⚡️ Join now here: $match"
   }
 }
 

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
@@ -480,7 +480,7 @@ Future<FlutterBackgroundService> initializeService() async {
       autoStartOnBoot: false,
       notificationChannelId: 'silent_service_channel',
       initialNotificationTitle: 'Madnolia Service',
-      initialNotificationContent: translate('UTILS.KEEPING_CONNECTIONS'),
+      initialNotificationContent: t.UTILS.KEEPING_CONNECTIONS,
       foregroundServiceNotificationId: 888,
     ),
   );

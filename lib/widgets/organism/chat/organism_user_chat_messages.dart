@@ -3,7 +3,7 @@ import 'dart:async' show StreamSubscription;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
@@ -69,7 +69,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
 
         switch (state.status) {
           case ListStatus.failure:
-              return Center(child: Text(translate("CHAT.ERRORS.LOADING")));
+              return Center(child: Text(t.CHAT.ERRORS.LOADING));
           case ListStatus.initial:
             return const Center(child: CircularProgressIndicator());
           case ListStatus.success:
@@ -84,7 +84,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
                 ),
               );
             } else{
-              return Center(child: Text(translate('CHAT.SAY_HI')));
+              return Center(child: Text(t.CHAT.SAY_HI));
             }
           // default:
           //   return Center(child: Text('Say hi'));

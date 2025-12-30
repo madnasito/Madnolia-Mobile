@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/scaffolds/unloged_scaffold.dart';
 import '../../widgets/organism/form/organism_recover_password_form.dart' show OrganismRecoverPasswordForm;
@@ -34,7 +34,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
           ),
           SizedBox(height: 20),
-          CenterTitleAtom(text: translate("RECOVER_PASSWORD.TITLE")),
+          CenterTitleAtom(text: t.RECOVER_PASSWORD.TITLE),
           SizedBox(height: 20),
           OrganismRecoverPasswordForm()
         ],

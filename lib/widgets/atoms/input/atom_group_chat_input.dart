@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/database/database.dart' show UserData;
 import 'package:madnolia/database/repository_manager.dart';
 class AtomGroupChatInput extends StatefulWidget {
@@ -106,7 +106,7 @@ class _AtomGroupChatInputState extends State<AtomGroupChatInput> {
               filled: true, // Enable the filling of the background
               fillColor: const Color.fromARGB(12, 255, 255, 255), // Set the desired dark background color
               contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-              hintText: translate('CHAT.MESSAGE'),
+              hintText: t.CHAT.MESSAGE,
               hintStyle: const TextStyle(color: Colors.white70), // Optional: Change hint text color
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),

@@ -335,8 +335,8 @@ class TranslationsCreateMatchEn {
 	/// en: 'Title is required'
 	String get TITLE_EMPTY => 'Title is required';
 
-	/// en: 'Duration: {duration} minutes'
-	String get DURATION => 'Duration: {duration} minutes';
+	/// en: 'Duration: $duration minutes'
+	String DURATION({required Object duration}) => 'Duration: ${duration} minutes';
 }
 
 // Path: MATCH
@@ -446,8 +446,8 @@ class TranslationsConnectionsEn {
 
 	late final TranslationsConnectionsErrorsEn ERRORS = TranslationsConnectionsErrorsEn._(_root);
 
-	/// en: 'You have requested a connection to {name}'
-	String get HAVE_A_REQUEST => 'You have requested a connection to {name}';
+	/// en: 'You have requested a connection to $name'
+	String HAVE_A_REQUEST({required Object name}) => 'You have requested a connection to ${name}';
 
 	late final TranslationsConnectionsRequestsEn REQUESTS = TranslationsConnectionsRequestsEn._(_root);
 }
@@ -492,8 +492,8 @@ class TranslationsChatEn {
 	/// en: 'No messages'
 	String get NO_MESSAGES => 'No messages';
 
-	/// en: 'Say hi to {name}'
-	String get SAY_HI_TO => 'Say hi to {name}';
+	/// en: 'Say hi to $name'
+	String SAY_HI_TO({required Object name}) => 'Say hi to ${name}';
 
 	/// en: 'Say hi'
 	String get SAY_HI => 'Say hi';
@@ -548,8 +548,8 @@ class TranslationsNotificationsEn {
 	/// en: 'You are invited to'
 	String get INVITED_TO => 'You are invited to';
 
-	/// en: '{name} wants connect with you'
-	String get CONNECTION_REQUEST => '{name} wants connect with you';
+	/// en: '$name wants connect with you'
+	String CONNECTION_REQUEST({required Object name}) => '${name} wants connect with you';
 
 	/// en: 'Accept request?'
 	String get ACCEPT_REQUEST_TITLE => 'Accept request?';
@@ -560,8 +560,8 @@ class TranslationsNotificationsEn {
 	/// en: 'Match ready'
 	String get MATCH_READY => 'Match ready';
 
-	/// en: '{name} has started'
-	String get MATCH_STARTED => '{name} has started';
+	/// en: '$name has started'
+	String MATCH_STARTED({required Object name}) => '${name} has started';
 }
 
 // Path: PROFILE
@@ -670,8 +670,8 @@ class TranslationsUtilsEn {
 	/// en: 'Reload'
 	String get RELOAD => 'Reload';
 
-	/// en: 'Recovering password for {name}'
-	String get RECOVERING_PASSWORD_FOR => 'Recovering password for {name}';
+	/// en: 'Recovering password for $name'
+	String RECOVERING_PASSWORD_FOR({required Object name}) => 'Recovering password for ${name}';
 
 	/// en: 'Keeping connections active'
 	String get KEEPING_CONNECTIONS => 'Keeping connections active';
@@ -739,11 +739,11 @@ class TranslationsShareEn {
 	/// en: '⚡️ Share this match!'
 	String get TITLE => '⚡️ Share this match!';
 
-	/// en: '🎮 Let's play {name}'
-	String get SUBJECT => '🎮 Let\'s play {name}';
+	/// en: '🎮 Let's play $name'
+	String SUBJECT({required Object name}) => '🎮 Let\'s play ${name}';
 
-	/// en: '🎮 Let's play {gameName} ⚡️ Join now here: {match}'
-	String get TEXT => '🎮 Let\'s play {gameName} \n⚡️ Join now here: {match}';
+	/// en: '🎮 Let's play $gameName ⚡️ Join now here: $match'
+	String TEXT({required Object gameName, required Object match}) => '🎮 Let\'s play ${gameName} \n⚡️ Join now here: ${match}';
 }
 
 // Path: REGISTER.VALIDATIONS
@@ -850,14 +850,14 @@ class TranslationsFormValidationsEn {
 	/// en: 'Too long'
 	String get TOO_LONG => 'Too long';
 
-	/// en: 'Minimum {count} characters'
-	String get MIN_LENGTH => 'Minimum {count} characters';
+	/// en: 'Minimum $count characters'
+	String MIN_LENGTH({required Object count}) => 'Minimum ${count} characters';
 
-	/// en: 'Maximum {count} characters'
-	String get MAX_LENGTH => 'Maximum {count} characters';
+	/// en: 'Maximum $count characters'
+	String MAX_LENGTH({required Object count}) => 'Maximum ${count} characters';
 
-	/// en: 'Between {min} and {max} characters'
-	String get MIN_MAX_LENGTH => 'Between {min} and {max} characters';
+	/// en: 'Between $min and $max characters'
+	String MIN_MAX_LENGTH({required Object min, required Object max}) => 'Between ${min} and ${max} characters';
 
 	/// en: 'Only letters allowed'
 	String get ONLY_LETTERS => 'Only letters allowed';
@@ -895,8 +895,8 @@ class TranslationsFormValidationsEn {
 	/// en: 'Password too weak'
 	String get PASSWORD_TOO_WEAK => 'Password too weak';
 
-	/// en: 'Password must be at least {count} characters'
-	String get PASSWORD_MIN_LENGTH => 'Password must be at least {count} characters';
+	/// en: 'Password must be at least $count characters'
+	String PASSWORD_MIN_LENGTH({required Object count}) => 'Password must be at least ${count} characters';
 
 	/// en: 'Password must include uppercase, lowercase and numbers'
 	String get PASSWORD_REQUIREMENTS => 'Password must include uppercase, lowercase and numbers';
@@ -925,11 +925,11 @@ class TranslationsFormValidationsEn {
 	/// en: 'Invalid age'
 	String get INVALID_AGE => 'Invalid age';
 
-	/// en: 'Minimum age: {age} years'
-	String get MIN_AGE => 'Minimum age: {age} years';
+	/// en: 'Minimum age: $age years'
+	String MIN_AGE({required Object age}) => 'Minimum age: ${age} years';
 
-	/// en: 'Maximum age: {age} years'
-	String get MAX_AGE => 'Maximum age: {age} years';
+	/// en: 'Maximum age: $age years'
+	String MAX_AGE({required Object age}) => 'Maximum age: ${age} years';
 
 	/// en: 'Numeric values only'
 	String get NUMERIC_ONLY => 'Numeric values only';
@@ -940,11 +940,11 @@ class TranslationsFormValidationsEn {
 	/// en: 'Value out of allowed range'
 	String get INVALID_RANGE => 'Value out of allowed range';
 
-	/// en: 'Minimum value: {value}'
-	String get MIN_VALUE => 'Minimum value: {value}';
+	/// en: 'Minimum value: $value'
+	String MIN_VALUE({required Object value}) => 'Minimum value: ${value}';
 
-	/// en: 'Maximum value: {value}'
-	String get MAX_VALUE => 'Maximum value: {value}';
+	/// en: 'Maximum value: $value'
+	String MAX_VALUE({required Object value}) => 'Maximum value: ${value}';
 
 	/// en: 'Whitespace not allowed'
 	String get WHITESPACE_NOT_ALLOWED => 'Whitespace not allowed';
@@ -1087,8 +1087,8 @@ class TranslationsConnectionsRequestsEn {
 	/// en: 'Reject'
 	String get REJECT => 'Reject';
 
-	/// en: '{name} wants to connect with you'
-	String get USER_WANTS_TO_CONNECT => '{name} wants to connect with you';
+	/// en: '$name wants to connect with you'
+	String USER_WANTS_TO_CONNECT({required Object name}) => '${name} wants to connect with you';
 
 	/// en: 'Accept request?'
 	String get ACCEPT_REQUEST => 'Accept request?';
@@ -1413,9 +1413,9 @@ extension on Translations {
 			'FORM.VALIDATIONS.INVALID_INPUT' => 'Invalid input',
 			'FORM.VALIDATIONS.TOO_SHORT' => 'Too short',
 			'FORM.VALIDATIONS.TOO_LONG' => 'Too long',
-			'FORM.VALIDATIONS.MIN_LENGTH' => 'Minimum {count} characters',
-			'FORM.VALIDATIONS.MAX_LENGTH' => 'Maximum {count} characters',
-			'FORM.VALIDATIONS.MIN_MAX_LENGTH' => 'Between {min} and {max} characters',
+			'FORM.VALIDATIONS.MIN_LENGTH' => ({required Object count}) => 'Minimum ${count} characters',
+			'FORM.VALIDATIONS.MAX_LENGTH' => ({required Object count}) => 'Maximum ${count} characters',
+			'FORM.VALIDATIONS.MIN_MAX_LENGTH' => ({required Object min, required Object max}) => 'Between ${min} and ${max} characters',
 			'FORM.VALIDATIONS.ONLY_LETTERS' => 'Only letters allowed',
 			'FORM.VALIDATIONS.ONLY_NUMBERS' => 'Only numbers allowed',
 			'FORM.VALIDATIONS.LETTERS_AND_NUMBERS' => 'Only letters and numbers allowed',
@@ -1428,7 +1428,7 @@ extension on Translations {
 			'FORM.VALIDATIONS.INVALID_TIME' => 'Invalid time',
 			'FORM.VALIDATIONS.PASSWORDS_DONT_MATCH' => 'Passwords don\'t match',
 			'FORM.VALIDATIONS.PASSWORD_TOO_WEAK' => 'Password too weak',
-			'FORM.VALIDATIONS.PASSWORD_MIN_LENGTH' => 'Password must be at least {count} characters',
+			'FORM.VALIDATIONS.PASSWORD_MIN_LENGTH' => ({required Object count}) => 'Password must be at least ${count} characters',
 			'FORM.VALIDATIONS.PASSWORD_REQUIREMENTS' => 'Password must include uppercase, lowercase and numbers',
 			'FORM.VALIDATIONS.USERNAME_INVALID' => 'Invalid username',
 			'FORM.VALIDATIONS.USERNAME_TOO_SHORT' => 'Username too short',
@@ -1438,13 +1438,13 @@ extension on Translations {
 			'FORM.VALIDATIONS.INVALID_NAME' => 'Invalid name',
 			'FORM.VALIDATIONS.NAME_TOO_LONG' => 'Name too long',
 			'FORM.VALIDATIONS.INVALID_AGE' => 'Invalid age',
-			'FORM.VALIDATIONS.MIN_AGE' => 'Minimum age: {age} years',
-			'FORM.VALIDATIONS.MAX_AGE' => 'Maximum age: {age} years',
+			'FORM.VALIDATIONS.MIN_AGE' => ({required Object age}) => 'Minimum age: ${age} years',
+			'FORM.VALIDATIONS.MAX_AGE' => ({required Object age}) => 'Maximum age: ${age} years',
 			'FORM.VALIDATIONS.NUMERIC_ONLY' => 'Numeric values only',
 			'FORM.VALIDATIONS.POSITIVE_NUMBER' => 'Must be a positive number',
 			'FORM.VALIDATIONS.INVALID_RANGE' => 'Value out of allowed range',
-			'FORM.VALIDATIONS.MIN_VALUE' => 'Minimum value: {value}',
-			'FORM.VALIDATIONS.MAX_VALUE' => 'Maximum value: {value}',
+			'FORM.VALIDATIONS.MIN_VALUE' => ({required Object value}) => 'Minimum value: ${value}',
+			'FORM.VALIDATIONS.MAX_VALUE' => ({required Object value}) => 'Maximum value: ${value}',
 			'FORM.VALIDATIONS.WHITESPACE_NOT_ALLOWED' => 'Whitespace not allowed',
 			'FORM.VALIDATIONS.MUST_CONTAIN_UPPERCASE' => 'Must contain at least one uppercase letter',
 			'FORM.VALIDATIONS.MUST_CONTAIN_LOWERCASE' => 'Must contain at least one lowercase letter',
@@ -1495,7 +1495,7 @@ extension on Translations {
 			'CREATE_MATCH.UPLOADING_MESSAGE' => 'The match is creating',
 			'CREATE_MATCH.ERROR' => 'Error creating the match',
 			'CREATE_MATCH.TITLE_EMPTY' => 'Title is required',
-			'CREATE_MATCH.DURATION' => 'Duration: {duration} minutes',
+			'CREATE_MATCH.DURATION' => ({required Object duration}) => 'Duration: ${duration} minutes',
 			'MATCH.MATCH_UPDATED' => 'Match updated',
 			'MATCH.ERROR_LOADING' => 'Error loading match',
 			'MATCH.JOIN_TO_MATCH' => 'Join to match',
@@ -1526,7 +1526,7 @@ extension on Translations {
 			'CONNECTIONS.EMPTY' => 'No connections',
 			'CONNECTIONS.ERRORS.LOADING_ERROR' => 'Error loading connections',
 			'CONNECTIONS.ERRORS.NO_CONNECTIONS' => 'No connections found',
-			'CONNECTIONS.HAVE_A_REQUEST' => 'You have requested a connection to {name}',
+			'CONNECTIONS.HAVE_A_REQUEST' => ({required Object name}) => 'You have requested a connection to ${name}',
 			'CONNECTIONS.REQUESTS.TITLE' => 'Requests',
 			'CONNECTIONS.REQUESTS.ACCEPTED' => 'Accepted',
 			'CONNECTIONS.REQUESTS.ADD' => 'Add',
@@ -1535,7 +1535,7 @@ extension on Translations {
 			'CONNECTIONS.REQUESTS.PENDING' => 'Pending',
 			'CONNECTIONS.REQUESTS.ACCEPT' => 'Accept',
 			'CONNECTIONS.REQUESTS.REJECT' => 'Reject',
-			'CONNECTIONS.REQUESTS.USER_WANTS_TO_CONNECT' => '{name} wants to connect with you',
+			'CONNECTIONS.REQUESTS.USER_WANTS_TO_CONNECT' => ({required Object name}) => '${name} wants to connect with you',
 			'CONNECTIONS.REQUESTS.ACCEPT_REQUEST' => 'Accept request?',
 			'CONNECTIONS.REQUESTS.WANT_TO_CANCELL' => 'Do you want to cancel the request?',
 			'CONNECTIONS.REQUESTS.CANCEL' => 'Cancel request',
@@ -1547,7 +1547,7 @@ extension on Translations {
 			'CHAT.MESSAGES' => 'Messages',
 			'CHAT.MESSAGE' => 'Message',
 			'CHAT.NO_MESSAGES' => 'No messages',
-			'CHAT.SAY_HI_TO' => 'Say hi to {name}',
+			'CHAT.SAY_HI_TO' => ({required Object name}) => 'Say hi to ${name}',
 			'CHAT.SAY_HI' => 'Say hi',
 			'CHAT.ERRORS.LOADING_ERROR' => 'Error loading messages',
 			'CHAT.ERRORS.LOADING_CHAT' => 'Error loading chat',
@@ -1564,11 +1564,11 @@ extension on Translations {
 			'NOTIFICATIONS.ERROR_LOADING' => 'Error loading notifications',
 			'NOTIFICATIONS.MATCH_INVITATION' => 'Match Invitation',
 			'NOTIFICATIONS.INVITED_TO' => 'You are invited to',
-			'NOTIFICATIONS.CONNECTION_REQUEST' => '{name} wants connect with you',
+			'NOTIFICATIONS.CONNECTION_REQUEST' => ({required Object name}) => '${name} wants connect with you',
 			'NOTIFICATIONS.ACCEPT_REQUEST_TITLE' => 'Accept request?',
 			'NOTIFICATIONS.INVITATION_TO_MATCH' => 'You have a new invitation to:',
 			'NOTIFICATIONS.MATCH_READY' => 'Match ready',
-			'NOTIFICATIONS.MATCH_STARTED' => '{name} has started',
+			'NOTIFICATIONS.MATCH_STARTED' => ({required Object name}) => '${name} has started',
 			'PROFILE.YOU' => 'You',
 			'PROFILE.MATCHES' => 'Matches',
 			'PROFILE.TITLE' => 'Profile',
@@ -1616,7 +1616,7 @@ extension on Translations {
 			'UTILS.SELECT_FILE' => 'Select file',
 			'UTILS.FILE' => 'File',
 			'UTILS.RELOAD' => 'Reload',
-			'UTILS.RECOVERING_PASSWORD_FOR' => 'Recovering password for {name}',
+			'UTILS.RECOVERING_PASSWORD_FOR' => ({required Object name}) => 'Recovering password for ${name}',
 			'UTILS.KEEPING_CONNECTIONS' => 'Keeping connections active',
 			'UTILS.ACCEPT' => 'Accept',
 			'UTILS.CANCEL' => 'Cancel',
@@ -1648,8 +1648,8 @@ extension on Translations {
 			'ERRORS.LOCAL.LOADING_USERS' => 'Error loading users',
 			'ERRORS.LOCAL.LOADING_USER' => 'Error loading user',
 			'SHARE.TITLE' => '⚡️ Share this match!',
-			'SHARE.SUBJECT' => '🎮 Let\'s play {name}',
-			'SHARE.TEXT' => '🎮 Let\'s play {gameName} \n⚡️ Join now here: {match}',
+			'SHARE.SUBJECT' => ({required Object name}) => '🎮 Let\'s play ${name}',
+			'SHARE.TEXT' => ({required Object gameName, required Object match}) => '🎮 Let\'s play ${gameName} \n⚡️ Join now here: ${match}',
 			_ => null,
 		};
 	}

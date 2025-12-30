@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import '../../../i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
@@ -15,16 +15,16 @@ class ViewUser extends StatelessWidget {
     return Column(
       children: [
         const SizedBox(height: 10),
-        CenterTitleAtom(text: translate("PROFILE.TITLE"), textStyle: neonTitleText,),
+        CenterTitleAtom(text: t.PROFILE.TITLE, textStyle: neonTitleText,),
         const SizedBox(height: 10),
         _Card(
           icon: Icons.person,
-          title: translate("PROFILE.YOU"),
+          title: t.PROFILE.YOU,
           routeName: "/me/edit",
         ),
         _Card(
           icon: Icons.gamepad_outlined,
-          title: translate("PROFILE.PLATFORMS"),
+          title: t.PROFILE.PLATFORMS,
           routeName: "/me/platforms",
         ),
       ],

@@ -6,7 +6,7 @@ import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/message/message_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
@@ -149,7 +149,7 @@ class _ViewMatchState extends State<ViewMatch> {
               IconButton(onPressed: () async{
                 // final String apiUrl = dotenv.get("SOCKETS_URL");
                 final params = ShareParams(
-                  title: translate("SHARE.TITLE"),
+                  title: t.SHARE.TITLE,
                   // uri: Uri.tryParse("https://madnolia.app/match/${_match.id}"),
                   // subject: "🎮 Let's play ${widget.game.name}",
                   text: translate("SHARE.TEXT", args: {
@@ -202,10 +202,10 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
       builder: (context, state) {
 
         if (state.status == ListStatus.failure && state.roomMessages.isEmpty) {
-          return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
+          return Center(child: Text(t.CHAT.ERRORS.LOADING));
         }
         else if (state.roomMessages.isEmpty && state.hasReachedMax) {
-          return Center(child: Text(translate('CHAT.SAY_HI')));
+          return Center(child: Text(t.CHAT.SAY_HI));
         }
 
         else if (state.status == ListStatus.initial && state.roomMessages.isEmpty) {

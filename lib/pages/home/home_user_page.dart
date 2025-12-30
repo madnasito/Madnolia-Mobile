@@ -1,5 +1,5 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
@@ -61,7 +61,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
               return Center(
                 child: ElevatedButton(
                   onPressed: _retryLoadInfo,
-                  child: Text(translate('UTILS.RELOAD')),
+                  child: Text(t.UTILS.RELOAD),
                 ),
               );
             } else if (snapshot.hasData) {
@@ -81,7 +81,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
                       children: [
                         SizedBox(height: MediaQuery.of(context).size.height * 0.3), // Espacio para centrar verticalmente
                         Text(
-                          translate('HOME.NO_MATCHES'),
+                          t.HOME.NO_MATCHES,
                           style: TextStyle(color: Colors.grey),
                           textAlign: TextAlign.center,
                         ),

@@ -1,4 +1,4 @@
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
@@ -22,7 +22,7 @@ class MatchPage extends StatelessWidget {
               return ViewMatch(match: snapshot.data!.match, game: snapshot.data!.game,);
               
             } else if(snapshot.hasError){
-              return Center(child: Text(translate("MATCH.ERROR_LOADING")));
+              return Center(child: Text(t.MATCH.ERROR_LOADING));
             }
             else {
               return const Center(child: CircularProgressIndicator());
