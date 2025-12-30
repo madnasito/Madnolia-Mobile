@@ -65,7 +65,7 @@ class MoleculePlatformGameMatchesList extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(
-                translate(t.MATCH.STATUS.RUNNING),
+                t.MATCH.STATUS.RUNNING,
                 style: const TextStyle(color: Color.fromARGB(255, 142, 255, 236), fontSize: 17)
               ),
             ),

@@ -103,7 +103,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
         DropdownMenuItem(
             value: "ALL",
             child: Text(
-              t.PROFILE.USER_PAGE.INVITATIONS.ALL,
+              t.PROFILE.USER_PAGE.INVITATIONS.EVERYONE,
             )),
         DropdownMenuItem(
           value: "PARTNERS",

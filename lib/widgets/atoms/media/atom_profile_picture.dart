@@ -43,7 +43,6 @@ class AtomProfilePicture extends StatelessWidget {
                 hideBottomControls: true,
               ),
               IOSUiSettings(
-                title: t.PROFILE.USER_PAGE.CROP_IMAGE,
                 aspectRatioLockEnabled: true,
               ),
             ],

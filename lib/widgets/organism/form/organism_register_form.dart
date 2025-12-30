@@ -44,8 +44,8 @@ class OrganismRegisterForm extends StatelessWidget {
               icon: Icons.abc_rounded,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
-                FormBuilderValidators.minLength(1, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '1'})),
-                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'})) 
+                FormBuilderValidators.minLength(1, errorText: t.FORM.VALIDATIONS.MIN_LENGTH(count: '1')),
+                FormBuilderValidators.maxLength(20, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '20')) 
               ]),
             ),
           ),
@@ -59,7 +59,7 @@ class OrganismRegisterForm extends StatelessWidget {
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
                 FormBuilderValidators.username(errorText: t.FORM.VALIDATIONS.USERNAME_INVALID),
-                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'})) 
+                FormBuilderValidators.maxLength(20, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '20')) 
                 // FormBuilderValidators.notEqual(notValidUser)
               ]),
             ),
@@ -89,7 +89,7 @@ class OrganismRegisterForm extends StatelessWidget {
               isPassword: true,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
-                FormBuilderValidators.minLength(6, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '6'})),
+                FormBuilderValidators.minLength(6, errorText: t.FORM.VALIDATIONS.MIN_LENGTH(count: '6')),
                 FormBuilderValidators.maxLength(40, errorText: t.FORM.VALIDATIONS.INVALID_LENGTH) 
               ]),
             ),

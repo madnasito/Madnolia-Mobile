@@ -24,7 +24,7 @@ class OrganismPlatformGameMatches extends StatelessWidget {
           
           case ListStatus.success:
             // Message when there is no notification
-            if(state.gameMatches.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.MATCHES.ERRORS.NO_MATCHES_FOUND)));
+            if(state.gameMatches.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.MATCHES.ERRORS.NO_MATCHES)));
             return MoleculePlatformGameMatchesList(
               platform: platform,
               gameId: gameId,

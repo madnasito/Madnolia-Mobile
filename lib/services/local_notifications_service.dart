@@ -75,18 +75,18 @@ class LocalNotificationsService {
   @pragma("vm:entry-point")
   static Future<void> initializeTranslations() async {
       // Use PlatformDispatcher to get the device locale
-    Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
-        ? const Locale('en') // Fallback if needed
-        : const Locale('en'); // Replace with actual logic to get locale
+    // Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
+    //     ? const Locale('en') // Fallback if needed
+    //     : const Locale('en'); // Replace with actual logic to get locale
 
-    String langCode = deviceLocale.languageCode;
+    // String langCode = deviceLocale.languageCode;
 
-    List<String> supportedLangs = ['en', 'es'];
+    // List<String> supportedLangs = ['en', 'es'];
 
-    await LocalizationDelegate.create(
-      fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
-      supportedLocales: supportedLangs,
-    );
+    // await LocalizationDelegate.create(
+    //   fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
+    //   supportedLocales: supportedLangs,
+    // );
   }
 
   @pragma("vm:entry-point")
@@ -315,7 +315,7 @@ class LocalNotificationsService {
       );
       await _notificationsPlugin.show(
         id, t.NOTIFICATIONS.MATCH_READY,
-        translate('NOTIFICATIONS.MATCH_STARTED', args: {'name': payload.title}),
+        t.NOTIFICATIONS.MATCH_STARTED(name: payload.title),
         notificationDetails,
         payload: json.encode(matchDb.toJson()));
     } catch (e) {

@@ -198,7 +198,8 @@
     "JOINED": "Joined",
     "ERRORS": {
       "LOADING_ERROR": "Error loading matches",
-      "NO_MATCHES": "No matches found"
+      "NO_MATCHES": "No matches found",
+      "JOIN_FAILED": "Failed to join the match"
     }
   },
   "CONNECTIONS": {
@@ -364,7 +365,8 @@
         "LOADING_GAME": "Error loading game, please try again",
         "EMAIL_DATE_LIMIT": "You must wait at least 15 days to update your email",
         "IMAGE_DATA": "There is a problem with the image data \n Please, try another image",
-        "INVALID_CREDENTIALS": "User or password incorrect"
+        "INVALID_CREDENTIALS": "User or password incorrect",
+        "UNKNOWN": "Unknown error"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verify your connection"

@@ -38,7 +38,7 @@ class _OrganismRecoverPasswordTokenFormState extends State<OrganismRecoverPasswo
             icon: Icons.lock_outline_rounded,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
-              FormBuilderValidators.minLength(6, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '6'})),
+              FormBuilderValidators.minLength(6, errorText: t.FORM.VALIDATIONS.MIN_LENGTH(count: '6')),
               FormBuilderValidators.maxLength(40, errorText: t.FORM.VALIDATIONS.INVALID_LENGTH) 
             ])
           ),

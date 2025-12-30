@@ -72,7 +72,7 @@ class MatchFormView extends StatelessWidget {
               icon: Icons.title_rounded,
               validator: FormBuilderValidators.compose([
                 // Solo validamos longitud máxima, sin requerir mínimo
-                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'}), checkNullOrEmpty: false)
+                FormBuilderValidators.maxLength(20, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '20'), checkNullOrEmpty: false)
               ]),
             ),
             const SizedBox(height: 20),
@@ -130,7 +130,7 @@ class MatchFormView extends StatelessWidget {
               icon: Icons.description_outlined,
               validator: FormBuilderValidators.compose([
                 // Solo validamos longitud máxima
-                FormBuilderValidators.maxLength(100, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '100'}), checkNullOrEmpty: false)
+                FormBuilderValidators.maxLength(100, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '100'), checkNullOrEmpty: false)
               ]),
             ),
             const SizedBox(height: 20),

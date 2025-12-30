@@ -23,7 +23,7 @@ class DialogRequested extends StatelessWidget {
             backgroundImage: CachedNetworkImageProvider(userData.thumb),
           ),
           const SizedBox(height: 20),
-          Text(translate('CONNECTIONS.HAVE_A_REQUEST', args: {'name': userData.name}), textAlign: TextAlign.center,)
+          Text(t.CONNECTIONS.HAVE_A_REQUEST(name: userData.name), textAlign: TextAlign.center,)
         ],
       ),
       content: Text(t.CONNECTIONS.REQUESTS.WANT_TO_CANCELL, textAlign: TextAlign.center,),

@@ -15,6 +15,7 @@ import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
 import 'package:toast/toast.dart';
 
 import '../../../services/user_service.dart' show UserService;
+import '../../../utils/get_slang_translations.dart';
 
 class OrganismEditUserForm extends StatelessWidget {
 
@@ -47,8 +48,8 @@ class OrganismEditUserForm extends StatelessWidget {
               initialValue: nameController.text,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
-                FormBuilderValidators.minLength(1, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '1'})),
-                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'})) 
+                FormBuilderValidators.minLength(1, errorText: t.FORM.VALIDATIONS.MIN_LENGTH(count: '1')),
+                FormBuilderValidators.maxLength(20, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '20')) 
               ]),
             ),
           ),
@@ -103,7 +104,7 @@ class OrganismEditUserForm extends StatelessWidget {
             ),
             const SizedBox(width: 12), 
             Text(
-              t.PROFILE.USER_PAGE.INVITATIONS.${option.name.toUpperCase()}
+              getUserPageInvitationTranslation(option)
             ),
           ],
         ),

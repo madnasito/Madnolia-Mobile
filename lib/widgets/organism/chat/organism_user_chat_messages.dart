@@ -69,7 +69,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
 
         switch (state.status) {
           case ListStatus.failure:
-              return Center(child: Text(t.CHAT.ERRORS.LOADING));
+              return Center(child: Text(t.CHAT.ERRORS.LOADING_ERROR));
           case ListStatus.initial:
             return const Center(child: CircularProgressIndicator());
           case ListStatus.success:

@@ -56,7 +56,7 @@ const OrganismEditMatchForm({super.key, required this.match, required this.game}
                   label: t.CREATE_MATCH.MATCH_NAME,
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
-                    FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'}))
+                    FormBuilderValidators.maxLength(20, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '20'))
                   ]),
                 ),
                 const SizedBox(height: 10),
@@ -119,7 +119,7 @@ const OrganismEditMatchForm({super.key, required this.match, required this.game}
                   initialValue: match.description,
                   label: t.CREATE_MATCH.DESCRIPTION,
                   validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.maxLength(80, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '80'}), checkNullOrEmpty: false),
+                    FormBuilderValidators.maxLength(80, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '80'), checkNullOrEmpty: false),
                   ]),
                 ),
                 const SizedBox(height: 10),

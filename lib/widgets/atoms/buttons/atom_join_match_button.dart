@@ -75,7 +75,7 @@ class _AtomJoinMatchButtonState extends State<AtomJoinMatchButton> {
         } catch (e) {
           debugPrint(e.toString());
           setState(() {
-            _errorMessage = t.MATCH.ERRORS.JOIN_FAILED;
+            _errorMessage = t.MATCHES.ERRORS.JOIN_FAILED;
             _isLoading = false;
           });
         }

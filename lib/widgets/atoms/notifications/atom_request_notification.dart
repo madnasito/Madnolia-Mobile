@@ -22,7 +22,7 @@ class AtomRequestNotification extends StatelessWidget {
           backgroundColor: Colors.grey[800],
           radius: 30,
           backgroundImage: CachedNetworkImageProvider(data.notification.thumb),),
-        title: Text(translate('NOTIFICATIONS.CONNECTION_REQUEST', args: {'name': data.notification.title})),
+        title: Text(t.NOTIFICATIONS.CONNECTION_REQUEST(name: data.notification.title)),
         subtitle: Text("@${data.user?.username}", style: TextStyle(
             color: Colors.greenAccent, // Lighter grey for subtitle
             overflow: TextOverflow.ellipsis, // Handle long text
@@ -44,7 +44,7 @@ class AtomRequestNotification extends StatelessWidget {
                 backgroundImage: CachedNetworkImageProvider(data.user!.thumb),
               ),
               const SizedBox(height: 20),
-              Text(translate('NOTIFICATIONS.CONNECTION_REQUEST', args: {'name': data.user?.name}), textAlign: TextAlign.center,),
+              Text(t.NOTIFICATIONS.CONNECTION_REQUEST(name: data.user!.name), textAlign: TextAlign.center,),
               SizedBox(height: 8,),
               Text("@${data.user?.username}", textAlign: TextAlign.center, style: TextStyle(fontSize: 13, color: const Color.fromARGB(255, 158, 157, 80)),)
             ],

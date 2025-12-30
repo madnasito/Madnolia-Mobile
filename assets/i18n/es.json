@@ -192,7 +192,8 @@
         "JOINED": "Ingresadas",
         "ERRORS": {
             "LOADING_ERROR": "Error cargando partidas",
-            "NO_MATCHES": "No hay partidas"
+            "NO_MATCHES": "No hay partidas",
+            "JOIN_FAILED": "Error al ingresar a la partida"
         }
     },
     "CONNECTIONS": {
@@ -358,7 +359,8 @@
         "LOADING_GAME": "Error cargando el juego, vuelva a intentarlo",
         "EMAIL_DATE_LIMIT": "Debe esperar al menos 15 dias para poder actualizar su correo",
         "IMAGE_DATA": "Hubo un problema al cargar esta imagen \nPor favor, suba otra imagen",
-        "INVALID_CREDENTIALS": "Usuario o contraseña incorrectos"
+        "INVALID_CREDENTIALS": "Usuario o contraseña incorrectos",
+        "UNKNOWN": "Error desconocido"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verifica tu conexión"

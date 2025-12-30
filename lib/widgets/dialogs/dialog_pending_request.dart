@@ -22,7 +22,7 @@ class DialogPendingRequest extends StatelessWidget {
             backgroundImage: CachedNetworkImageProvider(userData.thumb),
           ),
           const SizedBox(height: 20),
-          Text(translate('CONNECTIONS.REQUESTS.USER_WANTS_TO_CONNECT', args: {'name': userData.username}), textAlign: TextAlign.center,)
+          Text(t.CONNECTIONS.REQUESTS.USER_WANTS_TO_CONNECT(name: userData.username), textAlign: TextAlign.center,)
         ],
       ),
       content: Text(t.CONNECTIONS.REQUESTS.ACCEPT_REQUEST, textAlign: TextAlign.center,),

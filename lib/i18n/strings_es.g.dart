@@ -202,9 +202,11 @@ class _TranslationsCreateMatchEs implements TranslationsCreateMatchEn {
 	@override String DURATION({required Object duration}) => 'Duración: ${duration} minutos';
   
    @override
+   // TODO: implement ERROR
    String get ERROR => throw UnimplementedError();
   
    @override
+   // TODO: implement UPLOADING_MESSAGE
    String get UPLOADING_MESSAGE => throw UnimplementedError();
 }
 
@@ -583,6 +585,7 @@ class _TranslationsMatchesErrorsEs implements TranslationsMatchesErrorsEn {
 	// Translations
 	@override String get LOADING_ERROR => 'Error cargando partidas';
 	@override String get NO_MATCHES => 'No hay partidas';
+	@override String get JOIN_FAILED => 'Error al ingresar a la partida';
 }
 
 // Path: CONNECTIONS.ERRORS
@@ -728,6 +731,7 @@ class _TranslationsErrorsServerEs implements TranslationsErrorsServerEn {
 	@override String get EMAIL_DATE_LIMIT => 'Debe esperar al menos 15 dias para poder actualizar su correo';
 	@override String get IMAGE_DATA => 'Hubo un problema al cargar esta imagen \nPor favor, suba otra imagen';
 	@override String get INVALID_CREDENTIALS => 'Usuario o contraseña incorrectos';
+	@override String get UNKNOWN => 'Error desconocido';
 }
 
 // Path: ERRORS.NETWORK
@@ -947,6 +951,7 @@ extension on TranslationsEs {
 			'MATCHES.JOINED' => 'Ingresadas',
 			'MATCHES.ERRORS.LOADING_ERROR' => 'Error cargando partidas',
 			'MATCHES.ERRORS.NO_MATCHES' => 'No hay partidas',
+			'MATCHES.ERRORS.JOIN_FAILED' => 'Error al ingresar a la partida',
 			'CONNECTIONS.TITLE' => 'Conexiones',
 			'CONNECTIONS.EMPTY' => 'Sin conexiones',
 			'CONNECTIONS.LOADING' => 'Cargando conexiones',
@@ -1069,6 +1074,7 @@ extension on TranslationsEs {
 			'ERRORS.SERVER.EMAIL_DATE_LIMIT' => 'Debe esperar al menos 15 dias para poder actualizar su correo',
 			'ERRORS.SERVER.IMAGE_DATA' => 'Hubo un problema al cargar esta imagen \nPor favor, suba otra imagen',
 			'ERRORS.SERVER.INVALID_CREDENTIALS' => 'Usuario o contraseña incorrectos',
+			'ERRORS.SERVER.UNKNOWN' => 'Error desconocido',
 			'ERRORS.NETWORK.VERIFY_CONNECTION' => 'Verifica tu conexión',
 			'ERRORS.LOCAL.LOADING_USERS' => 'Error cargando usuarios',
 			'ERRORS.LOCAL.LOADING_USER' => 'Error cargando usuario',

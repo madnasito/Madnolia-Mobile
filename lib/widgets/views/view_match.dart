@@ -152,10 +152,10 @@ class _ViewMatchState extends State<ViewMatch> {
                   title: t.SHARE.TITLE,
                   // uri: Uri.tryParse("https://madnolia.app/match/${_match.id}"),
                   // subject: "🎮 Let's play ${widget.game.name}",
-                  text: translate("SHARE.TEXT", args: {
-                    "gameName": widget.game.name,
-                    "match": "https://madnolia.app/match/${_match.id}"
-                    })
+                  text: t.SHARE.TEXT(
+                    gameName: widget.game.name,
+                    match: "https://madnolia.app/match/${_match.id}"
+                    )
                   // uri: Uri.parse('https://madnolia.app/match/${_match.id}')
                 );
       
@@ -202,7 +202,7 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
       builder: (context, state) {
 
         if (state.status == ListStatus.failure && state.roomMessages.isEmpty) {
-          return Center(child: Text(t.CHAT.ERRORS.LOADING));
+          return Center(child: Text(t.CHAT.ERRORS.LOADING_CHAT));
         }
         else if (state.roomMessages.isEmpty && state.hasReachedMax) {
           return Center(child: Text(t.CHAT.SAY_HI));

@@ -1038,6 +1038,9 @@ class TranslationsMatchesErrorsEn {
 
 	/// en: 'No matches found'
 	String get NO_MATCHES => 'No matches found';
+
+	/// en: 'Failed to join the match'
+	String get JOIN_FAILED => 'Failed to join the match';
 }
 
 // Path: CONNECTIONS.ERRORS
@@ -1275,6 +1278,9 @@ class TranslationsErrorsServerEn {
 
 	/// en: 'User or password incorrect'
 	String get INVALID_CREDENTIALS => 'User or password incorrect';
+
+	/// en: 'Unknown error'
+	String get UNKNOWN => 'Unknown error';
 }
 
 // Path: ERRORS.NETWORK
@@ -1522,6 +1528,7 @@ extension on Translations {
 			'MATCHES.JOINED' => 'Joined',
 			'MATCHES.ERRORS.LOADING_ERROR' => 'Error loading matches',
 			'MATCHES.ERRORS.NO_MATCHES' => 'No matches found',
+			'MATCHES.ERRORS.JOIN_FAILED' => 'Failed to join the match',
 			'CONNECTIONS.TITLE' => 'Connections',
 			'CONNECTIONS.EMPTY' => 'No connections',
 			'CONNECTIONS.ERRORS.LOADING_ERROR' => 'Error loading connections',
@@ -1644,6 +1651,7 @@ extension on Translations {
 			'ERRORS.SERVER.EMAIL_DATE_LIMIT' => 'You must wait at least 15 days to update your email',
 			'ERRORS.SERVER.IMAGE_DATA' => 'There is a problem with the image data \n Please, try another image',
 			'ERRORS.SERVER.INVALID_CREDENTIALS' => 'User or password incorrect',
+			'ERRORS.SERVER.UNKNOWN' => 'Unknown error',
 			'ERRORS.NETWORK.VERIFY_CONNECTION' => 'Verify your connection',
 			'ERRORS.LOCAL.LOADING_USERS' => 'Error loading users',
 			'ERRORS.LOCAL.LOADING_USER' => 'Error loading user',
