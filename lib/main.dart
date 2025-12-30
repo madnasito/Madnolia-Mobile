@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/friendships/friendships_bloc.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
@@ -12,10 +13,8 @@ import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart' show GlobalCupertinoLocalizations, GlobalMaterialLocalizations, GlobalWidgetsLocalizations;
 import 'package:madnolia/routes/routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
 import 'dart:ui';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:madnolia/services/sockets_service.dart';
@@ -23,8 +22,10 @@ import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
- import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+
+import 'i18n/strings.g.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,18 +50,16 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   // Use PlatformDispatcher to get the device locale
-  Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
-      ? const Locale('en') // Fallback if needed
-      : const Locale('en'); // Replace with actual logic to get locale
+  // Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
+  //     ? const Locale('en') // Fallback if needed
+  //     : const Locale('en'); // Replace with actual logic to get locale
 
-  String langCode = deviceLocale.languageCode;
+  // String langCode = deviceLocale.languageCode;
 
-  List<String> supportedLangs = ['en', 'es'];
+  // List<String> supportedLangs = ['en', 'es'];
 
-  LocalizationDelegate delegate = await LocalizationDelegate.create(
-    fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
-    supportedLocales: supportedLangs,
-  );
+  WidgetsFlutterBinding.ensureInitialized(); // add this
+  LocaleSettings.useDeviceLocale(); // and this
 
   
   try {
@@ -103,7 +102,7 @@ void main() async {
 
   debugPrint('Force update version from remote config: $forceUpdateVersion');
 
-  runApp(LocalizedApp(delegate, const AppWrapper()));
+  runApp(TranslationProvider(child: AppWrapper()));
 }
 
  GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -137,12 +136,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var localizationDelegate = LocalizedApp.of(context).delegate;
 
-    return LocalizationProvider(
-      state: LocalizationProvider.of(context).state,
-      
-      child:  MultiBlocProvider(
+    return  MultiBlocProvider(
       providers: [
         BlocProvider(create: (BuildContext context) => getIt<UserBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>()),
@@ -157,23 +152,17 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
       ],
       child: MaterialApp.router(
-              theme: ThemeData(
-                brightness: Brightness.dark,
-              ),
-              title: 'madnolia',
-              routerConfig: router,
-              localizationsDelegates: [
-                GlobalCupertinoLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                localizationDelegate
-              ],
-              supportedLocales: localizationDelegate.supportedLocales,
-              locale: localizationDelegate.currentLocale,
-              key: navigatorKey,
-            ),
+        locale: TranslationProvider.of(context).flutterLocale,
+        supportedLocales: AppLocaleUtils.supportedLocales,
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        theme: ThemeData(
+          brightness: Brightness.dark,
         ),
-    );
+        title: 'madnolia',
+        routerConfig: router,
+        key: navigatorKey,
+        ),
+      );
     }
 }
 

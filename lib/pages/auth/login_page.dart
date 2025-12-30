@@ -1,9 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/organism/form/organism_login_form.dart';
 import 'package:madnolia/widgets/scaffolds/unloged_scaffold.dart';
+import '../../i18n/strings.g.dart';
 
 import '../../widgets/atoms/text_atoms/center_title_atom.dart';
 
@@ -26,7 +26,7 @@ class LoginPage extends StatelessWidget {
                   onPressed: () => Navigator.of(context).maybePop(),
                 ),
               ),
-              CenterTitleAtom(text: translate("LOGIN.BUTTON"),),
+              CenterTitleAtom(text: t.LOGIN.BUTTON ),
               const SizedBox(height: 30),
 
               const OrganismLoginForm(),
@@ -39,11 +39,11 @@ class LoginPage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                FadeIn(delay: const Duration(milliseconds: 400),child: Text(translate("LOGIN.SUBTITLE"))),
+                FadeIn(delay: const Duration(milliseconds: 400),child: Text(t.LOGIN.SUBTITLE)),
                 const SizedBox(width: 5),
                 FadeIn(delay: const Duration(milliseconds: 450),child: GestureDetector(
                   onTap: () => context.goNamed('register'),
-                  child: Text(translate("LOGIN.SUB_REGISTER"), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),))),
+                  child: Text(t.LOGIN.SUB_REGISTER, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),))),
               ],)
             ],
           ),
