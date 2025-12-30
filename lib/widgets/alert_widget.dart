@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/i18n/strings.g.dart';
 
 import '../utils/get_slang_translations.dart';
 

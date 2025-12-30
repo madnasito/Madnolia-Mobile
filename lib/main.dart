@@ -37,7 +37,6 @@ void main() async {
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
-      name: 'Madnolia'
     );
   }
   

@@ -202,11 +202,9 @@ class _TranslationsCreateMatchEs implements TranslationsCreateMatchEn {
 	@override String DURATION({required Object duration}) => 'Duración: ${duration} minutos';
   
    @override
-   // TODO: implement ERROR
    String get ERROR => throw UnimplementedError();
   
    @override
-   // TODO: implement UPLOADING_MESSAGE
    String get UPLOADING_MESSAGE => throw UnimplementedError();
 }
 
@@ -223,13 +221,13 @@ class _TranslationsMatchEs implements TranslationsMatchEn {
 	@override String get EDIT_MATCH => 'Editar partida';
 	@override String get LEAVE_MATCH => 'Salir de la partida';
 	@override String get CANCEL_MATCH => 'Cancelar partida';
+	// ignore: override_on_non_overriding_member
 	@override String get CANCEL_MATCH_QUESTION => '¿Estás seguro de que deseas cancelar la partida?';
 	@override String get MATCH_CANCELLED => 'Partida cancelada';
 	@override String get MATCH_ENDED => 'Partida finalizada';
 	@override late final _TranslationsMatchStatusEs STATUS = _TranslationsMatchStatusEs._(_root);
   
    @override
-   // TODO: implement CANCELL_MATCH_QUESTION
    String get CANCELL_MATCH_QUESTION => throw UnimplementedError();
 }
 
@@ -272,6 +270,7 @@ class _TranslationsConnectionsEs implements TranslationsConnectionsEn {
 	// Translations
 	@override String get TITLE => 'Conexiones';
 	@override String get EMPTY => 'Sin conexiones';
+	// ignore: override_on_non_overriding_member
 	@override String get LOADING => 'Cargando conexiones';
 	@override late final _TranslationsConnectionsErrorsEs ERRORS = _TranslationsConnectionsErrorsEs._(_root);
 	@override String HAVE_A_REQUEST({required Object name}) => 'Tienes una solicitud para ${name}';
@@ -595,14 +594,13 @@ class _TranslationsConnectionsErrorsEs implements TranslationsConnectionsErrorsE
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
+	// ignore: override_on_non_overriding_member
 	@override String get LOADING => 'Error cargando conexiones';
   
    @override
-   // TODO: implement LOADING_ERROR
    String get LOADING_ERROR => throw UnimplementedError();
   
    @override
-   // TODO: implement NO_CONNECTIONS
    String get NO_CONNECTIONS => throw UnimplementedError();
 }
 
@@ -644,6 +642,7 @@ class _TranslationsChatErrorsEs implements TranslationsChatErrorsEn {
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
+	// ignore: override_on_non_overriding_member
 	@override String get LOADING => 'Error cargando mensajes';
 	@override String get LOADING_CHAT => 'Error cargando el chat';
 	@override String get NO_DATA => 'Sin datos de amistad';
@@ -651,7 +650,6 @@ class _TranslationsChatErrorsEs implements TranslationsChatErrorsEn {
 	@override String get NO_USER_DATA => 'Sin datos del usuario';
   
    @override
-   // TODO: implement LOADING_ERROR
    String get LOADING_ERROR => throw UnimplementedError();
 }
 

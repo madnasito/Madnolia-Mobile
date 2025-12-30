@@ -67,7 +67,7 @@ class UserService {
 
   Future searchUser(String user) => userGetRequest("user/search/$user");
 
-  Future<Map> addUserPartner({partner}) =>
+  Future<Map> addUserPartner({required String partner}) =>
       userPutRequest("add_partner", partner);
 
   Future<User> updateUser(UpdateUser user) async{
@@ -124,7 +124,7 @@ class UserService {
     }
   }
 
-  Future<Map<String, dynamic>> updateUserPlatforms({platforms}) =>
+  Future<Map<String, dynamic>> updateUserPlatforms({required Map<String, dynamic> platforms}) =>
       userPutRequest("user/update", platforms);
 
   Future userGetRequest(String apiUrl) async {
