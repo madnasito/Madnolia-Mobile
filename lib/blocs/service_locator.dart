@@ -12,14 +12,14 @@ GetIt getIt = GetIt.instance;
 
 Future<void> serviceLocatorInit() async {
 
-  getIt.registerSingleton(UserBloc());
-  getIt.registerSingleton(GameDataBloc());
-  getIt.registerSingleton(MessageBloc());
-  getIt.registerSingleton(PlatformGamesBloc());
-  getIt.registerSingleton(ChatsBloc());
-  getIt.registerSingleton(NotificationsBloc());
-  getIt.registerSingleton(MatchesBloc());
-  getIt.registerSingleton(PlatformGameMatchesBloc());
-  getIt.registerSingleton(FriendshipsBloc());
+  getIt.registerLazySingleton(() => UserBloc());
+  getIt.registerLazySingleton(() => GameDataBloc());
+  getIt.registerLazySingleton(() => MessageBloc());
+  getIt.registerLazySingleton(() => PlatformGamesBloc());
+  getIt.registerLazySingleton(() => ChatsBloc());
+  getIt.registerLazySingleton(() => NotificationsBloc());
+  getIt.registerLazySingleton(() => MatchesBloc());
+  getIt.registerLazySingleton(() => PlatformGameMatchesBloc());
+  getIt.registerLazySingleton(() => FriendshipsBloc());
 }
 

@@ -77,9 +77,8 @@ Future<void> onStart(ServiceInstance service) async {
   } catch (e) {
     debugPrint('Error creating notification channel: $e');
   }
-  
-  // Pequeño delay para asegurar que el canal esté creado
-  await Future.delayed(const Duration(milliseconds: 500));
+
+  service.invoke("service_started");
   
   try {
     const storage = FlutterSecureStorage();

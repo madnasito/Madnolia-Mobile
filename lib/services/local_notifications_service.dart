@@ -40,7 +40,7 @@ class LocalNotificationsService {
   static Future<void> initialize() async {
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
-          android: AndroidInitializationSettings("@mipmap/ic_launcher")
+          android: AndroidInitializationSettings("@mipmap/launcher_icon")
         );
 
      {
@@ -492,24 +492,10 @@ static Future<void> _updateSummaryNotification() async {
     await initializeService();
     startBackgroundService();
     
-    // Esperar por conexión con timeout
-    final completer = Completer<void>();
-    final subscription = service.on('connected_socket').listen((_) {
-      if (!completer.isCompleted) {
-        service.invoke('new_message', messageData);
-        completer.complete();
-      }
+    service.on('service_started').listen((_) {
+      debugPrint('Service started, sending message...');
+      service.invoke('new_message', messageData);
     });
-    
-    // Timeout después de 10 segundos
-    Timer(const Duration(seconds: 10), () {
-      if (!completer.isCompleted) {
-        subscription.cancel();
-        completer.completeError(TimeoutException("Socket connection timeout"));
-      }
-    });
-    
-    await completer.future;
   }
 
   static Future<void> _sendMessage(
