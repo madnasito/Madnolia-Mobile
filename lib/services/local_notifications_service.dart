@@ -384,11 +384,12 @@ static Future<void> deleteRoomMessages(String room) async {
         // 3. Cancelar solo la notificación específica de esta sala
         await _notificationsPlugin.cancel(roomNotificationId);
         
-        // 4. Si hay más grupos activos, actualizar el resumen
-        if (_roomMessages.isNotEmpty) {
+        // 4. Si hay más de un grupo activo, actualizar el resumen
+        if (_roomMessages.length > 1) {
             await _updateSummaryNotification();
         } else {
-            // 5. Si no hay más grupos, cancelar el resumen también
+            // 5. Si queda 1 o 0, ya no se necesita un resumen.
+            // Si queda 1, su notificación individual ya está visible.
             await _notificationsPlugin.cancel(-1); // ID del resumen
         }
         
