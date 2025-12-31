@@ -327,6 +327,11 @@ class LocalNotificationsService {
   @pragma("vm:entry-point")
   static void onDidReceiveNotificationResponse(NotificationResponse details) async {
 
+      if (details.payload == null || details.payload!.isEmpty) {
+        debugPrint("Notification payload is empty.");
+        return;
+      }
+
       // _roomMessages.clear();
       // _userMessages.clear();
 
