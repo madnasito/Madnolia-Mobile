@@ -178,7 +178,7 @@ class LocalNotificationsService {
           groupKey: groupKey,
           setAsGroupSummary: false,
           importance: Importance.high,
-          icon: 'ic_notifications',
+          icon: '@drawable/ic_notifications',
           priority: Priority.high,
           category: AndroidNotificationCategory.message,
           colorized: true,
@@ -243,7 +243,7 @@ class LocalNotificationsService {
             styleInformation: inboxStyleInformation,
             groupKey: groupKey,
             setAsGroupSummary: true,
-            icon: 'ic_notifications',
+            icon: '@drawable/ic_notifications',
           ),
         );
         
@@ -279,7 +279,7 @@ class LocalNotificationsService {
             "Main Channel",
             groupKey: "gfg",          
             playSound: true, 
-            icon: 'ic_notifications',
+            icon: '@drawable/ic_notifications',
             subText: t.NOTIFICATIONS.MATCH_INVITATION,
             styleInformation: BigPictureStyleInformation(
               icon,
@@ -305,7 +305,7 @@ class LocalNotificationsService {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails = const NotificationDetails(
         android: AndroidNotificationDetails(
-            icon: 'ic_notifications',
+            icon: '@drawable/ic_notifications',
             "Channel Id",
             "Main Channel",
             groupKey: "gfg",
@@ -438,7 +438,7 @@ static Future<void> _updateSummaryNotification() async {
                 styleInformation: inboxStyleInformation,
                 groupKey: groupKey,
                 setAsGroupSummary: true,
-                icon: 'ic_notifications',
+                icon: '@drawable/ic_notifications',
             ),
         );
         
