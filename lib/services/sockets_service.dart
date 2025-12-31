@@ -77,8 +77,6 @@ Future<void> onStart(ServiceInstance service) async {
   } catch (e) {
     debugPrint('Error creating notification channel: $e');
   }
-
-  service.invoke("service_started");
   
   try {
     const storage = FlutterSecureStorage();
@@ -136,6 +134,7 @@ Future<void> onStart(ServiceInstance service) async {
   String username = "";
   String? userId = await storage.read(key: "userId");
 
+  service.invoke("service_started");
   socket.onConnect((_) async {
 
     debugPrint('Connected. Socket ID: ${socket.id}');
@@ -332,12 +331,14 @@ Future<void> onStart(ServiceInstance service) async {
 
   service.on("new_message").listen((onData) async {
     try {
+      debugPrint("NEW MESSAGE FROM BACKGROUND SERVICE");
       final message = CreateMessage.fromJson(onData!);
+      debugPrint('Creator: ${userId!}');
       final result = await chatMessageRepository.createOrUpdate(
         ChatMessageCompanion(
+          creator: Value(userId),
           content: Value(message.content),
           conversation: Value(message.conversation),
-          creator: Value(userId!),
           date: Value(DateTime.now()),
           id: Value(message.id),
           status: Value(ChatMessageStatus.sent),
@@ -346,9 +347,10 @@ Future<void> onStart(ServiceInstance service) async {
         )
       );
 
-      debugPrint(result.toString());
+      debugPrint('Sended message: ${result.toString()}');
       socket.emitWithAck("message", onData);
     } catch (e) {
+      debugPrint("Error sending message:");
       debugPrint(e.toString());
       rethrow;
     }
