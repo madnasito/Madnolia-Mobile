@@ -21,6 +21,7 @@ import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
+import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:uuid/uuid.dart';
 import '../models/chat/chat_message_model.dart';
@@ -271,6 +272,7 @@ class LocalNotificationsService {
       final matchDb = await _matchRepository.getMatchById(invitation.match);
       final userDb = await _userRepository.getUserById(invitation.user);
       final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeImage(invitation.img)));
+      final String platformName = getPlatformInfo(matchDb.platform.id).name;
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
       
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
@@ -284,7 +286,7 @@ class LocalNotificationsService {
             subText: t.NOTIFICATIONS.MATCH_INVITATION,
             styleInformation: BigPictureStyleInformation(
               icon,
-              contentTitle: "${t.NOTIFICATIONS.INVITED_TO} ${invitation.name}",
+              contentTitle: "${t.NOTIFICATIONS.INVITED_TO} ${invitation.name} | $platformName",
               summaryText: "@${userDb.username}",
             ),
             // styleInformation: BigPictureStyleInformation(bigPicture),
