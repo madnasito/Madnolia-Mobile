@@ -31,6 +31,7 @@ class LocalNotificationsService {
 
   static final _userRepository = RepositoryManager().user;
   static final _matchRepository = RepositoryManager().match;
+  static final _gamesRepository = RepositoryManager().games;
    // Instance of Flutternotification plugin
    @pragma("vm:entry-point")
    static final FlutterLocalNotificationsPlugin _notificationsPlugin =
@@ -303,13 +304,22 @@ class LocalNotificationsService {
     try {
       final matchDb = await _matchRepository.getMatchById(payload.match);
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      NotificationDetails notificationDetails = const NotificationDetails(
+      final gameDb = await _gamesRepository.getGameById(matchDb.game);
+      final image = await imageProviderToBase64(
+        CachedNetworkImageProvider(resizeImage(gameDb.background!))
+      );
+      final icon = ByteArrayAndroidBitmap.fromBase64String(image);
+
+      NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
             icon: '@drawable/ic_notifications',
             "Channel Id",
             "Main Channel",
             groupKey: "gfg",
             playSound: true,
+            styleInformation: gameDb.background != null ? BigPictureStyleInformation(
+              icon
+            ) : null,
             timeoutAfter: 1000 * 60 * 5,
             priority: Priority.high),
       );

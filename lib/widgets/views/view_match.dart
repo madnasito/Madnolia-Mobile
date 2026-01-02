@@ -14,7 +14,6 @@ import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
 import '../../enums/chat_message_type.enum.dart';
 import '../molecules/chat/molecule_match_chat_input.dart';
-import 'package:flutter_mentions/flutter_mentions.dart';
 
 
 class ViewMatch extends StatefulWidget {
