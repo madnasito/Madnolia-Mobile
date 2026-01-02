@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart' show CenterTitleAtom;
@@ -33,19 +33,19 @@ class OrganismRegisterForm extends StatelessWidget {
       key: formKey,
       child: Column(
         children: [
-          CenterTitleAtom(text: translate("REGISTER.TITLE")),
+          CenterTitleAtom(text: t.REGISTER.TITLE),
           const SizedBox(height: 40),
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
             child: MoleculeTextField(
               onChanged: (value) => changeScroll(false),
               name: "name",
-              label: translate("FORM.INPUT.NAME"),
+              label: t.FORM.INPUT.NAME,
               icon: Icons.abc_rounded,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
-                FormBuilderValidators.minLength(1, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '1'})),
-                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'})) 
+                FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
+                FormBuilderValidators.minLength(1, errorText: t.FORM.VALIDATIONS.MIN_LENGTH(count: '1')),
+                FormBuilderValidators.maxLength(20, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '20')) 
               ]),
             ),
           ),
@@ -54,12 +54,12 @@ class OrganismRegisterForm extends StatelessWidget {
             child: MoleculeTextField(
               // onChanged: (value) => changeScroll(false),
               name: "username",
-              label: translate("FORM.INPUT.USERNAME"),
+              label: t.FORM.INPUT.USERNAME,
               icon: Icons.account_circle_outlined,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
-                FormBuilderValidators.username(errorText: translate('FORM.VALIDATIONS.USERNAME_INVALID')),
-                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'})) 
+                FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
+                FormBuilderValidators.username(errorText: t.FORM.VALIDATIONS.USERNAME_INVALID),
+                FormBuilderValidators.maxLength(20, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '20')) 
                 // FormBuilderValidators.notEqual(notValidUser)
               ]),
             ),
@@ -69,12 +69,12 @@ class OrganismRegisterForm extends StatelessWidget {
             child: MoleculeTextField(
               onChanged: (value) => changeScroll(false),
               name: "email",
-              label: translate("FORM.INPUT.EMAIL"),
+              label: t.FORM.INPUT.EMAIL,
               icon: Icons.email_outlined,
               keyboardType: TextInputType.emailAddress,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
-                FormBuilderValidators.email(errorText: translate('FORM.VALIDATIONS.INVALID_EMAIL')),
+                FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
+                FormBuilderValidators.email(errorText: t.FORM.VALIDATIONS.INVALID_EMAIL),
                 // FormBuilderValidators.notEqual(notValidEmail)
               ])
             ),
@@ -84,20 +84,20 @@ class OrganismRegisterForm extends StatelessWidget {
             child: MoleculeTextField(
               onChanged: (value) => changeScroll(false),
               name: "password",
-              label: translate("FORM.INPUT.PASSWORD"),
+              label: t.FORM.INPUT.PASSWORD,
               icon: Icons.lock_outline_rounded,
               isPassword: true,
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
-                FormBuilderValidators.minLength(6, errorText: translate('FORM.VALIDATIONS.MIN_LENGTH', args: {'count': '6'})),
-                FormBuilderValidators.maxLength(40, errorText: translate('FORM.VALIDATIONS.INVALID_LENGTH')) 
+                FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
+                FormBuilderValidators.minLength(6, errorText: t.FORM.VALIDATIONS.MIN_LENGTH(count: '6')),
+                FormBuilderValidators.maxLength(40, errorText: t.FORM.VALIDATIONS.INVALID_LENGTH) 
               ]),
             ),
           ),
             
           StatefulBuilder(
             builder: (context, setState) => MoleculeFormButton(
-              text: translate("REGISTER.NEXT"),
+              text: t.REGISTER.NEXT,
               isLoading: loading,
               onPressed: () async {
                 try {
@@ -152,11 +152,11 @@ class OrganismRegisterForm extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-            FadeIn(delay: const Duration(milliseconds: 400),child: Text(translate("REGISTER.SUBTITLE"))),
+            FadeIn(delay: const Duration(milliseconds: 400),child: Text(t.REGISTER.SUBTITLE)),
             const SizedBox(width: 5),
             FadeIn(delay: const Duration(milliseconds: 450),child: GestureDetector(
               onTap: () => context.goNamed('login'),
-              child: Text(translate("REGISTER.SUB_LOGIN"), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),))),
+              child: Text(t.REGISTER.SUB_LOGIN, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),))),
                       ]
                       ,)
         ],

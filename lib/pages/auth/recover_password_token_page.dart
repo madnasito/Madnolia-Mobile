@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/scaffolds/unloged_scaffold.dart';
@@ -38,7 +38,7 @@ class RecoverPasswordTokenPage extends StatelessWidget {
                       )
                     ),
                   SizedBox(height: 15),
-                  Text(translate('UTILS.RECOVERING_PASSWORD_FOR', args: {'name': snapshot.data?.name}), 
+                  Text(t.UTILS.RECOVERING_PASSWORD_FOR(name: snapshot.data!.name), 
                     style: Theme.of(context).textTheme.titleMedium
                   ),
                   const SizedBox(height: 15),
@@ -58,13 +58,13 @@ class RecoverPasswordTokenPage extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        translate('RECOVER_PASSWORD.ERROR_GETTING_INFO'),
+                        t.RECOVER_PASSWORD.ERROR_GETTING_INFO,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        translate('RECOVER_PASSWORD.HOME_PAGE_REDIRECTING'),
+                        t.RECOVER_PASSWORD.HOME_PAGE_REDIRECTING,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey),
                       ),

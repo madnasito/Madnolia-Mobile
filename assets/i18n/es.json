@@ -68,9 +68,9 @@
             "INVALID_INPUT": "Entrada no válida",
             "TOO_SHORT": "Muy corto",
             "TOO_LONG": "Muy largo",
-            "MIN_LENGTH": "Mínimo {count} caracteres",
-            "MAX_LENGTH": "Máximo {count} caracteres",
-            "MIN_MAX_LENGTH": "Entre {min} y {max} caracteres",
+            "MIN_LENGTH": "Mínimo $count caracteres",
+            "MAX_LENGTH": "Máximo $count caracteres",
+            "MIN_MAX_LENGTH": "Entre $min y $max caracteres",
             "ONLY_LETTERS": "Solo letras permitidas",
             "ONLY_NUMBERS": "Solo números permitidos",
             "LETTERS_AND_NUMBERS": "Solo letras y números permitidos",
@@ -83,7 +83,7 @@
             "INVALID_TIME": "Hora no válida",
             "PASSWORDS_DONT_MATCH": "Las contraseñas no coinciden",
             "PASSWORD_TOO_WEAK": "Contraseña muy débil",
-            "PASSWORD_MIN_LENGTH": "La contraseña debe tener al menos {count} caracteres",
+            "PASSWORD_MIN_LENGTH": "La contraseña debe tener al menos $count caracteres",
             "PASSWORD_REQUIREMENTS": "La contraseña debe incluir mayúsculas, minúsculas y números",
             "USERNAME_INVALID": "Nombre de usuario no válido",
             "USERNAME_TOO_SHORT": "Nombre de usuario muy corto",
@@ -93,13 +93,13 @@
             "INVALID_NAME": "Nombre no válido",
             "NAME_TOO_LONG": "Nombre muy largo",
             "INVALID_AGE": "Edad no válida",
-            "MIN_AGE": "Edad mínima: {age} años",
-            "MAX_AGE": "Edad máxima: {age} años",
+            "MIN_AGE": "Edad mínima: $age años",
+            "MAX_AGE": "Edad máxima: $age años",
             "NUMERIC_ONLY": "Solo valores numéricos",
             "POSITIVE_NUMBER": "Debe ser un número positivo",
             "INVALID_RANGE": "Valor fuera del rango permitido",
-            "MIN_VALUE": "Valor mínimo: {value}",
-            "MAX_VALUE": "Valor máximo: {value}",
+            "MIN_VALUE": "Valor mínimo: $value",
+            "MAX_VALUE": "Valor máximo: $value",
             "WHITESPACE_NOT_ALLOWED": "No se permiten espacios en blanco",
             "MUST_CONTAIN_UPPERCASE": "Debe contener al menos una mayúscula",
             "MUST_CONTAIN_LOWERCASE": "Debe contener al menos una minúscula",
@@ -157,7 +157,7 @@
         "MATCH_CREATED": "¡Partida creada!",
         "DATE_ERROR": "Cree una fecha y hora correctas",
         "TITLE_EMPTY": "Escriba el titulo",
-        "DURATION": "Duración: {duration} minutos"
+        "DURATION": "Duración: $duration minutos"
     },
     "MATCH": {
         "MATCH_UPDATED": "Partida actualizada",
@@ -192,7 +192,8 @@
         "JOINED": "Ingresadas",
         "ERRORS": {
             "LOADING_ERROR": "Error cargando partidas",
-            "NO_MATCHES": "No hay partidas"
+            "NO_MATCHES": "No hay partidas",
+            "JOIN_FAILED": "Error al ingresar a la partida"
         }
     },
     "CONNECTIONS": {
@@ -202,7 +203,7 @@
         "ERRORS": {
             "LOADING": "Error cargando conexiones"
         },
-        "HAVE_A_REQUEST": "Tienes una solicitud para {name}",
+        "HAVE_A_REQUEST": "Tienes una solicitud para $name",
         "REQUESTS": {
             "TITLE": "Solicitudes",
             "ACCEPTED": "Aceptada",
@@ -212,7 +213,7 @@
             "PENDING": "Pendiente",
             "ACCEPT": "Aceptar",
             "REJECT": "Rechazar",
-            "USER_WANTS_TO_CONNECT": "{name} quiere conectar contigo",
+            "USER_WANTS_TO_CONNECT": "$name quiere conectar contigo",
             "ACCEPT_REQUEST": "¿Aceptar solicitud?",
             "WANT_TO_CANCELL": "¿Deseas cancelar la solicitud?",
             "CANCEL": "Cancelar solicitud"
@@ -231,7 +232,7 @@
         "MESSAGES": "Mensajes",
         "MESSAGE": "Mensaje",
         "NO_MESSAGES": "Sin mensajes",
-        "SAY_HI_TO": "Di hola a {name}",
+        "SAY_HI_TO": "Di hola a $name",
         "SAY_HI": "Saluda",
         "ERRORS": {
             "LOADING": "Error cargando mensajes",
@@ -254,11 +255,11 @@
         "ERROR_LOADING": "Error cargando notificaciones",
         "MATCH_INVITATION": "Invitacion a partida",
         "INVITED_TO": "Fuiste invitado a:",
-        "CONNECTION_REQUEST": "{name} quiere conectar contigo",
+        "CONNECTION_REQUEST": "$name quiere conectar contigo",
         "ACCEPT_REQUEST_TITLE": "¿Aceptar solicitud?",
         "INVITATION_TO_MATCH": "Tienes una invitacion para: ",
         "MATCH_READY": "Partida lista",
-        "MATCH_STARTED": "{name} ha empezado"
+        "MATCH_STARTED": "$name ha empezado"
     },
     "FRIENDS": {
         "TITLE": "Amigos",
@@ -326,7 +327,7 @@
       "SELECT_FILE": "Seleccionar archivo",
       "FILE": "Archivo",
       "RELOAD": "Recargar",
-      "RECOVERING_PASSWORD_FOR": "Recuperando contraseña para {name}",
+      "RECOVERING_PASSWORD_FOR": "Recuperando contraseña para $name",
       "KEEPING_CONNECTIONS": "Manteniendo conexiones activas",
       "ACCEPT": "Aceptar",
       "CANCEL": "Cancelar",
@@ -358,7 +359,8 @@
         "LOADING_GAME": "Error cargando el juego, vuelva a intentarlo",
         "EMAIL_DATE_LIMIT": "Debe esperar al menos 15 dias para poder actualizar su correo",
         "IMAGE_DATA": "Hubo un problema al cargar esta imagen \nPor favor, suba otra imagen",
-        "INVALID_CREDENTIALS": "Usuario o contraseña incorrectos"
+        "INVALID_CREDENTIALS": "Usuario o contraseña incorrectos",
+        "UNKNOWN": "Error desconocido"
     },
     "NETWORK": {
         "VERIFY_CONNECTION": "Verifica tu conexión"
@@ -370,8 +372,8 @@
   },
   "SHARE": {
     "TITLE": "⚡️ ¡Comparte esta partida!",
-    "SUBJECT": "🎮 Juguemos {name}",
-    "TEXT": "🎮 Juguemos {gameName} \n⚡️ Unete aqui: {match}"
+    "SUBJECT": "🎮 Juguemos $name",
+    "TEXT": "🎮 Juguemos $gameName \n⚡️ Unete aqui: $match"
   }
 }
 

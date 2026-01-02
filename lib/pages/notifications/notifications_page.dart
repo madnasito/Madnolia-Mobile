@@ -1,7 +1,7 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
@@ -43,7 +43,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
         child: Column(
             children: [
               const SizedBox(height: 20),
-              CenterTitleAtom(text: translate("NOTIFICATIONS.TITLE"), textStyle: neonTitleText,),
+              CenterTitleAtom(text: t.NOTIFICATIONS.TITLE, textStyle: neonTitleText,),
               const SizedBox(height: 10),
               Expanded(
                 child: OrganismNotifications(),

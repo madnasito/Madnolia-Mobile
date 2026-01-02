@@ -1,1 +1,0 @@
-/home/madna/Documents/Madnolia/madnolia-mobile/build/app/intermediates/cxx/RelWithDebInfo/3s345x2a/obj/arm64-v8a

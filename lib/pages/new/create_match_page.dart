@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:animate_do/animate_do.dart';
@@ -37,7 +37,7 @@ class _NewPageState extends State<NewPage> {
               FadeIn(
                   delay: const Duration(milliseconds: 300),
                   child: CenterTitleAtom(
-                    text: translate("CREATE_MATCH.TITLE"),
+                    text: t.CREATE_MATCH.TITLE,
                     textStyle: neonTitleText,
                   )),
               const SizedBox(height: 10),

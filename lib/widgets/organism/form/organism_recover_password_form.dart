@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart' show FormBuilder, FormBuilderState;
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/services/mail_service.dart' show MailService;
 import 'package:madnolia/widgets/alert_widget.dart';
@@ -28,16 +28,16 @@ class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordFor
           MoleculeTextField(
             keyboardType: TextInputType.emailAddress,
             name: "email",
-            label: translate("REGISTER.EMAIL"),
+            label: t.REGISTER.EMAIL,
             icon: Icons.email_outlined,
             validator: FormBuilderValidators.compose([
-              FormBuilderValidators.email(errorText: translate('FORM.VALIDATIONS.INVALID_EMAIL'))
+              FormBuilderValidators.email(errorText: t.FORM.VALIDATIONS.INVALID_EMAIL)
             ]),
             autovalidateMode: AutovalidateMode.onUnfocus,
           ),
           SizedBox(height: 20),
           MoleculeFormButton(
-            text: translate("RECOVER_PASSWORD.RECOVER_PASSWORD"), 
+            text: t.RECOVER_PASSWORD.RECOVER_PASSWORD, 
             color: Colors.transparent, 
             isLoading: _isLoading, // Pasamos el estado de carga al botón
             onPressed: () async {
@@ -71,7 +71,7 @@ class _OrganismRecoverPasswordFormState extends State<OrganismRecoverPasswordFor
                   formKey.currentState?.reset();
                   toastification.show(
                     context: context, // optional if you use ToastificationWrapper
-                    title: Text(translate("RECOVER_PASSWORD.EMAIL_SENDED")),
+                    title: Text(t.RECOVER_PASSWORD.EMAIL_SENDED),
                     autoCloseDuration: const Duration(seconds: 5),
                     style: ToastificationStyle.fillColored,
                   );

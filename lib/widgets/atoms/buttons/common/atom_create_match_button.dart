@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import '../../../../i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 
 class AtomCreateMatchButton extends StatelessWidget {
@@ -19,7 +19,7 @@ class AtomCreateMatchButton extends StatelessWidget {
           children: [
             Icon(Icons.bolt_outlined, color: const Color.fromARGB(255, 255, 242, 126),),
             SizedBox(width: 8),
-            Text(translate("HEADER.MATCH"), style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),),
+            Text(t.HEADER.MATCH, style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),),
           ]),
     );
   }

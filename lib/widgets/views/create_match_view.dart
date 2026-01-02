@@ -15,7 +15,7 @@ import 'package:madnolia/widgets/molecules/form/molecule_text_form_field.dart';
 import 'package:madnolia/widgets/search_user_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/utils/platforms.dart';
@@ -68,11 +68,11 @@ class MatchFormView extends StatelessWidget {
                   const SizedBox(height: 20),
             MoleculeTextField(
               name: 'title', 
-              label: translate('CREATE_MATCH.MATCH_NAME'),
+              label: t.CREATE_MATCH.MATCH_NAME,
               icon: Icons.title_rounded,
               validator: FormBuilderValidators.compose([
                 // Solo validamos longitud máxima, sin requerir mínimo
-                FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'}), checkNullOrEmpty: false)
+                FormBuilderValidators.maxLength(20, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '20'), checkNullOrEmpty: false)
               ]),
             ),
             const SizedBox(height: 20),
@@ -80,7 +80,7 @@ class MatchFormView extends StatelessWidget {
             SimpleCustomInput(
               iconData: CupertinoIcons.calendar_today,
               keyboardType: TextInputType.none,
-              placeholder: translate("CREATE_MATCH.DATE"),
+              placeholder: t.CREATE_MATCH.DATE,
               controller: dateController,
               onTap: () async {
                 DateTime? dateTime = await showOmniDateTimePicker(
@@ -126,11 +126,11 @@ class MatchFormView extends StatelessWidget {
             const SizedBox(height: 20),
             MoleculeTextField(
               name: 'description', 
-              label: translate('CREATE_MATCH.DESCRIPTION'),
+              label: t.CREATE_MATCH.DESCRIPTION,
               icon: Icons.description_outlined,
               validator: FormBuilderValidators.compose([
                 // Solo validamos longitud máxima
-                FormBuilderValidators.maxLength(100, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '100'}), checkNullOrEmpty: false)
+                FormBuilderValidators.maxLength(100, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '100'), checkNullOrEmpty: false)
               ]),
             ),
             const SizedBox(height: 20),
@@ -162,14 +162,14 @@ class MatchFormView extends StatelessWidget {
             StatefulBuilder(
               builder: (BuildContext context, void Function(void Function()) setState) =>
               MoleculeFormButton(
-                text: translate("CREATE_MATCH.CREATE_MATCH"),
+                text: t.CREATE_MATCH.CREATE_MATCH,
                 color: Colors.transparent,
                 isLoading: uploading,
                 onPressed: () async {
                   try {
                     if (dateController.text == "") {
                       return Toast.show(
-                          translate("CREATE_MATCH.DATE_ERROR"),
+                          t.CREATE_MATCH.DATE_ERROR,
                           gravity: 100,
                           border: Border.all(color: Colors.blueAccent),
                           textStyle: const TextStyle(fontSize: 18),
@@ -206,7 +206,7 @@ class MatchFormView extends StatelessWidget {
                       return showErrorServerAlert(context, resp);
                     } else {
                         Toast.show(
-                          translate("CREATE_MATCH.MATCH_CREATED"),
+                          t.CREATE_MATCH.MATCH_CREATED,
                           gravity: 100,
                           border: Border.all(color: Colors.blueAccent),
                           textStyle: const TextStyle(fontSize: 18),

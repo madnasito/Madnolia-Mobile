@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:madnolia/widgets/organism/organism_platform_game_matches.dart';
 
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import '../../utils/platforms.dart';
 
 class GamePage extends StatefulWidget {
@@ -91,8 +91,8 @@ class _GamePageState extends State<GamePage> {
                             ),
                           child: ExpandableText(
                             game.description,
-                            expandText: translate("UTILS.SHOW_MORE"),
-                            collapseText: translate("UTILS.SHOW_LESS"),
+                            expandText: t.UTILS.SHOW_MORE,
+                            collapseText: t.UTILS.SHOW_LESS,
                             maxLines: 6,
                             animation: true,
                             collapseOnTextTap: true,

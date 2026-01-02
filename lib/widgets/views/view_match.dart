@@ -6,7 +6,7 @@ import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/message/message_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
@@ -14,6 +14,7 @@ import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
 import '../../enums/chat_message_type.enum.dart';
 import '../molecules/chat/molecule_match_chat_input.dart';
+
 
 class ViewMatch extends StatefulWidget {
   final MatchData match;
@@ -88,20 +89,20 @@ class _ViewMatchState extends State<ViewMatch> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        _buildMatchHeader(),
-        Expanded(child: MoleculeRoomMessages(room: _match.id)),
-        MoleculeMatchChatInput(
-          match: _match,
-          conversation: _match.id, messageType: ChatMessageType.match,
-          onMatchUpdated: (newMatch) {
-            setState(() {
-              _match = newMatch;
-            });
-          },
-        ),
-      ],
-    );
+        children: [
+          _buildMatchHeader(),
+          Expanded(child: MoleculeRoomMessages(room: _match.id)),
+          MoleculeMatchChatInput(
+            match: _match,
+            conversation: _match.id, messageType: ChatMessageType.match,
+            onMatchUpdated: (newMatch) {
+              setState(() {
+                _match = newMatch;
+              });
+            },
+          ),
+        ],
+      );
   }
 
   Widget _buildMatchHeader() {
@@ -145,13 +146,13 @@ class _ViewMatchState extends State<ViewMatch> {
               IconButton(onPressed: () async{
                 // final String apiUrl = dotenv.get("SOCKETS_URL");
                 final params = ShareParams(
-                  title: translate("SHARE.TITLE"),
+                  title: t.SHARE.TITLE,
                   // uri: Uri.tryParse("https://madnolia.app/match/${_match.id}"),
                   // subject: "🎮 Let's play ${widget.game.name}",
-                  text: translate("SHARE.TEXT", args: {
-                    "gameName": widget.game.name,
-                    "match": "https://madnolia.app/match/${_match.id}"
-                    })
+                  text: t.SHARE.TEXT(
+                    gameName: widget.game.name,
+                    match: "https://madnolia.app/match/${_match.id}"
+                    )
                   // uri: Uri.parse('https://madnolia.app/match/${_match.id}')
                 );
       
@@ -198,10 +199,10 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
       builder: (context, state) {
 
         if (state.status == ListStatus.failure && state.roomMessages.isEmpty) {
-          return Center(child: Text(translate('CHAT.ERRORS.LOADING')));
+          return Center(child: Text(t.CHAT.ERRORS.LOADING_CHAT));
         }
         else if (state.roomMessages.isEmpty && state.hasReachedMax) {
-          return Center(child: Text(translate('CHAT.SAY_HI')));
+          return Center(child: Text(t.CHAT.SAY_HI));
         }
 
         else if (state.status == ListStatus.initial && state.roomMessages.isEmpty) {

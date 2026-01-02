@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
@@ -49,7 +49,7 @@ class _AtomJoinMatchButtonState extends State<AtomJoinMatchButton> {
       );
     }
     return FormButton(
-      text: translate('MATCH.JOIN_TO_MATCH'),
+      text: t.MATCH.JOIN_TO_MATCH,
       color: Colors.transparent,
       onPressed: () async {
         setState(() {
@@ -75,7 +75,7 @@ class _AtomJoinMatchButtonState extends State<AtomJoinMatchButton> {
         } catch (e) {
           debugPrint(e.toString());
           setState(() {
-            _errorMessage = translate('MATCH.ERRORS.JOIN_FAILED');
+            _errorMessage = t.MATCHES.ERRORS.JOIN_FAILED;
             _isLoading = false;
           });
         }

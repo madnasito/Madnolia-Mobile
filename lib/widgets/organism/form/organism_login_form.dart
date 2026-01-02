@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart';
@@ -21,7 +21,7 @@ class OrganismLoginForm extends StatelessWidget {
       child: Column(
         children: [
         MoleculeTextField(
-          label: translate("FORM.INPUT.USERNAME_EMAIL"),
+          label: t.FORM.INPUT.USERNAME_EMAIL,
           name: "username",
           icon: Icons.person_2_outlined,
           onChanged: (value) {
@@ -29,24 +29,24 @@ class OrganismLoginForm extends StatelessWidget {
             FormBuilder.of(context)?.fields['username']?.didChange(trimmed);
           },
           validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
+            FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
           ]),
         ),
         const SizedBox(height: 15),
         MoleculeTextField(
-          label: translate("REGISTER.PASSWORD"),
+          label: t.REGISTER.PASSWORD,
           name: "password",
           isPassword: true,
           icon: Icons.lock_outline_rounded,
           validator: FormBuilderValidators.compose([
-            FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
-            FormBuilderValidators.maxLength(40, errorText: translate('FORM.VALIDATIONS.INVALID_LENGTH')) 
+            FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
+            FormBuilderValidators.maxLength(40, errorText: t.FORM.VALIDATIONS.INVALID_LENGTH) 
           ]),
         ),
         const SizedBox(height: 15),
         StatefulBuilder(
           builder: (BuildContext context, setState) => MoleculeFormButton(
-            text: translate('HEADER.LOGIN'),
+            text: t.HEADER.LOGIN,
             isLoading: logging,
             color: Colors.transparent,
             onPressed:(logging == false) ? () async {

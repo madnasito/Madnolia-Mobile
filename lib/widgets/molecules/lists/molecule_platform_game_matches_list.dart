@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/enums/platforms_id.enum.dart';
 import 'package:madnolia/utils/platforms.dart';
@@ -65,7 +65,7 @@ class MoleculePlatformGameMatchesList extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(4.0),
               child: Text(
-                translate(translate('MATCH.STATUS.RUNNING')),
+                t.MATCH.STATUS.RUNNING,
                 style: const TextStyle(color: Color.fromARGB(255, 142, 255, 236), fontSize: 17)
               ),
             ),

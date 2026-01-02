@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:madnolia/blocs/blocs.dart';
 
@@ -48,12 +48,12 @@ class OrganismDrawer extends StatelessWidget {
                   children: [
                     AtomMenuButton(
                       icon: Icon(Icons.bolt_outlined, size: 40,color: Colors.white),
-                      title: translate("HEADER.MATCH"),
+                      title: t.HEADER.MATCH,
                       route: "/new",
                     ),
                     AtomMenuButton(
                       icon: Icon(CupertinoIcons.gamecontroller, size: 40, color: Colors.white),
-                      title: translate('MATCHES.TITLE'),
+                      title: t.MATCHES.TITLE,
                       route: "/matches",
                     ),
                     AtomMenuButton(
@@ -65,7 +65,7 @@ class OrganismDrawer extends StatelessWidget {
                       ] 
                       ),
                       title:
-                          translate("HEADER.NOTIFICATIONS"),
+                          t.HEADER.NOTIFICATIONS,
                       route: "/notifications",
                     ),
                     AtomMenuButton(
@@ -83,7 +83,7 @@ class OrganismDrawer extends StatelessWidget {
                     ),
                     AtomMenuButton(
                       icon: Icon(Icons.person_outline_outlined, size: 40, color: Colors.white),
-                      title: translate("HEADER.PROFILE"),
+                      title: t.HEADER.PROFILE,
                       route: "/me"),
                   ],
                 ),
@@ -108,7 +108,7 @@ class OrganismDrawer extends StatelessWidget {
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            translate('HEADER.LOGOUT'),
+                            t.HEADER.LOGOUT,
                             style: const TextStyle(fontSize: 15, color: Colors.white),
                           )
                         ],

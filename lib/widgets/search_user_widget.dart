@@ -8,7 +8,7 @@ import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 
 import 'custom_input_widget.dart';
 
@@ -52,7 +52,7 @@ class _SeatchUserState extends State<SeatchUser> {
           iconData: CupertinoIcons.person_2,
           controller: controller,
           placeholder:
-              translate("CREATE_MATCH.SEARCH_USER"),
+              t.CREATE_MATCH.SEARCH_USER,
           onChanged: (value) async {
             counter++;
             Timer(

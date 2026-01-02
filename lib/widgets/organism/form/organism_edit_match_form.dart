@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
@@ -47,23 +47,23 @@ const OrganismEditMatchForm({super.key, required this.match, required this.game}
             child: Column(
               children: [
                 const SizedBox(height: 10,),
-                AtomStyledText(text: translate('MATCH.EDIT_MATCH'), style: presentationTitle),
+                AtomStyledText(text: t.MATCH.EDIT_MATCH, style: presentationTitle),
                 const SizedBox(height: 30),
                 MoleculeTextField(
                   icon: Icons.abc_rounded,
                   name: "title",
                   initialValue: match.title,
-                  label: translate("CREATE_MATCH.MATCH_NAME"),
+                  label: t.CREATE_MATCH.MATCH_NAME,
                   validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(errorText: translate('FORM.VALIDATIONS.REQUIRED')),
-                    FormBuilderValidators.maxLength(20, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '20'}))
+                    FormBuilderValidators.required(errorText: t.FORM.VALIDATIONS.REQUIRED),
+                    FormBuilderValidators.maxLength(20, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '20'))
                   ]),
                 ),
                 const SizedBox(height: 10),
                 SimpleCustomInput(
                       iconData: CupertinoIcons.calendar_today,
                       keyboardType: TextInputType.none,
-                      placeholder: translate("CREATE_MATCH.DATE"),
+                      placeholder: t.CREATE_MATCH.DATE,
                       controller: dateController,
                       onTap: () async {
                         DateTime? dateTime = await showOmniDateTimePicker(
@@ -117,9 +117,9 @@ const OrganismEditMatchForm({super.key, required this.match, required this.game}
                   icon: Icons.description_outlined,
                   name: "description",
                   initialValue: match.description,
-                  label: translate("CREATE_MATCH.DESCRIPTION"),
+                  label: t.CREATE_MATCH.DESCRIPTION,
                   validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.maxLength(80, errorText: translate('FORM.VALIDATIONS.MAX_LENGTH', args: {'count': '80'}), checkNullOrEmpty: false),
+                    FormBuilderValidators.maxLength(80, errorText: t.FORM.VALIDATIONS.MAX_LENGTH(count: '80'), checkNullOrEmpty: false),
                   ]),
                 ),
                 const SizedBox(height: 10),
@@ -155,7 +155,7 @@ const OrganismEditMatchForm({super.key, required this.match, required this.game}
                       debugPrint(resp.toString());
 
                       if(context.mounted) context.pop();
-                      Toast.show(translate("MATCH.MATCH_UPDATED"), border: Border.all(color: Colors.greenAccent), duration: 4,gravity: 5 );
+                      Toast.show(t.MATCH.MATCH_UPDATED, border: Border.all(color: Colors.greenAccent), duration: 4,gravity: 5 );
                     } catch (e) {
                       if(!context.mounted) return;
 

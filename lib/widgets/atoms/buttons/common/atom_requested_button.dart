@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/models/user/simple_user_model.dart';
 import 'package:madnolia/widgets/dialogs/dialog_requested.dart' show DialogRequested;
 
@@ -27,7 +27,7 @@ class AtomRequestedButton extends StatelessWidget {
       children: [
           Icon(Icons.check_rounded),
           SizedBox(width: 8),
-          Text(translate('CONNECTIONS.REQUESTS.REQUESTED'))
+          Text(t.CONNECTIONS.REQUESTS.REQUESTED)
           ]
         ,)
       ,

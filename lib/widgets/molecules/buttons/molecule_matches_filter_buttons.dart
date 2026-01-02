@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 
@@ -39,17 +39,17 @@ class MoleculeMatchesFilterButtons extends StatelessWidget {
           segments: [
             ButtonSegment(
               value: MatchesFilterType.all,
-              label: Text(translate('MATCHES.ALL'), textAlign: TextAlign.center)
+              label: Text(t.MATCHES.ALL, textAlign: TextAlign.center)
               ,
             ),
             ButtonSegment(
               value: MatchesFilterType.created,
-              label: Text(translate('MATCHES.CREATED'), textAlign: TextAlign.center)
+              label: Text(t.MATCHES.CREATED, textAlign: TextAlign.center)
               ,
             ),
             ButtonSegment(
               value: MatchesFilterType.joined,
-              label:  Text(translate('MATCHES.JOINED'), textAlign: TextAlign.center)
+              label:  Text(t.MATCHES.JOINED, textAlign: TextAlign.center)
               ,
             ),
           ],

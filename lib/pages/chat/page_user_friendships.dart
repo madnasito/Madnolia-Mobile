@@ -1,7 +1,7 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/friendships/friendships_bloc.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
@@ -24,7 +24,7 @@ class PageUserFriendships extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            CenterTitleAtom(text: translate('FRIENDS.TITLE')),
+            CenterTitleAtom(text: t.FRIENDS.TITLE),
             const SizedBox(height: 10),
             Expanded(
               child: OrganismFriendships(),

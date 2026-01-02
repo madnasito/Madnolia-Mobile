@@ -2,7 +2,7 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 
 class AppBarOrganism extends StatelessWidget {
@@ -56,18 +56,18 @@ class AppBarOrganism extends StatelessWidget {
                       // ),
                       _MenuButton(
                         icon: Icons.bolt_outlined,
-                        title: translate("HEADER.MATCH"),
+                        title: t.HEADER.MATCH,
                         route: "/new",
                       ),
                       _MenuButton(
                         icon: Icons.notifications_outlined,
                         title:
-                            translate("HEADER.NOTIFICATIONS"),
+                            t.HEADER.NOTIFICATIONS,
                         route: "/notifications",
                       ),
                       _MenuButton(
                           icon: Icons.person_outline_outlined,
-                          title: translate("HEADER.PROFILE"),
+                          title: t.HEADER.PROFILE,
                           route: "/user"),
                       const SizedBox(height: 230),
                     ],
@@ -92,7 +92,7 @@ class AppBarOrganism extends StatelessWidget {
                               size: 30,
                             ),
                             Text(
-                              translate('HEADER.LOGOUT'),
+                              t.HEADER.LOGOUT,
                               style: TextStyle(fontSize: 15),
                             )
                           ],

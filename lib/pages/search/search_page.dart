@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/organism/organism_users_list.dart';
@@ -56,7 +56,7 @@ class _SearchPageState extends State<SearchPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AtomSearchInput(
-                placeholder: translate('SEARCH.SEARCH_USERS'),
+                placeholder: t.SEARCH.SEARCH_USERS,
                 searchController: searchController,
                 onChanged: _onSearchChanged,
               ),
@@ -70,11 +70,11 @@ class _SearchPageState extends State<SearchPage> {
                             return const CircularProgressIndicator();
                           }
                           if (snapshot.hasError || !snapshot.hasData) {
-                            return Text(translate('ERRORS.LOCAL.LOADING_USERS'));
+                            return Text(t.ERRORS.LOCAL.LOADING_USERS);
                           }
 
                           if(snapshot.data!.isEmpty) {
-                            return Text(translate('SEARCH.NO_USERS_FOUND'));
+                            return Text(t.SEARCH.NO_USERS_FOUND);
                           } 
                           return OrganismUsersList(users: snapshot.data!.map((e) => SimpleUser.fromJson(e.toJson())).toList());
                         },

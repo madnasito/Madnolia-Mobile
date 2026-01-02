@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/database/database.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat_user_model.dart';
+import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_chat_input.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_user_header.dart' show MoleculeUserHeader;
@@ -23,7 +25,7 @@ class UserChatPage extends StatelessWidget {
 
         return CustomScaffold(
           body: FutureBuilder(
-            future: RepositoryManager().friendship.getFriendshipByUserId(chatUser.id),
+            future: _loadFriendshipChatMessages(chatUser),
             builder: (context, snapshot) {
               if(snapshot.hasData){
                 return BlocProvider(
@@ -42,7 +44,7 @@ class UserChatPage extends StatelessWidget {
                   ),
                 );
               } else if(snapshot.hasError) {
-                return Center(child: Text(translate('CHAT.ERRORS.LOADING_CHAT')));
+                return Center(child: Text(t.CHAT.ERRORS.LOADING_CHAT));
               } else {
                 return Center(heightFactor: 2, child: CircularProgressIndicator());
               }
@@ -56,6 +58,12 @@ class UserChatPage extends StatelessWidget {
       context.go('/');
       return const SizedBox.shrink(); // Return empty widget while redirecting
     }
+  }
+
+  Future <FriendshipData> _loadFriendshipChatMessages(ChatUser chatUser) async {
+    final FriendshipData friendship = await RepositoryManager().friendship.getFriendshipByUserId(chatUser.id);
+    await LocalNotificationsService.deleteRoomMessages(friendship.id);
+    return friendship;
   }
 }
 

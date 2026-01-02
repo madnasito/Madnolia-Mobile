@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 
 OutlineInputBorder focusedBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(40),
@@ -89,7 +89,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       focusColor: Colors.yellow,
       elevation: 20,
       isDense: true,
-      value: widget.value,
+      initialValue: widget.value,
       style: const TextStyle(
         decoration: TextDecoration.underline,
         fontSize: 15,
@@ -103,15 +103,15 @@ class _DropDownWidgetState extends State<DropDownWidget> {
         DropdownMenuItem(
             value: "ALL",
             child: Text(
-              translate('PROFILE.USER_PAGE.INVITATIONS.ALL'),
+              t.PROFILE.USER_PAGE.INVITATIONS.EVERYONE,
             )),
         DropdownMenuItem(
           value: "PARTNERS",
-          child: Text(translate('PROFILE.USER_PAGE.INVITATIONS.PARTNERS')),
+          child: Text(t.PROFILE.USER_PAGE.INVITATIONS.PARTNERS),
         ),
         DropdownMenuItem(
           value: "NOBODY",
-          child: Text(translate('PROFILE.USER_PAGE.INVITATIONS.NO')),
+          child: Text(t.PROFILE.USER_PAGE.INVITATIONS.NO),
         )
       ],
       onChanged: (value) => widget.onChanged!(value as String?),

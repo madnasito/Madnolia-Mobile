@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/platform/platform_icon_model.dart';
 import 'package:madnolia/style/text_style.dart';
@@ -58,13 +58,13 @@ class _PlatformsViewState extends State<PlatformsView> {
         const SizedBox(height: 10),
         FadeIn(
             delay: const Duration(milliseconds: 300),
-            child: CenterTitleAtom(text: translate("REGISTER.SELECT_PLATFORMS"),
+            child: CenterTitleAtom(text: t.REGISTER.SELECT_PLATFORMS,
             textStyle: neonTitleText,),
             ),
         const SizedBox(height: 20),
         FadeIn(
             delay: const Duration(milliseconds: 500),
-            child: CenterTitleAtom(text: translate("REGISTER.SELECT_PLATFORMS_SUBTITLE"),
+            child: CenterTitleAtom(text: t.REGISTER.SELECT_PLATFORMS_SUBTITLE,
             textStyle: neonSubTitleText,),
             ),
         const SizedBox(height: 20),

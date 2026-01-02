@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
@@ -21,6 +21,7 @@ import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
+import 'package:madnolia/utils/platforms.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:uuid/uuid.dart';
 import '../models/chat/chat_message_model.dart';
@@ -31,6 +32,7 @@ class LocalNotificationsService {
 
   static final _userRepository = RepositoryManager().user;
   static final _matchRepository = RepositoryManager().match;
+  static final _gamesRepository = RepositoryManager().games;
    // Instance of Flutternotification plugin
    @pragma("vm:entry-point")
    static final FlutterLocalNotificationsPlugin _notificationsPlugin =
@@ -40,7 +42,7 @@ class LocalNotificationsService {
   static Future<void> initialize() async {
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
-          android: AndroidInitializationSettings("@mipmap/ic_launcher")
+          android: AndroidInitializationSettings("@mipmap/launcher_icon")
         );
 
      {
@@ -75,18 +77,18 @@ class LocalNotificationsService {
   @pragma("vm:entry-point")
   static Future<void> initializeTranslations() async {
       // Use PlatformDispatcher to get the device locale
-    Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
-        ? const Locale('en') // Fallback if needed
-        : const Locale('en'); // Replace with actual logic to get locale
+    // Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
+    //     ? const Locale('en') // Fallback if needed
+    //     : const Locale('en'); // Replace with actual logic to get locale
 
-    String langCode = deviceLocale.languageCode;
+    // String langCode = deviceLocale.languageCode;
 
-    List<String> supportedLangs = ['en', 'es'];
+    // List<String> supportedLangs = ['en', 'es'];
 
-    await LocalizationDelegate.create(
-      fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
-      supportedLocales: supportedLangs,
-    );
+    // await LocalizationDelegate.create(
+    //   fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
+    //   supportedLocales: supportedLangs,
+    // );
   }
 
   @pragma("vm:entry-point")
@@ -148,7 +150,7 @@ class LocalNotificationsService {
 
       final Person me = Person(
         key: currentUserDb.id,
-        name: translate("UTILS.YOU"),
+        name: t.UTILS.YOU,
         icon: ByteArrayAndroidIcon(currentUserImage),
       );
 
@@ -178,7 +180,7 @@ class LocalNotificationsService {
           groupKey: groupKey,
           setAsGroupSummary: false,
           importance: Importance.high,
-          icon: 'ic_notifications',
+          icon: '@drawable/ic_notifications',
           priority: Priority.high,
           category: AndroidNotificationCategory.message,
           colorized: true,
@@ -186,12 +188,12 @@ class LocalNotificationsService {
           actions: [
             AndroidNotificationAction(
               message.id,
-              translate("FORM.INPUT.REPLY"),
-              inputs: [AndroidNotificationActionInput(label: translate("CHAT.MESSAGE"), allowFreeFormInput: true)],
+              t.FORM.INPUT.REPLY,
+              inputs: [AndroidNotificationActionInput(label: t.CHAT.MESSAGE, allowFreeFormInput: true)],
             ),
             AndroidNotificationAction(
               message.id,
-              translate("FORM.INPUT.MARK_AS_READ"),
+              t.FORM.INPUT.MARK_AS_READ,
             )
           ],
           styleInformation: MessagingStyleInformation(
@@ -243,7 +245,7 @@ class LocalNotificationsService {
             styleInformation: inboxStyleInformation,
             groupKey: groupKey,
             setAsGroupSummary: true,
-            icon: 'ic_notifications',
+            icon: '@drawable/ic_notifications',
           ),
         );
         
@@ -270,6 +272,7 @@ class LocalNotificationsService {
       final matchDb = await _matchRepository.getMatchById(invitation.match);
       final userDb = await _userRepository.getUserById(invitation.user);
       final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeImage(invitation.img)));
+      final String platformName = getPlatformInfo(matchDb.platform.id).name;
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
       
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
@@ -279,11 +282,11 @@ class LocalNotificationsService {
             "Main Channel",
             groupKey: "gfg",          
             playSound: true, 
-            icon: 'ic_notifications',
-            subText: translate("NOTIFICATIONS.MATCH_INVITATION"),
+            icon: '@drawable/ic_notifications',
+            subText: t.NOTIFICATIONS.MATCH_INVITATION,
             styleInformation: BigPictureStyleInformation(
               icon,
-              contentTitle: "${translate('NOTIFICATIONS.INVITED_TO')} ${invitation.name}",
+              contentTitle: "${t.NOTIFICATIONS.INVITED_TO} ${invitation.name} | $platformName",
               summaryText: "@${userDb.username}",
             ),
             // styleInformation: BigPictureStyleInformation(bigPicture),
@@ -303,19 +306,28 @@ class LocalNotificationsService {
     try {
       final matchDb = await _matchRepository.getMatchById(payload.match);
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      NotificationDetails notificationDetails = const NotificationDetails(
+      final gameDb = await _gamesRepository.getGameById(matchDb.game);
+      final image = await imageProviderToBase64(
+        CachedNetworkImageProvider(resizeImage(gameDb.background!))
+      );
+      final icon = ByteArrayAndroidBitmap.fromBase64String(image);
+
+      NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
-            icon: 'ic_notifications',
+            icon: '@drawable/ic_notifications',
             "Channel Id",
             "Main Channel",
             groupKey: "gfg",
             playSound: true,
+            styleInformation: gameDb.background != null ? BigPictureStyleInformation(
+              icon
+            ) : null,
             timeoutAfter: 1000 * 60 * 5,
             priority: Priority.high),
       );
       await _notificationsPlugin.show(
-        id, translate('NOTIFICATIONS.MATCH_READY'),
-        translate('NOTIFICATIONS.MATCH_STARTED', args: {'name': payload.title}),
+        id, t.NOTIFICATIONS.MATCH_READY,
+        t.NOTIFICATIONS.MATCH_STARTED(name: payload.title),
         notificationDetails,
         payload: json.encode(matchDb.toJson()));
     } catch (e) {
@@ -326,6 +338,11 @@ class LocalNotificationsService {
 
   @pragma("vm:entry-point")
   static void onDidReceiveNotificationResponse(NotificationResponse details) async {
+
+      if (details.payload == null || details.payload!.isEmpty) {
+        debugPrint("Notification payload is empty.");
+        return;
+      }
 
       // _roomMessages.clear();
       // _userMessages.clear();
@@ -379,11 +396,12 @@ static Future<void> deleteRoomMessages(String room) async {
         // 3. Cancelar solo la notificación específica de esta sala
         await _notificationsPlugin.cancel(roomNotificationId);
         
-        // 4. Si hay más grupos activos, actualizar el resumen
-        if (_roomMessages.isNotEmpty) {
+        // 4. Si hay más de un grupo activo, actualizar el resumen
+        if (_roomMessages.length > 1) {
             await _updateSummaryNotification();
         } else {
-            // 5. Si no hay más grupos, cancelar el resumen también
+            // 5. Si queda 1 o 0, ya no se necesita un resumen.
+            // Si queda 1, su notificación individual ya está visible.
             await _notificationsPlugin.cancel(-1); // ID del resumen
         }
         
@@ -433,7 +451,7 @@ static Future<void> _updateSummaryNotification() async {
                 styleInformation: inboxStyleInformation,
                 groupKey: groupKey,
                 setAsGroupSummary: true,
-                icon: 'ic_notifications',
+                icon: '@drawable/ic_notifications',
             ),
         );
         
@@ -487,24 +505,10 @@ static Future<void> _updateSummaryNotification() async {
     await initializeService();
     startBackgroundService();
     
-    // Esperar por conexión con timeout
-    final completer = Completer<void>();
-    final subscription = service.on('connected_socket').listen((_) {
-      if (!completer.isCompleted) {
-        service.invoke('new_message', messageData);
-        completer.complete();
-      }
+    service.on('service_started').listen((_) {
+      debugPrint('Service started, sending message...');
+      service.invoke('new_message', messageData);
     });
-    
-    // Timeout después de 10 segundos
-    Timer(const Duration(seconds: 10), () {
-      if (!completer.isCompleted) {
-        subscription.cancel();
-        completer.completeError(TimeoutException("Socket connection timeout"));
-      }
-    });
-    
-    await completer.future;
   }
 
   static Future<void> _sendMessage(

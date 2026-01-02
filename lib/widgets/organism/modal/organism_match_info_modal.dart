@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/style/text_style.dart';
@@ -27,7 +27,7 @@ class OrganismMatchInfoModal extends StatelessWidget {
         
             children: [
               const SizedBox(height: 5),
-              AtomStyledText(text: translate("UTILS.DETAILS"), style: presentationTitle,textAlign: TextAlign.center,),
+              AtomStyledText(text: t.UTILS.DETAILS, style: presentationTitle,textAlign: TextAlign.center,),
               ListTile(
                 title: Text(match.title),
                 leading: const Icon(Icons.label_outline_rounded),
@@ -41,8 +41,8 @@ class OrganismMatchInfoModal extends StatelessWidget {
               match.description.isNotEmpty ? ListTile(
                 title:ExpandableText(
                   match.description,
-                  expandText: translate("UTILS.SHOW_MORE"),
-                  collapseText: translate("UTILS.SHOW_LESS"),
+                  expandText: t.UTILS.SHOW_MORE,
+                  collapseText: t.UTILS.SHOW_LESS,
                   maxLines: 5,
                   animation: true,
                   collapseOnTextTap: true,
@@ -62,7 +62,7 @@ class OrganismMatchInfoModal extends StatelessWidget {
                 endIndent: 20.0, // Indent the divider from the end
               ),
               const SizedBox(height: 10),
-              AtomStyledText(text: translate("UTILS.ADMIN"), style: presentationTitle,textAlign: TextAlign.center,),
+              AtomStyledText(text: t.UTILS.ADMIN, style: presentationTitle,textAlign: TextAlign.center,),
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 1),
                 horizontalTitleGap: 1,
@@ -75,7 +75,7 @@ class OrganismMatchInfoModal extends StatelessWidget {
             ],
           ), icon: Icons.info_outline);
         } else  if(snapshot.hasError){
-          return Center(child: Text(translate("MATCH.ERROR_LOADING")));
+          return Center(child: Text(t.MATCH.ERROR_LOADING));
         } else {
           return const Center(child: CircularProgressIndicator());
         }

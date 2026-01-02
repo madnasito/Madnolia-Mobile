@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/auth/register_model.dart' show RegisterModel;
 import 'package:madnolia/services/auth_service.dart' show AuthService;
@@ -25,7 +25,7 @@ class _OrganismSelectPlatformState extends State<OrganismSelectPlatform> {
         PlatformsView(platforms: widget.registerModel.platforms),
         StatefulBuilder(
           builder: (context, setState) =>  MoleculeFormButton(
-            text: translate("REGISTER.TITLE"),
+            text: t.REGISTER.TITLE,
             isLoading: _isLoading,
             onPressed: () async {
               try {

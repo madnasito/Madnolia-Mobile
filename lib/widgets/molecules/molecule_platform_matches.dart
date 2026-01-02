@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/models/platform/platform_games_model.dart';
@@ -87,7 +87,7 @@ class MoleculePlatformMatches extends StatelessWidget {
             direction: Axis.vertical,
             children: [
               Text(
-                "${translate("HOME.NO_MATCHES_FOR")} ",
+                "${t.HOME.NO_MATCHES_FOR} ",
                 style:
                     const TextStyle(color: Colors.grey),
               ),
@@ -104,7 +104,7 @@ class MoleculePlatformMatches extends StatelessWidget {
                   backgroundColor: Colors.black,
                   shape: const StadiumBorder(),
                 ),
-                child: Text(translate("HOME.CREATE")),
+                child: Text(t.HOME.CREATE),
               )
             ],
           )
@@ -112,18 +112,18 @@ class MoleculePlatformMatches extends StatelessWidget {
       }
       
     } else if(platformState.status == PlatformGamesStatus.failure && platformState.games.isEmpty) {
-      return Center(child: Text(translate('HOME.ERROR_LOADING_MATCHES')),);
+      return Center(child: Text(t.HOME.ERROR_LOADING_MATCHES),);
     } else {
-      return Center(child: Text(translate('HOME.ERROR_LOADING_MATCHES')));
+      return Center(child: Text(t.HOME.ERROR_LOADING_MATCHES));
     }
     
   }
   String _getMatchesTranslation(int amount){
       if(amount == 0) {
-        return translate('HOME.NO_MATCHES_FOR');
-      } else if(amount == 1) {return "$amount ${translate('HOME.MATCH')}";}
+        return t.HOME.NO_MATCHES_FOR;
+      } else if(amount == 1) {return "$amount ${t.HOME.MATCH}";}
 
-      else {return "$amount ${translate('HOME.MATCHES')}";}
+      else {return "$amount ${t.HOME.MATCHES}";}
     }
 }
 

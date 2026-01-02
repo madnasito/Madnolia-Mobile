@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 
@@ -50,7 +50,7 @@ class AtomInvitationNotification extends StatelessWidget {
             backgroundColor: Colors.grey[800],
             backgroundImage: CachedNetworkImageProvider(resizeImage(data.notification.thumb)),),
           title: RichText(
-            text: TextSpan(text: translate("NOTIFICATIONS.INVITATION_TO_MATCH"),
+            text: TextSpan(text: t.NOTIFICATIONS.INVITATION_TO_MATCH,
             children: [
               TextSpan(
                 text: data.notification.title,

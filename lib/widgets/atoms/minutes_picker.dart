@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/cubits/cubits.dart';
 
 class MinutesPicker extends StatefulWidget {
@@ -68,7 +68,7 @@ class _MinutesPicker extends State<MinutesPicker> {
           disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(40),
           borderSide: const BorderSide(color: Colors.blue)),
-          hintText: translate('CREATE_MATCH.DURATION', args: {'duration': widget.items[selectedItem].toString()}),
+          hintText: t.CREATE_MATCH.DURATION(duration: widget.items[selectedItem].toString()),
           border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(40),
           borderSide: const BorderSide(color: Colors.blue))

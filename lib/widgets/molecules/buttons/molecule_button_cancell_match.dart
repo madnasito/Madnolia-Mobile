@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/services/match_service.dart';
@@ -29,20 +29,20 @@ class MoleculeButtonCancellMatch extends StatelessWidget {
                 radius: 50,
                 backgroundImage: CachedNetworkImageProvider(game.background!) 
               ) : null,
-              title: Text(translate('MATCH.CANCELL_MATCH_QUESTION'), textAlign: TextAlign.center),
+              title: Text(t.MATCH.CANCELL_MATCH_QUESTION, textAlign: TextAlign.center),
               actions: [
                 TextButton(
                   onPressed: () async {
                     Navigator.of(context).pop();                    
                   }, 
-                  child: Text(translate('UTILS.NO'))
+                  child: Text(t.UTILS.NO)
                 ),
                 TextButton(
                   onPressed: () async {
                     try {
                       await MatchService().cancellMatch(match.id);
                       if(!context.mounted) return;
-                      Toast.show(translate("MATCH.MATCH_CANCELLED"),
+                      Toast.show(t.MATCH.MATCH_CANCELLED,
                         gravity: 100,
                         border: Border.all(color: Colors.blueAccent),
                         textStyle: const TextStyle(fontSize: 18),
@@ -55,7 +55,7 @@ class MoleculeButtonCancellMatch extends StatelessWidget {
                       if(e is Map) showErrorServerAlert(context, e);
                     }
                   }, 
-                  child: Text(translate('UTILS.YES'))
+                  child: Text(t.UTILS.YES)
                 ),
               ],
             );
@@ -68,7 +68,7 @@ class MoleculeButtonCancellMatch extends StatelessWidget {
         spacing: 5,
         children: [
           Icon(Icons.cancel, color: Colors.red),
-          Text(translate('MATCH.CANCEL_MATCH'))
+          Text(t.MATCH.CANCEL_MATCH)
         ],
       ),
     );

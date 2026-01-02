@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
@@ -78,9 +78,6 @@ Future<void> onStart(ServiceInstance service) async {
     debugPrint('Error creating notification channel: $e');
   }
   
-  // Pequeño delay para asegurar que el canal esté creado
-  await Future.delayed(const Duration(milliseconds: 500));
-  
   try {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: "token");
@@ -137,6 +134,7 @@ Future<void> onStart(ServiceInstance service) async {
   String username = "";
   String? userId = await storage.read(key: "userId");
 
+  service.invoke("service_started");
   socket.onConnect((_) async {
 
     debugPrint('Connected. Socket ID: ${socket.id}');
@@ -333,12 +331,14 @@ Future<void> onStart(ServiceInstance service) async {
 
   service.on("new_message").listen((onData) async {
     try {
+      debugPrint("NEW MESSAGE FROM BACKGROUND SERVICE");
       final message = CreateMessage.fromJson(onData!);
+      debugPrint('Creator: ${userId!}');
       final result = await chatMessageRepository.createOrUpdate(
         ChatMessageCompanion(
+          creator: Value(userId),
           content: Value(message.content),
           conversation: Value(message.conversation),
-          creator: Value(userId!),
           date: Value(DateTime.now()),
           id: Value(message.id),
           status: Value(ChatMessageStatus.sent),
@@ -347,9 +347,10 @@ Future<void> onStart(ServiceInstance service) async {
         )
       );
 
-      debugPrint(result.toString());
+      debugPrint('Sended message: ${result.toString()}');
       socket.emitWithAck("message", onData);
     } catch (e) {
+      debugPrint("Error sending message:");
       debugPrint(e.toString());
       rethrow;
     }
@@ -480,7 +481,7 @@ Future<FlutterBackgroundService> initializeService() async {
       autoStartOnBoot: false,
       notificationChannelId: 'silent_service_channel',
       initialNotificationTitle: 'Madnolia Service',
-      initialNotificationContent: translate('UTILS.KEEPING_CONNECTIONS'),
+      initialNotificationContent: t.UTILS.KEEPING_CONNECTIONS,
       foregroundServiceNotificationId: 888,
     ),
   );

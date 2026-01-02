@@ -32,7 +32,7 @@ class NotificationHelper {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
         
     const InitializationSettings initializationSettings =
         InitializationSettings(

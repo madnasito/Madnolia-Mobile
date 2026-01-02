@@ -1,4 +1,4 @@
-import 'package:flutter_translate/flutter_translate.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +42,7 @@ class UserPlatformsPage extends StatelessWidget {
                 child:
                 StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) => 
                   MoleculeFormButton(
-                    text: translate('PROFILE.USER_PAGE.UPDATE'),
+                    text: t.PROFILE.USER_PAGE.UPDATE,
                     color: Colors.transparent,
                     isLoading: updating,
                     onPressed: updating == false
@@ -75,7 +75,7 @@ class UserPlatformsPage extends StatelessWidget {
                                 userBloc.loadInfo(user);
                                 platformsGamesBloc.add(RestorePlatformsGamesState());
                                 platformsGamesBloc.add(LoadPlatforms(platforms: userBloc.state.platforms));
-                                Toast.show(translate("PROFILE.PLATFORMS_PAGE.SUCCESS"),
+                                Toast.show(t.PROFILE.PLATFORMS_PAGE.SUCCESS,
                                     gravity: 100,
                                     border: Border.all(color: Colors.blueAccent),
                                     textStyle: const TextStyle(fontSize: 18),
