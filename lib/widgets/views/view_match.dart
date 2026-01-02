@@ -89,8 +89,7 @@ class _ViewMatchState extends State<ViewMatch> {
 
   @override
   Widget build(BuildContext context) {
-    return Portal(
-      child: Column(
+    return Column(
         children: [
           _buildMatchHeader(),
           Expanded(child: MoleculeRoomMessages(room: _match.id)),
@@ -104,8 +103,7 @@ class _ViewMatchState extends State<ViewMatch> {
             },
           ),
         ],
-      ),
-    );
+      );
   }
 
   Widget _buildMatchHeader() {

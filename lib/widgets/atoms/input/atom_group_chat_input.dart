@@ -59,6 +59,7 @@ class _AtomGroupChatInputState extends State<AtomGroupChatInput> {
                 ),
                 data: asyncSnapshot.data!
                     .map((e) => {
+                          "id": e.id,
                           "display": e.username,
                           "full_name": e.name,
                           "photo": e.thumb,

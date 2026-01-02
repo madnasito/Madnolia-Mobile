@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:madnolia/blocs/friendships/friendships_bloc.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
@@ -150,17 +151,19 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
         BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
       ],
-      child: MaterialApp.router(
-        locale: TranslationProvider.of(context).flutterLocale,
-        supportedLocales: AppLocaleUtils.supportedLocales,
-        localizationsDelegates: GlobalMaterialLocalizations.delegates,
-        theme: ThemeData(
-          brightness: Brightness.dark,
-        ),
-        title: 'madnolia',
-        routerConfig: router,
-        key: navigatorKey,
-        ),
+      child: Portal(
+        child: MaterialApp.router(
+          locale: TranslationProvider.of(context).flutterLocale,
+          supportedLocales: AppLocaleUtils.supportedLocales,
+          localizationsDelegates: GlobalMaterialLocalizations.delegates,
+          theme: ThemeData(
+            brightness: Brightness.dark,
+          ),
+          title: 'madnolia',
+          routerConfig: router,
+          key: navigatorKey,
+          ),
+      ),
       );
     }
 }
