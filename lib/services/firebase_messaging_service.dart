@@ -19,7 +19,6 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // Si necesitas usar Firebase en el background handler, debes inicializarlo
   try {
     await Firebase.initializeApp(
-      name: 'Madnolia',
       options: DefaultFirebaseOptions.currentPlatform);
   } catch (e) {
     if (e.toString().contains('duplicate-app')) {

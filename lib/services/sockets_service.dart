@@ -47,7 +47,6 @@ Future<void> onStart(ServiceInstance service) async {
   // Initialize Firebase after dotenv is loaded
   try {
     await Firebase.initializeApp(
-      name: 'Madnolia',
       options: DefaultFirebaseOptions.currentPlatform,
     );
     await FirebaseMessagingService.initialize();
