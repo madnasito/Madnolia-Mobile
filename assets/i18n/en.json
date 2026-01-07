@@ -141,7 +141,7 @@
   },
   "CREATE_MATCH":{
       "TITLE": "Select the platform",
-      "DESCRIPTION": "Description",
+      "DESCRIPTION": "Description (optional)",
       "SEARCH_GAME": "Search game",
       "LOADING_RECOMENDATIONS": "Loading recommendations",
       "SEARCH_RESULTS": "Search's results",
@@ -151,7 +151,7 @@
       "ADD_PLATFORMS": "Press here for to add a platform",
       "SEARCHING": "Searching",
       "SEARCH_USER": "Invite partners to your match",
-      "MATCH_NAME": "Match name",
+      "MATCH_NAME": "Match name (optional)",
       "INVITEDS": "Inviteds",
       "DATE": "Date",
       "TIME": "Time",

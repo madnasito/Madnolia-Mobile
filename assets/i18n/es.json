@@ -137,7 +137,7 @@
     },
     "CREATE_MATCH":{
         "TITLE": "Selecciona la plataforma",
-        "DESCRIPTION": "Descripción",
+        "DESCRIPTION": "Descripción (opcional)",
         "SEARCH_GAME": "Buscar juego",
         "LOADING_RECOMENDATIONS": "Cargando recomendaciones",
         "SEARCH_RESULTS": "Resultados de la busqueda",
@@ -147,7 +147,7 @@
         "ADD_PLATFORMS": "Ingresa aquí para añadir plataformas",
         "SEARCHING": "Buscando",
         "SEARCH_USER": "Invitar compañeros a tu partida",
-        "MATCH_NAME": "Nombre de la partida",
+        "MATCH_NAME": "Nombre de la partida (opcional)",
         "INVITEDS": "Invitados",
         "DATE": "Fecha",
         "TIME": "Hora",
