@@ -179,7 +179,7 @@ class _TranslationsCreateMatchEs implements TranslationsCreateMatchEn {
 
 	// Translations
 	@override String get TITLE => 'Selecciona la plataforma';
-	@override String get DESCRIPTION => 'Descripción';
+	@override String get DESCRIPTION => 'Descripción (opcional)';
 	@override String get SEARCH_GAME => 'Buscar juego';
 	@override String get LOADING_RECOMENDATIONS => 'Cargando recomendaciones';
 	@override String get SEARCH_RESULTS => 'Resultados de la busqueda';
@@ -188,8 +188,8 @@ class _TranslationsCreateMatchEs implements TranslationsCreateMatchEn {
 	@override String get PLATFORMS_EMPTY => 'No has seleccionado una plataforma';
 	@override String get ADD_PLATFORMS => 'Ingresa aquí para añadir plataformas';
 	@override String get SEARCHING => 'Buscando';
-	@override String get SEARCH_USER => 'Invitar compañeros a tu partida';
-	@override String get MATCH_NAME => 'Nombre de la partida';
+	@override String get SEARCH_USER => 'Invitar compañeros a tu partida (opcional)';
+	@override String get MATCH_NAME => 'Nombre de la partida (opcional)';
 	@override String get INVITEDS => 'Invitados';
 	@override String get DATE => 'Fecha';
 	@override String get TIME => 'Hora';
@@ -902,7 +902,7 @@ extension on TranslationsEs {
 			'LOGIN.SUBTITLE' => '¿No tienes una cuenta?',
 			'LOGIN.SUB_REGISTER' => 'Regístrate aquí',
 			'CREATE_MATCH.TITLE' => 'Selecciona la plataforma',
-			'CREATE_MATCH.DESCRIPTION' => 'Descripción',
+			'CREATE_MATCH.DESCRIPTION' => 'Descripción (opcional)',
 			'CREATE_MATCH.SEARCH_GAME' => 'Buscar juego',
 			'CREATE_MATCH.LOADING_RECOMENDATIONS' => 'Cargando recomendaciones',
 			'CREATE_MATCH.SEARCH_RESULTS' => 'Resultados de la busqueda',
@@ -911,8 +911,8 @@ extension on TranslationsEs {
 			'CREATE_MATCH.PLATFORMS_EMPTY' => 'No has seleccionado una plataforma',
 			'CREATE_MATCH.ADD_PLATFORMS' => 'Ingresa aquí para añadir plataformas',
 			'CREATE_MATCH.SEARCHING' => 'Buscando',
-			'CREATE_MATCH.SEARCH_USER' => 'Invitar compañeros a tu partida',
-			'CREATE_MATCH.MATCH_NAME' => 'Nombre de la partida',
+			'CREATE_MATCH.SEARCH_USER' => 'Invitar compañeros a tu partida (opcional)',
+			'CREATE_MATCH.MATCH_NAME' => 'Nombre de la partida (opcional)',
 			'CREATE_MATCH.INVITEDS' => 'Invitados',
 			'CREATE_MATCH.DATE' => 'Fecha',
 			'CREATE_MATCH.TIME' => 'Hora',
