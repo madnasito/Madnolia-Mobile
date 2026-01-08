@@ -40,18 +40,31 @@ class LocalNotificationsService {
 
   @pragma("vm:entry-point")
   static Future<void> initialize() async {
+
+    AndroidNotificationChannel channel = AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        importance: Importance.max,
+        description: 'This channel is used for important notifications.', // description
+    );
+
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
           android: AndroidInitializationSettings("@mipmap/launcher_icon")
         );
 
      {
+      
       final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       final androidInfo = await deviceInfo.androidInfo;
       final version = androidInfo.version.sdkInt;
       debugPrint(version.toString());
+
+      
+
       if(version > 32){
-        final androidPlugin = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+        final androidPlugin = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         
         // Verificar si ya tenemos los permisos
         final bool granted = await androidPlugin?.areNotificationsEnabled() ?? false;
@@ -62,7 +75,8 @@ class LocalNotificationsService {
       }
       }
 
-        
+      _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
       _notificationsPlugin.initialize(
         initializationSettingsAndroid,
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
@@ -278,7 +292,7 @@ class LocalNotificationsService {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails =  NotificationDetails(
         android: AndroidNotificationDetails(
-            "Channel Id",
+            "main_channel",
             "Main Channel",
             groupKey: "gfg",          
             playSound: true, 
@@ -315,7 +329,7 @@ class LocalNotificationsService {
       NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
             icon: '@drawable/ic_notifications',
-            "Channel Id",
+            "main_channel",
             "Main Channel",
             groupKey: "gfg",
             playSound: true,

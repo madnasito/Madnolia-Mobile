@@ -7,3 +7,5 @@ targets:
           input_directory: assets/i18n
           input_file_pattern: .json
           output_directory: lib/i18n
+          locale_handling: true
+          deferred_loading: false

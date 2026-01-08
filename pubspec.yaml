@@ -89,6 +89,7 @@ dependencies:
   stream_transform: ^2.1.1
   rxdart: ^0.28.0
   http_parser: ^4.1.2
+  firebase_analytics: ^12.1.0
 
 dev_dependencies:
   flutter_test:

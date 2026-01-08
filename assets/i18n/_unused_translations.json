@@ -1,0 +1,22 @@
+{
+  "@@info": [
+    "Here are translations that exist in secondary locales but not in <en>.",
+    "You may run 'dart run slang analyze --full' to also check translations not used in the source code."
+  ],
+  "es": {
+    "MATCH": {
+      "CANCEL_MATCH_QUESTION": "¿Estás seguro de que deseas cancelar la partida?"
+    },
+    "CONNECTIONS": {
+      "LOADING": "Cargando conexiones",
+      "ERRORS": {
+        "LOADING": "Error cargando conexiones"
+      }
+    },
+    "CHAT": {
+      "ERRORS": {
+        "LOADING": "Error cargando mensajes"
+      }
+    }
+  }
+}

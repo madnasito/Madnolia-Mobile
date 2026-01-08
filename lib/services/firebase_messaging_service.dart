@@ -92,6 +92,14 @@ class FirebaseMessagingService {
   static Future<void> initialize() async {
     // Configurar el manejador de mensajes en background
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      debugPrint('This come from the listen');
+      debugPrint('Message data: $message');
+
+      // if (message.data.isNotEmpty) {
+      //   await _showNotification(message);
+      // }
+    });
 
     // Solicitar permisos (especialmente importante para iOS)
     NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
@@ -116,16 +124,18 @@ class FirebaseMessagingService {
     });
 
     // Manejar mensajes cuando la app está en foreground
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('Got a message whilst in the foreground!');
-      debugPrint('Message data: ${message.data}');
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   debugPrint('Got a message whilst in the foreground!');
+    //   debugPrint('Message data: ${message.data}');
 
-      // if (message.notification != null) {
-      //   debugPrint('Message also contained a notification: ${message.notification}');
-      //   // Mostrar notificación usando el servicio local
-      //   _showNotification(message);
-      // }
-    });
+    //   AndroidNotification? android = message.notification!.android;
+
+    //   if (message.notification != null && android != null) {
+    //     debugPrint('Message also contained a notification: ${message.notification}');
+    //     // Mostrar notificación usando el servicio local
+    //     _showNotification(message);
+    //   }
+    // });
 
     // Manejar cuando el usuario toca una notificación que abrió la app
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
