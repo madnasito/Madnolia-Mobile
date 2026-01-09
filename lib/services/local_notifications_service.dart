@@ -90,19 +90,7 @@ class LocalNotificationsService {
   
   @pragma("vm:entry-point")
   static Future<void> initializeTranslations() async {
-      // Use PlatformDispatcher to get the device locale
-    // Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
-    //     ? const Locale('en') // Fallback if needed
-    //     : const Locale('en'); // Replace with actual logic to get locale
-
-    // String langCode = deviceLocale.languageCode;
-
-    // List<String> supportedLangs = ['en', 'es'];
-
-    // await LocalizationDelegate.create(
-    //   fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
-    //   supportedLocales: supportedLangs,
-    // );
+     LocaleSettings.useDeviceLocale();
   }
 
   @pragma("vm:entry-point")
@@ -281,7 +269,7 @@ class LocalNotificationsService {
     // To display the notification in device
     
     try {
-
+      LocaleSettings.useDeviceLocale();
       await initializeTranslations();
       final matchDb = await _matchRepository.getMatchById(invitation.match);
       final userDb = await _userRepository.getUserById(invitation.user);
