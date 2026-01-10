@@ -8,6 +8,7 @@ import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/molecules/lists/games_list_molecule.dart';
 
 import '../../models/game/minimal_game_model.dart';
+import '../../models/tiny_rawg_game_model.dart';
 import '../../widgets/match_card_widget.dart';
 import '../../services/games_service.dart';
 
@@ -112,23 +113,23 @@ class _SearchGamePageState extends State<SearchGamePage> {
                           title: controller.text.toString(),
                           platform: "$platformId"),
                       builder:
-                          (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                          (BuildContext context, AsyncSnapshot<List<TinyRawgGame>> snapshot) {
                         if (snapshot.hasData) {
                           return Flexible(
-                              child: snapshot.data.isNotEmpty
+                              child: snapshot.data!.isNotEmpty
                                   ? ListView.builder(
-                                      itemCount: snapshot.data.length,
+                                      itemCount: snapshot.data?.length,
                                       itemBuilder: (BuildContext context, int index) {
                                         return GestureDetector(
                                           onTap: () => setState(() {
                                             context.push("/new/match", extra: {
-                                              "game": snapshot.data[index],
+                                              "game": snapshot.data?[index],
                                               "platformId": platformId
                                             });
                                           }),
                                           child:  GameCard(
-                                              background: snapshot.data[index].backgroundImage,
-                                              name: snapshot.data[index].name,
+                                              background: snapshot.data?[index].backgroundImage,
+                                              name: snapshot.data![index].name,
                                               bottom: const Text("")),
                                         );
                                       })
@@ -142,7 +143,11 @@ class _SearchGamePageState extends State<SearchGamePage> {
                                 child: Text(t.CREATE_MATCH.SEARCH_HINT, textAlign: TextAlign.center,)
                               )
                             );
-                        } else {
+                        }else if(snapshot.hasError) {
+                          debugPrint(snapshot.error.toString());
+                          return Center(child: Text(t.CREATE_MATCH.SEARCH_ERROR));
+                        }
+                         else {
                           return const CircularProgressIndicator();
                         }
                       },

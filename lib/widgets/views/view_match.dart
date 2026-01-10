@@ -13,6 +13,7 @@ import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:madnolia/widgets/organism/chat_message_organism.dart';
 import 'package:madnolia/widgets/organism/organism_match_info.dart';
 import '../../enums/chat_message_type.enum.dart';
+import '../../utils/images_util.dart' show resizeRawgImage;
 import '../molecules/chat/molecule_match_chat_input.dart';
 
 
@@ -139,7 +140,7 @@ class _ViewMatchState extends State<ViewMatch> {
                 child: SizedBox(
                   width: 90,
                   child: widget.game.background != null ? AtomGameImage(
-                    background: resizeImage(widget.game.background! 
+                    background: resizeRawgImage(widget.game.background! 
                     )
                   ) : Image.asset("assets/no image.jpg", fit: BoxFit.cover) ),
               ),

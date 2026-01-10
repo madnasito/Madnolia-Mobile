@@ -1,52 +1,92 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/widgets.dart' show debugPrint;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/game_model.dart';
+import '../models/tiny_rawg_game_model.dart';
+import '../utils/images_util.dart' show resizeRawgImage;
 
 class RawgService {
   static const String urlBase = "https://api.rawg.io/api";
-  static const String apiKey = "8af7cb7fc9d949acac94ab83be57ed1b";
+  static final String apiKey = dotenv.get("RAWG_API_KEY");
+  
+  final _dio = Dio();
 
-  Future searchGame({required String game, required String platform}) async {
+  // Future searchGame({required String game, required String platform}) async {
+  //   try {
+  //     Uri url = Uri.parse("$urlBase/games");
+
+  //     url = url.replace(queryParameters: {
+  //       "key": apiKey,
+  //       "search": game,
+  //       "platforms": platform,
+  //       "page_size": "6"
+  //     });
+
+  //     final resp = await http.get(url);
+
+  //     final respBody = jsonDecode(resp.body);
+
+  //     List<Game> games = [];
+
+  //     if (respBody["results"].length > 0) {
+  //       for (var game in respBody["results"]) {
+  //         Game newGame = Game.fromJson(game);
+  //         if (newGame.backgroundImage != null) {
+  //           List image = newGame.backgroundImage!.split("/");
+  //           if (image[image.length - 3] == "screenshots") {
+  //             newGame.backgroundImage =
+  //                 "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
+  //           } else {
+  //             newGame.backgroundImage =
+  //                 "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
+  //           }
+  //         }
+  //         games.add(newGame);
+  //       }
+
+  //       return games;
+  //     }
+
+  //     return respBody["results"];
+  //   } catch (e) {
+  //     return {"ok": false};
+  //   }
+  // }
+
+  Future <List<TinyRawgGame>> searchGame({required String game, required String platform}) async {
     try {
-      Uri url = Uri.parse("$urlBase/games");
+      final url = "$urlBase/games";
 
-      url = url.replace(queryParameters: {
+      Response response = await _dio.get(url, queryParameters: {
         "key": apiKey,
         "search": game,
         "platforms": platform,
         "page_size": "6"
       });
 
-      final resp = await http.get(url);
+      final Map<String, dynamic> responseData = response.data;
 
-      final respBody = jsonDecode(resp.body);
+      List<TinyRawgGame> games = [];
 
-      List<Game> games = [];
+      if (responseData['results'].length > 0) {
+        games = (responseData['results'] as List)
+            .map<TinyRawgGame>((gameData) => TinyRawgGame.fromJson(gameData))
+            .toList();
 
-      if (respBody["results"].length > 0) {
-        for (var game in respBody["results"]) {
-          Game newGame = Game.fromJson(game);
-          if (newGame.backgroundImage != null) {
-            List image = newGame.backgroundImage!.split("/");
-            if (image[image.length - 3] == "screenshots") {
-              newGame.backgroundImage =
-                  "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
-            } else {
-              newGame.backgroundImage =
-                  "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
-            }
+        for (var g in games) {
+          if (g.backgroundImage != null) {
+            g.backgroundImage = resizeRawgImage(g.backgroundImage!);
           }
-          games.add(newGame);
         }
-
-        return games;
       }
-
-      return respBody["results"];
+      
+      return games;
     } catch (e) {
-      return {"ok": false};
+      debugPrint('Error in RawgService.searchGame: $e');
+      rethrow;
     }
   }
 
@@ -65,11 +105,11 @@ class RawgService {
 
       final respBody = jsonDecode(resp.body);
 
-      List<Game> games = [];
+      List<TinyRawgGame> games = [];
 
       if (respBody["results"].length > 0) {
         for (var game in respBody["results"]) {
-          Game newGame = Game.fromJson(game);
+          TinyRawgGame newGame = TinyRawgGame.fromJson(game);
           if (newGame.backgroundImage != null) {
             List image = newGame.backgroundImage!.split("/");
             if (image[image.length - 3] == "screenshots") {

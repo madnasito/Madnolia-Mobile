@@ -1,25 +1,25 @@
 // To parse this JSON data, do
 //
-//     final game = gameFromJson(jsonString);
+//     final tinyRawgGame = tinyRawgGameFromJson(jsonString);
 
 import 'dart:convert';
 
-Game gameFromJson(String str) => Game.fromJson(json.decode(str));
+TinyRawgGame tinyRawgGameFromJson(String str) => TinyRawgGame.fromJson(json.decode(str));
 
-String gameToJson(Game data) => json.encode(data.toJson());
+String tinyRawgGameToJson(TinyRawgGame data) => json.encode(data.toJson());
 
-class Game {
+class TinyRawgGame {
     String name;
     int id;
-    String? backgroundImage;
+    dynamic backgroundImage;
 
-    Game({
+    TinyRawgGame({
         required this.name,
         required this.id,
         required this.backgroundImage,
     });
 
-    factory Game.fromJson(Map<String, dynamic> json) => Game(
+    factory TinyRawgGame.fromJson(Map<String, dynamic> json) => TinyRawgGame(
         name: json["name"],
         id: json["id"],
         backgroundImage: json["background_image"],

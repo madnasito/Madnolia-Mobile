@@ -185,6 +185,7 @@ class _TranslationsCreateMatchEs implements TranslationsCreateMatchEn {
 	@override String get SEARCH_RESULTS => 'Resultados de la busqueda';
 	@override String get EMPTY_SEARCH => 'No se encontraron juegos, por favor intente con otro nombre';
 	@override String get SEARCH_HINT => 'Escribe un poco más del título para encontrar tu juego';
+	@override String get SEARCH_ERROR => 'Error al buscar juegos, por favor intente de nuevo';
 	@override String get PLATFORMS_EMPTY => 'No has seleccionado una plataforma';
 	@override String get ADD_PLATFORMS => 'Ingresa aquí para añadir plataformas';
 	@override String get SEARCHING => 'Buscando';
@@ -908,6 +909,7 @@ extension on TranslationsEs {
 			'CREATE_MATCH.SEARCH_RESULTS' => 'Resultados de la busqueda',
 			'CREATE_MATCH.EMPTY_SEARCH' => 'No se encontraron juegos, por favor intente con otro nombre',
 			'CREATE_MATCH.SEARCH_HINT' => 'Escribe un poco más del título para encontrar tu juego',
+			'CREATE_MATCH.SEARCH_ERROR' => 'Error al buscar juegos, por favor intente de nuevo',
 			'CREATE_MATCH.PLATFORMS_EMPTY' => 'No has seleccionado una plataforma',
 			'CREATE_MATCH.ADD_PLATFORMS' => 'Ingresa aquí para añadir plataformas',
 			'CREATE_MATCH.SEARCHING' => 'Buscando',

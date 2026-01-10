@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/game/minimal_game_model.dart';
-import 'package:madnolia/models/game_model.dart';
+import 'package:madnolia/models/tiny_rawg_game_model.dart';
 import 'package:madnolia/widgets/match_card_widget.dart';
 
 class GamesListMolecule extends StatelessWidget {
@@ -18,7 +18,7 @@ class GamesListMolecule extends StatelessWidget {
       final game = games[index];
       return GestureDetector(
         onTap: onTap ?? ()  {
-          final gameMatch = Game(name: game.name, backgroundImage: game.background, id: game.gameId);
+          final gameMatch = TinyRawgGame(name: game.name, backgroundImage: game.background, id: game.gameId);
           context.push("/new/match",
           extra: {
             "game": gameMatch,

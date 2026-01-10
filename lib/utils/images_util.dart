@@ -101,3 +101,12 @@ Future<Uint8List> getRoundedImageBytes(ImageProvider imageProvider) async {
       return imageProviderToUint8List(imageProvider);
     }
   }
+
+  String resizeRawgImage(String url) {
+    List image = url.split("/");
+    if (image[image.length - 3] == "screenshots") {
+      return "https://media.rawg.io/media/crop/600/400/screenshots/${image[image.length - 2]}/${image[image.length - 1]}";
+    } else {
+      return "https://media.rawg.io/media/crop/600/400/games/${image[image.length - 2]}/${image[image.length - 1]}";
+    }
+}

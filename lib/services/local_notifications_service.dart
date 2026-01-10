@@ -22,7 +22,6 @@ import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/platforms.dart';
-import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:uuid/uuid.dart';
 import '../models/chat/chat_message_model.dart';
 
@@ -273,7 +272,7 @@ class LocalNotificationsService {
       await initializeTranslations();
       final matchDb = await _matchRepository.getMatchById(invitation.match);
       final userDb = await _userRepository.getUserById(invitation.user);
-      final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeImage(invitation.img)));
+      final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeRawgImage(invitation.img)));
       final String platformName = getPlatformInfo(matchDb.platform.id).name;
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
       
@@ -310,7 +309,7 @@ class LocalNotificationsService {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       final gameDb = await _gamesRepository.getGameById(matchDb.game);
       final image = await imageProviderToBase64(
-        CachedNetworkImageProvider(resizeImage(gameDb.background!))
+        CachedNetworkImageProvider(resizeRawgImage(gameDb.background!))
       );
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
 

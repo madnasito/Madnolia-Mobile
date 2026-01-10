@@ -287,6 +287,9 @@ class TranslationsCreateMatchEn {
 	/// en: 'Type a bit more of the title to find your game'
 	String get SEARCH_HINT => 'Type a bit more of the title to find your game';
 
+	/// en: 'Error searching games, please try again'
+	String get SEARCH_ERROR => 'Error searching games, please try again';
+
 	/// en: 'You have not selected a platform'
 	String get PLATFORMS_EMPTY => 'You have not selected a platform';
 
@@ -1485,6 +1488,7 @@ extension on Translations {
 			'CREATE_MATCH.SEARCH_RESULTS' => 'Search\'s results',
 			'CREATE_MATCH.EMPTY_SEARCH' => 'No founded games, please try another name',
 			'CREATE_MATCH.SEARCH_HINT' => 'Type a bit more of the title to find your game',
+			'CREATE_MATCH.SEARCH_ERROR' => 'Error searching games, please try again',
 			'CREATE_MATCH.PLATFORMS_EMPTY' => 'You have not selected a platform',
 			'CREATE_MATCH.ADD_PLATFORMS' => 'Press here for to add a platform',
 			'CREATE_MATCH.SEARCHING' => 'Searching',
