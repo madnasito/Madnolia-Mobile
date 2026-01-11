@@ -24,7 +24,7 @@ import 'package:madnolia/utils/platforms.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:toast/toast.dart';
 
-import '../../models/game_model.dart';
+import '../../models/tiny_rawg_game_model.dart';
 import '../custom_input_widget.dart';
 
 final dateController = TextEditingController();
@@ -32,7 +32,7 @@ final dateController = TextEditingController();
 final formKey = GlobalKey<FormBuilderState>();
 
 class MatchFormView extends StatelessWidget {
-  final Game game;
+  final TinyRawgGame game;
   final int platformId;
 
   const MatchFormView(

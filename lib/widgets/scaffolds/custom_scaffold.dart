@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/widgets/background.dart';
 import 'package:madnolia/widgets/molecules/buttons/atom_menu_button.dart' show changeRoute;
 import 'package:madnolia/widgets/organism/menu/organism_drawer.dart';
@@ -15,6 +16,8 @@ class CustomScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    LocaleSettings.useDeviceLocale();
     
     final userBloc = context.watch<UserBloc>();
     

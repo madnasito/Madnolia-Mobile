@@ -9,6 +9,8 @@ import 'package:madnolia/models/game/minimal_game_model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/services/rawg_service.dart';
 
+import '../models/tiny_rawg_game_model.dart';
+
 class GamesService {
   final _storage = const FlutterSecureStorage();
   final _dio = Dio();
@@ -74,8 +76,13 @@ class GamesService {
     }
   }
 
-  static Future searchGames({required String title, required String platform}) async {
-    return RawgService().searchGame(game: title, platform: platform);
+  static Future<List<TinyRawgGame>> searchGames({required String title, required String platform}) async {
+
+    try {
+      return RawgService().searchGame(game: title, platform: platform);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   static Future<List<MinimalGame>> getRecomendations(int platform) async {

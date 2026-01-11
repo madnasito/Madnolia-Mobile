@@ -3,9 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
-import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 
 import '../../../models/notification/notification_details.dart';
+import '../../../utils/images_util.dart' show resizeRawgImage;
 
 class AtomInvitationNotification extends StatelessWidget {
   
@@ -48,7 +48,7 @@ class AtomInvitationNotification extends StatelessWidget {
           leading: CircleAvatar(
             radius: 30,
             backgroundColor: Colors.grey[800],
-            backgroundImage: CachedNetworkImageProvider(resizeImage(data.notification.thumb)),),
+            backgroundImage: CachedNetworkImageProvider(resizeRawgImage(data.notification.thumb)),),
           title: RichText(
             text: TextSpan(text: t.NOTIFICATIONS.INVITATION_TO_MATCH,
             children: [

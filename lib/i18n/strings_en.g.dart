@@ -269,8 +269,8 @@ class TranslationsCreateMatchEn {
 	/// en: 'Select the platform'
 	String get TITLE => 'Select the platform';
 
-	/// en: 'Description'
-	String get DESCRIPTION => 'Description';
+	/// en: 'Description (optional)'
+	String get DESCRIPTION => 'Description (optional)';
 
 	/// en: 'Search game'
 	String get SEARCH_GAME => 'Search game';
@@ -287,6 +287,9 @@ class TranslationsCreateMatchEn {
 	/// en: 'Type a bit more of the title to find your game'
 	String get SEARCH_HINT => 'Type a bit more of the title to find your game';
 
+	/// en: 'Error searching games, please try again'
+	String get SEARCH_ERROR => 'Error searching games, please try again';
+
 	/// en: 'You have not selected a platform'
 	String get PLATFORMS_EMPTY => 'You have not selected a platform';
 
@@ -296,11 +299,11 @@ class TranslationsCreateMatchEn {
 	/// en: 'Searching'
 	String get SEARCHING => 'Searching';
 
-	/// en: 'Invite partners to your match'
-	String get SEARCH_USER => 'Invite partners to your match';
+	/// en: 'Invite partners to your match (optional)'
+	String get SEARCH_USER => 'Invite partners to your match (optional)';
 
-	/// en: 'Match name'
-	String get MATCH_NAME => 'Match name';
+	/// en: 'Match name (optional)'
+	String get MATCH_NAME => 'Match name (optional)';
 
 	/// en: 'Inviteds'
 	String get INVITEDS => 'Inviteds';
@@ -1479,17 +1482,18 @@ extension on Translations {
 			'LOGIN.SUBTITLE' => 'Don\'t have an account?',
 			'LOGIN.SUB_REGISTER' => 'Register here',
 			'CREATE_MATCH.TITLE' => 'Select the platform',
-			'CREATE_MATCH.DESCRIPTION' => 'Description',
+			'CREATE_MATCH.DESCRIPTION' => 'Description (optional)',
 			'CREATE_MATCH.SEARCH_GAME' => 'Search game',
 			'CREATE_MATCH.LOADING_RECOMENDATIONS' => 'Loading recommendations',
 			'CREATE_MATCH.SEARCH_RESULTS' => 'Search\'s results',
 			'CREATE_MATCH.EMPTY_SEARCH' => 'No founded games, please try another name',
 			'CREATE_MATCH.SEARCH_HINT' => 'Type a bit more of the title to find your game',
+			'CREATE_MATCH.SEARCH_ERROR' => 'Error searching games, please try again',
 			'CREATE_MATCH.PLATFORMS_EMPTY' => 'You have not selected a platform',
 			'CREATE_MATCH.ADD_PLATFORMS' => 'Press here for to add a platform',
 			'CREATE_MATCH.SEARCHING' => 'Searching',
-			'CREATE_MATCH.SEARCH_USER' => 'Invite partners to your match',
-			'CREATE_MATCH.MATCH_NAME' => 'Match name',
+			'CREATE_MATCH.SEARCH_USER' => 'Invite partners to your match (optional)',
+			'CREATE_MATCH.MATCH_NAME' => 'Match name (optional)',
 			'CREATE_MATCH.INVITEDS' => 'Inviteds',
 			'CREATE_MATCH.DATE' => 'Date',
 			'CREATE_MATCH.TIME' => 'Time',

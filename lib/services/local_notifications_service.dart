@@ -22,7 +22,6 @@ import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/platforms.dart';
-import 'package:madnolia/widgets/atoms/media/game_image_atom.dart';
 import 'package:uuid/uuid.dart';
 import '../models/chat/chat_message_model.dart';
 
@@ -40,18 +39,31 @@ class LocalNotificationsService {
 
   @pragma("vm:entry-point")
   static Future<void> initialize() async {
+
+    AndroidNotificationChannel channel = AndroidNotificationChannel(
+        'high_importance_channel', // id
+        'High Importance Notifications', // title
+        importance: Importance.max,
+        description: 'This channel is used for important notifications.', // description
+    );
+
       const InitializationSettings initializationSettingsAndroid =
         InitializationSettings(
           android: AndroidInitializationSettings("@mipmap/launcher_icon")
         );
 
      {
+      
       final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       final androidInfo = await deviceInfo.androidInfo;
       final version = androidInfo.version.sdkInt;
       debugPrint(version.toString());
+
+      
+
       if(version > 32){
-        final androidPlugin = _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+        final androidPlugin = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
         
         // Verificar si ya tenemos los permisos
         final bool granted = await androidPlugin?.areNotificationsEnabled() ?? false;
@@ -62,7 +74,8 @@ class LocalNotificationsService {
       }
       }
 
-        
+      _notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
       _notificationsPlugin.initialize(
         initializationSettingsAndroid,
         onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
@@ -76,19 +89,7 @@ class LocalNotificationsService {
   
   @pragma("vm:entry-point")
   static Future<void> initializeTranslations() async {
-      // Use PlatformDispatcher to get the device locale
-    // Locale deviceLocale = WidgetsBinding.instance.platformDispatcher.views.first.devicePixelRatio > 1.0 
-    //     ? const Locale('en') // Fallback if needed
-    //     : const Locale('en'); // Replace with actual logic to get locale
-
-    // String langCode = deviceLocale.languageCode;
-
-    // List<String> supportedLangs = ['en', 'es'];
-
-    // await LocalizationDelegate.create(
-    //   fallbackLocale: supportedLangs.contains(langCode) ? langCode : 'en',
-    //   supportedLocales: supportedLangs,
-    // );
+     LocaleSettings.useDeviceLocale();
   }
 
   @pragma("vm:entry-point")
@@ -267,18 +268,18 @@ class LocalNotificationsService {
     // To display the notification in device
     
     try {
-
+      LocaleSettings.useDeviceLocale();
       await initializeTranslations();
       final matchDb = await _matchRepository.getMatchById(invitation.match);
       final userDb = await _userRepository.getUserById(invitation.user);
-      final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeImage(invitation.img)));
+      final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeRawgImage(invitation.img)));
       final String platformName = getPlatformInfo(matchDb.platform.id).name;
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
       
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       NotificationDetails notificationDetails =  NotificationDetails(
         android: AndroidNotificationDetails(
-            "Channel Id",
+            "main_channel",
             "Main Channel",
             groupKey: "gfg",          
             playSound: true, 
@@ -308,14 +309,14 @@ class LocalNotificationsService {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       final gameDb = await _gamesRepository.getGameById(matchDb.game);
       final image = await imageProviderToBase64(
-        CachedNetworkImageProvider(resizeImage(gameDb.background!))
+        CachedNetworkImageProvider(resizeRawgImage(gameDb.background!))
       );
       final icon = ByteArrayAndroidBitmap.fromBase64String(image);
 
       NotificationDetails notificationDetails = NotificationDetails(
         android: AndroidNotificationDetails(
             icon: '@drawable/ic_notifications',
-            "Channel Id",
+            "main_channel",
             "Main Channel",
             groupKey: "gfg",
             playSound: true,
