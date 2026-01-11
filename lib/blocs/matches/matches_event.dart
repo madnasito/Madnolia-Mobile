@@ -22,3 +22,10 @@ class LoadMatches extends MatchesEvent {
   final MatchesFilter filter;
   const LoadMatches({required this.filter, this.reload = false});
 }
+
+class UpdateMatchStatus extends MatchesEvent {
+  final String matchId;
+  final MatchStatus status;
+
+  const UpdateMatchStatus({required this.matchId, required this.status});
+}
