@@ -16,19 +16,22 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-    late NotificationsBloc notificationsBloc;
+  late NotificationsBloc notificationsBloc;
+  late final _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     notificationsBloc = context.read<NotificationsBloc>();
-    notificationsBloc.add(LoadNotifications(reload: false));
+    notificationsBloc.add(LoadNotifications());
     notificationsBloc.add(WatchNotifications());    
+    _scrollController.addListener(_onScroll);
   }
 
   
   @override
   void dispose() {
+    _scrollController.dispose();
     super.dispose();
   }
   @override
@@ -40,17 +43,32 @@ class _NotificationsPageState extends State<NotificationsPage> {
           notificationsBloc.add(RestoreNotificationsState());
           notificationsBloc.add(LoadNotifications(reload: true));
         },
-        child: Column(
-            children: [
-              const SizedBox(height: 20),
-              CenterTitleAtom(text: t.NOTIFICATIONS.TITLE, textStyle: neonTitleText,),
-              const SizedBox(height: 10),
-              Expanded(
-                child: OrganismNotifications(),
-              )
-            ],
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(
+              children: [
+                const SizedBox(height: 20),
+                CenterTitleAtom(text: t.NOTIFICATIONS.TITLE, textStyle: neonTitleText,),
+                const SizedBox(height: 10),
+                OrganismNotifications(),
+              ],
+          ),
         ),
       )
     );
+  }
+
+  void _onScroll() {
+    debugPrint('Is bottom: $_isBottom');
+    if (_isBottom) {
+      notificationsBloc.add(LoadNotifications());
+    }
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    return _scrollController.offset >=
+    (_scrollController.position.maxScrollExtent * 0.9);
   }
 }

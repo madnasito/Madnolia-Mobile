@@ -21,11 +21,9 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   final _notificationsRepository = RepositoryManager().notification;
 
-  NotificationsBloc() : super(NotificationsState()) {
+  NotificationsBloc() : super(const NotificationsState()) {
     on<LoadNotifications>( _loadNotifications, transformer: throttleDroppable(throttleDuration));
-
     on<RestoreNotificationsState>(_restore);
-
     on<WatchNotifications>(_watchNotifications);
   }
 
@@ -42,70 +40,70 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     );
   }
 
-  Future _loadNotifications(LoadNotifications event,Emitter<NotificationsState> emit) async {
+  Future<void> _loadNotifications(LoadNotifications event, Emitter<NotificationsState> emit) async {
+
+    debugPrint('hasReachedMax: ${state.hasReachedMax}, reload: ${event.reload}');
+
+    if (state.hasReachedMax && !event.reload) return;
+
+    // On pull-to-refresh, reset the state completely.
+    if (event.reload) {
+      emit(const NotificationsState());
+    }
+
+
     try {
+      final cursorId = event.reload ? null : state.data.lastOrNull?.notification.id;
 
-      if (state.hasReachedMax) return;
+      bool reload = event.reload || state.status == ListStatus.initial;
 
-      String? cursorId;
+      debugPrint('Loading notifications with cursorId: $cursorId, reload: $reload');
 
-      if(event.reload == false && state.data.isNotEmpty && state.status != ListStatus.initial) {
-        cursorId = state.data.last.notification.id;
-      }
-
-      final isReload = state.status == ListStatus.initial || event.reload;
-
-      final notifications = await _notificationsRepository.getUserNotifications(
-        reload: isReload,
-        cursorId: cursorId
+      final newNotifications = await _notificationsRepository.getUserNotifications(
+        reload: reload,
+        cursorId: cursorId,
       );
 
-      bool hasReachedMax = false;
+      final hasReachedMax = newNotifications.length < 20;
 
-      if(notifications.length < 20) hasReachedMax = true;
-      
       emit(
         state.copyWith(
+          status: ListStatus.success,
+          // Append new notifications to the existing list.
+          data: event.reload ? newNotifications : (List.of(state.data)..addAll(newNotifications)),
           hasReachedMax: hasReachedMax,
-          status: ListStatus.success
-        )
+        ),
       );
     } catch (e) {
       debugPrint(e.toString());
-      emit(
-        state.copyWith(
-          status: ListStatus.failure
-        )
-      );
+      emit(state.copyWith(status: ListStatus.failure));
       rethrow;
     }
   }
 
-  void _watchNotifications(
-  WatchNotifications event,
-  Emitter<NotificationsState> emit
-) async {
-  try {
-    debugPrint('Watch notifications started');
-    
-    await emit.forEach(
-      _notificationsRepository.watchAllNotifications(),
-      onData: (List<NotificationDetails> notifications) {
-        debugPrint('Stream received ${notifications.length} notifications');
-        return state.copyWith(
-          data: notifications,
-        );
-      },
-      onError: (error, stackTrace) {
-        debugPrint('Stream error: $error');
-        debugPrint(stackTrace.toString());
-        return state.copyWith(status: ListStatus.failure);
-      }
-    );
-  } catch (e) {
-    debugPrint('Watch notifications error: $e');
-    emit(state.copyWith(status: ListStatus.failure));
-  }
-}
+  Future<void> _watchNotifications(
+    WatchNotifications event,
+    Emitter<NotificationsState> emit,
+  ) async {
+    try {
+      debugPrint('Watch notifications started');
+      await emit.forEach<List<NotificationDetails>>(
+        _notificationsRepository.watchAllNotifications(),
+        onData: (notifications) {
 
+          return state.copyWith(
+            data: notifications,
+          );
+        },
+        onError: (error, stackTrace) {
+          debugPrint('Stream error: $error');
+          debugPrint(stackTrace.toString());
+          return state.copyWith(status: ListStatus.failure);
+        },
+      );
+    } catch (e) {
+      debugPrint('Watch notifications error: $e');
+      emit(state.copyWith(status: ListStatus.failure));
+    }
+  }
 }

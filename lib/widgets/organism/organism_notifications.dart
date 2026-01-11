@@ -45,21 +45,21 @@ class NotificationsLoader extends StatefulWidget {
 }
 
 class _NotificationsLoaderState extends State<NotificationsLoader> {
-  late final _scrollController = ScrollController();
+  
   late final NotificationsBloc notificationsBloc;
   
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    
     notificationsBloc = context.read<NotificationsBloc>();
-    notificationsBloc.add(LoadNotifications());
+    // notificationsBloc.add(LoadNotifications());
     // notificationsBloc.add(WatchNotifications());
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    
     super.dispose();
   }
 
@@ -75,8 +75,7 @@ class _NotificationsLoaderState extends State<NotificationsLoader> {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: notificationsBloc.state.data.length,
-      physics: const AlwaysScrollableScrollPhysics(),
-      controller: _scrollController,
+      physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
         final data = notificationsBloc.state.data[index];
         return data.notification.type == NotificationType.request
@@ -87,16 +86,4 @@ class _NotificationsLoaderState extends State<NotificationsLoader> {
     );
   }
 
-  void _onScroll() {
-    debugPrint('Is bottom: $_isBottom');
-    if (_isBottom) {
-      notificationsBloc.add(LoadNotifications());
-    }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    return _scrollController.offset >=
-    (_scrollController.position.maxScrollExtent * 0.9);
-  }
 }
