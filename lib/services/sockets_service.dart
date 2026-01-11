@@ -283,7 +283,7 @@ Future<void> onStart(ServiceInstance service) async {
     }
   });
 
-  socket.on('match_cancelled', (data) async => await matchRepository.updateMatchStatus(data['match'], MatchStatus.cancelled));
+  socket.on('match_cancelled', (data) async => await matchRepository.updateMatchStatus(data, MatchStatus.cancelled));
 
   socket.onDisconnect((_) {
     service.invoke("disconnected_socket");
