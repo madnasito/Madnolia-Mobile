@@ -206,6 +206,7 @@
   "CONNECTIONS": {
     "TITLE": "Connections",
     "EMPTY": "No connections",
+    "LOADING": "Loading connections",
     "ERRORS": {
       "LOADING_ERROR": "Error loading connections",
       "NO_CONNECTIONS": "No connections found"

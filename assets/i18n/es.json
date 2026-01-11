@@ -157,6 +157,8 @@
         "CREATE_MATCH": "Crear partida",
         "MATCH_CREATED": "¡Partida creada!",
         "DATE_ERROR": "Cree una fecha y hora correctas",
+        "UPLOADING_MESSAGE": "La partida se está creando",
+        "ERROR": "Error creando la partida, por favor intente de nuevo",
         "TITLE_EMPTY": "Escriba el titulo",
         "DURATION": "Duración: $duration minutos"
     },
@@ -167,7 +169,7 @@
         "EDIT_MATCH": "Editar partida",
         "LEAVE_MATCH": "Salir de la partida",
         "CANCEL_MATCH": "Cancelar partida",
-        "CANCEL_MATCH_QUESTION": "¿Estás seguro de que deseas cancelar la partida?",
+        "CANCELL_MATCH_QUESTION": "¿Estás seguro de que deseas cancelar la partida?",
         "MATCH_CANCELLED": "Partida cancelada",
         "MATCH_ENDED": "Partida finalizada",
         "STATUS": {
@@ -202,7 +204,8 @@
         "EMPTY": "Sin conexiones",
         "LOADING": "Cargando conexiones",
         "ERRORS": {
-            "LOADING": "Error cargando conexiones"
+            "LOADING_ERROR": "Error cargando conexiones",
+            "NO_CONNECTIONS": "Sin conexiones"
         },
         "HAVE_A_REQUEST": "Tienes una solicitud para $name",
         "REQUESTS": {
@@ -236,7 +239,7 @@
         "SAY_HI_TO": "Di hola a $name",
         "SAY_HI": "Saluda",
         "ERRORS": {
-            "LOADING": "Error cargando mensajes",
+            "LOADING_ERROR": "Error cargando mensajes",
             "LOADING_CHAT": "Error cargando el chat",
             "NO_DATA": "Sin datos de amistad",
             "LOADING_USER":"Error cargando usuario",

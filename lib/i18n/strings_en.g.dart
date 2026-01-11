@@ -447,6 +447,9 @@ class TranslationsConnectionsEn {
 	/// en: 'No connections'
 	String get EMPTY => 'No connections';
 
+	/// en: 'Loading connections'
+	String get LOADING => 'Loading connections';
+
 	late final TranslationsConnectionsErrorsEn ERRORS = TranslationsConnectionsErrorsEn._(_root);
 
 	/// en: 'You have requested a connection to $name'
@@ -1535,6 +1538,7 @@ extension on Translations {
 			'MATCHES.ERRORS.JOIN_FAILED' => 'Failed to join the match',
 			'CONNECTIONS.TITLE' => 'Connections',
 			'CONNECTIONS.EMPTY' => 'No connections',
+			'CONNECTIONS.LOADING' => 'Loading connections',
 			'CONNECTIONS.ERRORS.LOADING_ERROR' => 'Error loading connections',
 			'CONNECTIONS.ERRORS.NO_CONNECTIONS' => 'No connections found',
 			'CONNECTIONS.HAVE_A_REQUEST' => ({required Object name}) => 'You have requested a connection to ${name}',
