@@ -6,6 +6,7 @@ import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/services/match_service.dart';
+import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:toast/toast.dart';
 
@@ -34,7 +35,7 @@ class MoleculeButtonCancellMatch extends StatelessWidget {
               titleTextStyle: const TextStyle(fontSize: 20),
               icon: game.background != null ? CircleAvatar(
                 radius: 50,
-                backgroundImage: CachedNetworkImageProvider(game.background!) 
+                backgroundImage: CachedNetworkImageProvider(resizeRawgImage(game.background!)) 
               ) : null,
               title: Text(t.MATCH.CANCELL_MATCH_QUESTION, textAlign: TextAlign.center),
               actions: [

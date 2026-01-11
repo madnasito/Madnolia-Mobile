@@ -9,6 +9,7 @@ import 'package:madnolia/widgets/molecules/lists/games_list_molecule.dart';
 
 import '../../models/game/minimal_game_model.dart';
 import '../../models/tiny_rawg_game_model.dart';
+import '../../utils/images_util.dart';
 import '../../widgets/match_card_widget.dart';
 import '../../services/games_service.dart';
 
@@ -128,7 +129,7 @@ class _SearchGamePageState extends State<SearchGamePage> {
                                             });
                                           }),
                                           child:  GameCard(
-                                              background: snapshot.data?[index].backgroundImage,
+                                              background: resizeRawgImage(snapshot.data?[index].backgroundImage),
                                               name: snapshot.data![index].name,
                                               bottom: const Text("")),
                                         );
