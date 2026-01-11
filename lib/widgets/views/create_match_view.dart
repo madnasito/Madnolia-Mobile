@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
+import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:madnolia/models/match/create_match_model.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
@@ -48,6 +49,7 @@ class MatchFormView extends StatelessWidget {
     
     final platformInfo = getPlatformInfo(platformId);
     final matchUsersCubit = context.watch<MatchUsersCubit>();
+    final platformsGamesBloc = context.watch<PlatformGamesBloc>();
     const List<int> minutes =  [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
     
     return SingleChildScrollView(
@@ -215,6 +217,7 @@ class MatchFormView extends StatelessWidget {
                         dateController.clear();
                         matchMinutesCubit.restoreMinutes();
                         matchUsersCubit.restore();
+                        platformsGamesBloc.add(RestorePlatformsGamesState());
                         if(!context.mounted) return;
                         final playerMatches = context.read<MatchesBloc>();
                         playerMatches.add(RestoreMatchesState());
@@ -223,6 +226,7 @@ class MatchFormView extends StatelessWidget {
                         final backgroundService = FlutterBackgroundService();
                         backgroundService.invoke('match_created', {'id': resp['_id']});
                         context.goNamed("matches");
+                        
                       }
                       } catch (e) {
                         if (context.mounted) showAlert(context, e.toString());
