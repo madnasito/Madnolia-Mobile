@@ -6,7 +6,7 @@ class Notification extends Table {
   TextColumn get id => text()();
   IntColumn get type => intEnum<NotificationType>()();
   TextColumn get title => text()();
-  TextColumn get thumb => text()();
+  TextColumn get thumb => text().nullable()();
   TextColumn get sender => text().nullable().references(User, #id)();
   TextColumn get path => text()();
   BoolColumn get read => boolean()();

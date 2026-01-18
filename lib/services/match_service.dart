@@ -55,6 +55,7 @@ class MatchService {
 
       return matches;
     } catch (e) {
+      debugPrint('Error in MatchService.getMatches: $e');
       rethrow;  
     }
 

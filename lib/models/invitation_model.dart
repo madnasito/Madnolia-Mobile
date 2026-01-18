@@ -13,15 +13,15 @@ class Invitation {
   String name;
   String url;
   String match;
-  String img;
   String user;
+  String? img;
 
   Invitation({
     required this.name,
     required this.url,
     required this.match,
-    required this.img,
-    required this.user
+    required this.user,
+    this.img,
   });
 
   factory Invitation.fromJson(Map<String, dynamic> json) => Invitation(

@@ -8,11 +8,14 @@ import '../../../models/notification/notification_details.dart';
 import '../../../utils/images_util.dart' show resizeRawgImage;
 
 class AtomInvitationNotification extends StatelessWidget {
-  
   final NotificationDetails data;
   final FlutterBackgroundService backgroundService;
 
-  const AtomInvitationNotification({super.key, required this.data, required this.backgroundService});
+  const AtomInvitationNotification({
+    super.key,
+    required this.data,
+    required this.backgroundService,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,9 @@ class AtomInvitationNotification extends StatelessWidget {
       key: UniqueKey(),
       confirmDismiss: (direction) async {
         try {
-          backgroundService.invoke('delete_notification', {'id': data.notification.id});
+          backgroundService.invoke('delete_notification', {
+            'id': data.notification.id,
+          });
           return true;
         } catch (e) {
           return false;
@@ -28,40 +33,65 @@ class AtomInvitationNotification extends StatelessWidget {
       },
       direction: DismissDirection.startToEnd,
       background: Container(
-        decoration: BoxDecoration(gradient: LinearGradient(
-        begin: AlignmentDirectional.topStart,
-        end: AlignmentDirectional.bottomCenter,
-        colors: [Color.fromARGB(186, 255, 31, 15), Colors.transparent])
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: AlignmentDirectional.topStart,
+            end: AlignmentDirectional.bottomCenter,
+            colors: [Color.fromARGB(186, 255, 31, 15), Colors.transparent],
+          ),
         ),
         alignment: AlignmentDirectional.centerStart,
-        child: Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Icon(Icons.delete_outline_rounded, size: 40,)),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Icon(Icons.delete_outline_rounded, size: 40),
+        ),
       ),
-      onDismissed: (direction) {
-      },
+      onDismissed: (direction) {},
       child: Container(
         decoration: BoxDecoration(
           color: Colors.black45, // Darker background
           borderRadius: BorderRadius.circular(12), // Optional rounded corners
         ),
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8), 
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         child: ListTile(
           leading: CircleAvatar(
             radius: 30,
             backgroundColor: Colors.grey[800],
-            backgroundImage: CachedNetworkImageProvider(resizeRawgImage(data.notification.thumb)),),
+            backgroundImage:
+                (data.notification.thumb == null ||
+                    data.notification.thumb!.isEmpty)
+                ? null
+                : CachedNetworkImageProvider(
+                    resizeRawgImage(data.notification.thumb),
+                  ),
+            child:
+                (data.notification.thumb == null ||
+                    data.notification.thumb!.isEmpty)
+                ? const Icon(
+                    Icons.videogame_asset_outlined,
+                    color: Colors.white54,
+                    size: 30,
+                  )
+                : null,
+          ),
           title: RichText(
-            text: TextSpan(text: t.NOTIFICATIONS.INVITATION_TO_MATCH,
-            children: [
-              TextSpan(
-                text: data.notification.title,
-                style: TextStyle(fontWeight: FontWeight.bold)
-              )
-            ]
-          ),),
-          subtitle: Text("@${data.user?.username}", style: TextStyle(
+            text: TextSpan(
+              text: t.NOTIFICATIONS.INVITATION_TO_MATCH,
+              children: [
+                TextSpan(
+                  text: data.notification.title,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          subtitle: Text(
+            "@${data.user?.username}",
+            style: TextStyle(
               color: Colors.greenAccent,
               overflow: TextOverflow.ellipsis, // Handle long text
-            )),
+            ),
+          ),
           trailing: Icon(Icons.arrow_forward_ios_outlined),
           onTap: () => context.push('/match/${data.notification.path}'),
         ),

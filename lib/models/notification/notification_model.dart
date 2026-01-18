@@ -18,7 +18,7 @@ class NotificationModel {
     String user;
     NotificationType type;
     String title;
-    String thumb;
+    String? thumb;
     String? sender;
     String path;
     bool read;
@@ -29,7 +29,7 @@ class NotificationModel {
         required this.user,
         required this.type,
         required this.title,
-        required this.thumb,
+        this.thumb,
         this.sender,
         required this.path,
         required this.read,

@@ -272,32 +272,69 @@ class LocalNotificationsService {
       await initializeTranslations();
       final matchDb = await _matchRepository.getMatchById(invitation.match);
       final userDb = await _userRepository.getUserById(invitation.user);
-      final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeRawgImage(invitation.img)));
-      final String platformName = getPlatformInfo(matchDb.platform.id).name;
-      final icon = ByteArrayAndroidBitmap.fromBase64String(image);
+
+
       
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-      NotificationDetails notificationDetails =  NotificationDetails(
-        android: AndroidNotificationDetails(
-            "main_channel",
-            "Main Channel",
-            groupKey: "gfg",          
-            playSound: true, 
-            icon: '@drawable/ic_notifications',
-            subText: t.NOTIFICATIONS.MATCH_INVITATION,
-            styleInformation: BigPictureStyleInformation(
-              icon,
-              contentTitle: "${t.NOTIFICATIONS.INVITED_TO} ${invitation.name} | $platformName",
-              summaryText: "@${userDb.username}",
-            ),
-            // styleInformation: BigPictureStyleInformation(bigPicture),
-            priority: Priority.high),
-      );
+      final detailsInfo =  invitation.img != null ? invitationWithImage(
+        invitation: invitation,
+        matchData: matchDb,
+        userDb: userDb
+      ) : invitationWithoutImage(userDb: userDb, invitation: invitation, matchData: matchDb);
+      NotificationDetails notificationDetails = await detailsInfo;
       await _notificationsPlugin.show(id, null, null, notificationDetails, payload: json.encode(matchDb.toJson()));
     } catch (e) {
       debugPrint(e.toString());
     }
 
+  }
+
+  static Future<NotificationDetails> invitationWithImage({
+    required UserData userDb,
+    required Invitation invitation,
+    required MatchData matchData
+  }) async {
+    final image = await imageProviderToBase64(CachedNetworkImageProvider(resizeRawgImage(invitation.img!)));
+    final String platformName = getPlatformInfo(matchData.platform.id).name;
+    final icon = ByteArrayAndroidBitmap.fromBase64String(image);
+    return NotificationDetails(
+      android: AndroidNotificationDetails(
+        "main_channel",
+        "Main Channel",
+        groupKey: "gfg",          
+        playSound: true, 
+        icon: '@drawable/ic_notifications',
+        subText: t.NOTIFICATIONS.MATCH_INVITATION,
+        styleInformation: BigPictureStyleInformation(
+          icon,
+          contentTitle: "${t.NOTIFICATIONS.INVITED_TO} ${invitation.name} | $platformName",
+          summaryText: "@${userDb.username}",
+        ),
+        priority: Priority.high
+      )
+    );
+  }
+
+  static Future<NotificationDetails> invitationWithoutImage({
+    required UserData userDb,
+    required Invitation invitation,
+    required MatchData matchData
+  }) async {
+    final String platformName = getPlatformInfo(matchData.platform.id).name;
+    return NotificationDetails(
+      android: AndroidNotificationDetails(
+        "main_channel",
+        "Main Channel",
+        groupKey: "gfg",          
+        playSound: true, 
+        icon: '@drawable/ic_notifications',
+        subText: t.NOTIFICATIONS.MATCH_INVITATION,
+        styleInformation:  BigTextStyleInformation(
+          "${t.NOTIFICATIONS.INVITED_TO} ${invitation.name} | $platformName",
+          summaryText: "@${userDb.username}",
+        )
+      )
+    );
   }
 
   @pragma("vm:entry-point")

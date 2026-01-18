@@ -18,6 +18,7 @@ import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat/update_recipient_model.dart';
 import 'package:madnolia/models/friendship/connection_request.dart';
 import 'package:madnolia/models/match/match_ready_model.dart' show MatchReady;
+import 'package:madnolia/models/notification/notification_model.dart';
 import 'package:madnolia/services/firebase_messaging_service.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -285,6 +286,15 @@ Future<void> onStart(ServiceInstance service) async {
 
   socket.on('match_cancelled', (data) async => await matchRepository.updateMatchStatus(data, MatchStatus.cancelled));
 
+  socket.on('standard_notification', (data) async {
+    try {
+      final notification = NotificationModel.fromJson(data);
+      final notificationCompanion = notification.toCompanion();
+      await notificationsRepository.insertNotification(notificationCompanion);
+    } catch (e) {
+      debugPrint('Error handling standard notification: $e');
+    }
+  });
   socket.onDisconnect((_) {
     service.invoke("disconnected_socket");
     storage.write(key: 'lastSyncDate', value: DateTime.now().toUtc().toIso8601String());

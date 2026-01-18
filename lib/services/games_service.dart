@@ -79,7 +79,7 @@ class GamesService {
   static Future<List<TinyRawgGame>> searchGames({required String title, required String platform}) async {
 
     try {
-      return RawgService().searchGame(game: title, platform: platform);
+      return RawgService().searchGames(game: title, platform: platform);
     } catch (e) {
       rethrow;
     }
