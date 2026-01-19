@@ -60,6 +60,22 @@ class ChatMessageRepository {
     }
   }
 
+  Future<List<ChatMessageData>> getAllSentMessages() async {
+    try {
+      final query = database.select(database.chatMessage)
+        ..where((tbl) => tbl.status.equals(ChatMessageStatus.sent.index));
+
+        final messages = await (query
+        ..orderBy([(t) => OrderingTerm(expression: t.date, mode: OrderingMode.desc)])
+        ).get();
+
+        return messages;
+    } catch (e) {
+      debugPrint('Error getting sent messages:');
+      rethrow;
+    }
+  }
+
   Future<int> messageSended(String oldId, String newId, DateTime date) async {
     try {
       return await (database.update(database.chatMessage)..where((tbl) => tbl.id.equals(oldId))).write(

@@ -151,6 +151,20 @@ Future<void> onStart(ServiceInstance service) async {
       }
     }
 
+    final sentMessages = await chatMessageRepository.getAllSentMessages();
+    for (var message in sentMessages) {
+
+      debugPrint(message.toString());
+      final newMessage = CreateMessage(
+        id: message.id,
+        conversation: message.conversation,
+        content: message.content,
+        type: message.type
+      );
+      
+      socket.emitWithAck('message', newMessage.toJson());
+    }
+
   });
 
   socket.on('update_availability', (payload) => service.invoke('update_availability', {'availability': payload}));
