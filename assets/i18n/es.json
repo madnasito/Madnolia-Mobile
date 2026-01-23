@@ -113,7 +113,8 @@
             "TEXT_TOO_LONG": "Texto muy largo",
             "INVALID_SELECTION": "Selección no válida",
             "REQUIRED_SELECTION": "Debes seleccionar una opción",
-            "INVALID_LENGTH": "Longitud no válida"
+            "INVALID_LENGTH": "Longitud no válida",
+            "SELECT_PLATFORMS": "Necesitas seleccionar al menos una plataforma"
         }
     },
     "RECOVER_PASSWORD": {
@@ -300,7 +301,8 @@
                 "USERNAME": "Ya hay otro usuario usando este NOMBRE DE USUARIO",
                 "IMG_SIZE": "La imagen no puede ser mayor de 2MB",
                 "IMG_EXTENSION": "La extensión no es valida, por favor usa: 'JPG', 'JPEG'. 'PNG'",
-                "IMG_UPDATING": "Error actualizando la imagen"
+                "IMG_UPDATING": "Error actualizando la imagen",
+                "ERROR_UPDATING": "Error actualizando"
             },
             "UPLOADING_IMAGE": "Subiendo la imagen, espere un momento por favor",
             "UPDATED": "Datos actualizados",

@@ -541,6 +541,7 @@ class _TranslationsFormValidationsEs implements TranslationsFormValidationsEn {
 	@override String get INVALID_SELECTION => 'Selección no válida';
 	@override String get REQUIRED_SELECTION => 'Debes seleccionar una opción';
 	@override String get INVALID_LENGTH => 'Longitud no válida';
+	@override String get SELECT_PLATFORMS => 'Necesitas seleccionar al menos una plataforma';
 }
 
 // Path: LOGIN.ERRORS
@@ -761,6 +762,7 @@ class _TranslationsProfileUserPageErrorsEs implements TranslationsProfileUserPag
 	@override String get IMG_SIZE => 'La imagen no puede ser mayor de 2MB';
 	@override String get IMG_EXTENSION => 'La extensión no es valida, por favor usa: \'JPG\', \'JPEG\'. \'PNG\'';
 	@override String get IMG_UPDATING => 'Error actualizando la imagen';
+	@override String get ERROR_UPDATING => 'Error actualizando';
 }
 
 /// The flat map containing all translations for locale <es>.
@@ -870,6 +872,7 @@ extension on TranslationsEs {
 			'FORM.VALIDATIONS.INVALID_SELECTION' => 'Selección no válida',
 			'FORM.VALIDATIONS.REQUIRED_SELECTION' => 'Debes seleccionar una opción',
 			'FORM.VALIDATIONS.INVALID_LENGTH' => 'Longitud no válida',
+			'FORM.VALIDATIONS.SELECT_PLATFORMS' => 'Necesitas seleccionar al menos una plataforma',
 			'RECOVER_PASSWORD.TITLE' => 'Recupera tu contraseña',
 			'RECOVER_PASSWORD.RECOVER_PASSWORD' => 'Recuperar contraseña',
 			'RECOVER_PASSWORD.EMAIL_SENDED' => '¡Correo enviado!',
@@ -1008,6 +1011,7 @@ extension on TranslationsEs {
 			'PROFILE.USER_PAGE.ERRORS.IMG_SIZE' => 'La imagen no puede ser mayor de 2MB',
 			'PROFILE.USER_PAGE.ERRORS.IMG_EXTENSION' => 'La extensión no es valida, por favor usa: \'JPG\', \'JPEG\'. \'PNG\'',
 			'PROFILE.USER_PAGE.ERRORS.IMG_UPDATING' => 'Error actualizando la imagen',
+			'PROFILE.USER_PAGE.ERRORS.ERROR_UPDATING' => 'Error actualizando',
 			'PROFILE.USER_PAGE.UPLOADING_IMAGE' => 'Subiendo la imagen, espere un momento por favor',
 			'PROFILE.USER_PAGE.UPDATED' => 'Datos actualizados',
 			'PROFILE.USER_PAGE.UPDATE' => 'Actualizar',

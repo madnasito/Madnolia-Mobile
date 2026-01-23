@@ -993,6 +993,9 @@ class TranslationsFormValidationsEn {
 
 	/// en: 'Invalid length'
 	String get INVALID_LENGTH => 'Invalid length';
+
+	/// en: 'You need to select at least one platform'
+	String get SELECT_PLATFORMS => 'You need to select at least one platform';
 }
 
 // Path: LOGIN.ERRORS
@@ -1362,6 +1365,9 @@ class TranslationsProfileUserPageErrorsEn {
 
 	/// en: 'Error updating the image'
 	String get IMG_UPDATING => 'Error updating the image';
+
+	/// en: 'Error updating'
+	String get ERROR_UPDATING => 'Error updating';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -1471,6 +1477,7 @@ extension on Translations {
 			'FORM.VALIDATIONS.INVALID_SELECTION' => 'Invalid selection',
 			'FORM.VALIDATIONS.REQUIRED_SELECTION' => 'You must select an option',
 			'FORM.VALIDATIONS.INVALID_LENGTH' => 'Invalid length',
+			'FORM.VALIDATIONS.SELECT_PLATFORMS' => 'You need to select at least one platform',
 			'RECOVER_PASSWORD.TITLE' => 'Recover your password',
 			'RECOVER_PASSWORD.RECOVER_PASSWORD' => 'Recover password',
 			'RECOVER_PASSWORD.EMAIL_SENDED' => 'Email sended!',
@@ -1606,6 +1613,7 @@ extension on Translations {
 			'PROFILE.USER_PAGE.ERRORS.IMG_SIZE' => 'The image size cant\' moore than 2mb',
 			'PROFILE.USER_PAGE.ERRORS.IMG_EXTENSION' => 'The extension is not valid, please use: \'JPG\', \'PNG\', \'JPEG\'',
 			'PROFILE.USER_PAGE.ERRORS.IMG_UPDATING' => 'Error updating the image',
+			'PROFILE.USER_PAGE.ERRORS.ERROR_UPDATING' => 'Error updating',
 			'PROFILE.USER_PAGE.UPLOADING_IMAGE' => 'Uploading image, wait a moment please',
 			'PROFILE.USER_PAGE.UPDATED' => 'Updated!',
 			'PROFILE.USER_PAGE.UPDATE' => 'Update',
