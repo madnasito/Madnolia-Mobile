@@ -75,6 +75,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   void _updateData(UpdateData event, Emitter<UserState> emit) {
     emit(
       state.copyWith(
+        loadedUser: true,
         name: event.user.name,
         email: event.user.email,
         id: event.user.id,
