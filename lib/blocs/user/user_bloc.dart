@@ -18,32 +18,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     on<UpdateData> (_updateData);
 
-    on<UserEvent>((event, emit){
-      
+    on<UpdateAvailability> (_updateAvailability);
 
-      if(event is UserLogOut){
-        emit(
-          state.copyWith(loadedUser: false, notifications: 0, platforms: [], username: "", name: "", email: "", id: "", image: "", thumb: "", availability: UserAvailability.everyone)
-        );
-      }
+    on<UpdateImages> (_updateImages);
 
-      if( event is UserUpdateImage){
-        emit(
-          state.copyWith(
-            image: event.image,
-            thumb: event.thumbImage
-          )
-        );
-      }
+    on<UpdateChatRoom> (_updateChatRoom);
 
-      if(event is UserUpdateChatRoom) emit(state.copyWith(chatRoom: event.chatRoom));
+    on<UserLogOut> (_logOutUser);
 
-      if(event is AddNotifications) emit(state.copyWith(notifications: event.value));
+    on<AddNotifications> (_updateNotifications);
 
-      if(event is RestoreNotifications) emit(state.copyWith(notifications: 0));
+    on<RestoreNotifications>(_restoreNotifications);
 
-      if(event is UserUpdateAvailability) emit(state.copyWith(availability: event.availability));
-    });
   }
   
 
@@ -88,20 +74,60 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       )
     );
   }
-
-  void updateAvailability(UserAvailability event) => add(UserUpdateAvailability(availability: event));
   
-
-  void updateImages(String thumbImage, String image){
-    add(UserUpdateImage(thumbImage: thumbImage, image: image));
+  void _updateAvailability(UpdateAvailability event, Emitter<UserState> emit) {
+    emit(state.copyWith(
+      availability: event.availability
+    ));
+  }
+    
+  void _updateImages(UpdateImages event, Emitter<UserState> emit){
+    emit(
+      state.copyWith(
+        thumb: event.thumbImage,
+        image: event.image
+      )
+    );
   }
 
-  void updateChatRoom(String room) => add(UserUpdateChatRoom(chatRoom: room));
+  void _updateChatRoom(UpdateChatRoom event, Emitter<UserState> emit) {
+    emit(state.copyWith(
+      chatRoom: event.chatRoom
+    ));
+  }
 
-  void logOutUser() => add(UserLogOut());
+  void _logOutUser(UserLogOut event, Emitter<UserState> emit) {
+    emit(
+      state.copyWith(
+        loadedUser: false,
+        notifications: 0,
+        platforms: [],
+        username: "",
+        name: "",
+        email: "",
+        id: "",
+        image: "",
+        thumb: "",
+        availability: UserAvailability.everyone,
+        status: BlocStatus.initial
+      )
+    );
+  }
 
-  void updateNotifications(int value) => add(AddNotifications(value: value));
+  void _updateNotifications(AddNotifications event, Emitter<UserState> emit){
+    emit(
+      state.copyWith(
+        notifications: event.value
+      )
+    );
+  }
 
-  void restoreNotifications() => add(RestoreNotifications());
+  void _restoreNotifications(RestoreNotifications event, Emitter<UserState> emit) {
+    emit(
+      state.copyWith(
+        notifications: 0
+      )
+    );
+  }
   
 }

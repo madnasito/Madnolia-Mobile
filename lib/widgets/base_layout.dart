@@ -42,9 +42,9 @@ class BaseLayout extends StatelessWidget {
     final backgroundService = FlutterBackgroundService();
 
     backgroundService.on("new_request_connection").listen((onData) {
-      if(onData?['user'] == userBloc.state.id) userBloc.updateNotifications(userBloc.state.notifications + 1);
+      if(onData?['user'] == userBloc.state.id) userBloc.add(AddNotifications(value: userBloc.state.notifications + 1));
     });
-    backgroundService.on("invitation").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
+    backgroundService.on("invitation").listen((onData) => userBloc.add(AddNotifications(value: userBloc.state.notifications + 1)));
 
     Widget body = child;
     
@@ -149,7 +149,7 @@ class BaseLayout extends StatelessWidget {
                     final chatsBloc = context.read<ChatsBloc>();
                     final matchesBloc = context.read<MatchesBloc>();
                     final userRepository = RepositoryManager().user;
-                    userBloc.logOutUser();
+                    userBloc.add(UserLogOut());
                     messageBloc.add(RestoreState());
                     matchesBloc.add(RestoreMatchesState());
                     chatsBloc.add(RestoreUserChats());

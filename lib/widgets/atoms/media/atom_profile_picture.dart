@@ -50,7 +50,7 @@ class AtomProfilePicture extends StatelessWidget {
           if (croppedFile?.path != null) {
             try {
               final resp = await userStream.uploadImage(croppedFile!.path);
-              userBloc.updateImages(resp.thumb, resp.image);
+              userBloc.add(UpdateImages(image: resp.image, thumbImage: resp.thumb));
             } catch (e) {
               if (!context.mounted) return;
               showErrorServerAlert(context, {"message": "NETWORK_ERROR"});

@@ -65,12 +65,11 @@ class _NotificationsLoaderState extends State<NotificationsLoader> {
 
   @override
   Widget build(BuildContext context) {
-
     
     final backgroundService = FlutterBackgroundService();
     
     final userBloc = context.watch<UserBloc>();
-    userBloc.restoreNotifications();
+    userBloc.add(RestoreNotifications());
 
     return ListView.builder(
       shrinkWrap: true,

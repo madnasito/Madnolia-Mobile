@@ -25,7 +25,7 @@ Future<void> logoutApp(BuildContext context) async {
   final friendshipsBloc = context.read<FriendshipsBloc>();
   backgroundService.invoke('logout');
   backgroundService.invoke("delete_all_notifications");
-  userBloc.logOutUser();
+  userBloc.add(UserLogOut());
   messageBloc.add(RestoreState());
   matchesBloc.add(RestoreMatchesState());
   chatsBloc.add(RestoreUserChats());

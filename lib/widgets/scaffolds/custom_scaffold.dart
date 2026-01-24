@@ -24,9 +24,9 @@ class CustomScaffold extends StatelessWidget {
     final backgroundService = FlutterBackgroundService();
 
     backgroundService.on("new_request_connection").listen((onData) {
-      if(onData?['user'] == userBloc.state.id) userBloc.updateNotifications(userBloc.state.notifications + 1);
+      if(onData?['user'] == userBloc.state.id) userBloc.add(AddNotifications(value: userBloc.state.notifications + 1));
     });
-    backgroundService.on("invitation").listen((onData) => userBloc.updateNotifications(userBloc.state.notifications + 1));
+    backgroundService.on("invitation").listen((onData) => userBloc.add(AddNotifications(value: userBloc.state.notifications + 1)));
     return Scaffold(
       drawer: OrganismDrawer(),
       drawerEnableOpenDragGesture: false,

@@ -139,7 +139,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final User user = await UserService().getUserInfo();
       final int unreadNotificationsCount = await NotificationsService()
           .getNotificationsCount();
-      userBloc.updateNotifications(unreadNotificationsCount);
+      userBloc.add(AddNotifications(value: unreadNotificationsCount));
       userBloc.add(UpdateData(user: user));
       if (platformsGamesBloc.state.platformGames.isEmpty) {
         platformsGamesBloc.add(LoadPlatforms(platforms: user.platforms));

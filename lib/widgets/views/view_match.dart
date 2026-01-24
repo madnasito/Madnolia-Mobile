@@ -70,7 +70,7 @@ class _ViewMatchState extends State<ViewMatch> {
       if (mounted) setState(() => socketConnected = true);
     });
     
-    userBloc.updateChatRoom(_match.id);
+    userBloc.add(UpdateChatRoom(chatRoom: _match.id));
   }
 
   @override
@@ -83,7 +83,7 @@ class _ViewMatchState extends State<ViewMatch> {
     backgroundService.invoke("disconnect_chat");
     backgroundService.invoke("leave_room");
     // backgroundService.invoke("new_player_to_match");
-    userBloc.updateChatRoom("");
+    userBloc.add(UpdateChatRoom(chatRoom: ''));
     super.dispose();
   }
 

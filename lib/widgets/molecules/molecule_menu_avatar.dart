@@ -89,7 +89,7 @@ class MoleculeMenuAvatar extends StatelessWidget {
                       onChanged: (value) {
                         if(value == null) return;
                         backgroundService.invoke('update_availability', {'availability': value.index});
-                        userBloc.updateAvailability(value);
+                        userBloc.add(UpdateAvailability(availability: value));
                       },
                       isDense: true,
                       underline: Container(),
