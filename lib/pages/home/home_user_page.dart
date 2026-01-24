@@ -136,11 +136,8 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final messageBloc = context.read<MessageBloc>();
       final platformsGamesBloc = context.read<PlatformGamesBloc>();
 
-      final User user = await UserService().getUserInfo();
-      final int unreadNotificationsCount = await NotificationsService()
-          .getNotificationsCount();
-      userBloc.updateNotifications(unreadNotificationsCount);
-      userBloc.loadInfo(user);
+      // final User user = await UserService().getUserInfo();
+      userBloc.add(GetInfo());
       if (platformsGamesBloc.state.platformGames.isEmpty) {
         platformsGamesBloc.add(LoadPlatforms(platforms: user.platforms));
       }
@@ -155,7 +152,7 @@ class _HomeUserPageState extends State<HomeUserPage> {
         }
       }
 
-      return user;
+      return;
     } catch (e) {
       debugPrint("Load error: $e");
 

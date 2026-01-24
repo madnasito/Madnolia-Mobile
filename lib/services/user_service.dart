@@ -15,12 +15,7 @@ class UserService {
 
   final _storage = const FlutterSecureStorage();
   final String baseUrl = dotenv.get("API_URL");
-  final dio = Dio();
-
-  // Future getUserInfo() => userGetRequest("user/info");
-
-  // Future getUserInfoById(String id) => userGetRequest("user/info/$id");
-  
+  final dio = Dio();  
 
   Future<User> getUserInfo() async {
     try {

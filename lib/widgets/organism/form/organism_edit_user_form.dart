@@ -142,7 +142,7 @@ class OrganismEditUserForm extends StatelessWidget {
             
                   Toast.show(t.PROFILE.USER_PAGE.UPDATED, gravity: 20, duration: 2 );
             
-                  userBloc.loadInfo(newUser);
+                  userBloc.add(UpdateData(user: newUser));
                   
                   if(platformGamesBloc.state.platformGames.isEmpty) platformGamesBloc.add(LoadPlatforms(platforms: userBloc.state.platforms));
 

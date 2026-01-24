@@ -3,28 +3,22 @@ import 'package:madnolia/enums/user-availability.enum.dart';
 import 'package:madnolia/models/user/user_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/services/user_service.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
+  final _userService = UserService();
+  
   UserBloc():super(const UserState()){
 
+    on<GetInfo> (_loadInfo);
+
+    on<UpdateData> (_updateData);
+
     on<UserEvent>((event, emit){
-      if(event is UserLoadInfo){
-        final User user = event.userModel;
-        emit(state.copyWith(
-          loadedUser: true,
-          name: user.name,
-          email: user.email,
-          id: user.id,
-          image: user.image,
-          thumb: user.thumb,
-          platforms: user.platforms,
-          username: user.username,
-          availability: user.availability
-        ));
-      }
+      
 
       if(event is UserLogOut){
         emit(
@@ -52,10 +46,45 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
   
 
-  void loadInfo(User user){
+  Future<void> _loadInfo(GetInfo event, Emitter<UserState> emit) async {
+
+    final userApiData = await _userService.getUserInfo();
+
     final service = FlutterBackgroundService();
-    service.invoke("update_username", {"username": user.username});
-    add(UserLoadInfo(userModel: user));
+
+    service.invoke("update_username", {"username": userApiData.username});
+
+    final User user = userApiData;
+    emit(
+      state.copyWith(
+        loadedUser: true,
+        name: user.name,
+        email: user.email,
+        id: user.id,
+        image: user.image,
+        thumb: user.thumb,
+        platforms: user.platforms,
+        username: user.username,
+        availability: user.availability,
+        notifications: user.notifications
+      )
+    );
+  }
+
+  void _updateData(UpdateData event, Emitter<UserState> emit) {
+    emit(
+      state.copyWith(
+        name: event.user.name,
+        email: event.user.email,
+        id: event.user.id,
+        image: event.user.image,
+        thumb: event.user.thumb,
+        platforms: event.user.platforms,
+        username: event.user.username,
+        availability: event.user.availability,
+        notifications: event.user.notifications
+      )
+    );
   }
 
   void updateAvailability(UserAvailability event) => add(UserUpdateAvailability(availability: event));
