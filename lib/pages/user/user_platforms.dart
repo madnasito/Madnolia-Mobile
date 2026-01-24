@@ -47,70 +47,67 @@ class UserPlatformsPage extends StatelessWidget {
                         color: Colors.transparent,
                         isLoading: updating,
                         onPressed: updating == false
-                            ? () async {
-                                try {
-                                  if (platforms.isEmpty) {
-                                    Toast.show(
-                                      t.FORM.VALIDATIONS.SELECT_PLATFORMS,
-                                      gravity: 100,
-                                      border: Border.all(
-                                        color: Colors.blueAccent,
-                                      ),
-                                      textStyle: const TextStyle(fontSize: 18),
-                                      duration: 2,
-                                    );
-                                    return;
-                                  }
-
-                                  setState(() => updating = true);
-
-                                  final resp = await UserService()
-                                      .updateUserPlatforms(
-                                        platforms: {"platforms": platforms},
-                                      );
-
-                                  if (resp.containsKey("error")) {
-                                    Toast.show(
-                                      t.PROFILE.USER_PAGE.ERRORS.ERROR_UPDATING,
-                                      gravity: 100,
-                                      border: Border.all(
-                                        color: Colors.redAccent,
-                                      ),
-                                      textStyle: const TextStyle(fontSize: 18),
-                                      duration: 3,
-                                    );
-                                  } else {
-                                    final User user = User.fromJson(resp);
-                                    userBloc.loadInfo(user);
-                                    platformsGamesBloc.add(
-                                      RestorePlatformsGamesState(),
-                                    );
-                                    platformsGamesBloc.add(
-                                      LoadPlatforms(
-                                        platforms: userBloc.state.platforms,
-                                      ),
-                                    );
-                                    Toast.show(
-                                      t.PROFILE.PLATFORMS_PAGE.SUCCESS,
-                                      gravity: 100,
-                                      border: Border.all(
-                                        color: Colors.blueAccent,
-                                      ),
-                                      textStyle: const TextStyle(fontSize: 18),
-                                      duration: 3,
-                                    );
-                                  }
-
-                                  setState(() => updating = true);
-                                } catch (e) {
-                                  if (context.mounted) {
-                                    showAlert(context, e.toString());
-                                  }
-                                } finally {
-                                  setState(() => updating = false);
+                          ? () async {
+                              try {
+                                if (platforms.isEmpty) {
+                                  Toast.show(
+                                    t.FORM.VALIDATIONS.SELECT_PLATFORMS,
+                                    gravity: 100,
+                                    border: Border.all(
+                                      color: Colors.blueAccent,
+                                    ),
+                                    textStyle: const TextStyle(fontSize: 18),
+                                    duration: 2,
+                                  );
+                                  return;
                                 }
+                                setState(() => updating = true);
+                                final resp = await UserService()
+                                    .updateUserPlatforms(
+                                      platforms: {"platforms": platforms},
+                                    );
+                                if (resp.containsKey("error")) {
+                                  Toast.show(
+                                    t.PROFILE.USER_PAGE.ERRORS.ERROR_UPDATING,
+                                    gravity: 100,
+                                    border: Border.all(
+                                      color: Colors.redAccent,
+                                    ),
+                                    textStyle: const TextStyle(fontSize: 18),
+                                    duration: 3,
+                                  );
+                                } else {
+                                  final User user = User.fromJson(resp);
+                                  debugPrint(user.platforms.toString());
+                                  userBloc.loadInfo(user);
+                                  // platformsGamesBloc.add(
+                                  //   LoadPlatforms(
+                                  //     platforms: userBloc.state.platforms,
+                                  //   ),
+                                  // );
+                                  platformsGamesBloc.add(
+                                    RestorePlatformsGamesState(),
+                                  );
+                                  Toast.show(
+                                    t.PROFILE.PLATFORMS_PAGE.SUCCESS,
+                                    gravity: 100,
+                                    border: Border.all(
+                                      color: Colors.blueAccent,
+                                    ),
+                                    textStyle: const TextStyle(fontSize: 18),
+                                    duration: 3,
+                                  );
+                                }
+                                setState(() => updating = true);
+                              } catch (e) {
+                                if (context.mounted) {
+                                  showAlert(context, e.toString());
+                                }
+                              } finally {
+                                setState(() => updating = false);
                               }
-                            : null,
+                            }
+                          : null,
                       ),
                 ),
               ),

@@ -17,9 +17,26 @@ class UserService {
   final String baseUrl = dotenv.get("API_URL");
   final dio = Dio();
 
-  Future getUserInfo() => userGetRequest("user/info");
+  // Future getUserInfo() => userGetRequest("user/info");
 
   // Future getUserInfoById(String id) => userGetRequest("user/info/$id");
+  
+
+  Future<User> getUserInfo() async {
+    try {
+      Response response;
+
+      final String? token = await _storage.read(key: "token");
+
+      response = await dio.get('$baseUrl/user/info', options: Options(headers:  {"Authorization": "Bearer $token"}));
+
+      return User.fromJson(response.data);
+
+    } catch (e) {
+      debugPrint('Error getting user info ${e.toString()}');
+      rethrow;
+    }
+  }
 
   Future<SimpleUser> getUserInfoById(String id)  async {
     try {
