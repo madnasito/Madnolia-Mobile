@@ -3,7 +3,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/repository_manager.dart';
-import 'package:madnolia/enums/list_status.enum.dart';
+import 'package:madnolia/enums/bloc_status.enum.dart';
 import 'package:madnolia/models/notification/notification_details.dart';
 import 'package:stream_transform/stream_transform.dart';
 
@@ -35,7 +35,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       state.copyWith(
         data: [],
         hasReachedMax: false,
-        status: ListStatus.initial
+        status: BlocStatus.initial
       )
     );
   }
@@ -55,7 +55,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     try {
       final cursorId = event.reload ? null : state.data.lastOrNull?.notification.id;
 
-      bool reload = event.reload || state.status == ListStatus.initial;
+      bool reload = event.reload || state.status == BlocStatus.initial;
 
       debugPrint('Loading notifications with cursorId: $cursorId, reload: $reload');
 
@@ -68,7 +68,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
       emit(
         state.copyWith(
-          status: ListStatus.success,
+          status: BlocStatus.success,
           // Append new notifications to the existing list.
           data: event.reload ? newNotifications : (List.of(state.data)..addAll(newNotifications)),
           hasReachedMax: hasReachedMax,
@@ -76,7 +76,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       );
     } catch (e) {
       debugPrint(e.toString());
-      emit(state.copyWith(status: ListStatus.failure));
+      emit(state.copyWith(status: BlocStatus.failure));
       rethrow;
     }
   }
@@ -98,12 +98,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
         onError: (error, stackTrace) {
           debugPrint('Stream error: $error');
           debugPrint(stackTrace.toString());
-          return state.copyWith(status: ListStatus.failure);
+          return state.copyWith(status: BlocStatus.failure);
         },
       );
     } catch (e) {
       debugPrint('Watch notifications error: $e');
-      emit(state.copyWith(status: ListStatus.failure));
+      emit(state.copyWith(status: BlocStatus.failure));
     }
   }
 }

@@ -8,7 +8,7 @@ import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/user_messages.body.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../../enums/list_status.enum.dart' show ListStatus;
+import '../../enums/bloc_status.enum.dart' show BlocStatus;
 import '../../models/chat/chat_message_with_user.dart';
 
 part 'message_event.dart';
@@ -57,7 +57,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
             onError: (error, stackTrace) {
               debugPrint(error.toString());
               debugPrint(stackTrace.toString());
-              return state.copyWith(status: ListStatus.failure);
+              return state.copyWith(status: BlocStatus.failure);
             }
           );
       } catch (e) {
@@ -91,25 +91,25 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
         final bool conversationHasReachedEnd = conversation?.hasReachedEnd ?? false;
 
         if(messages.isEmpty && conversationHasReachedEnd){
-          return emit(state.copyWith(hasReachedMax: true, status: ListStatus.success));
+          return emit(state.copyWith(hasReachedMax: true, status: BlocStatus.success));
         }
 
         emit(
           state.copyWith(
-            status: ListStatus.success,
+            status: BlocStatus.success,
             hasReachedMax: messages.isEmpty && conversationHasReachedEnd, // Update hasReachedMax here
           )
         );
 
       } catch (e) {
-        emit(state.copyWith(status: ListStatus.failure));
+        emit(state.copyWith(status: BlocStatus.failure));
       }
     }
 
   void _restoreState(RestoreState event, Emitter<MessageState> emit){
     emit(
       state.copyWith(
-      status: ListStatus.initial,
+      status: BlocStatus.initial,
       unreadUserChats: 0,
       roomMessages: [],
       hasReachedMax: false

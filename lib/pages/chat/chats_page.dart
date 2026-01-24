@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
-import 'package:madnolia/enums/list_status.enum.dart';
+import 'package:madnolia/enums/bloc_status.enum.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_users_chats.dart';
@@ -84,7 +84,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
     final chatsBloc = context.read<ChatsBloc>();
 
     // Initialize if needed
-    if (chatsBloc.state.status == ListStatus.initial) {
+    if (chatsBloc.state.status == BlocStatus.initial) {
       chatsBloc.add(UserChatsFetched(reload: true));
       chatsBloc.add(WatchUserChats());
     }    
@@ -94,9 +94,9 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
   Widget build(BuildContext context) {
     return BlocBuilder<ChatsBloc, ChatsState>(
       builder: (context, state) {
-        if (state.status == ListStatus.initial) {
+        if (state.status == BlocStatus.initial) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state.status == ListStatus.success) {
+        } else if (state.status == BlocStatus.success) {
          return (state.usersChats.isNotEmpty) 
           ? MoleculeUsersChats(usersChats: state.usersChats)
           : SingleChildScrollView(
@@ -104,7 +104,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
             child: Center(child: Text(t.CHAT.NO_MESSAGES)
                     ),
           );
-        } else if (state.status == ListStatus.failure && 
+        } else if (state.status == BlocStatus.failure && 
                   state.usersChats.isEmpty) {
           return SingleChildScrollView(
             

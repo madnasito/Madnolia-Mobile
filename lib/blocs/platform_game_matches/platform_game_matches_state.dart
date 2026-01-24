@@ -4,18 +4,18 @@ class PlatformGameMatchesState extends Equatable {
 
   final List<Match> gameMatches;
   final bool hasReachedMax;
-  final ListStatus status;
+  final BlocStatus status;
 
   const PlatformGameMatchesState({
     this.gameMatches = const <Match>[],
     this.hasReachedMax = false,
-    this.status = ListStatus.initial
+    this.status = BlocStatus.initial
   });
 
   PlatformGameMatchesState copyWith({
     List<Match>? gameMatches,
     bool? hasReachedMax,
-    ListStatus? status
+    BlocStatus? status
   }){
     return PlatformGameMatchesState(
       gameMatches: gameMatches ?? this.gameMatches,

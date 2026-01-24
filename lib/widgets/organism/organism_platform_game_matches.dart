@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/platform_game_matches/platform_game_matches_bloc.dart';
-import 'package:madnolia/enums/list_status.enum.dart';
+import 'package:madnolia/enums/bloc_status.enum.dart';
 import 'package:madnolia/widgets/molecules/lists/molecule_platform_game_matches_list.dart';
 
 import '../../enums/platforms_id.enum.dart';
@@ -19,10 +19,10 @@ class OrganismPlatformGameMatches extends StatelessWidget {
     return BlocBuilder<PlatformGameMatchesBloc, PlatformGameMatchesState>(
       builder: (context, state) {
         switch (state.status) {
-          case ListStatus.initial:
+          case BlocStatus.initial:
             return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
           
-          case ListStatus.success:
+          case BlocStatus.success:
             // Message when there is no notification
             if(state.gameMatches.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.MATCHES.ERRORS.NO_MATCHES)));
             return MoleculePlatformGameMatchesList(
@@ -30,7 +30,7 @@ class OrganismPlatformGameMatches extends StatelessWidget {
               gameId: gameId,
             );
           
-          case ListStatus.failure:
+          case BlocStatus.failure:
             if(state.gameMatches.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.MATCHES.ERRORS.LOADING_ERROR)));
             return MoleculePlatformGameMatchesList(
               platform: platform,

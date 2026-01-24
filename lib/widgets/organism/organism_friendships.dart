@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 
 import '../../blocs/friendships/friendships_bloc.dart';
-import '../../enums/list_status.enum.dart';
+import '../../enums/bloc_status.enum.dart';
 import '../molecules/lists/molecule_friendships_users_list.dart';
 
 class OrganismFriendships extends StatefulWidget {
@@ -26,15 +26,15 @@ class _OrganismFriendshipsState extends State<OrganismFriendships> {
     final friendshipsBloc = context.watch<FriendshipsBloc>();
 
     switch (friendshipsBloc.state.status) {
-      case ListStatus.initial:
+      case BlocStatus.initial:
         return const Center(child: CircularProgressIndicator());
-      case ListStatus.failure:
+      case BlocStatus.failure:
         if (friendshipsBloc.state.friendshipsUsers.isEmpty) {
           return Center(child: Text(t.FRIENDS.ERROR_LOADING));
         } else {
           return const MoleculeFriendshipsUsersList();
         }
-      case ListStatus.success:
+      case BlocStatus.success:
         if (friendshipsBloc.state.friendshipsUsers.isNotEmpty) {
           return const MoleculeFriendshipsUsersList();
         } else {

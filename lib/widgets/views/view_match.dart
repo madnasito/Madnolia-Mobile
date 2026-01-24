@@ -3,7 +3,7 @@ import 'dart:async' show StreamSubscription;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/database/database.dart';
-import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
+import 'package:madnolia/enums/bloc_status.enum.dart' show BlocStatus;
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
@@ -199,14 +199,14 @@ class _MoleculeRoomMessagesState extends State<MoleculeRoomMessages> {
     return BlocBuilder<MessageBloc, MessageState>(
       builder: (context, state) {
 
-        if (state.status == ListStatus.failure && state.roomMessages.isEmpty) {
+        if (state.status == BlocStatus.failure && state.roomMessages.isEmpty) {
           return Center(child: Text(t.CHAT.ERRORS.LOADING_CHAT));
         }
         else if (state.roomMessages.isEmpty && state.hasReachedMax) {
           return Center(child: Text(t.CHAT.SAY_HI));
         }
 
-        else if (state.status == ListStatus.initial && state.roomMessages.isEmpty) {
+        else if (state.status == BlocStatus.initial && state.roomMessages.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }else {
           return BuildMessageList(scrollController: _scrollController, state: state);

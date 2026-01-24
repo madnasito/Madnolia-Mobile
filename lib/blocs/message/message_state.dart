@@ -4,7 +4,7 @@ part of 'message_bloc.dart';
 
 final class MessageState extends Equatable {
   
-  final ListStatus status;
+  final BlocStatus status;
   final int unreadUserChats;
   // final List<ChatMessage> userMessages;
   final List<ChatMessageWithUser> roomMessages;
@@ -12,7 +12,7 @@ final class MessageState extends Equatable {
   final bool hasReachedMax;
 
   const MessageState({
-    this.status = ListStatus.initial,
+    this.status = BlocStatus.initial,
     this.unreadUserChats = 0,
     // this.userMessages = const <ChatMessage>[],
     this.roomMessages = const <ChatMessageWithUser>[],
@@ -22,7 +22,7 @@ final class MessageState extends Equatable {
 
 
   MessageState copyWith({
-    ListStatus? status,
+    BlocStatus? status,
     int? unreadUserChats,
     // List<ChatMessage>? userMessages,
     List<ChatMessageWithUser>? roomMessages,

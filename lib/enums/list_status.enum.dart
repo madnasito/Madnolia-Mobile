@@ -1,1 +1,0 @@
-enum ListStatus { initial, success, failure }

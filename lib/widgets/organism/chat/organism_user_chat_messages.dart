@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
-import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
+import 'package:madnolia/enums/bloc_status.enum.dart' show BlocStatus;
 import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart' show MoleculeUserChatMessagesList;
 
 class OrganismUserChatMessages extends StatefulWidget {
@@ -68,11 +68,11 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
       builder: (context, state) {
 
         switch (state.status) {
-          case ListStatus.failure:
+          case BlocStatus.failure:
               return Center(child: Text(t.CHAT.ERRORS.LOADING_ERROR));
-          case ListStatus.initial:
+          case BlocStatus.initial:
             return const Center(child: CircularProgressIndicator());
-          case ListStatus.success:
+          case BlocStatus.success:
             if (state.roomMessages.isNotEmpty) {
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -80,7 +80,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
                 child: MoleculeUserChatMessagesList(
                   state: state,
                   scrollController: _scrollController,
-                  isLoading: state.status == ListStatus.initial && !state.hasReachedMax,
+                  isLoading: state.status == BlocStatus.initial && !state.hasReachedMax,
                 ),
               );
             } else{
@@ -89,7 +89,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
           // default:
           //   return Center(child: Text('Say hi'));
         }
-        // if (state.status == ListStatus.failure) {
+        // if (state.status == BlocStatus.failure) {
           
         // }
       },
