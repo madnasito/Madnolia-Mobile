@@ -11,7 +11,6 @@ import 'package:toast/toast.dart';
 
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/views/platforms_view.dart';
-import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 import '../../models/user/user_model.dart';
 
@@ -28,25 +27,24 @@ class UserPlatformsPage extends StatelessWidget {
     ToastContext().init(context);
 
     bool updating = false;
-    return CustomScaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            PlatformsView(platforms: platforms),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FadeIn(
-                delay: const Duration(seconds: 1),
-                child: StatefulBuilder(
-                  builder:
-                      (
-                        BuildContext context,
-                        void Function(void Function()) setState,
-                      ) => MoleculeFormButton(
-                        text: t.PROFILE.USER_PAGE.UPDATE,
-                        color: Colors.transparent,
-                        isLoading: updating,
-                        onPressed: updating == false
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          PlatformsView(platforms: platforms),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FadeIn(
+              delay: const Duration(seconds: 1),
+              child: StatefulBuilder(
+                builder:
+                    (
+                      BuildContext context,
+                      void Function(void Function()) setState,
+                    ) => MoleculeFormButton(
+                      text: t.PROFILE.USER_PAGE.UPDATE,
+                      color: Colors.transparent,
+                      isLoading: updating,
+                      onPressed: updating == false
                           ? () async {
                               try {
                                 if (platforms.isEmpty) {
@@ -70,9 +68,7 @@ class UserPlatformsPage extends StatelessWidget {
                                   Toast.show(
                                     t.PROFILE.USER_PAGE.ERRORS.ERROR_UPDATING,
                                     gravity: 100,
-                                    border: Border.all(
-                                      color: Colors.redAccent,
-                                    ),
+                                    border: Border.all(color: Colors.redAccent),
                                     textStyle: const TextStyle(fontSize: 18),
                                     duration: 3,
                                   );
@@ -108,12 +104,11 @@ class UserPlatformsPage extends StatelessWidget {
                               }
                             }
                           : null,
-                      ),
-                ),
+                    ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

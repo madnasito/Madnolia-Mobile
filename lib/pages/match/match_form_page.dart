@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/widgets/views/create_match_view.dart';
-import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 import '../../models/tiny_rawg_game_model.dart';
 
@@ -13,11 +12,6 @@ class MatchFormPage extends StatelessWidget {
     late var extra = GoRouterState.of(context).extra as Map;
 
     TinyRawgGame game = extra["game"] as TinyRawgGame;
-    return CustomScaffold(
-        body:MatchFormView(
-        game: game,
-        platformId: extra["platformId"],
-      ),
-    );
+    return MatchFormView(game: game, platformId: extra["platformId"]);
   }
 }

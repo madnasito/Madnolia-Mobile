@@ -11,30 +11,23 @@ import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/molecules/chat/molecule_users_chats.dart';
 
-import '../../widgets/scaffolds/custom_scaffold.dart';
-
 class ChatsPage extends StatelessWidget {
   const ChatsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: 
-        Column(
-          children: [
-            const SizedBox(height: 10),
-            CenterTitleAtom(
-              text: t.CHAT.MESSAGES, 
-              textStyle: neonTitleText,
-            ),
-            const SizedBox(height: 10),
-            Expanded(
-              child: _ChatListWithUpdates(),
-            ),
-          ],
-        ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Column(
+        children: [
+          const SizedBox(height: 10),
+          CenterTitleAtom(text: t.CHAT.MESSAGES, textStyle: neonTitleText),
+          const SizedBox(height: 10),
+          Expanded(child: const _ChatListWithUpdates()),
+        ],
+      ),
       floatingActionButton: IconButton(
-        onPressed: () => context.pushNamed('friendships'), 
+        onPressed: () => context.pushNamed('friendships'),
         icon: Container(
           decoration: BoxDecoration(
             color: Colors.blueAccent,
@@ -49,12 +42,8 @@ class ChatsPage extends StatelessWidget {
             ],
           ),
           padding: const EdgeInsets.all(12),
-          child: const Icon(
-            Icons.person_add,
-            color: Colors.white,
-            size: 28,
-          ),
-        )
+          child: const Icon(Icons.person_add, color: Colors.white, size: 28),
+        ),
       ),
     );
   }
@@ -68,7 +57,6 @@ class _ChatListWithUpdates extends StatefulWidget {
 }
 
 class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
-
   @override
   void initState() {
     super.initState();
@@ -87,7 +75,7 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
     if (chatsBloc.state.status == BlocStatus.initial) {
       chatsBloc.add(UserChatsFetched(reload: true));
       chatsBloc.add(WatchUserChats());
-    }    
+    }
   }
 
   @override
@@ -97,19 +85,18 @@ class __ChatListWithUpdatesState extends State<_ChatListWithUpdates> {
         if (state.status == BlocStatus.initial) {
           return const Center(child: CircularProgressIndicator());
         } else if (state.status == BlocStatus.success) {
-         return (state.usersChats.isNotEmpty) 
-          ? MoleculeUsersChats(usersChats: state.usersChats)
-          : SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: Center(child: Text(t.CHAT.NO_MESSAGES)
-                    ),
-          );
-        } else if (state.status == BlocStatus.failure && 
-                  state.usersChats.isEmpty) {
+          return (state.usersChats.isNotEmpty)
+              ? MoleculeUsersChats(usersChats: state.usersChats)
+              : SingleChildScrollView(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: Center(child: Text(t.CHAT.NO_MESSAGES)),
+                );
+        } else if (state.status == BlocStatus.failure &&
+            state.usersChats.isEmpty) {
           return SingleChildScrollView(
-            
             physics: AlwaysScrollableScrollPhysics(),
-            child: Center(child: Text(t.CHAT.ERRORS.LOADING_CHAT)));
+            child: Center(child: Text(t.CHAT.ERRORS.LOADING_CHAT)),
+          );
         } else {
           // Show existing chats even if there was a subsequent error
           return MoleculeUsersChats(usersChats: state.usersChats);

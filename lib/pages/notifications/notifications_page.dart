@@ -6,7 +6,6 @@ import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
 import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/organism/organism_notifications.dart';
-import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
@@ -24,38 +23,39 @@ class _NotificationsPageState extends State<NotificationsPage> {
     super.initState();
     notificationsBloc = context.read<NotificationsBloc>();
     notificationsBloc.add(LoadNotifications());
-    notificationsBloc.add(WatchNotifications());    
+    notificationsBloc.add(WatchNotifications());
     _scrollController.addListener(_onScroll);
   }
 
-  
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: CustomMaterialIndicator(
-        autoRebuild: false,
-        onRefresh: () async {
-          notificationsBloc.add(RestoreNotificationsState());
-          notificationsBloc.add(LoadNotifications(reload: true));
-        },
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-              children: [
-                const SizedBox(height: 20),
-                CenterTitleAtom(text: t.NOTIFICATIONS.TITLE, textStyle: neonTitleText,),
-                const SizedBox(height: 10),
-                OrganismNotifications(),
-              ],
-          ),
+    return CustomMaterialIndicator(
+      autoRebuild: false,
+      onRefresh: () async {
+        notificationsBloc.add(RestoreNotificationsState());
+        notificationsBloc.add(LoadNotifications(reload: true));
+      },
+      child: SingleChildScrollView(
+        controller: _scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            CenterTitleAtom(
+              text: t.NOTIFICATIONS.TITLE,
+              textStyle: neonTitleText,
+            ),
+            const SizedBox(height: 10),
+            const OrganismNotifications(),
+          ],
         ),
-      )
+      ),
     );
   }
 
@@ -69,6 +69,6 @@ class _NotificationsPageState extends State<NotificationsPage> {
   bool get _isBottom {
     if (!_scrollController.hasClients) return false;
     return _scrollController.offset >=
-    (_scrollController.position.maxScrollExtent * 0.9);
+        (_scrollController.position.maxScrollExtent * 0.9);
   }
 }

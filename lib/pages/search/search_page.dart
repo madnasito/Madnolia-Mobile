@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/services/user_service.dart';
-import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/organism/organism_users_list.dart';
 
 import '../../models/user/simple_user_model.dart';
@@ -26,7 +25,6 @@ class _SearchPageState extends State<SearchPage> {
     counter = 0;
   }
 
-
   @override
   void dispose() {
     searchController.dispose();
@@ -37,52 +35,52 @@ class _SearchPageState extends State<SearchPage> {
   void _onSearchChanged(String value) {
     debugPrint(searchController.text);
     counter++;
-    Timer(
-      const Duration(seconds: 1),
-      () {
-        counter--;
-        setState(() {});
-      },
-    );
+    Timer(const Duration(seconds: 1), () {
+      counter--;
+      setState(() {});
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              AtomSearchInput(
-                placeholder: t.SEARCH.SEARCH_USERS,
-                searchController: searchController,
-                onChanged: _onSearchChanged,
-              ),
-              const SizedBox(height: 20),
-              (counter == 0 && searchController.text.isNotEmpty)
-                  ? Flexible(
-                      child: FutureBuilder<List<SimpleUser>>(
-                        future: _searchUsers(searchController.text),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const CircularProgressIndicator();
-                          }
-                          if (snapshot.hasError || !snapshot.hasData) {
-                            return Text(t.ERRORS.LOCAL.LOADING_USERS);
-                          }
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AtomSearchInput(
+              placeholder: t.SEARCH.SEARCH_USERS,
+              searchController: searchController,
+              onChanged: _onSearchChanged,
+            ),
+            const SizedBox(height: 20),
+            (counter == 0 && searchController.text.isNotEmpty)
+                ? Flexible(
+                    child: FutureBuilder<List<SimpleUser>>(
+                      future: _searchUsers(searchController.text),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError || !snapshot.hasData) {
+                          return Text(t.ERRORS.LOCAL.LOADING_USERS);
+                        }
 
-                          if(snapshot.data!.isEmpty) {
-                            return Text(t.SEARCH.NO_USERS_FOUND);
-                          } 
-                          return OrganismUsersList(users: snapshot.data!.map((e) => SimpleUser.fromJson(e.toJson())).toList());
-                        },
-                      ),
-                    )
-                  : const SizedBox(),
-            ],
-          ),
+                        if (snapshot.data!.isEmpty) {
+                          return Text(t.SEARCH.NO_USERS_FOUND);
+                        }
+                        return OrganismUsersList(
+                          users: snapshot.data!
+                              .map((e) => SimpleUser.fromJson(e.toJson()))
+                              .toList(),
+                        );
+                      },
+                    ),
+                  )
+                : const SizedBox(),
+          ],
         ),
       ),
     );

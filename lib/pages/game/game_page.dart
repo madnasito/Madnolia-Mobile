@@ -8,7 +8,6 @@ import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/widgets/organism/organism_platform_game_matches.dart';
 
-import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import '../../utils/platforms.dart';
 
@@ -30,10 +29,12 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     super.initState();
     platformGameMatchesBloc = context.read<PlatformGameMatchesBloc>();
-    platformId =
-        PlatformId.values.firstWhere((element) => element.id == widget.platform);
-    platformGameMatchesBloc
-        .add(LoadPlatformGameMatches(platformId: platformId, gameId: widget.game));
+    platformId = PlatformId.values.firstWhere(
+      (element) => element.id == widget.platform,
+    );
+    platformGameMatchesBloc.add(
+      LoadPlatformGameMatches(platformId: platformId, gameId: widget.game),
+    );
     _scrollController.addListener(_onScroll);
   }
 
@@ -47,7 +48,8 @@ class _GamePageState extends State<GamePage> {
   void _onScroll() {
     if (_isBottom) {
       platformGameMatchesBloc.add(
-          LoadPlatformGameMatches(platformId: platformId, gameId: widget.game));
+        LoadPlatformGameMatches(platformId: platformId, gameId: widget.game),
+      );
     }
   }
 
@@ -59,59 +61,60 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        child: Column(
-          children: [
-            FutureBuilder(
-                future: RepositoryManager().games.getGameById(widget.game),
-                builder: (BuildContext context, AsyncSnapshot<GameData> snapshot) {
-                  if (snapshot.hasData) {
-                    final GameData game = snapshot.data!;
-                    return Column(
-                      children: [
-                        AtomGameImage(
-                            name: game.name, background: game.background),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 4),
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.topCenter,
-                                colors: [
-                                  Colors.black12,
-                                  Colors.black26,
-                                  Colors.black,
-                                  Colors.black26,
-                                  Colors.black12
-                                ]
-                              )
-                            ),
-                          child: ExpandableText(
-                            game.description,
-                            expandText: t.UTILS.SHOW_MORE,
-                            collapseText: t.UTILS.SHOW_LESS,
-                            maxLines: 6,
-                            animation: true,
-                            collapseOnTextTap: true,
-                            expandOnTextTap: true,
-                            urlStyle: const TextStyle(
-                                color: Color.fromARGB(255, 169, 145, 255)),
-                          ),
+    return SingleChildScrollView(
+      controller: _scrollController,
+      child: Column(
+        children: [
+          FutureBuilder(
+            future: RepositoryManager().games.getGameById(widget.game),
+            builder: (BuildContext context, AsyncSnapshot<GameData> snapshot) {
+              if (snapshot.hasData) {
+                final GameData game = snapshot.data!;
+                return Column(
+                  children: [
+                    AtomGameImage(name: game.name, background: game.background),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.topCenter,
+                          colors: [
+                            Colors.black12,
+                            Colors.black26,
+                            Colors.black,
+                            Colors.black26,
+                            Colors.black12,
+                          ],
                         ),
-                        Text(getPlatformInfo(widget.platform).name),
-                      ],
-                    );
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                }),
-            OrganismPlatformGameMatches(
-                platform: platformId, gameId: widget.game)
-          ],
-        ),
+                      ),
+                      child: ExpandableText(
+                        game.description,
+                        expandText: t.UTILS.SHOW_MORE,
+                        collapseText: t.UTILS.SHOW_LESS,
+                        maxLines: 6,
+                        animation: true,
+                        collapseOnTextTap: true,
+                        expandOnTextTap: true,
+                        urlStyle: const TextStyle(
+                          color: Color.fromARGB(255, 169, 145, 255),
+                        ),
+                      ),
+                    ),
+                    Text(getPlatformInfo(widget.platform).name),
+                  ],
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+          OrganismPlatformGameMatches(
+            platform: platformId,
+            gameId: widget.game,
+          ),
+        ],
       ),
     );
   }

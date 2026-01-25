@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/pages/auth/recover_password_page.dart';
@@ -26,7 +25,7 @@ import 'package:madnolia/pages/user/user_page.dart';
 import 'package:madnolia/pages/user/user_platforms.dart';
 import 'package:madnolia/pages/user/user_profile_page.dart';
 import 'package:madnolia/services/sockets_service.dart';
-
+import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 import '../pages/chat/page_user_friendships.dart';
 import '../pages/home/home_user_page.dart';
@@ -39,183 +38,193 @@ final GoRouter router = GoRouter(
   initialLocation: "/",
   routes: <RouteBase>[
     GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return FutureBuilder(
-            future: getToken(),
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.hasData) {
-                return const HomeUserPage();
-              } else if(snapshot.hasError) {
-                return const HomePage();
-              }
-              else {
-                return const Center(child: CircularProgressIndicator(),);
-              }
-            });
+      path: 'home',
+      name: 'home',
+      builder: (context, state) => const HomePage(),
+    ),
+    GoRoute(
+      path: 'login',
+      name: 'login',
+      builder: (BuildContext context, GoRouterState state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: 'register',
+      name: 'register',
+      builder: (context, state) => RegisterPage(),
+    ),
+    GoRoute(
+      path: 'recover-password',
+      name: 'recover-password',
+      builder: (BuildContext context, GoRouterState state) =>
+          const ForgotPasswordPage(),
+    ),
+    GoRoute(
+      path: 'auth/recover-password-token/:token',
+      builder: (context, state) => RecoverPasswordTokenPage(
+        token: state.pathParameters['token'].toString(),
+      ),
+    ),
+    ShellRoute(
+      builder: (context, state, child) {
+        return CustomScaffold(child: child);
       },
-      routes: <RouteBase>[
+      routes: [
         GoRoute(
-            path: "home",
-            name: "home",
-            builder: (context, state) => const HomePage()),
+          path: '/',
+          builder: (BuildContext context, GoRouterState state) {
+            return FutureBuilder(
+              future: getToken(),
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                if (snapshot.hasData) {
+                  return const HomeUserPage();
+                } else if (snapshot.hasError) {
+                  // If no token or error, we redirect to the public home
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.go('/home');
+                  });
+                  return const Center(child: CircularProgressIndicator());
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            );
+          },
+        ),
         GoRoute(
-          path: "chat",
+          path: '/home-user',
+          name: 'home-user',
+          builder: (context, state) => const HomeUserPage(),
+        ),
+        GoRoute(
+          path: "/chat",
           name: "chat",
-          builder: (context, state) => const ChatsPage()
+          builder: (context, state) => const ChatsPage(),
         ),
         GoRoute(
-          path: "user-chat",
+          path: "/user-chat",
           name: "user-chat",
-          builder: (context, state) => const UserChatPage()
+          builder: (context, state) => const UserChatPage(),
         ),
         GoRoute(
-          path: "search",
+          path: "/search",
           name: "search",
-          builder: (context, state) => const SearchPage()
+          builder: (context, state) => const SearchPage(),
         ),
         GoRoute(
-            path: "home-user",
-            name: "home-user",
-            builder: (context, state) => const HomeUserPage()),
-        GoRoute(
-          path: 'login',
-          name: 'login',
-          builder: (BuildContext context, GoRouterState state) {
-            return const LoginPage();
-          },
-        ),
-        GoRoute(
-          path: 'friendships',
+          path: '/friendships',
           name: 'friendships',
-          builder: (BuildContext context, GoRouterState state) {
-            return const PageUserFriendships();
-          },
+          builder: (BuildContext context, GoRouterState state) =>
+              const PageUserFriendships(),
         ),
-        GoRoute(
-          path: 'recover-password',
-          name: 'recover-password',
-          builder: (BuildContext context, GoRouterState state) {
-            return const ForgotPasswordPage();
-          },
-        ),
-        GoRoute(
-            path: "register",
-            name: "register",
-            builder: (context, state) => RegisterPage()),
         GoRoute(
           name: "platforms",
-          path: "platforms",
+          path: "/platforms",
+          builder: (context, state) => const PlatformsPage(),
           routes: <RouteBase>[
             GoRoute(
               name: "Get platform games",
               path: ":id",
-              redirect: (context, state) {
-                if (state.pathParameters["id"] == null) {
-                  return context.namedLocation("platforms");
-                } else {
-                  return null;
-                }
-              },
               builder: (context, state) =>
                   PlatformGames(id: state.pathParameters["id"].toString()),
-            )
+            ),
           ],
-          builder: (context, state) {
-            return const PlatformsPage();
-          },
         ),
         GoRoute(
-          path: "notifications",
+          path: "/notifications",
           name: "notifications",
           builder: (context, state) => const NotificationsPage(),
         ),
         GoRoute(
-          path: "matches",
+          path: "/matches",
           name: "matches",
           builder: (context, state) => const MatchesPage(),
         ),
-        GoRoute(path: 'user/:id',
-          builder: (context, state) => UserProfilePage(id: state.pathParameters['id'].toString())
+        GoRoute(
+          path: '/user/:id',
+          builder: (context, state) =>
+              UserProfilePage(id: state.pathParameters['id'].toString()),
         ),
         GoRoute(
-            name: "me",
-            path: 'me',
-            builder: (BuildContext context, GoRouterState state) {
-              return const UserPage();
-            },
-            routes: [
-              GoRoute(
-                name: "edit-user",
-                path: 'edit',
-                builder: (BuildContext context, GoRouterState state) {
-                  return const UserEditPage();
-                },
-              ),
-              
-              GoRoute(
-                  path: "platforms",
-                  name: "user-platforms",
-                  builder: (context, state) => const UserPlatformsPage())
-            ]),
+          name: "me",
+          path: '/me',
+          builder: (BuildContext context, GoRouterState state) =>
+              const UserPage(),
+          routes: [
+            GoRoute(
+              name: "edit-user",
+              path: 'edit',
+              builder: (BuildContext context, GoRouterState state) =>
+                  const UserEditPage(),
+            ),
+            GoRoute(
+              path: "platforms",
+              name: "user-platforms",
+              builder: (context, state) => const UserPlatformsPage(),
+            ),
+          ],
+        ),
         GoRoute(
           name: "new",
-          path: 'new',
-          builder: (BuildContext context, GoRouterState state) => const NewPage(),
+          path: '/new',
+          builder: (BuildContext context, GoRouterState state) =>
+              const NewPage(),
           routes: [
             GoRoute(
               path: "match",
               builder: (context, state) => const MatchFormPage(),
-            )
+            ),
           ],
         ),
         GoRoute(
-          path: "match/:id",
+          path: "/match/:id",
           builder: (context, state) {
             return FutureBuilder(
               future: getToken(),
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (snapshot.hasData) {
                   return MatchPage(id: state.pathParameters['id'].toString());
-                } else if(snapshot.hasError){
+                } else if (snapshot.hasError) {
                   return Center(child: Text(t.MATCH.ERROR_LOADING));
-                }else {
-                  return Center(child: CircularProgressIndicator(),);
+                } else {
+                  return const Center(child: CircularProgressIndicator());
                 }
-              }
+              },
             );
           },
         ),
         GoRoute(
-          path: 'auth/recover-password-token/:token',
-          builder: (context, state) => RecoverPasswordTokenPage(token: state.pathParameters['token'].toString(),),
+          path: "/platform/:platform/:game",
+          name: "game",
+          builder: (context, state) {
+            try {
+              int platform = int.parse(
+                state.pathParameters['platform'].toString(),
+              );
+              String game = state.pathParameters['game'].toString();
+              return GamePage(game: game, platform: platform);
+            } catch (e) {
+              context.go("/home-user");
+              return const SizedBox.shrink();
+            }
+          },
         ),
         GoRoute(
-            path: "platform/:platform/:game", name: "game", builder: (context, state) {
-              try {
-                int platform = int.parse(state.pathParameters['platform'].toString());
-                String game = state.pathParameters['game'].toString();
-                return GamePage(game: game, platform: platform);
-              } catch (e) {
-                context.go("/home-user");
-                return const SizedBox.shrink();
-              }
-            } ),
-        GoRoute(path: "search_game", name: "search game", builder: (context, state) => const SearchGamePage())
+          path: "/search_game",
+          name: "search game",
+          builder: (context, state) => const SearchGamePage(),
+        ),
       ],
     ),
   ],
 );
 
 Future<String?> getToken() async {
-
   try {
-    
     const storage = FlutterSecureStorage();
 
     final token = await storage.read(key: "token");
 
-    if(token == null) throw 'No token';
+    if (token == null) throw 'No token';
 
     return token;
   } catch (e) {

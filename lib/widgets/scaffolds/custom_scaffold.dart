@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
@@ -6,73 +8,115 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/widgets/background.dart';
-import 'package:madnolia/widgets/molecules/buttons/atom_menu_button.dart' show changeRoute;
+import 'package:madnolia/widgets/molecules/buttons/atom_menu_button.dart'
+    show changeRoute;
 import 'package:madnolia/widgets/organism/menu/organism_drawer.dart';
 
-class CustomScaffold extends StatelessWidget {
-  final Widget body;
+class CustomScaffold extends StatefulWidget {
+  final Widget child;
   final Widget? floatingActionButton;
-  const CustomScaffold({super.key, required this.body, this.floatingActionButton});
+  const CustomScaffold({
+    super.key,
+    required this.child,
+    this.floatingActionButton,
+  });
+
+  @override
+  State<CustomScaffold> createState() => _CustomScaffoldState();
+}
+
+class _CustomScaffoldState extends State<CustomScaffold> {
+  StreamSubscription? _newRequestSubscription;
+  StreamSubscription? _invitationSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _setupBackgroundListeners();
+  }
+
+  void _setupBackgroundListeners() {
+    final backgroundService = FlutterBackgroundService();
+
+    _newRequestSubscription = backgroundService
+        .on("new_request_connection")
+        .listen((onData) {
+          if (mounted) {
+            final userBloc = context.read<UserBloc>();
+            if (onData?['user'] == userBloc.state.id) {
+              userBloc.add(
+                AddNotifications(value: userBloc.state.notifications + 1),
+              );
+            }
+          }
+        });
+
+    _invitationSubscription = backgroundService.on("invitation").listen((
+      onData,
+    ) {
+      if (mounted) {
+        final userBloc = context.read<UserBloc>();
+        userBloc.add(AddNotifications(value: userBloc.state.notifications + 1));
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _newRequestSubscription?.cancel();
+    _invitationSubscription?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     LocaleSettings.useDeviceLocale();
-    
-    final userBloc = context.watch<UserBloc>();
-    
-    final backgroundService = FlutterBackgroundService();
 
-    backgroundService.on("new_request_connection").listen((onData) {
-      if(onData?['user'] == userBloc.state.id) userBloc.add(AddNotifications(value: userBloc.state.notifications + 1));
-    });
-    backgroundService.on("invitation").listen((onData) => userBloc.add(AddNotifications(value: userBloc.state.notifications + 1)));
+    final userBloc = context.watch<UserBloc>();
+
     return Scaffold(
-      drawer: OrganismDrawer(),
+      drawer: const OrganismDrawer(),
       drawerEnableOpenDragGesture: false,
       appBar: AppBar(
         leading: Builder(
           builder: (context) {
             return IconButton(
               icon: const Icon(Icons.menu),
-              onPressed: userBloc.state.loadedUser ? () {
-                Scaffold.of(context).openDrawer();
-              } : null,
+              onPressed: userBloc.state.loadedUser
+                  ? () {
+                      Scaffold.of(context).openDrawer();
+                    }
+                  : null,
             );
-          }
+          },
         ),
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         shadowColor: Colors.transparent,
         centerTitle: true,
         title: IconButton(
-            icon: SvgPicture.asset("assets/madnolia-logo.svg",
-            width: MediaQuery.of(context).size.width / 11,),
-            onPressed: () {
-              final String? currentRoute = GoRouterState.of(context).fullPath;
+          icon: SvgPicture.asset(
+            "assets/madnolia-logo.svg",
+            width: MediaQuery.of(context).size.width / 11,
+          ),
+          onPressed: () {
+            final String? currentRoute = GoRouterState.of(context).fullPath;
 
-              if(currentRoute != '/') GoRouter.of(context).push("/");
-            } 
-            )
-            ,
+            if (currentRoute != '/') GoRouter.of(context).go("/");
+          },
+        ),
         actions: [
           IconButton(
-            onPressed: (){
+            onPressed: () {
               changeRoute(context, '/search');
             },
-            icon: const Icon(Icons.search_rounded)
-            )
+            icon: const Icon(Icons.search_rounded),
+          ),
         ],
       ),
-      floatingActionButton: floatingActionButton,
+      floatingActionButton: widget.floatingActionButton,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
-      body: Background(
-        child: SafeArea(
-          child: body
-        )
-      ),
+      body: Background(child: SafeArea(child: widget.child)),
     );
   }
 }
-
-
