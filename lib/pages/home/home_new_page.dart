@@ -13,19 +13,18 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    return Stack(
-      alignment: Alignment.center,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Positioned(
-          top: screenSize.height * 0.05,
-          child: AnimatedLogoAtom(size: screenSize.width * 0.4),
-        ),
+        const SizedBox(height: 50),
+        AnimatedLogoAtom(size: screenSize.width * 0.4),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              const SizedBox(height: 180),
+              const SizedBox(height: 50),
               const AtomStyledText(text: "madnolia", style: mainTitleStyle),
               const SizedBox(height: 50),
               Row(

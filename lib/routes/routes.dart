@@ -38,6 +38,7 @@ final GoRouter router = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: "/",
   redirect: (context, state) async {
+    debugPrint("Redirecting to ${state.matchedLocation}");
     final token = await getToken();
     final bool isLoggedIn = token != null;
 

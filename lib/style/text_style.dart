@@ -5,7 +5,7 @@ const TextStyle mainTitleStyle = TextStyle(
   fontFamily: "Cyberverse",
   decoration: TextDecoration.none,
   fontWeight: FontWeight.normal,
-  fontSize: 45,
+  fontSize: 50,
 );
 
 const TextStyle yellowTextStyle = TextStyle(

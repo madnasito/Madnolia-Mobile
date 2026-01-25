@@ -7,7 +7,9 @@ import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:madnolia/blocs/blocs.dart';
 
+import '../../../routes/routes.dart' show router;
 import '../../../utils/logout.dart';
+
 import '../../molecules/buttons/atom_menu_button.dart';
 import '../../molecules/molecule_menu_avatar.dart';
 
@@ -145,15 +147,12 @@ class OrganismDrawer extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   child: GestureDetector(
                     onTap: () async {
-                      await logoutApp(context);
-                      if (context.mounted) {
-                        final scaffoldState = Scaffold.maybeOf(context);
-                        if (scaffoldState != null &&
-                            scaffoldState.isDrawerOpen) {
-                          scaffoldState.closeDrawer();
-                        }
-                        GoRouter.of(context).pushReplacement("/welcome");
+                      final scaffoldState = Scaffold.maybeOf(context);
+                      if (scaffoldState != null && scaffoldState.isDrawerOpen) {
+                        scaffoldState.closeDrawer();
                       }
+                      await logoutApp(context);
+                      router.go("/");
                     },
                     child: Row(
                       children: [
