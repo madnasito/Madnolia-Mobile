@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:madnolia/i18n/strings.g.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/models/auth/register_model.dart' show RegisterModel;
 import 'package:madnolia/services/auth_service.dart' show AuthService;
 import 'package:madnolia/widgets/alert_widget.dart' show showErrorServerAlert;
-import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart' show MoleculeFormButton;
+import 'package:madnolia/widgets/molecules/buttons/molecule_form_button.dart'
+    show MoleculeFormButton;
 import 'package:madnolia/widgets/views/platforms_view.dart' show PlatformsView;
 
 class OrganismSelectPlatform extends StatefulWidget {
@@ -24,20 +26,20 @@ class _OrganismSelectPlatformState extends State<OrganismSelectPlatform> {
       children: [
         PlatformsView(platforms: widget.registerModel.platforms),
         StatefulBuilder(
-          builder: (context, setState) =>  MoleculeFormButton(
+          builder: (context, setState) => MoleculeFormButton(
             text: t.REGISTER.TITLE,
             isLoading: _isLoading,
             onPressed: () async {
               try {
                 setState(() => _isLoading = true);
                 final resp = await AuthService().register(widget.registerModel);
-          
+
                 if (!context.mounted) return;
-          
+
                 if (resp.containsKey("message")) {
                   showErrorServerAlert(context, resp);
                 } else {
-                  if(context.mounted) context.go("/");
+                  if (context.mounted) context.go("/");
                 }
               } catch (e) {
                 debugPrint(e.toString());
@@ -47,9 +49,8 @@ class _OrganismSelectPlatformState extends State<OrganismSelectPlatform> {
             },
           ),
         ),
-        SizedBox(height: 15)
+        SizedBox(height: 15),
       ],
     );
   }
 }
-

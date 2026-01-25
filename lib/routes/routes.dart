@@ -38,28 +38,47 @@ final GoRouter router = GoRouter(
   initialLocation: "/",
   routes: <RouteBase>[
     GoRoute(
-      path: 'home',
-      name: 'home',
+      path: '/',
+      builder: (context, state) => FutureBuilder(
+        future: getToken(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData && snapshot.data != null) {
+            return const HomeUserPage();
+          } else {
+            return const HomePage();
+          }
+        },
+      ),
+      routes: [
+        
+      ]
+    ),
+    GoRoute(
+      path: '/welcome',
+      name: 'welcome',
       builder: (context, state) => const HomePage(),
     ),
     GoRoute(
-      path: 'login',
+      path: '/login',
       name: 'login',
       builder: (BuildContext context, GoRouterState state) => const LoginPage(),
     ),
     GoRoute(
-      path: 'register',
+      path: '/register',
       name: 'register',
       builder: (context, state) => RegisterPage(),
     ),
     GoRoute(
-      path: 'recover-password',
+      path: '/recover-password',
       name: 'recover-password',
       builder: (BuildContext context, GoRouterState state) =>
           const ForgotPasswordPage(),
     ),
     GoRoute(
-      path: 'auth/recover-password-token/:token',
+      path: '/auth/recover-password-token/:token',
       builder: (context, state) => RecoverPasswordTokenPage(
         token: state.pathParameters['token'].toString(),
       ),
@@ -80,7 +99,7 @@ final GoRouter router = GoRouter(
                 } else if (snapshot.hasError) {
                   // If no token or error, we redirect to the public home
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.go('/home');
+                    context.go('/welcome');
                   });
                   return const Center(child: CircularProgressIndicator());
                 } else {
@@ -90,6 +109,7 @@ final GoRouter router = GoRouter(
             );
           },
         ),
+
         GoRoute(
           path: '/home-user',
           name: 'home-user',

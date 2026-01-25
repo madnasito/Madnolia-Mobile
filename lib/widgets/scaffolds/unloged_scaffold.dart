@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:madnolia/widgets/background.dart';
 
 class UnlogedScaffold extends StatelessWidget {
   final Widget body;
@@ -7,7 +6,7 @@ class UnlogedScaffold extends StatelessWidget {
   final VoidCallback? onBackPressed;
 
   const UnlogedScaffold({
-    super.key, 
+    super.key,
     required this.body,
     this.showBackButton = false,
     this.onBackPressed,
@@ -17,13 +16,8 @@ class UnlogedScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: showBackButton ? _buildAppBar(context) : null,
-      body: Background(
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: body,
-          ),
-        ),
-      ),
+
+      body: SafeArea(child: SingleChildScrollView(child: body)),
     );
   }
 
@@ -32,11 +26,7 @@ class UnlogedScaffold extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_ios_rounded,
-          color: Colors.white,
-          size: 24,
-        ),
+        icon: Icon(Icons.arrow_back_ios_rounded, color: Colors.white, size: 24),
         onPressed: onBackPressed ?? () => Navigator.of(context).pop(),
       ),
       // Para asegurar que el título no ocupe espacio

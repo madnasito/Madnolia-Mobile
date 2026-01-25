@@ -12,13 +12,11 @@ import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/services/sockets_service.dart';
-import 'package:madnolia/widgets/background.dart';
 
 class BaseLayout extends StatelessWidget {
   final Widget child;
   final bool showDrawer;
   final bool showAppBar;
-  final bool showBackground;
   final bool showSafeArea;
   final String? title;
   final List<Widget>? actions;
@@ -28,7 +26,6 @@ class BaseLayout extends StatelessWidget {
     required this.child,
     this.showDrawer = true,
     this.showAppBar = true,
-    this.showBackground = true,
     this.showSafeArea = true,
     this.title,
     this.actions,
@@ -38,24 +35,27 @@ class BaseLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final userBloc = context.read<UserBloc>();
     final messageBloc = context.read<MessageBloc>();
-    
+
     final backgroundService = FlutterBackgroundService();
 
     backgroundService.on("new_request_connection").listen((onData) {
-      if(onData?['user'] == userBloc.state.id) userBloc.add(AddNotifications(value: userBloc.state.notifications + 1));
+      if (onData?['user'] == userBloc.state.id) {
+        userBloc.add(AddNotifications(value: userBloc.state.notifications + 1));
+      }
     });
-    backgroundService.on("invitation").listen((onData) => userBloc.add(AddNotifications(value: userBloc.state.notifications + 1)));
+    backgroundService
+        .on("invitation")
+        .listen(
+          (onData) => userBloc.add(
+            AddNotifications(value: userBloc.state.notifications + 1),
+          ),
+        );
 
     Widget body = child;
-    
+
     // Wrap with SafeArea if needed
     if (showSafeArea) {
       body = SafeArea(child: body);
-    }
-    
-    // Wrap with Background if needed
-    if (showBackground) {
-      body = Background(child: body);
     }
 
     return Scaffold(
@@ -66,7 +66,11 @@ class BaseLayout extends StatelessWidget {
     );
   }
 
-  Drawer _buildDrawer(BuildContext context, UserBloc userBloc, MessageBloc messageBloc) {
+  Drawer _buildDrawer(
+    BuildContext context,
+    UserBloc userBloc,
+    MessageBloc messageBloc,
+  ) {
     return Drawer(
       surfaceTintColor: Colors.pink,
       backgroundColor: const Color.fromARGB(96, 9, 4, 24),
@@ -81,8 +85,9 @@ class BaseLayout extends StatelessWidget {
                 children: [
                   const SizedBox(width: 0),
                   CircleAvatar(
-                    backgroundImage:
-                        CachedNetworkImageProvider(userBloc.state.image),
+                    backgroundImage: CachedNetworkImageProvider(
+                      userBloc.state.image,
+                    ),
                     minRadius: 40,
                     maxRadius: 50,
                     backgroundColor: Colors.white,
@@ -90,7 +95,7 @@ class BaseLayout extends StatelessWidget {
                   Text(
                     userBloc.state.name,
                     style: const TextStyle(fontSize: 20),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -100,84 +105,128 @@ class BaseLayout extends StatelessWidget {
               children: [
                 const SizedBox(height: 230),
                 _MenuButton(
-                  icon: Icon(Icons.bolt_outlined, size: 40,color: Colors.white),
+                  icon: Icon(
+                    Icons.bolt_outlined,
+                    size: 40,
+                    color: Colors.white,
+                  ),
                   title: t.HEADER.MATCH,
                   route: "/new",
                 ),
                 _MenuButton(
-                  icon: Icon(CupertinoIcons.gamecontroller, size: 40, color: Colors.white),
+                  icon: Icon(
+                    CupertinoIcons.gamecontroller,
+                    size: 40,
+                    color: Colors.white,
+                  ),
                   title: t.MATCHES.TITLE,
                   route: "/matches",
                 ),
                 _MenuButton(
-                  icon: userBloc.state.notifications == 0 ? Icon(Icons.notifications_none_rounded,size: 40, color: Colors.white ) : Stack(
-                    alignment: Alignment.center,
-                    children: [
-                    Icon(Icons.notifications_active_rounded,size: 40, color: Colors.pink ),
-                    Text(userBloc.state.notifications > 9 ? '9+' : userBloc.state.notifications.toString(), style: TextStyle(color: Colors.white, fontSize: 14))
-                  ] 
-                  ),
-                  title:
-                      t.HEADER.NOTIFICATIONS,
+                  icon: userBloc.state.notifications == 0
+                      ? Icon(
+                          Icons.notifications_none_rounded,
+                          size: 40,
+                          color: Colors.white,
+                        )
+                      : Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Icon(
+                              Icons.notifications_active_rounded,
+                              size: 40,
+                              color: Colors.pink,
+                            ),
+                            Text(
+                              userBloc.state.notifications > 9
+                                  ? '9+'
+                                  : userBloc.state.notifications.toString(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                  title: t.HEADER.NOTIFICATIONS,
                   route: "/notifications",
                 ),
                 _MenuButton(
-                  icon: messageBloc.state.unreadUserChats == 0 ? Icon(Icons.chat_bubble_outline_rounded,size: 40, color: Colors.white ) : Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Icon(Icons.chat_bubble_rounded,size: 40, color: Colors.pink ),
-                      Positioned(
-                        bottom: 12,
-                        child: Text(messageBloc.state.unreadUserChats > 9 ? '9+' : messageBloc.state.unreadUserChats.toString(), style: TextStyle(color: Colors.white, fontSize: 14)))
-                    ] 
-                  ),
+                  icon: messageBloc.state.unreadUserChats == 0
+                      ? Icon(
+                          Icons.chat_bubble_outline_rounded,
+                          size: 40,
+                          color: Colors.white,
+                        )
+                      : Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Icon(
+                              Icons.chat_bubble_rounded,
+                              size: 40,
+                              color: Colors.pink,
+                            ),
+                            Positioned(
+                              bottom: 12,
+                              child: Text(
+                                messageBloc.state.unreadUserChats > 9
+                                    ? '9+'
+                                    : messageBloc.state.unreadUserChats
+                                          .toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                   title: "Chat",
                   route: "/chat",
                 ),
                 _MenuButton(
-                    icon: Icon(Icons.person_outline_outlined, size: 40, color: Colors.white),
-                    title: t.HEADER.PROFILE,
-                    route: "/me"),
+                  icon: Icon(
+                    Icons.person_outline_outlined,
+                    size: 40,
+                    color: Colors.white,
+                  ),
+                  title: t.HEADER.PROFILE,
+                  route: "/me",
+                ),
                 const SizedBox(height: 230),
               ],
             ),
             Positioned(
-                bottom: 30,
-                left: 20,
-                child: GestureDetector(
-                  onTap: () async {
-                    final chatsBloc = context.read<ChatsBloc>();
-                    final matchesBloc = context.read<MatchesBloc>();
-                    final userRepository = RepositoryManager().user;
-                    userBloc.add(UserLogOut());
-                    messageBloc.add(RestoreState());
-                    matchesBloc.add(RestoreMatchesState());
-                    chatsBloc.add(RestoreUserChats());
-                    final backgroundService = FlutterBackgroundService();
-                    backgroundService.invoke("delete_all_notifications");
-                    stopBackgroundService();
-                    const storage = FlutterSecureStorage();
-                    await storage.delete(key: "token");
-                    if(!context.mounted) return;
-                    userRepository.deleteUsers();
-                    GoRouter.of(context).go("/");
-                  },
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 10,
-                    children: [
-                      Icon(
-                        Icons.power_settings_new,
-                        color: Colors.red,
-                        size: 30,
-                      ),
-                      Text(
-                        t.HEADER.LOGOUT,
-                        style: TextStyle(fontSize: 15),
-                      )
-                    ],
-                  ),
-                ))
+              bottom: 30,
+              left: 20,
+              child: GestureDetector(
+                onTap: () async {
+                  final chatsBloc = context.read<ChatsBloc>();
+                  final matchesBloc = context.read<MatchesBloc>();
+                  final userRepository = RepositoryManager().user;
+                  userBloc.add(UserLogOut());
+                  messageBloc.add(RestoreState());
+                  matchesBloc.add(RestoreMatchesState());
+                  chatsBloc.add(RestoreUserChats());
+                  final backgroundService = FlutterBackgroundService();
+                  backgroundService.invoke("delete_all_notifications");
+                  stopBackgroundService();
+                  const storage = FlutterSecureStorage();
+                  await storage.delete(key: "token");
+                  if (!context.mounted) return;
+                  userRepository.deleteUsers();
+                  GoRouter.of(context).go("/");
+                },
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 10,
+                  children: [
+                    Icon(Icons.power_settings_new, color: Colors.red, size: 30),
+                    Text(t.HEADER.LOGOUT, style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -186,28 +235,32 @@ class BaseLayout extends StatelessWidget {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+      backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
       centerTitle: true,
-      title: title != null 
-        ? Text(title!)
-        : IconButton(
-            icon: SvgPicture.asset("assets/madnolia-logo.svg",
-            width: MediaQuery.of(context).size.width / 11,),
-            onPressed: () {
-              final String? currentRoute = GoRouterState.of(context).fullPath;
+      title: title != null
+          ? Text(title!)
+          : IconButton(
+              icon: SvgPicture.asset(
+                "assets/madnolia-logo.svg",
+                width: MediaQuery.of(context).size.width / 11,
+              ),
+              onPressed: () {
+                final String? currentRoute = GoRouterState.of(context).fullPath;
 
-              if(currentRoute != '/') GoRouter.of(context).push("/");
-            } 
+                if (currentRoute != '/') GoRouter.of(context).push("/");
+              },
             ),
-      actions: actions ?? [
-        IconButton(
-          onPressed: (){
-            changeRoute(context, '/search');
-          },
-          icon: const Icon(Icons.search_rounded)
-        )
-      ],
+      actions:
+          actions ??
+          [
+            IconButton(
+              onPressed: () {
+                changeRoute(context, '/search');
+              },
+              icon: const Icon(Icons.search_rounded),
+            ),
+          ],
     );
   }
 }
@@ -216,55 +269,58 @@ class _MenuButton extends StatelessWidget {
   final Widget icon;
   final String title;
   final String route;
-  const _MenuButton(
-      {required this.icon, required this.title, required this.route});
+  const _MenuButton({
+    required this.icon,
+    required this.title,
+    required this.route,
+  });
 
   @override
   Widget build(BuildContext context) {
     final fullPath = GoRouterState.of(context).fullPath;
     return ElevatedButton(
-        onPressed: () {
-          changeRoute(context, route);
-        },
-        style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-            foregroundColor: Colors.pink,
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-            disabledBackgroundColor: Colors.transparent,
-            padding: const EdgeInsets.all(0),
-            shadowColor: Colors.transparent,
-            elevation: 0),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-          margin: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(1),
-            gradient: startsWithPattern(fullPath!, route)
-                ? const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                        Color.fromRGBO(255, 31, 75, 0),
-                        Color.fromRGBO(255, 31, 75, 0.5),
-                        Color.fromRGBO(255, 31, 75, 0.7),
-                        Color.fromRGBO(255, 31, 75, 1),
-                        Color.fromRGBO(255, 31, 75, 0.7),
-                        Color.fromRGBO(255, 31, 75, 0.5),
-                        Color.fromRGBO(255, 31, 75, 0),
-                      ])
-                : null,
-          ),
-          child: Row(
-            children: [
-              icon,
-              Text(
-                "     $title",
-                style: const TextStyle(color: Colors.white),
-              )
-            ],
-          ),
-        ));
+      onPressed: () {
+        changeRoute(context, route);
+      },
+      style: ElevatedButton.styleFrom(
+        shape: const StadiumBorder(),
+        foregroundColor: Colors.pink,
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        disabledBackgroundColor: Colors.transparent,
+        padding: const EdgeInsets.all(0),
+        shadowColor: Colors.transparent,
+        elevation: 0,
+      ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        margin: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(1),
+          gradient: startsWithPattern(fullPath!, route)
+              ? const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color.fromRGBO(255, 31, 75, 0),
+                    Color.fromRGBO(255, 31, 75, 0.5),
+                    Color.fromRGBO(255, 31, 75, 0.7),
+                    Color.fromRGBO(255, 31, 75, 1),
+                    Color.fromRGBO(255, 31, 75, 0.7),
+                    Color.fromRGBO(255, 31, 75, 0.5),
+                    Color.fromRGBO(255, 31, 75, 0),
+                  ],
+                )
+              : null,
+        ),
+        child: Row(
+          children: [
+            icon,
+            Text("     $title", style: const TextStyle(color: Colors.white)),
+          ],
+        ),
+      ),
+    );
   }
 
   bool startsWithPattern(String input, String pattern) {
@@ -274,7 +330,7 @@ class _MenuButton extends StatelessWidget {
   }
 }
 
-void changeRoute(BuildContext context, String route){
+void changeRoute(BuildContext context, String route) {
   final currentRouteName = "/${ModalRoute.of(context)?.settings.name}";
   if (route != "" && route != currentRouteName) {
     // Cerrar el drawer si está abierto
