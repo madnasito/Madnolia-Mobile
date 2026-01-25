@@ -8,11 +8,14 @@ import 'package:madnolia/widgets/molecules/lists/molecule_platform_game_matches_
 import '../../enums/platforms_id.enum.dart';
 
 class OrganismPlatformGameMatches extends StatelessWidget {
-
   final PlatformId platform;
   final String gameId;
-  
-  const OrganismPlatformGameMatches({super.key, required this.platform, required this.gameId});
+
+  const OrganismPlatformGameMatches({
+    super.key,
+    required this.platform,
+    required this.gameId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +23,31 @@ class OrganismPlatformGameMatches extends StatelessWidget {
       builder: (context, state) {
         switch (state.status) {
           case BlocStatus.initial:
-            return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
-          
+            return const SizedBox(
+              height: 200,
+              child: Center(child: CircularProgressIndicator()),
+            );
+
           case BlocStatus.success:
             // Message when there is no notification
-            if(state.gameMatches.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.MATCHES.ERRORS.NO_MATCHES)));
+            if (state.gameMatches.isEmpty) {
+              return SizedBox(
+                height: 200,
+                child: Center(child: Text(t.MATCHES.ERRORS.NO_MATCHES)),
+              );
+            }
             return MoleculePlatformGameMatchesList(
               platform: platform,
               gameId: gameId,
             );
-          
+
           case BlocStatus.failure:
-            if(state.gameMatches.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.MATCHES.ERRORS.LOADING_ERROR)));
+            if (state.gameMatches.isEmpty) {
+              return SizedBox(
+                height: 200,
+                child: Center(child: Text(t.MATCHES.ERRORS.LOADING_ERROR)),
+              );
+            }
             return MoleculePlatformGameMatchesList(
               platform: platform,
               gameId: gameId,

@@ -37,52 +37,6 @@ final GoRouter router = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: "/",
   routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (context, state) => FutureBuilder(
-        future: getToken(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasData && snapshot.data != null) {
-            return const HomeUserPage();
-          } else {
-            return const HomePage();
-          }
-        },
-      ),
-      routes: [
-        
-      ]
-    ),
-    GoRoute(
-      path: '/welcome',
-      name: 'welcome',
-      builder: (context, state) => const HomePage(),
-    ),
-    GoRoute(
-      path: '/login',
-      name: 'login',
-      builder: (BuildContext context, GoRouterState state) => const LoginPage(),
-    ),
-    GoRoute(
-      path: '/register',
-      name: 'register',
-      builder: (context, state) => RegisterPage(),
-    ),
-    GoRoute(
-      path: '/recover-password',
-      name: 'recover-password',
-      builder: (BuildContext context, GoRouterState state) =>
-          const ForgotPasswordPage(),
-    ),
-    GoRoute(
-      path: '/auth/recover-password-token/:token',
-      builder: (context, state) => RecoverPasswordTokenPage(
-        token: state.pathParameters['token'].toString(),
-      ),
-    ),
     ShellRoute(
       builder: (context, state, child) {
         return CustomScaffold(child: child);
@@ -90,31 +44,54 @@ final GoRouter router = GoRouter(
       routes: [
         GoRoute(
           path: '/',
-          builder: (BuildContext context, GoRouterState state) {
-            return FutureBuilder(
-              future: getToken(),
-              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                if (snapshot.hasData) {
-                  return const HomeUserPage();
-                } else if (snapshot.hasError) {
-                  // If no token or error, we redirect to the public home
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.go('/welcome');
-                  });
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            );
-          },
+          builder: (context, state) => FutureBuilder(
+            future: getToken(),
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasData && snapshot.data != null) {
+                return const HomeUserPage();
+              } else {
+                return const HomePage();
+              }
+            },
+          ),
         ),
-
+        GoRoute(
+          path: '/welcome',
+          name: 'welcome',
+          builder: (context, state) => const HomePage(),
+        ),
+        GoRoute(
+          path: '/login',
+          name: 'login',
+          builder: (BuildContext context, GoRouterState state) =>
+              const LoginPage(),
+        ),
+        GoRoute(
+          path: '/register',
+          name: 'register',
+          builder: (context, state) => RegisterPage(),
+        ),
+        GoRoute(
+          path: '/recover-password',
+          name: 'recover-password',
+          builder: (BuildContext context, GoRouterState state) =>
+              const ForgotPasswordPage(),
+        ),
+        GoRoute(
+          path: '/auth/recover-password-token/:token',
+          builder: (context, state) => RecoverPasswordTokenPage(
+            token: state.pathParameters['token'].toString(),
+          ),
+        ),
         GoRoute(
           path: '/home-user',
           name: 'home-user',
           builder: (context, state) => const HomeUserPage(),
         ),
+
         GoRoute(
           path: "/chat",
           name: "chat",

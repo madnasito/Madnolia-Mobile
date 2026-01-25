@@ -15,22 +15,33 @@ class OrganismNotifications extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<NotificationsBloc, NotificationsState>(
       builder: (context, state) {
         switch (state.status) {
-          
           case BlocStatus.initial:
-            return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
-          
+            return const SizedBox(
+              height: 200,
+              child: Center(child: CircularProgressIndicator()),
+            );
+
           case BlocStatus.success:
             // Message when there is no notification
-            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.NOTIFICATIONS.EMPTY)));
+            if (state.data.isEmpty) {
+              return SizedBox(
+                height: 200,
+                child: Center(child: Text(t.NOTIFICATIONS.EMPTY)),
+              );
+            }
             return NotificationsLoader();
-          
+
           case BlocStatus.failure:
-            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.NOTIFICATIONS.ERROR_LOADING)));
-            return NotificationsLoader();
+            if (state.data.isEmpty) {
+              return SizedBox(
+                height: 200,
+                child: Center(child: Text(t.NOTIFICATIONS.ERROR_LOADING)),
+              );
+            }
+            return const NotificationsLoader();
         }
       },
     );
@@ -45,13 +56,12 @@ class NotificationsLoader extends StatefulWidget {
 }
 
 class _NotificationsLoaderState extends State<NotificationsLoader> {
-  
   late final NotificationsBloc notificationsBloc;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     notificationsBloc = context.read<NotificationsBloc>();
     // notificationsBloc.add(LoadNotifications());
     // notificationsBloc.add(WatchNotifications());
@@ -59,15 +69,13 @@ class _NotificationsLoaderState extends State<NotificationsLoader> {
 
   @override
   void dispose() {
-    
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    
     final backgroundService = FlutterBackgroundService();
-    
+
     final userBloc = context.watch<UserBloc>();
     userBloc.add(RestoreNotifications());
 
@@ -78,11 +86,12 @@ class _NotificationsLoaderState extends State<NotificationsLoader> {
       itemBuilder: (context, index) {
         final data = notificationsBloc.state.data[index];
         return data.notification.type == NotificationType.request
-          ? AtomRequestNotification(data: data
-          )
-          : AtomInvitationNotification(data: data, backgroundService: backgroundService);
+            ? AtomRequestNotification(data: data)
+            : AtomInvitationNotification(
+                data: data,
+                backgroundService: backgroundService,
+              );
       },
     );
   }
-
 }

@@ -1,21 +1,28 @@
 import 'dart:async' show StreamSubscription;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart' show FlutterBackgroundService;
+import 'package:flutter_background_service/flutter_background_service.dart'
+    show FlutterBackgroundService;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/enums/bloc_status.enum.dart' show BlocStatus;
-import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart' show MoleculeUserChatMessagesList;
+import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart'
+    show MoleculeUserChatMessagesList;
 
 class OrganismUserChatMessages extends StatefulWidget {
   final String id;
   final String user;
-  const OrganismUserChatMessages({super.key, required this.id, required this.user});
+  const OrganismUserChatMessages({
+    super.key,
+    required this.id,
+    required this.user,
+  });
 
   @override
-  State<OrganismUserChatMessages> createState() => _OrganismUserChatMessagesState();
+  State<OrganismUserChatMessages> createState() =>
+      _OrganismUserChatMessagesState();
 }
 
 class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
@@ -42,14 +49,12 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
     });
 
     _messageBloc.add(WatchRoomMessages(roomId: widget.id));
-
   }
 
   void _addMessage(Map<String, dynamic> onData) {
     if (!mounted || onData['type'] != 0) return;
 
     try {
-
       // final message = ChatMessage.fromJson(onData);
 
       // final messageData = ChatMessageRepository().createOrUpdate(message.toCompanion());
@@ -66,32 +71,31 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
   Widget build(BuildContext context) {
     return BlocBuilder<MessageBloc, MessageState>(
       builder: (context, state) {
-
         switch (state.status) {
           case BlocStatus.failure:
-              return Center(child: Text(t.CHAT.ERRORS.LOADING_ERROR));
+            return Center(child: Text(t.CHAT.ERRORS.LOADING_ERROR));
           case BlocStatus.initial:
             return const Center(child: CircularProgressIndicator());
           case BlocStatus.success:
             if (state.roomMessages.isNotEmpty) {
               return Container(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 8,
+                ),
                 color: Colors.black38,
                 child: MoleculeUserChatMessagesList(
                   state: state,
                   scrollController: _scrollController,
-                  isLoading: state.status == BlocStatus.initial && !state.hasReachedMax,
+                  isLoading:
+                      state.status == BlocStatus.initial &&
+                      !state.hasReachedMax,
                 ),
               );
-            } else{
+            } else {
               return Center(child: Text(t.CHAT.SAY_HI));
             }
-          // default:
-          //   return Center(child: Text('Say hi'));
         }
-        // if (state.status == BlocStatus.failure) {
-          
-        // }
       },
     );
   }
@@ -109,7 +113,8 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
 
   void _onScroll() {
     if (_isBottom) {
-      _messageBloc.add(MessageFetched(roomId: widget.id, type: ChatMessageType.user)
+      _messageBloc.add(
+        MessageFetched(roomId: widget.id, type: ChatMessageType.user),
       );
     }
   }
