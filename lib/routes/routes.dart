@@ -26,6 +26,7 @@ import 'package:madnolia/pages/user/user_platforms.dart';
 import 'package:madnolia/pages/user/user_profile_page.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
+import 'package:madnolia/widgets/scaffolds/unloged_scaffold.dart';
 
 import '../pages/chat/page_user_friendships.dart';
 import '../pages/home/home_user_page.dart';
@@ -36,62 +37,86 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final GoRouter router = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: "/",
+  redirect: (context, state) async {
+    final token = await getToken();
+    final bool isLoggedIn = token != null;
+
+    // Define guest-only routes
+    final isGuestRoute =
+        state.matchedLocation == '/welcome' ||
+        state.matchedLocation == '/login' ||
+        state.matchedLocation == '/register' ||
+        state.matchedLocation == '/recover-password' ||
+        state.matchedLocation.startsWith('/auth/recover-password-token');
+
+    final isRoot = state.matchedLocation == '/';
+
+    if (!isLoggedIn) {
+      if (isRoot || !isGuestRoute) {
+        return '/welcome';
+      }
+      return null;
+    }
+
+    if (isGuestRoute || isRoot) {
+      return '/home-user';
+    }
+
+    return null;
+  },
   routes: <RouteBase>[
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const UnlogedScaffold(body: HomePage()),
+    ),
+    GoRoute(
+      path: '/welcome',
+      name: 'welcome',
+      builder: (context, state) => const UnlogedScaffold(body: HomePage()),
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'login',
+      builder: (BuildContext context, GoRouterState state) =>
+          const UnlogedScaffold(showBackButton: true, body: LoginPage()),
+    ),
+    GoRoute(
+      path: '/register',
+      name: 'register',
+      builder: (context, state) => UnlogedScaffold(
+        scrollable: false,
+        showBackButton: true,
+        body: RegisterPage(),
+      ),
+    ),
+    GoRoute(
+      path: '/recover-password',
+      name: 'recover-password',
+      builder: (BuildContext context, GoRouterState state) =>
+          const UnlogedScaffold(
+            showBackButton: true,
+            body: ForgotPasswordPage(),
+          ),
+    ),
+    GoRoute(
+      path: '/auth/recover-password-token/:token',
+      builder: (context, state) => UnlogedScaffold(
+        showBackButton: true,
+        body: RecoverPasswordTokenPage(
+          token: state.pathParameters['token'].toString(),
+        ),
+      ),
+    ),
     ShellRoute(
       builder: (context, state, child) {
         return CustomScaffold(child: child);
       },
       routes: [
         GoRoute(
-          path: '/',
-          builder: (context, state) => FutureBuilder(
-            future: getToken(),
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snapshot.hasData && snapshot.data != null) {
-                return const HomeUserPage();
-              } else {
-                return const HomePage();
-              }
-            },
-          ),
-        ),
-        GoRoute(
-          path: '/welcome',
-          name: 'welcome',
-          builder: (context, state) => const HomePage(),
-        ),
-        GoRoute(
-          path: '/login',
-          name: 'login',
-          builder: (BuildContext context, GoRouterState state) =>
-              const LoginPage(),
-        ),
-        GoRoute(
-          path: '/register',
-          name: 'register',
-          builder: (context, state) => RegisterPage(),
-        ),
-        GoRoute(
-          path: '/recover-password',
-          name: 'recover-password',
-          builder: (BuildContext context, GoRouterState state) =>
-              const ForgotPasswordPage(),
-        ),
-        GoRoute(
-          path: '/auth/recover-password-token/:token',
-          builder: (context, state) => RecoverPasswordTokenPage(
-            token: state.pathParameters['token'].toString(),
-          ),
-        ),
-        GoRoute(
           path: '/home-user',
           name: 'home-user',
           builder: (context, state) => const HomeUserPage(),
         ),
-
         GoRoute(
           path: "/chat",
           name: "chat",
@@ -221,11 +246,14 @@ Future<String?> getToken() async {
 
     final token = await storage.read(key: "token");
 
-    if (token == null) throw 'No token';
+    if (token == null) {
+      stopBackgroundService();
+      return null;
+    }
 
     return token;
   } catch (e) {
     stopBackgroundService();
-    rethrow;
+    return null;
   }
 }

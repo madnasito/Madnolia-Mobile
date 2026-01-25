@@ -152,7 +152,7 @@ class OrganismDrawer extends StatelessWidget {
                             scaffoldState.isDrawerOpen) {
                           scaffoldState.closeDrawer();
                         }
-                        GoRouter.of(context).go("/welcome");
+                        GoRouter.of(context).pushReplacement("/welcome");
                       }
                     },
                     child: Row(

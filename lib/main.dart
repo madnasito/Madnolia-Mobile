@@ -165,7 +165,6 @@ class MyApp extends StatelessWidget {
 
           title: 'madnolia',
           routerConfig: router,
-          key: navigatorKey,
           builder: (context, child) {
             return ColoredBox(
               color: const Color.fromARGB(255, 10, 0, 25),

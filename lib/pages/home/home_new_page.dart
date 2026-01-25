@@ -13,65 +13,55 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    return SingleChildScrollView(
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Positioned(
-            top: screenSize.height * 0.05,
-            child: AnimatedLogoAtom(size: screenSize.width * 0.4),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const SizedBox(height: 60),
-                Center(
-                  heightFactor: 3,
-                  child: Column(
-                    children: [
-                      const AtomStyledText(
-                        text: "madnolia",
-                        style: mainTitleStyle,
-                      ),
-                      const SizedBox(height: 50),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          TextButtonMolecule(
-                            onPressed: () => context.push("/login"),
-                            text: t.HEADER.LOGIN,
-                            textStye: yellowTextStyle,
-                            buttonStyle: borderedYellowStyle,
-                          ),
-                          TextButtonMolecule(
-                            onPressed: () => context.push("/register"),
-                            text: t.HEADER.REGISTER,
-                            textStye: blueTextStyle,
-                            buttonStyle: borderedBlueStyle,
-                          ),
-                        ],
-                      ),
-                    ],
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Positioned(
+          top: screenSize.height * 0.05,
+          child: AnimatedLogoAtom(size: screenSize.width * 0.4),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 180),
+              const AtomStyledText(text: "madnolia", style: mainTitleStyle),
+              const SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButtonMolecule(
+                    onPressed: () => context.push("/login"),
+                    text: t.HEADER.LOGIN,
+                    textStye: yellowTextStyle,
+                    buttonStyle: borderedYellowStyle,
                   ),
-                ),
-                AtomStyledText(
-                  text: t.PRESENTATION.TITLE,
-                  style: presentationTitle,
-                  textAlign: TextAlign.right,
-                ),
-                const SizedBox(height: 30),
-                AtomStyledText(
-                  text: t.PRESENTATION.SUBTITLE,
-                  style: presentationSubtitle,
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
+                  TextButtonMolecule(
+                    onPressed: () => context.push("/register"),
+                    text: t.HEADER.REGISTER,
+                    textStye: blueTextStyle,
+                    buttonStyle: borderedBlueStyle,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 80),
+              AtomStyledText(
+                text: t.PRESENTATION.TITLE,
+                style: presentationTitle,
+                textAlign: TextAlign.right,
+              ),
+              const SizedBox(height: 30),
+              AtomStyledText(
+                text: t.PRESENTATION.SUBTITLE,
+                style: presentationSubtitle,
+                textAlign: TextAlign.right,
+              ),
+              const SizedBox(height: 20),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
