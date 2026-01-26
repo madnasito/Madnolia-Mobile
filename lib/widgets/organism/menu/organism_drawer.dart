@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
-import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:madnolia/blocs/blocs.dart';
 
 import '../../../routes/routes.dart' show router;
