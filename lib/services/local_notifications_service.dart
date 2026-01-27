@@ -10,7 +10,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/i18n/strings.g.dart';
-import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
@@ -34,6 +33,8 @@ class LocalNotificationsService {
   @pragma("vm:entry-point")
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
+
+  static bool _launchNotificationProcessed = false;
 
   @pragma("vm:entry-point")
   static Future<void> initialize() async {
@@ -77,12 +78,36 @@ class LocalNotificationsService {
           AndroidFlutterLocalNotificationsPlugin
         >()
         ?.createNotificationChannel(channel);
-    _notificationsPlugin.initialize(
+    await _notificationsPlugin.initialize(
       initializationSettingsAndroid,
       onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
       // to handle event when we receive notification
       onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
     );
+
+    // Manejar caso de Cold Start (App totalmente cerrada)
+    // Solo procesar una vez por ejecución de la app
+    if (_launchNotificationProcessed) return;
+
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await _notificationsPlugin.getNotificationAppLaunchDetails();
+
+    if (notificationAppLaunchDetails != null &&
+        notificationAppLaunchDetails.didNotificationLaunchApp) {
+      if (notificationAppLaunchDetails.notificationResponse != null) {
+        _launchNotificationProcessed = true;
+        // Un pequeño retraso para permitir que GoRouter inicialice y maneje el redirect inicial
+        Future.delayed(const Duration(seconds: 2), () {
+          onDidReceiveNotificationResponse(
+            notificationAppLaunchDetails.notificationResponse!,
+          );
+        });
+      }
+    } else {
+      // Si la app no fue lanzada por una notificación, marcamos como procesado igual
+      // para evitar re-consultas innecesarias en cada rebuild de HomeUserPage
+      _launchNotificationProcessed = true;
+    }
   }
 
   static final List<List<ChatMessage>> _roomMessages =
@@ -424,16 +449,14 @@ class LocalNotificationsService {
 
     try {
       MatchData matchDb = MatchData.fromJson(json.decode(details.payload!));
-      final context = navigatorKey.currentContext;
-      GoRouter.of(context!).push("/match/${matchDb.id}");
+      router.push("/match/${matchDb.id}");
       return;
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("Not MatchData payload: $e");
     }
 
     try {
       final ChatMessage message = chatMessageFromJson(details.payload!);
-      final context = navigatorKey.currentContext;
       switch (message.type) {
         case ChatMessageType.user:
           UserData userDb = await _userRepository.getUserById(message.creator);
@@ -453,15 +476,13 @@ class LocalNotificationsService {
             thumb: userDb.thumb,
             username: userDb.username,
           );
-          if (context!.mounted) {
-            GoRouter.of(context).pushNamed("user-chat", extra: chatUser);
-          }
+          router.pushNamed("user-chat", extra: chatUser);
           break;
         default:
-          GoRouter.of(context!).push("/match/${message.conversation}");
+          router.push("/match/${message.conversation}");
       }
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint("Not ChatMessage payload: $e");
     }
   }
 
