@@ -1,5 +1,3 @@
-import 'dart:ui' show ImageFilter;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:madnolia/models/platform/platform_icon_model.dart';
@@ -32,21 +30,18 @@ class PlatformIcon extends StatelessWidget {
         if (platform.active)
           Positioned(
             top: -1,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: platform.padding,
-                  horizontal: 10,
-                ),
-                child: SvgPicture.asset(
-                  platform.path,
-                  height: iconSize * 1.01,
-                  width: iconSize * 1.01,
-                  colorFilter: const ColorFilter.mode(
-                    Colors.white,
-                    BlendMode.srcIn,
-                  ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: platform.padding,
+                horizontal: 10,
+              ),
+              child: SvgPicture.asset(
+                platform.path,
+                height: iconSize * 1.01,
+                width: iconSize * 1.01,
+                colorFilter: const ColorFilter.mode(
+                  Color.fromARGB(60, 255, 255, 255),
+                  BlendMode.srcIn,
                 ),
               ),
             ),

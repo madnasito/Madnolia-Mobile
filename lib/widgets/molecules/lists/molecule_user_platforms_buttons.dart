@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/widgets/atoms/buttons/common/atom_neon_platform_button.dart';
-import '../../../models/platform/platform_icon_model.dart';
+import 'package:madnolia/models/platform/platform_icon_model.dart';
 
 class MoleculeUserPlatformsButtons extends StatelessWidget {
   const MoleculeUserPlatformsButtons({super.key});

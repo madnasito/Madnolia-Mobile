@@ -1,5 +1,3 @@
-import 'dart:ui' show ImageFilter;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:madnolia/models/platform/platform_icon_model.dart';
@@ -41,6 +39,7 @@ class AtomNeonPlatformButton extends StatelessWidget {
       ),
       child: Container(
         decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -50,25 +49,13 @@ class AtomNeonPlatformButton extends StatelessWidget {
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: const EdgeInsets.all(20),
-              child: SvgPicture.asset(
-                platform.path,
-                height: iconSize,
-                colorFilter: ColorFilter.mode(
-                  Color.lerp(baseNeonColor, Colors.white, 0.6)!,
-                  BlendMode.srcIn,
-                ),
-              ),
-            ),
+        padding: const EdgeInsets.all(20),
+        child: SvgPicture.asset(
+          platform.path,
+          height: iconSize,
+          colorFilter: ColorFilter.mode(
+            Color.lerp(baseNeonColor, Colors.white, 0.6)!,
+            BlendMode.srcIn,
           ),
         ),
       ),
