@@ -232,7 +232,7 @@ final GoRouter router = GoRouter(
           },
         ),
         GoRoute(
-          path: "/search_game",
+          path: "/search-game",
           name: "search game",
           builder: (context, state) => const SearchGamePage(),
         ),
