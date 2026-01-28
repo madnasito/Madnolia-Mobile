@@ -13,6 +13,7 @@ import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
+import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 
@@ -590,21 +591,28 @@ class LocalNotificationsService {
 
         final uuid = Uuid();
 
-        await _chatMessageRepository.createOrUpdate(
-          ChatMessageCompanion(
-            id: Value(uuid.v4()),
-            conversation: Value(message.conversation),
-            content: Value(notificationResponse.input.toString()),
-            type: Value(message.type),
-            creator: Value(message.creator),
-            date: Value(DateTime.now()),
-            status: Value(ChatMessageStatus.sent),
-            pending: Value(true),
-          ),
-        );
-
         if (!isRunning) {
+          await _chatMessageRepository.createOrUpdate(
+            ChatMessageCompanion(
+              id: Value(uuid.v4()),
+              conversation: Value(message.conversation),
+              content: Value(notificationResponse.input.toString()),
+              type: Value(message.type),
+              creator: Value(message.creator),
+              date: Value(DateTime.now()),
+              status: Value(ChatMessageStatus.sent),
+              pending: Value(true),
+            ),
+          );
           await backgroundService.startService();
+        } else {
+          final newMessage = CreateMessage(
+            id: uuid.v4(),
+            conversation: message.conversation,
+            content: notificationResponse.input.toString(),
+            type: message.type,
+          );
+          backgroundService.invoke('new_message', newMessage.toJson());
         }
       } catch (e) {
         debugPrint("Error in notificationTapBackground: $e");
