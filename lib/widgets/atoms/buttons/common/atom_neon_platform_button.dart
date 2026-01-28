@@ -1,9 +1,6 @@
-import 'dart:ui' show ImageFilter;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:madnolia/models/platform/platform_icon_model.dart';
-
 
 class AtomNeonPlatformButton extends StatelessWidget {
   final PlatformIconModel platform;
@@ -19,9 +16,12 @@ class AtomNeonPlatformButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconSize = (platform.size * MediaQuery.of(context).size.width) / 100 * sizeMultiplier;
+    final iconSize =
+        (platform.size * MediaQuery.of(context).size.width) /
+        100 *
+        sizeMultiplier;
     final baseNeonColor = _getPlatformColor(platform.id);
-    
+
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
@@ -29,18 +29,17 @@ class AtomNeonPlatformButton extends StatelessWidget {
         shadowColor: Colors.transparent,
         foregroundColor: baseNeonColor,
         padding: EdgeInsets.zero,
-        
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(22), // Menos redondeado que un círculo
+          borderRadius: BorderRadius.circular(22),
           side: BorderSide(
             color: baseNeonColor.withValues(alpha: 0.7),
             width: 1.5,
           ),
         ),
-        // elevation: 0,
       ),
       child: Container(
         decoration: BoxDecoration(
+          color: Colors.black.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -50,25 +49,13 @@ class AtomNeonPlatformButton extends StatelessWidget {
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: EdgeInsets.all(20),
-              child: SvgPicture.asset(
-                platform.path,
-                height: iconSize,
-                colorFilter: ColorFilter.mode(
-                  Color.lerp(baseNeonColor, Colors.white, 0.6)!, // 60% blanco, 40% color neón
-                  BlendMode.srcIn,
-                ),
-              ),
-            ),
+        padding: const EdgeInsets.all(20),
+        child: SvgPicture.asset(
+          platform.path,
+          height: iconSize,
+          colorFilter: ColorFilter.mode(
+            Color.lerp(baseNeonColor, Colors.white, 0.6)!,
+            BlendMode.srcIn,
           ),
         ),
       ),
@@ -104,4 +91,3 @@ class AtomNeonPlatformButton extends StatelessWidget {
     }
   }
 }
-
