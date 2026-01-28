@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
-import 'package:madnolia/enums/list_status.enum.dart';
+import 'package:madnolia/enums/bloc_status.enum.dart';
 import 'package:madnolia/widgets/molecules/lists/molecule_matches_cards.dart';
 
 class OrganismLoadMatches extends StatelessWidget {
@@ -18,19 +18,19 @@ class OrganismLoadMatches extends StatelessWidget {
             orElse: () => LoadedMatches(
               type: state.selectedType,
               matches: [],
-              status: ListStatus.initial,
+              status: BlocStatus.initial,
               hasReachesMax: false,
             ),
           );
 
-          if (matchesState.status == ListStatus.initial) {
+          if (matchesState.status == BlocStatus.initial) {
             context.read<MatchesBloc>().add(
                   UpdateFilterType(type: state.selectedType),
                 );
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (matchesState.status == ListStatus.success) {
+          if (matchesState.status == BlocStatus.success) {
             if (matchesState.matches.isEmpty) {
               return Center(child: Text(t.MATCHES.ERRORS.NO_MATCHES));
             }
@@ -42,7 +42,7 @@ class OrganismLoadMatches extends StatelessWidget {
             );
           }
 
-          if (matchesState.status == ListStatus.failure) {
+          if (matchesState.status == BlocStatus.failure) {
             if (matchesState.matches.isEmpty) {
               return Center(child: Text(t.MATCHES.ERRORS.LOADING_ERROR));
             }

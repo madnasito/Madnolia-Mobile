@@ -3,11 +3,12 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/database/repository_manager.dart';
-import 'package:madnolia/enums/list_status.enum.dart';
+import 'package:madnolia/enums/bloc_status.enum.dart';
 import 'package:madnolia/models/match/match_with_game_model.dart';
 import 'package:madnolia/models/match/matches-filter.model.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../enums/match-status.enum.dart';
 import '../../enums/sort_type.enum.dart';
 
 part 'matches_event.dart';
@@ -30,14 +31,15 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
     on<InitialState>(_initState);
     on<UpdateFilterType>(_updateFilterType);
     on<RestoreMatchesState>(_restoreState);
+    on<UpdateMatchStatus>(_restoreMatchStatus);
 
   }
 
   void _initState(InitialState event, Emitter<MatchesState> emit) {
     final mainList = [
-      LoadedMatches(type: MatchesFilterType.all, hasReachesMax: false, matches: [], status: ListStatus.initial),
-      LoadedMatches(type: MatchesFilterType.created, hasReachesMax: false, matches: [], status: ListStatus.initial),
-      LoadedMatches(type: MatchesFilterType.joined, hasReachesMax: false, matches: [], status: ListStatus.initial),
+      LoadedMatches(type: MatchesFilterType.all, hasReachesMax: false, matches: [], status: BlocStatus.initial),
+      LoadedMatches(type: MatchesFilterType.created, hasReachesMax: false, matches: [], status: BlocStatus.initial),
+      LoadedMatches(type: MatchesFilterType.joined, hasReachesMax: false, matches: [], status: BlocStatus.initial),
     ];
 
     emit(
@@ -68,7 +70,7 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
       : LoadedMatches(
           type: event.type,
           matches: [],
-          status: ListStatus.initial,
+          status: BlocStatus.initial,
           hasReachesMax: false,
         );
 
@@ -76,7 +78,7 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
   final lastUpdate = DateTime.fromMillisecondsSinceEpoch(state.lastUpdate);
 
   // If we need to fetch data (either new state or empty existing state)
-  if (matchesState.status != ListStatus.success || matchesState.matches.isEmpty || now.difference(lastUpdate).inMinutes < 6) {
+  if (matchesState.status != BlocStatus.success || matchesState.matches.isEmpty || now.difference(lastUpdate).inMinutes < 6) {
     add(LoadMatches(
       filter: MatchesFilter(
         cursor: matchesState.matches.isNotEmpty ? matchesState.matches.last.match.id : null,
@@ -101,7 +103,7 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
     try {
       if (currentMatchesState.hasReachesMax) return;
 
-      final isReload = currentMatchesState.status == ListStatus.initial || event.reload;
+      final isReload = currentMatchesState.status == BlocStatus.initial || event.reload;
 
       final data = await _matchRepository.getMatchesWithGame(filter: event.filter, reload: isReload);
 
@@ -112,7 +114,7 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
       final updatedMatchesState = LoadedMatches(
         type: currentMatchesState.type,
         hasReachesMax: hasReachedMax,
-        status: ListStatus.success,
+        status: BlocStatus.success,
         matches: [...currentMatchesState.matches, ...data],
       );
 
@@ -130,7 +132,7 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
       debugPrint(e.toString());
       // Create a new failure state
       final failedMatchesState = currentMatchesState.copyWith(
-        status: ListStatus.failure,
+        status: BlocStatus.failure,
       );
 
       // Create a new list with the failed state
@@ -148,50 +150,22 @@ class MatchesBloc extends Bloc<MatchesEvent, MatchesState> {
     }
   }
 
-  // Future _fetchMatches(FetchMatchesType event, Emitter<MatchesState> emit) async {
-  //   final int index = state.matchesState.indexWhere((e) => e.type == event.filter.type);
-  //   final currentMatchesState = state.matchesState[index];
+  void _restoreMatchStatus(UpdateMatchStatus event, Emitter<MatchesState> emit) {
+    final updatedMatchesState = state.matchesState.map((matchesState) {
+      final updatedMatches = matchesState.matches.map((matchWithGame) {
+        if (matchWithGame.match.id == event.matchId) {
+          final updatedMatch = matchWithGame.match.copyWith(status: event.status);
+          return MatchWithGame(
+            match: updatedMatch,
+            game: matchWithGame.game,
+          );
+        }
+        return matchWithGame;
+      }).toList();
 
-  //   try {
-  //     if (currentMatchesState.hasReachesMax) return;
+      return matchesState.copyWith(matches: updatedMatches);
+    }).toList();
 
-  //     final data = await _matchRepository.getMatchWithGame(event.filter);
-
-  //     final updatedMatchesState = LoadedMatches(
-  //       type: currentMatchesState.type,
-  //       hasReachesMax: data.isEmpty || data.length < 10,
-  //       status: ListStatus.success,
-  //       matches: [...currentMatchesState.matches, ...data],
-  //     );
-
-  //     final updatedList = [
-  //       for (var item in state.matchesState)
-  //         if (item.type == event.filter.type) updatedMatchesState else item,
-  //     ];
-
-  //     emit(state.copyWith(
-  //       matchesState: updatedList,
-  //       lastUpdate: DateTime.now().millisecondsSinceEpoch,
-  //     ));
-
-  //   } catch (e) {
-  //     // Create a new failure state
-  //     final failedMatchesState = currentMatchesState.copyWith(
-  //       status: ListStatus.failure,
-  //     );
-
-  //     // Create a new list with the failed state
-  //     final updatedList = [
-  //       for (var item in state.matchesState)
-  //         if (item.type == event.filter.type) failedMatchesState else item,
-  //     ];
-
-  //     emit(state.copyWith(
-  //       matchesState: updatedList,
-  //       lastUpdate: DateTime.now().millisecondsSinceEpoch,
-  //     ));
-      
-  //     rethrow;
-  //   }
-  // }
+    emit(state.copyWith(matchesState: updatedMatchesState));
+  }
 }

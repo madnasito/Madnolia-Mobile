@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:madnolia/services/rawg_service.dart';
-import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 class PlatformGames extends StatelessWidget {
   final String id;
@@ -9,27 +8,25 @@ class PlatformGames extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffold(
-        body: Center(
-          child: FutureBuilder(
-            future: RawgService().getPlatformGames(id: id),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return null;
-                    
-                      // return GameCard(
-                      //     game: snapshot.data[index], bottom: const Text(""));
-                    });
-              } else {
-                return const CircularProgressIndicator();
-              }
-            },
-          ),
-        ),
-      )
-    ;
+    return Center(
+      child: FutureBuilder(
+        future: RawgService().getPlatformGames(id: id),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (context, index) {
+                return null;
+
+                // return GameCard(
+                //     game: snapshot.data[index], bottom: const Text(""));
+              },
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        },
+      ),
+    );
   }
 }

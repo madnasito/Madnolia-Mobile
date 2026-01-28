@@ -25,7 +25,7 @@ Future<void> logoutApp(BuildContext context) async {
   final friendshipsBloc = context.read<FriendshipsBloc>();
   backgroundService.invoke('logout');
   backgroundService.invoke("delete_all_notifications");
-  userBloc.logOutUser();
+  userBloc.add(UserLogOut());
   messageBloc.add(RestoreState());
   matchesBloc.add(RestoreMatchesState());
   chatsBloc.add(RestoreUserChats());
@@ -39,8 +39,6 @@ Future<void> logoutApp(BuildContext context) async {
   await RepositoryManager().notification.deleteNotifications();
   await RepositoryManager().chatMessage.deleteMessages();
   await RepositoryManager().conversation.deleteConversations();
-  if(!context.mounted) return;
   stopBackgroundService();
   await storage.deleteAll();
-  
 }

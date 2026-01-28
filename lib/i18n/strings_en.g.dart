@@ -447,6 +447,9 @@ class TranslationsConnectionsEn {
 	/// en: 'No connections'
 	String get EMPTY => 'No connections';
 
+	/// en: 'Loading connections'
+	String get LOADING => 'Loading connections';
+
 	late final TranslationsConnectionsErrorsEn ERRORS = TranslationsConnectionsErrorsEn._(_root);
 
 	/// en: 'You have requested a connection to $name'
@@ -990,6 +993,9 @@ class TranslationsFormValidationsEn {
 
 	/// en: 'Invalid length'
 	String get INVALID_LENGTH => 'Invalid length';
+
+	/// en: 'You need to select at least one platform'
+	String get SELECT_PLATFORMS => 'You need to select at least one platform';
 }
 
 // Path: LOGIN.ERRORS
@@ -1359,6 +1365,9 @@ class TranslationsProfileUserPageErrorsEn {
 
 	/// en: 'Error updating the image'
 	String get IMG_UPDATING => 'Error updating the image';
+
+	/// en: 'Error updating'
+	String get ERROR_UPDATING => 'Error updating';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -1468,6 +1477,7 @@ extension on Translations {
 			'FORM.VALIDATIONS.INVALID_SELECTION' => 'Invalid selection',
 			'FORM.VALIDATIONS.REQUIRED_SELECTION' => 'You must select an option',
 			'FORM.VALIDATIONS.INVALID_LENGTH' => 'Invalid length',
+			'FORM.VALIDATIONS.SELECT_PLATFORMS' => 'You need to select at least one platform',
 			'RECOVER_PASSWORD.TITLE' => 'Recover your password',
 			'RECOVER_PASSWORD.RECOVER_PASSWORD' => 'Recover password',
 			'RECOVER_PASSWORD.EMAIL_SENDED' => 'Email sended!',
@@ -1535,6 +1545,7 @@ extension on Translations {
 			'MATCHES.ERRORS.JOIN_FAILED' => 'Failed to join the match',
 			'CONNECTIONS.TITLE' => 'Connections',
 			'CONNECTIONS.EMPTY' => 'No connections',
+			'CONNECTIONS.LOADING' => 'Loading connections',
 			'CONNECTIONS.ERRORS.LOADING_ERROR' => 'Error loading connections',
 			'CONNECTIONS.ERRORS.NO_CONNECTIONS' => 'No connections found',
 			'CONNECTIONS.HAVE_A_REQUEST' => ({required Object name}) => 'You have requested a connection to ${name}',
@@ -1602,6 +1613,7 @@ extension on Translations {
 			'PROFILE.USER_PAGE.ERRORS.IMG_SIZE' => 'The image size cant\' moore than 2mb',
 			'PROFILE.USER_PAGE.ERRORS.IMG_EXTENSION' => 'The extension is not valid, please use: \'JPG\', \'PNG\', \'JPEG\'',
 			'PROFILE.USER_PAGE.ERRORS.IMG_UPDATING' => 'Error updating the image',
+			'PROFILE.USER_PAGE.ERRORS.ERROR_UPDATING' => 'Error updating',
 			'PROFILE.USER_PAGE.UPLOADING_IMAGE' => 'Uploading image, wait a moment please',
 			'PROFILE.USER_PAGE.UPDATED' => 'Updated!',
 			'PROFILE.USER_PAGE.UPDATE' => 'Update',

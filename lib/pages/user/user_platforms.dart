@@ -11,7 +11,6 @@ import 'package:toast/toast.dart';
 
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/views/platforms_view.dart';
-import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 
 import '../../models/user/user_model.dart';
 
@@ -28,75 +27,88 @@ class UserPlatformsPage extends StatelessWidget {
     ToastContext().init(context);
 
     bool updating = false;
-    return CustomScaffold(
-        body: SingleChildScrollView(
-        child: Column(
-          children: [
-            PlatformsView(
-              platforms: platforms,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FadeIn(
-                delay: const Duration(seconds: 1),
-                child:
-                StatefulBuilder(builder: (BuildContext context, void Function(void Function()) setState) => 
-                  MoleculeFormButton(
-                    text: t.PROFILE.USER_PAGE.UPDATE,
-                    color: Colors.transparent,
-                    isLoading: updating,
-                    onPressed: updating == false
-                        ? () async {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          PlatformsView(platforms: platforms),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FadeIn(
+              delay: const Duration(seconds: 1),
+              child: StatefulBuilder(
+                builder:
+                    (
+                      BuildContext context,
+                      void Function(void Function()) setState,
+                    ) => MoleculeFormButton(
+                      text: t.PROFILE.USER_PAGE.UPDATE,
+                      color: Colors.transparent,
+                      isLoading: updating,
+                      onPressed: updating == false
+                          ? () async {
                               try {
                                 if (platforms.isEmpty) {
-                                Toast.show(
-                                    "You need to select at least one platform",
+                                  Toast.show(
+                                    t.FORM.VALIDATIONS.SELECT_PLATFORMS,
                                     gravity: 100,
-                                    border: Border.all(color: Colors.blueAccent),
+                                    border: Border.all(
+                                      color: Colors.blueAccent,
+                                    ),
                                     textStyle: const TextStyle(fontSize: 18),
-                                    duration: 2);
-                                return;
-                              }
-
-                              setState(() => updating = true);
-
-                              final resp = await UserService()
-                                  .updateUserPlatforms(
-                                      platforms: {"platforms": platforms});
-
-                              if (resp.containsKey("error") ) {
-                                Toast.show("Error updating",
+                                    duration: 2,
+                                  );
+                                  return;
+                                }
+                                setState(() => updating = true);
+                                final resp = await UserService()
+                                    .updateUserPlatforms(
+                                      platforms: {"platforms": platforms},
+                                    );
+                                if (resp.containsKey("error")) {
+                                  Toast.show(
+                                    t.PROFILE.USER_PAGE.ERRORS.ERROR_UPDATING,
                                     gravity: 100,
                                     border: Border.all(color: Colors.redAccent),
                                     textStyle: const TextStyle(fontSize: 18),
-                                    duration: 3);
-                              } else {
-                                final User user = User.fromJson(resp);
-                                userBloc.loadInfo(user);
-                                platformsGamesBloc.add(RestorePlatformsGamesState());
-                                platformsGamesBloc.add(LoadPlatforms(platforms: userBloc.state.platforms));
-                                Toast.show(t.PROFILE.PLATFORMS_PAGE.SUCCESS,
+                                    duration: 3,
+                                  );
+                                } else {
+                                  final User user = User.fromJson(resp);
+                                  debugPrint(user.platforms.toString());
+                                  userBloc.add(UpdateData(user: user));
+                                  // platformsGamesBloc.add(
+                                  //   LoadPlatforms(
+                                  //     platforms: userBloc.state.platforms,
+                                  //   ),
+                                  // );
+                                  platformsGamesBloc.add(
+                                    RestorePlatformsGamesState(),
+                                  );
+                                  Toast.show(
+                                    t.PROFILE.PLATFORMS_PAGE.SUCCESS,
                                     gravity: 100,
-                                    border: Border.all(color: Colors.blueAccent),
+                                    border: Border.all(
+                                      color: Colors.blueAccent,
+                                    ),
                                     textStyle: const TextStyle(fontSize: 18),
-                                    duration: 3);
+                                    duration: 3,
+                                  );
+                                }
+                                setState(() => updating = true);
+                              } catch (e) {
+                                if (context.mounted) {
+                                  showAlert(context, e.toString());
+                                }
+                              } finally {
+                                setState(() => updating = false);
                               }
-
-                              setState(() => updating = true);
-                            } catch (e) {
-                              if (context.mounted) showAlert(context, e.toString());
-                            } finally {
-                              setState(() => updating = false);
                             }
-                          }
-                        : null
+                          : null,
                     ),
-                  )
-                 ,
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -26,7 +26,6 @@ class AppPage extends StatelessWidget {
     return BaseLayout(
       showDrawer: showDrawer,
       showAppBar: showAppBar,
-      showBackground: showBackground,
       showSafeArea: showSafeArea,
       title: title,
       actions: appBarActions,
@@ -43,11 +42,11 @@ class AppPageWithDrawer extends AppPage {
     super.title,
     super.appBarActions,
   }) : super(
-    showDrawer: true,
-    showAppBar: true,
-    showBackground: true,
-    showSafeArea: true,
-  );
+         showDrawer: true,
+         showAppBar: true,
+         showBackground: true,
+         showSafeArea: true,
+       );
 }
 
 class AppPageWithoutDrawer extends AppPage {
@@ -57,33 +56,29 @@ class AppPageWithoutDrawer extends AppPage {
     super.title,
     super.appBarActions,
   }) : super(
-    showDrawer: false,
-    showAppBar: true,
-    showBackground: true,
-    showSafeArea: true,
-  );
+         showDrawer: false,
+         showAppBar: true,
+         showBackground: true,
+         showSafeArea: true,
+       );
 }
 
 class AppPageFullScreen extends AppPage {
-  const AppPageFullScreen({
-    super.key,
-    required super.child,
-  }) : super(
-    showDrawer: false,
-    showAppBar: false,
-    showBackground: true,
-    showSafeArea: false,
-  );
+  const AppPageFullScreen({super.key, required super.child})
+    : super(
+        showDrawer: false,
+        showAppBar: false,
+        showBackground: true,
+        showSafeArea: false,
+      );
 }
 
 class AppPageMinimal extends AppPage {
-  const AppPageMinimal({
-    super.key,
-    required super.child,
-  }) : super(
-    showDrawer: false,
-    showAppBar: false,
-    showBackground: false,
-    showSafeArea: true,
-  );
+  const AppPageMinimal({super.key, required super.child})
+    : super(
+        showDrawer: false,
+        showAppBar: false,
+        showBackground: false,
+        showSafeArea: true,
+      );
 }

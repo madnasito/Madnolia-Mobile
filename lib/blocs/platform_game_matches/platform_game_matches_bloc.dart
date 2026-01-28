@@ -5,7 +5,7 @@ import 'package:madnolia/enums/platforms_id.enum.dart';
 import 'package:madnolia/models/match/match_model.dart';
 import 'package:madnolia/services/match_service.dart';
 
-import '../../enums/list_status.enum.dart';
+import '../../enums/bloc_status.enum.dart';
 
 part 'platform_game_matches_event.dart';
 part 'platform_game_matches_state.dart';
@@ -22,7 +22,7 @@ class PlatformGameMatchesBloc extends Bloc<PlatformGameMatchesEvent, PlatformGam
       state.copyWith(
         gameMatches: [],
         hasReachedMax: false,
-        status: ListStatus.initial
+        status: BlocStatus.initial
       )
     );
   }
@@ -46,7 +46,7 @@ class PlatformGameMatchesBloc extends Bloc<PlatformGameMatchesEvent, PlatformGam
         state.copyWith(
           gameMatches: [...currentMatches, ...apiMatches],
           hasReachedMax: hasReachedMax,
-          status: ListStatus.success
+          status: BlocStatus.success
         )
       );
       
@@ -54,7 +54,7 @@ class PlatformGameMatchesBloc extends Bloc<PlatformGameMatchesEvent, PlatformGam
       debugPrint(e.toString());
       emit(
         state.copyWith(
-          status: ListStatus.failure
+          status: BlocStatus.failure
         )
       );
       rethrow;

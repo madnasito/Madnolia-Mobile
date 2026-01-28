@@ -1,11 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/services/match_service.dart';
+import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
 import 'package:toast/toast.dart';
+
+import '../../../blocs/matches/matches_bloc.dart';
+import '../../../blocs/platform_games/platform_games_bloc.dart';
 
 class MoleculeButtonCancellMatch extends StatelessWidget {
   final MatchData match;
@@ -14,11 +20,13 @@ class MoleculeButtonCancellMatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final matchesBloc = context.watch<MatchesBloc>();
     return IconButton(
       onPressed: () { 
         showDialog(
           context: context, 
           builder: (BuildContext context) { 
+            final platformsGamesBloc = context.watch<PlatformGamesBloc>();
             return AlertDialog(
               backgroundColor: Colors.black26,
               actionsAlignment: MainAxisAlignment.center,
@@ -27,7 +35,7 @@ class MoleculeButtonCancellMatch extends StatelessWidget {
               titleTextStyle: const TextStyle(fontSize: 20),
               icon: game.background != null ? CircleAvatar(
                 radius: 50,
-                backgroundImage: CachedNetworkImageProvider(game.background!) 
+                backgroundImage: CachedNetworkImageProvider(resizeRawgImage(game.background!)) 
               ) : null,
               title: Text(t.MATCH.CANCELL_MATCH_QUESTION, textAlign: TextAlign.center),
               actions: [
@@ -41,6 +49,8 @@ class MoleculeButtonCancellMatch extends StatelessWidget {
                   onPressed: () async {
                     try {
                       await MatchService().cancellMatch(match.id);
+                      platformsGamesBloc.add(RestorePlatformsGamesState());
+                      matchesBloc.add(UpdateMatchStatus(matchId: match.id, status: MatchStatus.cancelled));
                       if(!context.mounted) return;
                       Toast.show(t.MATCH.MATCH_CANCELLED,
                         gravity: 100,

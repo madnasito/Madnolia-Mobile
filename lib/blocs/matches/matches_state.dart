@@ -34,19 +34,19 @@ final class PlayerMatchesInitial extends MatchesState {}
 class LoadedMatches extends Equatable {
   final MatchesFilterType type;
   final bool hasReachesMax;
-  final ListStatus status;
+  final BlocStatus status;
   final List<MatchWithGame> matches;
 
   const LoadedMatches({
     required this.type,
     this.hasReachesMax = false,
-    this.status = ListStatus.initial,
+    this.status = BlocStatus.initial,
     this.matches = const [],
   });
 
   LoadedMatches copyWith({
     bool? hasReachesMax,
-    ListStatus? status,
+    BlocStatus? status,
     List<MatchWithGame>? matches,
   }) {
     return LoadedMatches(

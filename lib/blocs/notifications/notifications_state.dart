@@ -3,18 +3,18 @@ part of 'notifications_bloc.dart';
 class NotificationsState extends Equatable {
   final List<NotificationDetails> data;
   final bool hasReachedMax;
-  final ListStatus status;
+  final BlocStatus status;
 
   const NotificationsState({
     this.data = const <NotificationDetails>[],
     this.hasReachedMax = false,
-    this.status = ListStatus.initial
+    this.status = BlocStatus.initial
   });
 
   NotificationsState copyWith({
     List<NotificationDetails>? data,
     bool? hasReachedMax,
-    ListStatus? status
+    BlocStatus? status
   }) {
     return NotificationsState(
       data: data ?? this.data,

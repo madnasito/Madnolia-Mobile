@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
 
 import '../../database/repository_manager.dart';
-import '../../enums/list_status.enum.dart';
+import '../../enums/bloc_status.enum.dart';
 part 'friendships_event.dart';
 part 'friendships_state.dart';
 
@@ -53,7 +53,7 @@ class FriendshipsBloc extends Bloc<FriendshipsEvent, FriendshipsState> {
         state.copyWith(
           friendshipsUsers: [...currentData, ...usersData],
           hasReachedMax: hasReachedMax,
-          status: ListStatus.success,
+          status: BlocStatus.success,
           page: page + 1
         )
       );
@@ -63,7 +63,7 @@ class FriendshipsBloc extends Bloc<FriendshipsEvent, FriendshipsState> {
       debugPrint(e.toString());
       emit(
         state.copyWith(
-          status: ListStatus.failure
+          status: BlocStatus.failure
         )
       );
       rethrow;
@@ -75,7 +75,7 @@ class FriendshipsBloc extends Bloc<FriendshipsEvent, FriendshipsState> {
       state.copyWith(
         friendshipsUsers: [],
         hasReachedMax: false,
-        status: ListStatus.initial,
+        status: BlocStatus.initial,
         page: 1
       )
     );

@@ -7,29 +7,31 @@ sealed class UserEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class UserLoadInfo extends UserEvent {
-  final User userModel;
-  const UserLoadInfo({required this.userModel});
+class GetInfo extends UserEvent {}
+
+class UpdateData extends UserEvent {
+  final User user;
+  const UpdateData({required this.user});
 }
 
 class UserLogOut extends UserEvent {}
 
-class UserUpdateImage extends UserEvent {
+class UpdateImages extends UserEvent {
   final String thumbImage;
   final String image;
 
-  const UserUpdateImage({required this.thumbImage, required this.image});
+  const UpdateImages({required this.thumbImage, required this.image});
 }
 
-class UserUpdateChatRoom extends UserEvent {
+class UpdateChatRoom extends UserEvent {
   final String chatRoom;
 
-  const UserUpdateChatRoom({required this.chatRoom});
+  const UpdateChatRoom({required this.chatRoom});
 }
 
-class UserUpdateAvailability extends UserEvent {
+class UpdateAvailability extends UserEvent {
   final UserAvailability availability;
-  const UserUpdateAvailability({required this.availability});
+  const UpdateAvailability({required this.availability});
 }
 
 class AddNotifications extends UserEvent {

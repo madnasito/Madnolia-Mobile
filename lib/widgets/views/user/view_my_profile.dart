@@ -67,14 +67,13 @@ class ViewMyProfile extends StatelessWidget {
   }
 
   Future _loadInfo(BuildContext context) async {
-  final userInfo = await UserService().getUserInfo();
+    final userInfo = await UserService().getUserInfo();
 
-  if (!context.mounted) return;
-  final userBloc = context.read<UserBloc>();
+    if (!context.mounted) return;
+    final userBloc = context.read<UserBloc>();
 
-  userBloc.loadInfo(userFromJson(jsonEncode(userInfo)));
+    userBloc.add(UpdateData(user: userFromJson(jsonEncode(userInfo))));
 
-
-  return userInfo;
-}
+    return userInfo;
+  }
 }

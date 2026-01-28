@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:madnolia/blocs/edit_user_provider.dart';
-import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/views/user/view_my_profile.dart';
 
 class UserEditPage extends StatelessWidget {
@@ -9,11 +8,7 @@ class UserEditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EditUserProvider(
-      child: const CustomScaffold(
-          body: SingleChildScrollView(
-          child: ViewMyProfile(),
-        ),
-      ),
+      child: SingleChildScrollView(child: ViewMyProfile()),
     );
   }
 }

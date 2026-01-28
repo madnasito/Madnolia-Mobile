@@ -12,6 +12,7 @@ class UserState extends Equatable {
   final UserAvailability availability;
   final String chatRoom;
   final int notifications;
+  final BlocStatus status;
 
   const UserState({
     this.loadedUser = false,
@@ -24,7 +25,8 @@ class UserState extends Equatable {
     this.id = "",
     this.availability = UserAvailability.everyone,
     this.chatRoom= "",
-    this.notifications = 0
+    this.notifications = 0,
+    this.status = BlocStatus.initial
   });
 
   UserState copyWith({
@@ -38,7 +40,8 @@ class UserState extends Equatable {
     bool? loadedUser,
     UserAvailability? availability,
     String? chatRoom,
-    int? notifications
+    int? notifications,
+    BlocStatus? status,
   }) => UserState(
     name: name ?? this.name,
     email: email ?? this.email,
@@ -50,11 +53,12 @@ class UserState extends Equatable {
     loadedUser: loadedUser ?? this.loadedUser,
     availability: availability ?? this.availability,
     chatRoom: chatRoom ?? this.chatRoom,
-    notifications: notifications ?? this.notifications
+    notifications: notifications ?? this.notifications,
+    status: status ?? this.status
   );
   
   @override
   List<Object> get props => [
-    name, email, username, platforms, image, thumb, id, loadedUser, availability, chatRoom, notifications
+    name, email, username, platforms, image, thumb, id, loadedUser, availability, chatRoom, notifications, status
   ];
 }

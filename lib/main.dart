@@ -30,17 +30,17 @@ import 'i18n/strings.g.dart'; // Importa las traducciones generadas
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
-  
+
   // 1. INICIALIZAR slang PRIMERO
   LocaleSettings.useDeviceLocale(); // Esto debe ir antes de cualquier widget
-  
-  // Load environment variables
-  (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod");
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
+  // Load environment variables
+  (kDebugMode)
+      ? await dotenv.load(fileName: "assets/.env.dev")
+      : await dotenv.load(fileName: "assets/.env.prod");
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   serviceLocatorInit();
   cubitServiceLocatorInit();
 
@@ -50,7 +50,7 @@ void main() async {
   ]);
 
   try {
-    if(await getToken() is String) {
+    if (await getToken() is String) {
       await LocalNotificationsService.initialize();
       await initializeService();
       debugPrint('Service initialized, waiting for login to start');
@@ -68,19 +68,21 @@ void main() async {
 
   final packageInfo = await PackageInfo.fromPlatform();
   final currentVersion = packageInfo.version;
-  
+
   debugPrint('Current app version: $currentVersion');
-  debugPrint('Current locale: ${LocaleSettings.currentLocale.languageCode}'); // Verifica el locale
+  debugPrint(
+    'Current locale: ${LocaleSettings.currentLocale.languageCode}',
+  ); // Verifica el locale
 
   final remoteConfig = FirebaseRemoteConfig.instance;
   await remoteConfig.fetchAndActivate();
-  final forceUpdateVersion = remoteConfig.getString('force_update_for_version_mobile');
+  final forceUpdateVersion = remoteConfig.getString(
+    'force_update_for_version_mobile',
+  );
 
   debugPrint('Force update version from remote config: $forceUpdateVersion');
 
-  runApp(TranslationProvider(
-    child: AppWrapper(),
-  ));
+  runApp(TranslationProvider(child: const AppWrapper()));
 }
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -106,7 +108,7 @@ class _AppWrapperState extends State<AppWrapper> {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key}); 
+  const MyApp({super.key});
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -117,19 +119,33 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (BuildContext context) => getIt<UserBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<GameDataBloc>()),
         BlocProvider(create: (BuildContext context) => getIt<MessageBloc>()),
-        BlocProvider(create: (BuildContext context) => getIt<PlatformGamesBloc>()),
+        BlocProvider(
+          create: (BuildContext context) => getIt<PlatformGamesBloc>(),
+        ),
         BlocProvider(create: (BuildContext context) => getIt<ChatsBloc>()),
-        BlocProvider(create: (BuildContext context) => getIt<NotificationsBloc>()),
+        BlocProvider(
+          create: (BuildContext context) => getIt<NotificationsBloc>(),
+        ),
         BlocProvider(create: (BuildContext context) => getIt<MatchesBloc>()),
-        BlocProvider(create: (BuildContext context) => getIt<FriendshipsBloc>()),
-        BlocProvider(create: (BuildContext context) => getIt<PlatformGameMatchesBloc>()),
-        BlocProvider(create: (BuildContext context) => getItCubit<MatchMinutesCubit>()),
-        BlocProvider(create: (BuildContext context) => getItCubit<MatchUsersCubit>()),
+        BlocProvider(
+          create: (BuildContext context) => getIt<FriendshipsBloc>(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => getIt<PlatformGameMatchesBloc>(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => getItCubit<MatchMinutesCubit>(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => getItCubit<MatchUsersCubit>(),
+        ),
       ],
       child: Portal(
         child: MaterialApp.router(
           // Configuración crucial para las traducciones
-          locale: TranslationProvider.of(context).flutterLocale, // Esto obtiene el locale de slang
+          locale: TranslationProvider.of(
+            context,
+          ).flutterLocale, // Esto obtiene el locale de slang
           supportedLocales: AppLocaleUtils.supportedLocales,
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
@@ -137,15 +153,23 @@ class MyApp extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           theme: ThemeData(
+            useMaterial3: true,
             brightness: Brightness.dark,
+            scaffoldBackgroundColor: const Color.fromARGB(255, 10, 0, 25),
+            canvasColor: const Color.fromARGB(255, 10, 0, 25),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color.fromARGB(255, 10, 0, 25),
+              brightness: Brightness.dark,
+            ).copyWith(surface: const Color.fromARGB(255, 10, 0, 25)),
           ),
+
           title: 'madnolia',
           routerConfig: router,
-          key: navigatorKey,
           builder: (context, child) {
-            // Opcional: Puedes agregar un builder para debugging
-            debugPrint('Current locale in MaterialApp: ${Localizations.localeOf(context)}');
-            return child!;
+            return ColoredBox(
+              color: const Color.fromARGB(255, 10, 0, 25),
+              child: child!,
+            );
           },
         ),
       ),

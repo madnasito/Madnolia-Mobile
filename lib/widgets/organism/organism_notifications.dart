@@ -3,7 +3,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
-import 'package:madnolia/enums/list_status.enum.dart';
+import 'package:madnolia/enums/bloc_status.enum.dart';
 
 import '../../blocs/user/user_bloc.dart';
 import '../../enums/notification_type.enum.dart';
@@ -15,22 +15,33 @@ class OrganismNotifications extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocBuilder<NotificationsBloc, NotificationsState>(
       builder: (context, state) {
         switch (state.status) {
-          
-          case ListStatus.initial:
-            return const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()));
-          
-          case ListStatus.success:
+          case BlocStatus.initial:
+            return const SizedBox(
+              height: 200,
+              child: Center(child: CircularProgressIndicator()),
+            );
+
+          case BlocStatus.success:
             // Message when there is no notification
-            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.NOTIFICATIONS.EMPTY)));
+            if (state.data.isEmpty) {
+              return SizedBox(
+                height: 200,
+                child: Center(child: Text(t.NOTIFICATIONS.EMPTY)),
+              );
+            }
             return NotificationsLoader();
-          
-          case ListStatus.failure:
-            if(state.data.isEmpty) return SizedBox(height: 200, child: Center(child: Text(t.NOTIFICATIONS.ERROR_LOADING)));
-            return NotificationsLoader();
+
+          case BlocStatus.failure:
+            if (state.data.isEmpty) {
+              return SizedBox(
+                height: 200,
+                child: Center(child: Text(t.NOTIFICATIONS.ERROR_LOADING)),
+              );
+            }
+            return const NotificationsLoader();
         }
       },
     );
@@ -45,58 +56,42 @@ class NotificationsLoader extends StatefulWidget {
 }
 
 class _NotificationsLoaderState extends State<NotificationsLoader> {
-  late final _scrollController = ScrollController();
   late final NotificationsBloc notificationsBloc;
-  
+
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+
     notificationsBloc = context.read<NotificationsBloc>();
-    notificationsBloc.add(LoadNotifications());
+    // notificationsBloc.add(LoadNotifications());
     // notificationsBloc.add(WatchNotifications());
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    
     final backgroundService = FlutterBackgroundService();
-    
+
     final userBloc = context.watch<UserBloc>();
-    userBloc.restoreNotifications();
+    userBloc.add(RestoreNotifications());
 
     return ListView.builder(
       shrinkWrap: true,
       itemCount: notificationsBloc.state.data.length,
-      physics: const AlwaysScrollableScrollPhysics(),
-      controller: _scrollController,
+      physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
         final data = notificationsBloc.state.data[index];
         return data.notification.type == NotificationType.request
-          ? AtomRequestNotification(data: data
-          )
-          : AtomInvitationNotification(data: data, backgroundService: backgroundService);
+            ? AtomRequestNotification(data: data)
+            : AtomInvitationNotification(
+                data: data,
+                backgroundService: backgroundService,
+              );
       },
     );
-  }
-
-  void _onScroll() {
-    debugPrint('Is bottom: $_isBottom');
-    if (_isBottom) {
-      notificationsBloc.add(LoadNotifications());
-    }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    return _scrollController.offset >=
-    (_scrollController.position.maxScrollExtent * 0.9);
   }
 }

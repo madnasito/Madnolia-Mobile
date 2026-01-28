@@ -18,6 +18,18 @@ class NotificationRepository {
     _userRepository = UserRepository(database);
   }
 
+  Future<int> insertNotification(NotificationCompanion notification) async {
+    try {
+      if(notification.sender.value != null) {
+        await _userRepository.getUserById(notification.sender.value!);
+      }
+      return await database.into(database.notification).insertOnConflictUpdate(notification);
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
+  }
+
   Future<List<NotificationDetails>> getUserNotifications({String? cursorId, bool? reload}) async {
     try {
       if(reload == true) await updateData(cursorId);

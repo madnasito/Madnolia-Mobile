@@ -25,6 +25,7 @@ class PlatformGamesBloc extends Bloc<PlatformGamesEvent, PlatformGamesState> {
     on<PlatformGamesFetched>(_onFetchPlatformGames, transformer: throttleDroppable(throttleDuration));
 
     on<RestorePlatformsGamesState>(_restoreState);
+    
     on<FetchAllPlatforms>(_fetchAll);
   }
 

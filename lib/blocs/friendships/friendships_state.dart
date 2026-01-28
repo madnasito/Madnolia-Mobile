@@ -3,20 +3,20 @@ part of 'friendships_bloc.dart';
 class FriendshipsState extends Equatable {
 
   final bool hasReachedMax;
-  final ListStatus status;
+  final BlocStatus status;
   final List<UserData> friendshipsUsers;
   final int page;
 
   const FriendshipsState({
     this.friendshipsUsers = const <UserData>[],
     this.hasReachedMax = false,
-    this.status = ListStatus.initial,
+    this.status = BlocStatus.initial,
     this.page = 1,
   });
 
   FriendshipsState copyWith({
     bool? hasReachedMax,
-    ListStatus? status,
+    BlocStatus? status,
     List<UserData>? friendshipsUsers,
     int? page,
   }){

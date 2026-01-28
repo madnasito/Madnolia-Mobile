@@ -56,7 +56,7 @@ class RawgService {
   //   }
   // }
 
-  Future <List<TinyRawgGame>> searchGame({required String game, required String platform}) async {
+  Future <List<TinyRawgGame>> searchGames({required String game, required String platform}) async {
     try {
       final url = "$urlBase/games";
 

@@ -31,12 +31,12 @@
       "PASSWORD": "Password",
       "PASSWORD2": "Repeat password",
       "VALIDATIONS":{
-          "NAME": "The name is not valid",
+        "NAME": "The name is not valid",
         "LONG_NAME": "The name is too long",
-          "USERNAME": "The username is not valid",
-          "EMAIL": "The email is not correct",
-          "PASSWORD": "The password is too short",
-          "PASSWORD2":"The passwords are diffenrents"
+        "USERNAME": "The username is not valid",
+        "EMAIL": "The email is not correct",
+        "PASSWORD": "The password is too short",
+        "PASSWORD2":"The passwords are diffenrents"
       },
       "SELECT_PLATFORMS": "Please, select your platforms",
       "PHONE": "Mobile",
@@ -114,7 +114,8 @@
         "TEXT_TOO_LONG": "Text too long",
         "INVALID_SELECTION": "Invalid selection",
         "REQUIRED_SELECTION": "You must select an option",
-        "INVALID_LENGTH": "Invalid length"
+        "INVALID_LENGTH": "Invalid length",
+        "SELECT_PLATFORMS": "You need to select at least one platform"
     }
   },
   "BUTTONS": {
@@ -206,6 +207,7 @@
   "CONNECTIONS": {
     "TITLE": "Connections",
     "EMPTY": "No connections",
+    "LOADING": "Loading connections",
     "ERRORS": {
       "LOADING_ERROR": "Error loading connections",
       "NO_CONNECTIONS": "No connections found"
@@ -298,7 +300,8 @@
             "USERNAME": "There is another user using this USERNAME",
             "IMG_SIZE": "The image size cant' moore than 2mb",
             "IMG_EXTENSION": "The extension is not valid, please use: 'JPG', 'PNG', 'JPEG'",
-            "IMG_UPDATING": "Error updating the image"
+            "IMG_UPDATING": "Error updating the image",
+            "ERROR_UPDATING": "Error updating"
         },
         "UPLOADING_IMAGE": "Uploading image, wait a moment please",
         "UPDATED": "Updated!",

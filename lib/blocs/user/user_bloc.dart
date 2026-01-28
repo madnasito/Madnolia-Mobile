@@ -1,76 +1,114 @@
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:madnolia/enums/bloc_status.enum.dart';
 import 'package:madnolia/enums/user-availability.enum.dart';
 import 'package:madnolia/models/user/user_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/services/user_service.dart';
 
 part 'user_event.dart';
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
-  UserBloc():super(const UserState()){
+  final _userService = UserService();
 
-    on<UserEvent>((event, emit){
-      if(event is UserLoadInfo){
-        final User user = event.userModel;
-        emit(state.copyWith(
-          loadedUser: true,
-          name: user.name,
-          email: user.email,
-          id: user.id,
-          image: user.image,
-          thumb: user.thumb,
-          platforms: user.platforms,
-          username: user.username,
-          availability: user.availability
-        ));
-      }
+  UserBloc() : super(const UserState()) {
+    on<GetInfo>(_loadInfo);
 
-      if(event is UserLogOut){
-        emit(
-          state.copyWith(loadedUser: false, notifications: 0, platforms: [], username: "", name: "", email: "", id: "", image: "", thumb: "", availability: UserAvailability.everyone)
-        );
-      }
+    on<UpdateData>(_updateData);
 
-      if( event is UserUpdateImage){
-        emit(
-          state.copyWith(
-            image: event.image,
-            thumb: event.thumbImage
-          )
-        );
-      }
+    on<UpdateAvailability>(_updateAvailability);
 
-      if(event is UserUpdateChatRoom) emit(state.copyWith(chatRoom: event.chatRoom));
+    on<UpdateImages>(_updateImages);
 
-      if(event is AddNotifications) emit(state.copyWith(notifications: event.value));
+    on<UpdateChatRoom>(_updateChatRoom);
 
-      if(event is RestoreNotifications) emit(state.copyWith(notifications: 0));
+    on<UserLogOut>(_logOutUser);
 
-      if(event is UserUpdateAvailability) emit(state.copyWith(availability: event.availability));
-    });
+    on<AddNotifications>(_updateNotifications);
+
+    on<RestoreNotifications>(_restoreNotifications);
   }
-  
 
-  void loadInfo(User user){
+  Future<void> _loadInfo(GetInfo event, Emitter<UserState> emit) async {
+    final userApiData = await _userService.getUserInfo();
+
     final service = FlutterBackgroundService();
-    service.invoke("update_username", {"username": user.username});
-    add(UserLoadInfo(userModel: user));
+
+    service.invoke("update_username", {"username": userApiData.username});
+
+    final User user = userApiData;
+    emit(
+      state.copyWith(
+        loadedUser: true,
+        name: user.name,
+        email: user.email,
+        id: user.id,
+        image: user.image,
+        thumb: user.thumb,
+        platforms: user.platforms,
+        username: user.username,
+        availability: user.availability,
+        notifications: user.notifications,
+      ),
+    );
   }
 
-  void updateAvailability(UserAvailability event) => add(UserUpdateAvailability(availability: event));
-  
-
-  void updateImages(String thumbImage, String image){
-    add(UserUpdateImage(thumbImage: thumbImage, image: image));
+  void _updateData(UpdateData event, Emitter<UserState> emit) {
+    emit(
+      state.copyWith(
+        loadedUser: true,
+        name: event.user.name,
+        email: event.user.email,
+        id: event.user.id,
+        image: event.user.image,
+        thumb: event.user.thumb,
+        platforms: event.user.platforms,
+        username: event.user.username,
+        availability: event.user.availability,
+        notifications: event.user.notifications,
+      ),
+    );
   }
 
-  void updateChatRoom(String room) => add(UserUpdateChatRoom(chatRoom: room));
+  void _updateAvailability(UpdateAvailability event, Emitter<UserState> emit) {
+    emit(state.copyWith(availability: event.availability));
+  }
 
-  void logOutUser() => add(UserLogOut());
+  void _updateImages(UpdateImages event, Emitter<UserState> emit) {
+    emit(state.copyWith(thumb: event.thumbImage, image: event.image));
+  }
 
-  void updateNotifications(int value) => add(AddNotifications(value: value));
+  void _updateChatRoom(UpdateChatRoom event, Emitter<UserState> emit) {
+    emit(state.copyWith(chatRoom: event.chatRoom));
+  }
 
-  void restoreNotifications() => add(RestoreNotifications());
-  
+  void _logOutUser(UserLogOut event, Emitter<UserState> emit) {
+    emit(
+      state.copyWith(
+        loadedUser: false,
+        notifications: 0,
+        platforms: [],
+        username: "",
+        name: "",
+        email: "",
+        id: "",
+        image: "",
+        thumb: "",
+        availability: UserAvailability.everyone,
+        status: BlocStatus.initial,
+      ),
+    );
+  }
+
+  void _updateNotifications(AddNotifications event, Emitter<UserState> emit) {
+    emit(state.copyWith(notifications: event.value));
+  }
+
+  void _restoreNotifications(
+    RestoreNotifications event,
+    Emitter<UserState> emit,
+  ) {
+    emit(state.copyWith(notifications: 0));
+  }
 }

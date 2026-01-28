@@ -199,14 +199,10 @@ class _TranslationsCreateMatchEs implements TranslationsCreateMatchEn {
 	@override String get CREATE_MATCH => 'Crear partida';
 	@override String get MATCH_CREATED => '¡Partida creada!';
 	@override String get DATE_ERROR => 'Cree una fecha y hora correctas';
+	@override String get UPLOADING_MESSAGE => 'La partida se está creando';
+	@override String get ERROR => 'Error creando la partida, por favor intente de nuevo';
 	@override String get TITLE_EMPTY => 'Escriba el titulo';
 	@override String DURATION({required Object duration}) => 'Duración: ${duration} minutos';
-  
-   @override
-   String get ERROR => throw UnimplementedError();
-  
-   @override
-   String get UPLOADING_MESSAGE => throw UnimplementedError();
 }
 
 // Path: MATCH
@@ -222,14 +218,10 @@ class _TranslationsMatchEs implements TranslationsMatchEn {
 	@override String get EDIT_MATCH => 'Editar partida';
 	@override String get LEAVE_MATCH => 'Salir de la partida';
 	@override String get CANCEL_MATCH => 'Cancelar partida';
-	// ignore: override_on_non_overriding_member
-	@override String get CANCEL_MATCH_QUESTION => '¿Estás seguro de que deseas cancelar la partida?';
+	@override String get CANCELL_MATCH_QUESTION => '¿Estás seguro de que deseas cancelar la partida?';
 	@override String get MATCH_CANCELLED => 'Partida cancelada';
 	@override String get MATCH_ENDED => 'Partida finalizada';
 	@override late final _TranslationsMatchStatusEs STATUS = _TranslationsMatchStatusEs._(_root);
-  
-   @override
-   String get CANCELL_MATCH_QUESTION => throw UnimplementedError();
 }
 
 // Path: SEARCH
@@ -271,7 +263,6 @@ class _TranslationsConnectionsEs implements TranslationsConnectionsEn {
 	// Translations
 	@override String get TITLE => 'Conexiones';
 	@override String get EMPTY => 'Sin conexiones';
-	// ignore: override_on_non_overriding_member
 	@override String get LOADING => 'Cargando conexiones';
 	@override late final _TranslationsConnectionsErrorsEs ERRORS = _TranslationsConnectionsErrorsEs._(_root);
 	@override String HAVE_A_REQUEST({required Object name}) => 'Tienes una solicitud para ${name}';
@@ -550,6 +541,7 @@ class _TranslationsFormValidationsEs implements TranslationsFormValidationsEn {
 	@override String get INVALID_SELECTION => 'Selección no válida';
 	@override String get REQUIRED_SELECTION => 'Debes seleccionar una opción';
 	@override String get INVALID_LENGTH => 'Longitud no válida';
+	@override String get SELECT_PLATFORMS => 'Necesitas seleccionar al menos una plataforma';
 }
 
 // Path: LOGIN.ERRORS
@@ -595,14 +587,8 @@ class _TranslationsConnectionsErrorsEs implements TranslationsConnectionsErrorsE
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
-	// ignore: override_on_non_overriding_member
-	@override String get LOADING => 'Error cargando conexiones';
-  
-   @override
-   String get LOADING_ERROR => throw UnimplementedError();
-  
-   @override
-   String get NO_CONNECTIONS => throw UnimplementedError();
+	@override String get LOADING_ERROR => 'Error cargando conexiones';
+	@override String get NO_CONNECTIONS => 'Sin conexiones';
 }
 
 // Path: CONNECTIONS.REQUESTS
@@ -643,15 +629,11 @@ class _TranslationsChatErrorsEs implements TranslationsChatErrorsEn {
 	final TranslationsEs _root; // ignore: unused_field
 
 	// Translations
-	// ignore: override_on_non_overriding_member
-	@override String get LOADING => 'Error cargando mensajes';
+	@override String get LOADING_ERROR => 'Error cargando mensajes';
 	@override String get LOADING_CHAT => 'Error cargando el chat';
 	@override String get NO_DATA => 'Sin datos de amistad';
 	@override String get LOADING_USER => 'Error cargando usuario';
 	@override String get NO_USER_DATA => 'Sin datos del usuario';
-  
-   @override
-   String get LOADING_ERROR => throw UnimplementedError();
 }
 
 // Path: PROFILE.MATCHES_PAGE
@@ -780,6 +762,7 @@ class _TranslationsProfileUserPageErrorsEs implements TranslationsProfileUserPag
 	@override String get IMG_SIZE => 'La imagen no puede ser mayor de 2MB';
 	@override String get IMG_EXTENSION => 'La extensión no es valida, por favor usa: \'JPG\', \'JPEG\'. \'PNG\'';
 	@override String get IMG_UPDATING => 'Error actualizando la imagen';
+	@override String get ERROR_UPDATING => 'Error actualizando';
 }
 
 /// The flat map containing all translations for locale <es>.
@@ -889,6 +872,7 @@ extension on TranslationsEs {
 			'FORM.VALIDATIONS.INVALID_SELECTION' => 'Selección no válida',
 			'FORM.VALIDATIONS.REQUIRED_SELECTION' => 'Debes seleccionar una opción',
 			'FORM.VALIDATIONS.INVALID_LENGTH' => 'Longitud no válida',
+			'FORM.VALIDATIONS.SELECT_PLATFORMS' => 'Necesitas seleccionar al menos una plataforma',
 			'RECOVER_PASSWORD.TITLE' => 'Recupera tu contraseña',
 			'RECOVER_PASSWORD.RECOVER_PASSWORD' => 'Recuperar contraseña',
 			'RECOVER_PASSWORD.EMAIL_SENDED' => '¡Correo enviado!',
@@ -923,6 +907,8 @@ extension on TranslationsEs {
 			'CREATE_MATCH.CREATE_MATCH' => 'Crear partida',
 			'CREATE_MATCH.MATCH_CREATED' => '¡Partida creada!',
 			'CREATE_MATCH.DATE_ERROR' => 'Cree una fecha y hora correctas',
+			'CREATE_MATCH.UPLOADING_MESSAGE' => 'La partida se está creando',
+			'CREATE_MATCH.ERROR' => 'Error creando la partida, por favor intente de nuevo',
 			'CREATE_MATCH.TITLE_EMPTY' => 'Escriba el titulo',
 			'CREATE_MATCH.DURATION' => ({required Object duration}) => 'Duración: ${duration} minutos',
 			'MATCH.MATCH_UPDATED' => 'Partida actualizada',
@@ -931,7 +917,7 @@ extension on TranslationsEs {
 			'MATCH.EDIT_MATCH' => 'Editar partida',
 			'MATCH.LEAVE_MATCH' => 'Salir de la partida',
 			'MATCH.CANCEL_MATCH' => 'Cancelar partida',
-			'MATCH.CANCEL_MATCH_QUESTION' => '¿Estás seguro de que deseas cancelar la partida?',
+			'MATCH.CANCELL_MATCH_QUESTION' => '¿Estás seguro de que deseas cancelar la partida?',
 			'MATCH.MATCH_CANCELLED' => 'Partida cancelada',
 			'MATCH.MATCH_ENDED' => 'Partida finalizada',
 			'MATCH.STATUS.WAITING' => 'En espera',
@@ -955,7 +941,8 @@ extension on TranslationsEs {
 			'CONNECTIONS.TITLE' => 'Conexiones',
 			'CONNECTIONS.EMPTY' => 'Sin conexiones',
 			'CONNECTIONS.LOADING' => 'Cargando conexiones',
-			'CONNECTIONS.ERRORS.LOADING' => 'Error cargando conexiones',
+			'CONNECTIONS.ERRORS.LOADING_ERROR' => 'Error cargando conexiones',
+			'CONNECTIONS.ERRORS.NO_CONNECTIONS' => 'Sin conexiones',
 			'CONNECTIONS.HAVE_A_REQUEST' => ({required Object name}) => 'Tienes una solicitud para ${name}',
 			'CONNECTIONS.REQUESTS.TITLE' => 'Solicitudes',
 			'CONNECTIONS.REQUESTS.ACCEPTED' => 'Aceptada',
@@ -979,7 +966,7 @@ extension on TranslationsEs {
 			'CHAT.NO_MESSAGES' => 'Sin mensajes',
 			'CHAT.SAY_HI_TO' => ({required Object name}) => 'Di hola a ${name}',
 			'CHAT.SAY_HI' => 'Saluda',
-			'CHAT.ERRORS.LOADING' => 'Error cargando mensajes',
+			'CHAT.ERRORS.LOADING_ERROR' => 'Error cargando mensajes',
 			'CHAT.ERRORS.LOADING_CHAT' => 'Error cargando el chat',
 			'CHAT.ERRORS.NO_DATA' => 'Sin datos de amistad',
 			'CHAT.ERRORS.LOADING_USER' => 'Error cargando usuario',
@@ -1024,6 +1011,7 @@ extension on TranslationsEs {
 			'PROFILE.USER_PAGE.ERRORS.IMG_SIZE' => 'La imagen no puede ser mayor de 2MB',
 			'PROFILE.USER_PAGE.ERRORS.IMG_EXTENSION' => 'La extensión no es valida, por favor usa: \'JPG\', \'JPEG\'. \'PNG\'',
 			'PROFILE.USER_PAGE.ERRORS.IMG_UPDATING' => 'Error actualizando la imagen',
+			'PROFILE.USER_PAGE.ERRORS.ERROR_UPDATING' => 'Error actualizando',
 			'PROFILE.USER_PAGE.UPLOADING_IMAGE' => 'Subiendo la imagen, espere un momento por favor',
 			'PROFILE.USER_PAGE.UPDATED' => 'Datos actualizados',
 			'PROFILE.USER_PAGE.UPDATE' => 'Actualizar',

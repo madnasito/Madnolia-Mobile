@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/chat_messages/chat_message_repository.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
-import 'package:madnolia/enums/list_status.enum.dart' show ListStatus;
+import 'package:madnolia/enums/bloc_status.enum.dart' show BlocStatus;
 import 'package:madnolia/models/chat/user_chat.dart';
 import 'package:stream_transform/stream_transform.dart';
 
@@ -41,7 +41,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         onError: (error, stackTrace) {
           debugPrint(error.toString());
           debugPrint(stackTrace.toString());
-          return state.copyWith(status: ListStatus.failure);
+          return state.copyWith(status: BlocStatus.failure);
         }
       );
     } catch (e) {
@@ -56,7 +56,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     try {
       final int skip = state.usersChats.length;
 
-      final isReload = state.status == ListStatus.initial || event.reload;
+      final isReload = state.status == BlocStatus.initial || event.reload;
 
       final chats = await _chatMessageRepository.getUsersChats(skip: skip, reload: isReload );
 
@@ -66,19 +66,19 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       
       emit(
         state.copyWith(
-          status: ListStatus.success,
+          status: BlocStatus.success,
           // usersChats: [...state.usersChats, ...chats]
         )
       );
     } catch (e) {
-      emit(state.copyWith(status: ListStatus.failure));
+      emit(state.copyWith(status: BlocStatus.failure));
     }
   }
 
   void _restoreState(RestoreUserChats event, Emitter<ChatsState> emit) {
     emit(
       state.copyWith(
-        status: ListStatus.initial,
+        status: BlocStatus.initial,
         hasReachedMax: false,
         usersChats: []
       )
