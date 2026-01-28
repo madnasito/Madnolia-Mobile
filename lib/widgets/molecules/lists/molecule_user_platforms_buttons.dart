@@ -26,7 +26,7 @@ class MoleculeUserPlatformsButtons extends StatelessWidget {
               child: AtomNeonPlatformButton(
                 platform: platform,
                 onTap: () {
-                  context.push("/search_game", extra: platform.id);
+                  context.push("/search-game", extra: platform.id);
                 },
                 sizeMultiplier: 0.6,
               ),
