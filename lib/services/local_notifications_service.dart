@@ -620,16 +620,16 @@ class LocalNotificationsService {
           await _chatMessageRepository.createOrUpdate(
             ChatMessageCompanion(
               id: Value(id),
-              creator: Value(message.creator),
+              creator: Value(userId!),
               conversation: Value(message.conversation),
-              content: Value(message.content),
+              content: Value(notificationResponse.input.toString()),
               type: Value(message.type),
               date: Value(DateTime.now()),
               status: Value(ChatMessageStatus.sent),
               pending: Value(true),
             ),
           );
-          startBackgroundService();
+          Timer(Duration(milliseconds: 100), startBackgroundService);
         } else {
           final newMessage = CreateMessage(
             id: id,

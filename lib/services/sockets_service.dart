@@ -165,7 +165,7 @@ Future<void> onStart(ServiceInstance service) async {
           type: message.type,
         );
 
-        socket.emitWithAck('message', newMessage.toJson());
+        socket.emit('message', newMessage.toJson());
       }
     });
 
