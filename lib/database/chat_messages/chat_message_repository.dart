@@ -91,6 +91,20 @@ class ChatMessageRepository {
 
   Future<int> messageSended(String oldId, String newId, DateTime date) async {
     try {
+      // Check if newId already exists to avoid PK conflict (e.g. from server broadcast)
+      final existing = await (database.select(
+        database.chatMessage,
+      )..where((tbl) => tbl.id.equals(newId))).getSingleOrNull();
+
+      if (existing != null) {
+        debugPrint(
+          'Message with server ID $newId already exists, deleting temporary $oldId',
+        );
+        return await (database.delete(
+          database.chatMessage,
+        )..where((tbl) => tbl.id.equals(oldId))).go();
+      }
+
       return await (database.update(
         database.chatMessage,
       )..where((tbl) => tbl.id.equals(oldId))).write(
@@ -102,7 +116,7 @@ class ChatMessageRepository {
         ),
       );
     } catch (e) {
-      debugPrint('Error in updateMessageId: $e');
+      debugPrint('Error in messageSended: $e');
       rethrow;
     }
   }
@@ -222,12 +236,6 @@ class ChatMessageRepository {
             );
             break;
           default:
-        }
-
-        debugPrint(messagesApi.length.toString());
-
-        for (var message in messagesApi) {
-          debugPrint(message.content);
         }
 
         if (messagesApi.isNotEmpty) {
