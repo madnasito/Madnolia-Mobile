@@ -84,11 +84,11 @@ Future<void> onStart(ServiceInstance service) async {
   try {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: "token");
-    print('Background service: token present: ${token != null}');
+    debugPrint('Background service: token present: ${token != null}');
 
     // dotenv is already loaded at the beginning of the function
     final String socketsUrl = dotenv.get("SOCKETS_URL");
-    print('Background service: socketsUrl: $socketsUrl');
+    debugPrint('Background service: socketsUrl: $socketsUrl');
 
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
@@ -98,8 +98,8 @@ Future<void> onStart(ServiceInstance service) async {
     // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
     final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    print('Background service: FCM Token: $fcmToken');
-    print('Background service: APNS Token: $apnsToken');
+    debugPrint('Background service: FCM Token: $fcmToken');
+    debugPrint('Background service: APNS Token: $apnsToken');
     if (apnsToken != null) {
       // APNS token is available, make FCM plugin API requests...
     }
@@ -137,22 +137,24 @@ Future<void> onStart(ServiceInstance service) async {
           .build(),
     );
 
-    print('Background service: socket initialization completed');
+    debugPrint('Background service: socket initialization completed');
 
     String currentRoom = "";
     String username = "";
     String? userId = await storage.read(key: "userId");
-    print('Background service: userId present: ${userId != null}');
+    debugPrint('Background service: userId present: ${userId != null}');
     final Set<String> inFlightMessages = {};
 
     service.invoke("service_started");
     socket.onConnect((_) async {
-      print('Background service: socket connected. Socket ID: ${socket.id}');
+      debugPrint(
+        'Background service: socket connected. Socket ID: ${socket.id}',
+      );
 
       service.invoke("connected_socket");
 
       if (await storage.containsKey(key: 'lastSyncDate')) {
-        print('Background service: starting syncing');
+        debugPrint('Background service: starting syncing');
         final String? dateString = await storage.read(key: 'lastSyncDate');
         if (dateString != '' && dateString != null) {
           final date = DateTime.parse(dateString);
@@ -160,20 +162,22 @@ Future<void> onStart(ServiceInstance service) async {
         }
       }
 
-      print('Background service: checking for pending messages...');
+      debugPrint('Background service: checking for pending messages...');
       final sentMessages = await chatMessageRepository.getAllSentMessages();
-      print(
+      debugPrint(
         'Background service: found ${sentMessages.length} pending messages',
       );
       for (var message in sentMessages) {
         if (inFlightMessages.contains(message.id)) {
-          print(
+          debugPrint(
             'Background service: message ${message.id} already in flight, skipping',
           );
           continue;
         }
 
-        print('Background service: emitting pending message: ${message.id}');
+        debugPrint(
+          'Background service: emitting pending message: ${message.id}',
+        );
         inFlightMessages.add(message.id);
 
         final newMessage = CreateMessage(
@@ -187,7 +191,7 @@ Future<void> onStart(ServiceInstance service) async {
           'message',
           newMessage.toJson(),
           ack: (data) {
-            print(
+            debugPrint(
               'Background service: ack received for message: ${message.id}',
             );
             inFlightMessages.remove(message.id);
@@ -435,10 +439,10 @@ Future<void> onStart(ServiceInstance service) async {
 
     service.on("new_message").listen((onData) async {
       try {
-        print("Background service: new_message event received");
-        print(onData.toString());
+        debugPrint("Background service: new_message event received");
+        debugPrint(onData.toString());
         final message = CreateMessage.fromJson(onData!);
-        print('Background service: using userId: ${userId!}');
+        debugPrint('Background service: using userId: ${userId!}');
         final result = await chatMessageRepository.createOrUpdate(
           ChatMessageCompanion(
             id: Value(message.id),
@@ -452,27 +456,31 @@ Future<void> onStart(ServiceInstance service) async {
           ),
         );
 
-        print('Background service: local message saved: ${result.toString()}');
+        debugPrint(
+          'Background service: local message saved: ${result.toString()}',
+        );
 
         if (inFlightMessages.contains(message.id)) {
-          print(
+          debugPrint(
             'Background service: message ${message.id} already in flight, skipping emission',
           );
           return;
         }
         inFlightMessages.add(message.id);
 
-        print('Background service: emitting message ${message.id}');
+        debugPrint('Background service: emitting message ${message.id}');
         socket.emitWithAck(
           "message",
           onData,
           ack: (data) {
-            print('Background service: ack received for message ${message.id}');
+            debugPrint(
+              'Background service: ack received for message ${message.id}',
+            );
             inFlightMessages.remove(message.id);
           },
         );
       } catch (e) {
-        print("Background service: error in new_message listener: $e");
+        debugPrint("Background service: error in new_message listener: $e");
         rethrow;
       }
     });
