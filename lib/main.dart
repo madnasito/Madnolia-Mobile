@@ -24,6 +24,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'i18n/strings.g.dart'; // Importa las traducciones generadas
 
@@ -40,6 +41,15 @@ void main() async {
       : await dotenv.load(fileName: "assets/.env.prod");
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
   serviceLocatorInit();
   cubitServiceLocatorInit();
