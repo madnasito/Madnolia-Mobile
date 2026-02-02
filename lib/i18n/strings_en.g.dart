@@ -732,6 +732,7 @@ class TranslationsErrorsEn {
 	late final TranslationsErrorsServerEn SERVER = TranslationsErrorsServerEn._(_root);
 	late final TranslationsErrorsNetworkEn NETWORK = TranslationsErrorsNetworkEn._(_root);
 	late final TranslationsErrorsLocalEn LOCAL = TranslationsErrorsLocalEn._(_root);
+	late final TranslationsErrorsUiEn UI = TranslationsErrorsUiEn._(_root);
 }
 
 // Path: SHARE
@@ -1319,6 +1320,21 @@ class TranslationsErrorsLocalEn {
 	String get LOADING_USER => 'Error loading user';
 }
 
+// Path: ERRORS.UI
+class TranslationsErrorsUiEn {
+	TranslationsErrorsUiEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Something went wrong while rendering the UI. Please try reloading the app.'
+	String get MAIN => 'Something went wrong while rendering the UI. Please try reloading the app.';
+
+	/// en: 'Technical details'
+	String get TECHNICAL_DETAILS => 'Technical details';
+}
+
 // Path: PROFILE.USER_PAGE.INVITATIONS
 class TranslationsProfileUserPageInvitationsEn {
 	TranslationsProfileUserPageInvitationsEn._(this._root);
@@ -1671,6 +1687,8 @@ extension on Translations {
 			'ERRORS.NETWORK.VERIFY_CONNECTION' => 'Verify your connection',
 			'ERRORS.LOCAL.LOADING_USERS' => 'Error loading users',
 			'ERRORS.LOCAL.LOADING_USER' => 'Error loading user',
+			'ERRORS.UI.MAIN' => 'Something went wrong while rendering the UI. Please try reloading the app.',
+			'ERRORS.UI.TECHNICAL_DETAILS' => 'Technical details',
 			'SHARE.TITLE' => '⚡️ Share this match!',
 			'SHARE.SUBJECT' => ({required Object name}) => '🎮 Let\'s play ${name}',
 			'SHARE.TEXT' => ({required Object gameName, required Object match}) => '🎮 Let\'s play ${gameName} \n⚡️ Join now here: ${match}',

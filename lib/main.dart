@@ -13,6 +13,7 @@ import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/routes/routes.dart';
+import 'package:madnolia/widgets/views/error_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:ui';
@@ -31,6 +32,11 @@ import 'i18n/strings.g.dart'; // Importa las traducciones generadas
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
+
+  // Custom Error Widget for rendering errors
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return ErrorView(errorDetails: details);
+  };
 
   // 1. INICIALIZAR slang PRIMERO
   LocaleSettings.useDeviceLocale(); // Esto debe ir antes de cualquier widget

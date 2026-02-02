@@ -424,6 +424,7 @@ class _TranslationsErrorsEs implements TranslationsErrorsEn {
 	@override late final _TranslationsErrorsServerEs SERVER = _TranslationsErrorsServerEs._(_root);
 	@override late final _TranslationsErrorsNetworkEs NETWORK = _TranslationsErrorsNetworkEs._(_root);
 	@override late final _TranslationsErrorsLocalEs LOCAL = _TranslationsErrorsLocalEs._(_root);
+	@override late final _TranslationsErrorsUiEs UI = _TranslationsErrorsUiEs._(_root);
 }
 
 // Path: SHARE
@@ -734,6 +735,17 @@ class _TranslationsErrorsLocalEs implements TranslationsErrorsLocalEn {
 	// Translations
 	@override String get LOADING_USERS => 'Error cargando usuarios';
 	@override String get LOADING_USER => 'Error cargando usuario';
+}
+
+// Path: ERRORS.UI
+class _TranslationsErrorsUiEs implements TranslationsErrorsUiEn {
+	_TranslationsErrorsUiEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get MAIN => 'Algo salió mal al renderizar la UI. Por favor, recarga la app.';
+	@override String get TECHNICAL_DETAILS => 'Detalles técnicos';
 }
 
 // Path: PROFILE.USER_PAGE.INVITATIONS
@@ -1066,6 +1078,8 @@ extension on TranslationsEs {
 			'ERRORS.NETWORK.VERIFY_CONNECTION' => 'Verifica tu conexión',
 			'ERRORS.LOCAL.LOADING_USERS' => 'Error cargando usuarios',
 			'ERRORS.LOCAL.LOADING_USER' => 'Error cargando usuario',
+			'ERRORS.UI.MAIN' => 'Algo salió mal al renderizar la UI. Por favor, recarga la app.',
+			'ERRORS.UI.TECHNICAL_DETAILS' => 'Detalles técnicos',
 			'SHARE.TITLE' => '⚡️ ¡Comparte esta partida!',
 			'SHARE.SUBJECT' => ({required Object name}) => '🎮 Juguemos ${name}',
 			'SHARE.TEXT' => ({required Object gameName, required Object match}) => '🎮 Juguemos ${gameName} \n⚡️ Unete aqui: ${match}',

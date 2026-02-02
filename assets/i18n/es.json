@@ -374,6 +374,10 @@
     "LOCAL": {
       "LOADING_USERS": "Error cargando usuarios",
       "LOADING_USER": "Error cargando usuario"
+    },
+    "UI": {
+      "MAIN": "Algo salió mal al renderizar la UI. Por favor, recarga la app.",
+      "TECHNICAL_DETAILS": "Detalles técnicos"
     }
   },
   "SHARE": {
