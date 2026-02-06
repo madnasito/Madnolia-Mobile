@@ -1,385 +1,397 @@
 {
-    "PRESENTATION":{
-        "TITLE": "Conecta con gamers de todo el mundo",
-        "SUBTITLE": "Crea partidas para cualquier consola retro o moderna"
+  "PRESENTATION": {
+    "TITLE": "Conecta con gamers de todo el mundo",
+    "SUBTITLE": "Crea partidas para cualquier consola retro o moderna"
+  },
+  "HEADER": {
+    "PLATFORMS": "Plataformas",
+    "MATCH": "Crear partida",
+    "NOTIFICATIONS": "Notificaciones",
+    "INVITATIONS": "Invitations",
+    "JOINED_MATCHES": "Partidas ingresadas",
+    "REGISTER": "Registrarse",
+    "LOGIN": "Ingresar",
+    "PROFILE": "Perfil",
+    "SETTINGS": "Settings",
+    "LOGOUT": "Salir"
+  },
+  "HOME": {
+    "MATCH": "Partida creada",
+    "MATCHES": "Partidas creadas",
+    "CREATE": "Crea una aquí",
+    "NO_MATCHES": "Aun no hay alguna partida creada",
+    "NO_MATCHES_FOR": "Sin partidas",
+    "ERROR_LOADING_MATCHES": "Error cargando partidas"
+  },
+  "REGISTER": {
+    "TITLE": "Crear cuenta",
+    "NAME": "Nombre",
+    "USERNAME": "Nombre de usuario",
+    "EMAIL": "Correo",
+    "PASSWORD": "Contraseña",
+    "PASSWORD2": "Repita la Contraseña",
+    "VALIDATIONS": {
+      "NAME": "El nombre no es valido",
+      "LONG_NAME": "El nombre es muy largo",
+      "USERNAME": "El nombre de usuario no es valido",
+      "EMAIL": "Ingrese una dirección de correo correcta",
+      "PASSWORD": "La contraseña es muy corta",
+      "PASSWORD2": "Las contraseñas son diferentes"
     },
-    "HEADER": {
+    "SELECT_PLATFORMS": "Selecciona tus plataformas de juegos",
+    "PHONE": "Movil",
+    "SUBTITLE": "¿Ya tienes una cuenta?",
+    "SUB_LOGIN": " Inicia sesión",
+    "NEXT": "Siguiente",
+    "TOAST_SIGN_UP": "¡Perfecto! Registro exitoso",
+    "SELECT_PLATFORMS_SUBTITLE": "Tus plataformas seleccionadas brillarán"
+  },
+  "FORM": {
+    "INPUT": {
+      "NAME": "Nombre",
+      "USERNAME": "Nombre de usuario",
+      "EMAIL": "Correo",
+      "PASSWORD": "Contraseña",
+      "PASSWORD2": "Repita la Contraseña",
       "PLATFORMS": "Plataformas",
-      "MATCH": "Crear partida",
-      "NOTIFICATIONS": "Notificaciones",
-      "INVITATIONS": "Invitations",
-      "JOINED_MATCHES": "Partidas ingresadas",
-      "REGISTER": "Registrarse",
-      "LOGIN": "Ingresar",
-      "PROFILE": "Perfil",
-      "LOGOUT": "Salir"
-    },    
-    "HOME":{
-        "MATCH": "Partida creada",
-        "MATCHES": "Partidas creadas",
-        "CREATE": "Crea una aquí",
-        "NO_MATCHES": "Aun no hay alguna partida creada",
-        "NO_MATCHES_FOR": "Sin partidas",
-        "ERROR_LOADING_MATCHES": "Error cargando partidas"
+      "REPLY": "Responder",
+      "MARK_AS_READ": "Marcar como leido",
+      "NEW_PASSWORD": "Nueva contraseña",
+      "USERNAME_EMAIL": "Nombre de Usuario o Correo"
     },
-    "REGISTER":{
-        "TITLE": "Crear cuenta",
-        "NAME": "Nombre",
-        "USERNAME": "Nombre de usuario",
-        "EMAIL": "Correo",
-        "PASSWORD": "Contraseña",
-        "PASSWORD2": "Repita la Contraseña",
-        "VALIDATIONS":{
-            "NAME": "El nombre no es valido",
-            "LONG_NAME": "El nombre es muy largo",
-            "USERNAME": "El nombre de usuario no es valido",
-            "EMAIL": "Ingrese una dirección de correo correcta",
-            "PASSWORD": "La contraseña es muy corta",
-            "PASSWORD2":"Las contraseñas son diferentes"
-        },
-        "SELECT_PLATFORMS": "Selecciona tus plataformas de juegos",
-        "PHONE": "Movil",
-        "SUBTITLE": "¿Ya tienes una cuenta?",
-        "SUB_LOGIN": " Inicia sesión",
-        "NEXT": "Siguiente",
-        "TOAST_SIGN_UP": "¡Perfecto! Registro exitoso",
-        "SELECT_PLATFORMS_SUBTITLE": "Tus plataformas seleccionadas brillarán"
+    "BUTTONS": {
+      "UPDATE_PASSWORD": "Actualizar contraseña"
     },
-    "FORM": {
-        "INPUT": {
-            "NAME": "Nombre",
-            "USERNAME": "Nombre de usuario",
-            "EMAIL": "Correo",
-            "PASSWORD": "Contraseña",
-            "PASSWORD2": "Repita la Contraseña",
-            "PLATFORMS": "Plataformas",
-            "REPLY": "Responder",
-            "MARK_AS_READ": "Marcar como leido",
-            "NEW_PASSWORD": "Nueva contraseña",
-            "USERNAME_EMAIL":"Nombre de Usuario o Correo"
-        },
-        "BUTTONS": {
-            "UPDATE_PASSWORD": "Actualizar contraseña"
-        },
-        "VALIDATIONS": {
-            "REQUIRED": "Este campo es requerido",
-            "REQUIRED_FIELD": "Campo requerido",
-            "INVALID_FORMAT": "Formato no válido",
-            "INVALID_INPUT": "Entrada no válida",
-            "TOO_SHORT": "Muy corto",
-            "TOO_LONG": "Muy largo",
-            "MIN_LENGTH": "Mínimo $count caracteres",
-            "MAX_LENGTH": "Máximo $count caracteres",
-            "MIN_MAX_LENGTH": "Entre $min y $max caracteres",
-            "ONLY_LETTERS": "Solo letras permitidas",
-            "ONLY_NUMBERS": "Solo números permitidos",
-            "LETTERS_AND_NUMBERS": "Solo letras y números permitidos",
-            "NO_SPECIAL_CHARS": "No se permiten caracteres especiales",
-            "INVALID_EMAIL": "Correo electrónico no válido",
-            "INVALID_EMAIL_FORMAT": "Formato de correo inválido",
-            "INVALID_URL": "URL no válida",
-            "INVALID_PHONE": "Número de teléfono no válido",
-            "INVALID_DATE": "Fecha no válida",
-            "INVALID_TIME": "Hora no válida",
-            "PASSWORDS_DONT_MATCH": "Las contraseñas no coinciden",
-            "PASSWORD_TOO_WEAK": "Contraseña muy débil",
-            "PASSWORD_MIN_LENGTH": "La contraseña debe tener al menos $count caracteres",
-            "PASSWORD_REQUIREMENTS": "La contraseña debe incluir mayúsculas, minúsculas y números",
-            "USERNAME_INVALID": "Nombre de usuario no válido",
-            "USERNAME_TOO_SHORT": "Nombre de usuario muy corto",
-            "USERNAME_TOO_LONG": "Nombre de usuario muy largo",
-            "USERNAME_EXISTS": "Este nombre de usuario ya existe",
-            "EMAIL_EXISTS": "Este correo ya está registrado",
-            "INVALID_NAME": "Nombre no válido",
-            "NAME_TOO_LONG": "Nombre muy largo",
-            "INVALID_AGE": "Edad no válida",
-            "MIN_AGE": "Edad mínima: $age años",
-            "MAX_AGE": "Edad máxima: $age años",
-            "NUMERIC_ONLY": "Solo valores numéricos",
-            "POSITIVE_NUMBER": "Debe ser un número positivo",
-            "INVALID_RANGE": "Valor fuera del rango permitido",
-            "MIN_VALUE": "Valor mínimo: $value",
-            "MAX_VALUE": "Valor máximo: $value",
-            "WHITESPACE_NOT_ALLOWED": "No se permiten espacios en blanco",
-            "MUST_CONTAIN_UPPERCASE": "Debe contener al menos una mayúscula",
-            "MUST_CONTAIN_LOWERCASE": "Debe contener al menos una minúscula",
-            "MUST_CONTAIN_NUMBER": "Debe contener al menos un número",
-            "MUST_CONTAIN_SYMBOL": "Debe contener al menos un símbolo",
-            "FIELD_REQUIRED": "Campo obligatorio",
-            "PLEASE_FILL_FIELD": "Por favor completa este campo",
-            "CHECK_INPUT": "Revisa la información ingresada",
-            "INVALID_CHARACTERS": "Caracteres no válidos",
-            "TEXT_TOO_SHORT": "Texto muy corto",
-            "TEXT_TOO_LONG": "Texto muy largo",
-            "INVALID_SELECTION": "Selección no válida",
-            "REQUIRED_SELECTION": "Debes seleccionar una opción",
-            "INVALID_LENGTH": "Longitud no válida",
-            "SELECT_PLATFORMS": "Necesitas seleccionar al menos una plataforma"
-        }
+    "VALIDATIONS": {
+      "REQUIRED": "Este campo es requerido",
+      "REQUIRED_FIELD": "Campo requerido",
+      "INVALID_FORMAT": "Formato no válido",
+      "INVALID_INPUT": "Entrada no válida",
+      "TOO_SHORT": "Muy corto",
+      "TOO_LONG": "Muy largo",
+      "MIN_LENGTH": "Mínimo $count caracteres",
+      "MAX_LENGTH": "Máximo $count caracteres",
+      "MIN_MAX_LENGTH": "Entre $min y $max caracteres",
+      "ONLY_LETTERS": "Solo letras permitidas",
+      "ONLY_NUMBERS": "Solo números permitidos",
+      "LETTERS_AND_NUMBERS": "Solo letras y números permitidos",
+      "NO_SPECIAL_CHARS": "No se permiten caracteres especiales",
+      "INVALID_EMAIL": "Correo electrónico no válido",
+      "INVALID_EMAIL_FORMAT": "Formato de correo inválido",
+      "INVALID_URL": "URL no válida",
+      "INVALID_PHONE": "Número de teléfono no válido",
+      "INVALID_DATE": "Fecha no válida",
+      "INVALID_TIME": "Hora no válida",
+      "PASSWORDS_DONT_MATCH": "Las contraseñas no coinciden",
+      "PASSWORD_TOO_WEAK": "Contraseña muy débil",
+      "PASSWORD_MIN_LENGTH": "La contraseña debe tener al menos $count caracteres",
+      "PASSWORD_REQUIREMENTS": "La contraseña debe incluir mayúsculas, minúsculas y números",
+      "USERNAME_INVALID": "Nombre de usuario no válido",
+      "USERNAME_TOO_SHORT": "Nombre de usuario muy corto",
+      "USERNAME_TOO_LONG": "Nombre de usuario muy largo",
+      "USERNAME_EXISTS": "Este nombre de usuario ya existe",
+      "EMAIL_EXISTS": "Este correo ya está registrado",
+      "INVALID_NAME": "Nombre no válido",
+      "NAME_TOO_LONG": "Nombre muy largo",
+      "INVALID_AGE": "Edad no válida",
+      "MIN_AGE": "Edad mínima: $age años",
+      "MAX_AGE": "Edad máxima: $age años",
+      "NUMERIC_ONLY": "Solo valores numéricos",
+      "POSITIVE_NUMBER": "Debe ser un número positivo",
+      "INVALID_RANGE": "Valor fuera del rango permitido",
+      "MIN_VALUE": "Valor mínimo: $value",
+      "MAX_VALUE": "Valor máximo: $value",
+      "WHITESPACE_NOT_ALLOWED": "No se permiten espacios en blanco",
+      "MUST_CONTAIN_UPPERCASE": "Debe contener al menos una mayúscula",
+      "MUST_CONTAIN_LOWERCASE": "Debe contener al menos una minúscula",
+      "MUST_CONTAIN_NUMBER": "Debe contener al menos un número",
+      "MUST_CONTAIN_SYMBOL": "Debe contener al menos un símbolo",
+      "FIELD_REQUIRED": "Campo obligatorio",
+      "PLEASE_FILL_FIELD": "Por favor completa este campo",
+      "CHECK_INPUT": "Revisa la información ingresada",
+      "INVALID_CHARACTERS": "Caracteres no válidos",
+      "TEXT_TOO_SHORT": "Texto muy corto",
+      "TEXT_TOO_LONG": "Texto muy largo",
+      "INVALID_SELECTION": "Selección no válida",
+      "REQUIRED_SELECTION": "Debes seleccionar una opción",
+      "INVALID_LENGTH": "Longitud no válida",
+      "SELECT_PLATFORMS": "Necesitas seleccionar al menos una plataforma"
+    }
+  },
+  "RECOVER_PASSWORD": {
+    "TITLE": "Recupera tu contraseña",
+    "RECOVER_PASSWORD": "Recuperar contraseña",
+    "EMAIL_SENDED": "¡Correo enviado!",
+    "ERROR_GETTING_INFO": "Hubo un error al cargar la recuperacion de contraseña",
+    "HOME_PAGE_REDIRECTING": "Redirigiendo a la pagina principal...",
+    "PASSWORD_UPDATED": "Contraseña actualizada exitosamente"
+  },
+  "LOGIN": {
+    "WELCOME": "Ingresar",
+    "BUTTON": "Iniciar Sesión",
+    "ERRORS": {
+      "USER": "No se ha encontrado al usuario",
+      "PASSWORD": "La contraseña es invalida"
     },
-    "RECOVER_PASSWORD": {
-        "TITLE": "Recupera tu contraseña",
-        "RECOVER_PASSWORD": "Recuperar contraseña",
-        "EMAIL_SENDED": "¡Correo enviado!",
-        "ERROR_GETTING_INFO": "Hubo un error al cargar la recuperacion de contraseña",
-        "HOME_PAGE_REDIRECTING": "Redirigiendo a la pagina principal...",
-        "PASSWORD_UPDATED": "Contraseña actualizada exitosamente"
+    "FORGOT_PASSWORD": "¿Olvido la contraseña?",
+    "SUBTITLE": "¿No tienes una cuenta?",
+    "SUB_REGISTER": "Regístrate aquí"
+  },
+  "CREATE_MATCH": {
+    "TITLE": "Selecciona la plataforma",
+    "DESCRIPTION": "Descripción (opcional)",
+    "SEARCH_GAME": "Buscar juego",
+    "LOADING_RECOMENDATIONS": "Cargando recomendaciones",
+    "SEARCH_RESULTS": "Resultados de la busqueda",
+    "EMPTY_SEARCH": "No se encontraron juegos, por favor intente con otro nombre",
+    "SEARCH_HINT": "Escribe un poco más del título para encontrar tu juego",
+    "SEARCH_ERROR": "Error al buscar juegos, por favor intente de nuevo",
+    "PLATFORMS_EMPTY": "No has seleccionado una plataforma",
+    "ADD_PLATFORMS": "Ingresa aquí para añadir plataformas",
+    "SEARCHING": "Buscando",
+    "SEARCH_USER": "Invitar compañeros a tu partida (opcional)",
+    "MATCH_NAME": "Nombre de la partida (opcional)",
+    "INVITEDS": "Invitados",
+    "DATE": "Fecha",
+    "TIME": "Hora",
+    "CLOCK_MESSAGE": "Presiona el reloj",
+    "SUBMIT": "Enviar",
+    "CREATE_MATCH": "Crear partida",
+    "MATCH_CREATED": "¡Partida creada!",
+    "DATE_ERROR": "Cree una fecha y hora correctas",
+    "UPLOADING_MESSAGE": "La partida se está creando",
+    "ERROR": "Error creando la partida, por favor intente de nuevo",
+    "TITLE_EMPTY": "Escriba el titulo",
+    "DURATION": "Duración: $duration minutos"
+  },
+  "MATCH": {
+    "MATCH_UPDATED": "Partida actualizada",
+    "ERROR_LOADING": "Error cargando partida",
+    "JOIN_TO_MATCH": "Unirse a la partida",
+    "EDIT_MATCH": "Editar partida",
+    "LEAVE_MATCH": "Salir de la partida",
+    "CANCEL_MATCH": "Cancelar partida",
+    "CANCELL_MATCH_QUESTION": "¿Estás seguro de que deseas cancelar la partida?",
+    "MATCH_CANCELLED": "Partida cancelada",
+    "MATCH_ENDED": "Partida finalizada",
+    "STATUS": {
+      "WAITING": "En espera",
+      "RUNNING": "En curso",
+      "FINISHED": "Finalizada",
+      "CANCELLED": "Cancelada"
+    }
+  },
+  "SEARCH": {
+    "TITLE": "Buscar",
+    "SEARCH": "Buscar",
+    "SEARCH_USERS": "Buscar usuarios",
+    "NO_RESULTS": "No se encontraron resultados",
+    "ERROR_LOADING": "Error cargando resultados de búsqueda",
+    "SEARCHING": "Buscando...",
+    "NO_USERS_FOUND": "No se encontraron usuarios"
+  },
+  "MATCHES": {
+    "TITLE": "Partidas",
+    "ALL": "Todas",
+    "CREATED": "Creadas",
+    "JOINED": "Ingresadas",
+    "ERRORS": {
+      "LOADING_ERROR": "Error cargando partidas",
+      "NO_MATCHES": "No hay partidas",
+      "JOIN_FAILED": "Error al ingresar a la partida"
+    }
+  },
+  "CONNECTIONS": {
+    "TITLE": "Conexiones",
+    "EMPTY": "Sin conexiones",
+    "LOADING": "Cargando conexiones",
+    "ERRORS": {
+      "LOADING_ERROR": "Error cargando conexiones",
+      "NO_CONNECTIONS": "Sin conexiones"
     },
-    "LOGIN":{
-        "WELCOME": "Ingresar",
-        "BUTTON": "Iniciar Sesión",
-        "ERRORS":{
-            "USER": "No se ha encontrado al usuario",
-            "PASSWORD": "La contraseña es invalida"
-        },
-        "FORGOT_PASSWORD": "¿Olvido la contraseña?",
-        "SUBTITLE": "¿No tienes una cuenta?",
-        "SUB_REGISTER": "Regístrate aquí"
-    },
-    "CREATE_MATCH":{
-        "TITLE": "Selecciona la plataforma",
-        "DESCRIPTION": "Descripción (opcional)",
-        "SEARCH_GAME": "Buscar juego",
-        "LOADING_RECOMENDATIONS": "Cargando recomendaciones",
-        "SEARCH_RESULTS": "Resultados de la busqueda",
-        "EMPTY_SEARCH": "No se encontraron juegos, por favor intente con otro nombre",
-        "SEARCH_HINT": "Escribe un poco más del título para encontrar tu juego",
-        "SEARCH_ERROR": "Error al buscar juegos, por favor intente de nuevo",
-        "PLATFORMS_EMPTY": "No has seleccionado una plataforma",
-        "ADD_PLATFORMS": "Ingresa aquí para añadir plataformas",
-        "SEARCHING": "Buscando",
-        "SEARCH_USER": "Invitar compañeros a tu partida (opcional)",
-        "MATCH_NAME": "Nombre de la partida (opcional)",
-        "INVITEDS": "Invitados",
-        "DATE": "Fecha",
-        "TIME": "Hora",
-        "CLOCK_MESSAGE": "Presiona el reloj",
-        "SUBMIT": "Enviar",
-        "CREATE_MATCH": "Crear partida",
-        "MATCH_CREATED": "¡Partida creada!",
-        "DATE_ERROR": "Cree una fecha y hora correctas",
-        "UPLOADING_MESSAGE": "La partida se está creando",
-        "ERROR": "Error creando la partida, por favor intente de nuevo",
-        "TITLE_EMPTY": "Escriba el titulo",
-        "DURATION": "Duración: $duration minutos"
-    },
-    "MATCH": {
-        "MATCH_UPDATED": "Partida actualizada",
-        "ERROR_LOADING": "Error cargando partida",
-        "JOIN_TO_MATCH": "Unirse a la partida",
-        "EDIT_MATCH": "Editar partida",
-        "LEAVE_MATCH": "Salir de la partida",
-        "CANCEL_MATCH": "Cancelar partida",
-        "CANCELL_MATCH_QUESTION": "¿Estás seguro de que deseas cancelar la partida?",
-        "MATCH_CANCELLED": "Partida cancelada",
-        "MATCH_ENDED": "Partida finalizada",
-        "STATUS": {
-            "WAITING": "En espera",
-            "RUNNING": "En curso",
-            "FINISHED": "Finalizada",
-            "CANCELLED": "Cancelada"
-        }
-    },
-    "SEARCH": {
-        "TITLE": "Buscar",
-        "SEARCH": "Buscar",
-        "SEARCH_USERS": "Buscar usuarios",
-        "NO_RESULTS": "No se encontraron resultados",
-        "ERROR_LOADING": "Error cargando resultados de búsqueda",
-        "SEARCHING": "Buscando...",
-        "NO_USERS_FOUND": "No se encontraron usuarios"
-    },
-    "MATCHES": {
-        "TITLE": "Partidas",
-        "ALL": "Todas",
-        "CREATED": "Creadas",
-        "JOINED": "Ingresadas",
-        "ERRORS": {
-            "LOADING_ERROR": "Error cargando partidas",
-            "NO_MATCHES": "No hay partidas",
-            "JOIN_FAILED": "Error al ingresar a la partida"
-        }
-    },
-    "CONNECTIONS": {
-        "TITLE": "Conexiones",
-        "EMPTY": "Sin conexiones",
-        "LOADING": "Cargando conexiones",
-        "ERRORS": {
-            "LOADING_ERROR": "Error cargando conexiones",
-            "NO_CONNECTIONS": "Sin conexiones"
-        },
-        "HAVE_A_REQUEST": "Tienes una solicitud para $name",
-        "REQUESTS": {
-            "TITLE": "Solicitudes",
-            "ACCEPTED": "Aceptada",
-            "ADD": "Añadir",
-            "REQUESTED": "Solicitada",
-            "REJECTED": "Rechazada",
-            "PENDING": "Pendiente",
-            "ACCEPT": "Aceptar",
-            "REJECT": "Rechazar",
-            "USER_WANTS_TO_CONNECT": "$name quiere conectar contigo",
-            "ACCEPT_REQUEST": "¿Aceptar solicitud?",
-            "WANT_TO_CANCELL": "¿Deseas cancelar la solicitud?",
-            "CANCEL": "Cancelar solicitud"
-        }
-    },
-    "RECOMMENDATIONS": {
-        "TITLE": "Recomendaciones",
-        "EMPTY": "Aun no has creado una partida para esta plataforma \n Busca un juego para crear una",
-        "LOADING": "Cargando recomendaciones",
-        "FOR_YOU": "Recomendaciones para ti",
-        "ERRORS": {
-            "LOADING": "Error cargando recomendaciones"
-        }
-    },
-    "CHAT": {
-        "MESSAGES": "Mensajes",
-        "MESSAGE": "Mensaje",
-        "NO_MESSAGES": "Sin mensajes",
-        "SAY_HI_TO": "Di hola a $name",
-        "SAY_HI": "Saluda",
-        "ERRORS": {
-            "LOADING_ERROR": "Error cargando mensajes",
-            "LOADING_CHAT": "Error cargando el chat",
-            "NO_DATA": "Sin datos de amistad",
-            "LOADING_USER":"Error cargando usuario",
-            "NO_USER_DATA": "Sin datos del usuario"
-        }
-    },
-    "GAME":{
-        "GAME": "Juego",
-        "MATCH": "Partida",
-        "DATE": "Fecha",
-        "PLATFORM": "Plataforma"
-    },
-    "NOTIFICATIONS":{
-        "INVITATIONS": "Invitaciones",
-        "TITLE": "Notificaciones",
-        "EMPTY": "Sin notificaciones",
-        "ERROR_LOADING": "Error cargando notificaciones",
-        "MATCH_INVITATION": "Invitacion a partida",
-        "INVITED_TO": "Fuiste invitado a:",
-        "CONNECTION_REQUEST": "$name quiere conectar contigo",
-        "ACCEPT_REQUEST_TITLE": "¿Aceptar solicitud?",
-        "INVITATION_TO_MATCH": "Tienes una invitacion para: ",
-        "MATCH_READY": "Partida lista",
-        "MATCH_STARTED": "$name ha empezado"
-    },
-    "FRIENDS": {
-        "TITLE": "Amigos",
-        "EMPTY": "Aun no tienes amigos",
-        "ERROR_LOADING": "Error cargando amigos"
-    },
-    "PROFILE":{
-        "YOU": "Perfil",
-        "TITLE": "Perfil",
-        "MATCHES": "Partidas",
-        "PLATFORMS": "Tus plataformas",
-        "MATCHES_PAGE":{
-            "TITLE": "Mis partidas",
-            "EMPTY": "Aun no has creado una partida"
-        },
-        "AVAILABILITY": {
-            "EVERYONE": "Disponible",
-            "PARTNERS": "Solo colegas",
-            "NO": "No molestar"
-        },
-        "USER_PAGE":{
-            "NAME": "Nombre",
-            "USERNAME": "Nombre de usuario",
-            "EMAIL": "Correo",
-            "INVITATIONS":{
-                "TITLE": "Aceptar invitaciondes de:",
-                "EVERYONE": "Lo que sea, quiero jugar",
-                "PARTNERS": "Solo colegas",
-                "NO": "Ya, dejame en paz"
-            },
-            "ERRORS":{
-                "VERIFY": "Por favor verifica tú información",
-                "EMAIL": "Ya hay una cuenta registrada con este CORREO",
-                "USERNAME": "Ya hay otro usuario usando este NOMBRE DE USUARIO",
-                "IMG_SIZE": "La imagen no puede ser mayor de 2MB",
-                "IMG_EXTENSION": "La extensión no es valida, por favor usa: 'JPG', 'JPEG'. 'PNG'",
-                "IMG_UPDATING": "Error actualizando la imagen",
-                "ERROR_UPDATING": "Error actualizando"
-            },
-            "UPLOADING_IMAGE": "Subiendo la imagen, espere un momento por favor",
-            "UPDATED": "Datos actualizados",
-            "UPDATE": "Actualizar",
-            "DELETE_ACCOUNT": "Eliminar cuenta",
-            "ACCOUNT_DELETED": "Tu cuenta ha sido borrada"
-        },
-        "PLATFORMS_PAGE":{
-            "TITLE": "Tus plataformas",
-            "SUCCESS": "¡Plataformas actualizadas!"
-        }
-    },
-    "REPORTS": {
-        "CREATED": "Reporte creado",
-        "REPORT_USER": "Reportar este usuario",
-        "REPORT_TO": "Reportar a",
-        "SELECT_TYPE": "Selecciona el tipo",
-        "SPAM": "Spam",
-        "CHILD_ABUSE": "Abuso de menores",
-        "SUBMIT": "Subir reporte"
-    },
-    "UTILS":{
-      "SHOW_MORE": "Mostrar más",
-      "SHOW_LESS": "Mostrar menos",
-      "DETAILS": "Detalles",
-      "ADMIN": "Admin",
-      "DESCRIPTION": "Descripción",
-      "SELECT_FILE": "Seleccionar archivo",
-      "FILE": "Archivo",
-      "RELOAD": "Recargar",
-      "RECOVERING_PASSWORD_FOR": "Recuperando contraseña para $name",
-      "KEEPING_CONNECTIONS": "Manteniendo conexiones activas",
+    "HAVE_A_REQUEST": "Tienes una solicitud para $name",
+    "REQUESTS": {
+      "TITLE": "Solicitudes",
+      "ACCEPTED": "Aceptada",
+      "ADD": "Añadir",
+      "REQUESTED": "Solicitada",
+      "REJECTED": "Rechazada",
+      "PENDING": "Pendiente",
       "ACCEPT": "Aceptar",
-      "CANCEL": "Cancelar",
       "REJECT": "Rechazar",
-      "DISMISS": "Descartar",
-      "YOU": "Tu",
-      "NO": "No",
-      "YES": "Si"
+      "USER_WANTS_TO_CONNECT": "$name quiere conectar contigo",
+      "ACCEPT_REQUEST": "¿Aceptar solicitud?",
+      "WANT_TO_CANCELL": "¿Deseas cancelar la solicitud?",
+      "CANCEL": "Cancelar solicitud"
+    }
+  },
+  "RECOMMENDATIONS": {
+    "TITLE": "Recomendaciones",
+    "EMPTY": "Aun no has creado una partida para esta plataforma \n Busca un juego para crear una",
+    "LOADING": "Cargando recomendaciones",
+    "FOR_YOU": "Recomendaciones para ti",
+    "ERRORS": {
+      "LOADING": "Error cargando recomendaciones"
+    }
+  },
+  "CHAT": {
+    "MESSAGES": "Mensajes",
+    "MESSAGE": "Mensaje",
+    "NO_MESSAGES": "Sin mensajes",
+    "SAY_HI_TO": "Di hola a $name",
+    "SAY_HI": "Saluda",
+    "ERRORS": {
+      "LOADING_ERROR": "Error cargando mensajes",
+      "LOADING_CHAT": "Error cargando el chat",
+      "NO_DATA": "Sin datos de amistad",
+      "LOADING_USER": "Error cargando usuario",
+      "NO_USER_DATA": "Sin datos del usuario"
+    }
+  },
+  "GAME": {
+    "GAME": "Juego",
+    "MATCH": "Partida",
+    "DATE": "Fecha",
+    "PLATFORM": "Plataforma"
+  },
+  "NOTIFICATIONS": {
+    "INVITATIONS": "Invitaciones",
+    "TITLE": "Notificaciones",
+    "EMPTY": "Sin notificaciones",
+    "ERROR_LOADING": "Error cargando notificaciones",
+    "MATCH_INVITATION": "Invitacion a partida",
+    "INVITED_TO": "Fuiste invitado a:",
+    "CONNECTION_REQUEST": "$name quiere conectar contigo",
+    "ACCEPT_REQUEST_TITLE": "¿Aceptar solicitud?",
+    "INVITATION_TO_MATCH": "Tienes una invitacion para: ",
+    "MATCH_READY": "Partida lista",
+    "MATCH_STARTED": "$name ha empezado"
+  },
+  "FRIENDS": {
+    "TITLE": "Amigos",
+    "EMPTY": "Aun no tienes amigos",
+    "ERROR_LOADING": "Error cargando amigos"
+  },
+  "PROFILE": {
+    "YOU": "Perfil",
+    "TITLE": "Perfil",
+    "MATCHES": "Partidas",
+    "PLATFORMS": "Tus plataformas",
+    "MATCHES_PAGE": {
+      "TITLE": "Mis partidas",
+      "EMPTY": "Aun no has creado una partida"
     },
-    "ALERT": {
-        "YOU_SURE": "¿Estás seguro?",
-        "CANCEL": "Cancelar",
-        "DELETE_MY_ACCOUNT": "Borrar mi cuenta"
+    "AVAILABILITY": {
+      "EVERYONE": "Disponible",
+      "PARTNERS": "Solo colegas",
+      "NO": "No molestar"
     },
+    "USER_PAGE": {
+      "NAME": "Nombre",
+      "USERNAME": "Nombre de usuario",
+      "EMAIL": "Correo",
+      "INVITATIONS": {
+        "TITLE": "Aceptar invitaciondes de:",
+        "EVERYONE": "Lo que sea, quiero jugar",
+        "PARTNERS": "Solo colegas",
+        "NO": "Ya, dejame en paz"
+      },
+      "ERRORS": {
+        "VERIFY": "Por favor verifica tú información",
+        "EMAIL": "Ya hay una cuenta registrada con este CORREO",
+        "USERNAME": "Ya hay otro usuario usando este NOMBRE DE USUARIO",
+        "IMG_SIZE": "La imagen no puede ser mayor de 2MB",
+        "IMG_EXTENSION": "La extensión no es valida, por favor usa: 'JPG', 'JPEG'. 'PNG'",
+        "IMG_UPDATING": "Error actualizando la imagen",
+        "ERROR_UPDATING": "Error actualizando"
+      },
+      "UPLOADING_IMAGE": "Subiendo la imagen, espere un momento por favor",
+      "UPDATED": "Datos actualizados",
+      "UPDATE": "Actualizar",
+      "DELETE_ACCOUNT": "Eliminar cuenta",
+      "ACCOUNT_DELETED": "Tu cuenta ha sido borrada"
+    },
+    "PLATFORMS_PAGE": {
+      "TITLE": "Tus plataformas",
+      "SUCCESS": "¡Plataformas actualizadas!"
+    }
+  },
+  "REPORTS": {
+    "CREATED": "Reporte creado",
+    "REPORT_USER": "Reportar este usuario",
+    "REPORT_TO": "Reportar a",
+    "SELECT_TYPE": "Selecciona el tipo",
+    "APP_BUG": "Bug de la aplicación",
+    "OTHER": "Otro",
+    "SPAM": "Spam",
+    "CHILD_ABUSE": "Abuso de menores",
+    "SUBMIT": "Subir reporte",
+    "FEEDBACK": "Enviar reporte"
+  },
+  "UTILS": {
+    "SHOW_MORE": "Mostrar más",
+    "SHOW_LESS": "Mostrar menos",
+    "DETAILS": "Detalles",
+    "ADMIN": "Admin",
+    "DESCRIPTION": "Descripción",
+    "SELECT_FILE": "Seleccionar archivo",
+    "FILE": "Archivo",
+    "RELOAD": "Recargar",
+    "RECOVERING_PASSWORD_FOR": "Recuperando contraseña para $name",
+    "KEEPING_CONNECTIONS": "Manteniendo conexiones activas",
+    "ACCEPT": "Aceptar",
+    "CANCEL": "Cancelar",
+    "REJECT": "Rechazar",
+    "DISMISS": "Descartar",
+    "YOU": "Tu",
+    "NO": "No",
+    "YES": "Si"
+  },
+  "ALERT": {
+    "YOU_SURE": "¿Estás seguro?",
+    "CANCEL": "Cancelar",
+    "DELETE_MY_ACCOUNT": "Borrar mi cuenta"
+  },
   "ERRORS": {
     "SERVER": {
-        "USER_NOT_FOUND": "Usuario no encontrado",
-        "EMAIL_IN_USE": "Email en uso",
-        "USERNAME_IN_USE": "Nombre de usuario en uso",
-        "WRONG_PASSWORD": "Contraseña incorrecta",
-        "NETWORK_ERROR": "Error en la red",
-        "NO_MATCH_FOUND": "No hay partida encontrada",
-        "NO_GAME_FOUND": "Juego no encontrado",
-        "MISSING_TOKEN": "Falta el token",
-        "NO_MESSAGE": "No hay mensaje",
-        "NOT_VALID_EXTENSION": "Extensión no valida",
-        "INVALID_DATE": "Fecha invalida",
-        "REPORT_EXISTS": "Espera \n Ya has reportado a este usuario",
-        "LOADING_GAME": "Error cargando el juego, vuelva a intentarlo",
-        "EMAIL_DATE_LIMIT": "Debe esperar al menos 15 dias para poder actualizar su correo",
-        "IMAGE_DATA": "Hubo un problema al cargar esta imagen \nPor favor, suba otra imagen",
-        "INVALID_CREDENTIALS": "Usuario o contraseña incorrectos",
-        "UNKNOWN": "Error desconocido"
+      "USER_NOT_FOUND": "Usuario no encontrado",
+      "EMAIL_IN_USE": "Email en uso",
+      "USERNAME_IN_USE": "Nombre de usuario en uso",
+      "WRONG_PASSWORD": "Contraseña incorrecta",
+      "NETWORK_ERROR": "Error en la red",
+      "NO_MATCH_FOUND": "No hay partida encontrada",
+      "NO_GAME_FOUND": "Juego no encontrado",
+      "MISSING_TOKEN": "Falta el token",
+      "NO_MESSAGE": "No hay mensaje",
+      "NOT_VALID_EXTENSION": "Extensión no valida",
+      "INVALID_DATE": "Fecha invalida",
+      "REPORT_EXISTS": "Espera \n Ya has reportado a este usuario",
+      "LOADING_GAME": "Error cargando el juego, vuelva a intentarlo",
+      "EMAIL_DATE_LIMIT": "Debe esperar al menos 15 dias para poder actualizar su correo",
+      "IMAGE_DATA": "Hubo un problema al cargar esta imagen \nPor favor, suba otra imagen",
+      "INVALID_CREDENTIALS": "Usuario o contraseña incorrectos",
+      "UNKNOWN": "Error desconocido"
     },
     "NETWORK": {
-        "VERIFY_CONNECTION": "Verifica tu conexión"
+      "VERIFY_CONNECTION": "Verifica tu conexión"
     },
     "LOCAL": {
       "LOADING_USERS": "Error cargando usuarios",
       "LOADING_USER": "Error cargando usuario"
+    },
+    "UI": {
+      "MAIN": "Algo salió mal al renderizar la UI. Por favor, recarga la app.",
+      "TECHNICAL_DETAILS": "Detalles técnicos"
     }
   },
   "SHARE": {
     "TITLE": "⚡️ ¡Comparte esta partida!",
     "SUBJECT": "🎮 Juguemos $name",
     "TEXT": "🎮 Juguemos $gameName \n⚡️ Unete aqui: $match"
+  },
+  "UPDATE": {
+    "TITLE": "¡NUEVA VERSIÓN!",
+    "MESSAGE": "Actualiza madnolia a la versión $version para seguir jugando.",
+    "BUTTON": "ACTUALIZAR AHORA"
   }
 }
-

@@ -64,8 +64,9 @@ class MoleculePlatformMatches extends StatelessWidget {
             disableCenter: true,
             enlargeCenterPage: true,
             onPageChanged: (index, reason) {
-              if (index == platformState.games.length - 1)
+              if (index == platformState.games.length - 1) {
                 debugPrint('The end arrived');
+              }
               platformsGamesBloc.add(
                 PlatformGamesFetched(platformId: platform),
               );

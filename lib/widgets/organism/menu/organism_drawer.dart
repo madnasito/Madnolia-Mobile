@@ -129,12 +129,12 @@ class OrganismDrawer extends StatelessWidget {
                     ),
                     AtomMenuButton(
                       icon: Icon(
-                        Icons.person_outline_outlined,
+                        Icons.settings_rounded,
                         size: 40,
                         color: Colors.white,
                       ),
-                      title: t.HEADER.PROFILE,
-                      route: "/me",
+                      title: t.HEADER.SETTINGS,
+                      route: "/settings",
                     ),
                   ],
                 ),

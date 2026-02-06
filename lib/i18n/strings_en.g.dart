@@ -63,6 +63,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsAlertEn ALERT = TranslationsAlertEn._(_root);
 	late final TranslationsErrorsEn ERRORS = TranslationsErrorsEn._(_root);
 	late final TranslationsShareEn SHARE = TranslationsShareEn._(_root);
+	late final TranslationsUpdateEn UPDATE = TranslationsUpdateEn._(_root);
 }
 
 // Path: PRESENTATION
@@ -114,6 +115,9 @@ class TranslationsHeaderEn {
 
 	/// en: 'Joined'
 	String get JOINED_MATCHES => 'Joined';
+
+	/// en: 'Settings'
+	String get SETTINGS => 'Settings';
 }
 
 // Path: HOME
@@ -634,6 +638,12 @@ class TranslationsReportsEn {
 	/// en: 'Select report type'
 	String get SELECT_TYPE => 'Select report type';
 
+	/// en: 'App bug'
+	String get APP_BUG => 'App bug';
+
+	/// en: 'Other'
+	String get OTHER => 'Other';
+
 	/// en: 'Spam'
 	String get SPAM => 'Spam';
 
@@ -642,6 +652,9 @@ class TranslationsReportsEn {
 
 	/// en: 'Submit report'
 	String get SUBMIT => 'Submit report';
+
+	/// en: 'Send feedback'
+	String get FEEDBACK => 'Send feedback';
 }
 
 // Path: UTILS
@@ -732,6 +745,7 @@ class TranslationsErrorsEn {
 	late final TranslationsErrorsServerEn SERVER = TranslationsErrorsServerEn._(_root);
 	late final TranslationsErrorsNetworkEn NETWORK = TranslationsErrorsNetworkEn._(_root);
 	late final TranslationsErrorsLocalEn LOCAL = TranslationsErrorsLocalEn._(_root);
+	late final TranslationsErrorsUiEn UI = TranslationsErrorsUiEn._(_root);
 }
 
 // Path: SHARE
@@ -750,6 +764,24 @@ class TranslationsShareEn {
 
 	/// en: '🎮 Let's play $gameName ⚡️ Join now here: $match'
 	String TEXT({required Object gameName, required Object match}) => '🎮 Let\'s play ${gameName} \n⚡️ Join now here: ${match}';
+}
+
+// Path: UPDATE
+class TranslationsUpdateEn {
+	TranslationsUpdateEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'NEW VERSION!'
+	String get TITLE => 'NEW VERSION!';
+
+	/// en: 'Update madnolia to version $version to keep playing.'
+	String MESSAGE({required Object version}) => 'Update madnolia to version ${version} to keep playing.';
+
+	/// en: 'UPDATE NOW'
+	String get BUTTON => 'UPDATE NOW';
 }
 
 // Path: REGISTER.VALIDATIONS
@@ -1319,6 +1351,21 @@ class TranslationsErrorsLocalEn {
 	String get LOADING_USER => 'Error loading user';
 }
 
+// Path: ERRORS.UI
+class TranslationsErrorsUiEn {
+	TranslationsErrorsUiEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Something went wrong while rendering the UI. Please try reloading the app.'
+	String get MAIN => 'Something went wrong while rendering the UI. Please try reloading the app.';
+
+	/// en: 'Technical details'
+	String get TECHNICAL_DETAILS => 'Technical details';
+}
+
 // Path: PROFILE.USER_PAGE.INVITATIONS
 class TranslationsProfileUserPageInvitationsEn {
 	TranslationsProfileUserPageInvitationsEn._(this._root);
@@ -1389,6 +1436,7 @@ extension on Translations {
 			'HEADER.LOGOUT' => 'Logout',
 			'HEADER.INVITATIONS' => 'Invitations',
 			'HEADER.JOINED_MATCHES' => 'Joined',
+			'HEADER.SETTINGS' => 'Settings',
 			'HOME.MATCH' => 'Created match',
 			'HOME.MATCHES' => 'Created matches',
 			'HOME.CREATE' => 'Create one here',
@@ -1628,9 +1676,12 @@ extension on Translations {
 			'REPORTS.REPORT_USER' => 'Report this user',
 			'REPORTS.REPORT_TO' => 'Report to',
 			'REPORTS.SELECT_TYPE' => 'Select report type',
+			'REPORTS.APP_BUG' => 'App bug',
+			'REPORTS.OTHER' => 'Other',
 			'REPORTS.SPAM' => 'Spam',
 			'REPORTS.CHILD_ABUSE' => 'Child abuse',
 			'REPORTS.SUBMIT' => 'Submit report',
+			'REPORTS.FEEDBACK' => 'Send feedback',
 			'UTILS.SHOW_MORE' => 'Show more',
 			'UTILS.SHOW_LESS' => 'Show less',
 			'UTILS.DETAILS' => 'Details',
@@ -1671,9 +1722,14 @@ extension on Translations {
 			'ERRORS.NETWORK.VERIFY_CONNECTION' => 'Verify your connection',
 			'ERRORS.LOCAL.LOADING_USERS' => 'Error loading users',
 			'ERRORS.LOCAL.LOADING_USER' => 'Error loading user',
+			'ERRORS.UI.MAIN' => 'Something went wrong while rendering the UI. Please try reloading the app.',
+			'ERRORS.UI.TECHNICAL_DETAILS' => 'Technical details',
 			'SHARE.TITLE' => '⚡️ Share this match!',
 			'SHARE.SUBJECT' => ({required Object name}) => '🎮 Let\'s play ${name}',
 			'SHARE.TEXT' => ({required Object gameName, required Object match}) => '🎮 Let\'s play ${gameName} \n⚡️ Join now here: ${match}',
+			'UPDATE.TITLE' => 'NEW VERSION!',
+			'UPDATE.MESSAGE' => ({required Object version}) => 'Update madnolia to version ${version} to keep playing.',
+			'UPDATE.BUTTON' => 'UPDATE NOW',
 			_ => null,
 		};
 	}

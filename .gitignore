@@ -42,6 +42,7 @@ firebase.json
 
 # Obfuscation related
 app.*.map.json
+.crashlytics
 
 # Android Studio will place build artifacts here
 /android/app/debug

@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
+
+import 'package:flutter/foundation.dart';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -13,14 +16,17 @@ import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
+import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/routes/routes.dart';
+import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/platforms.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/chat/chat_message_model.dart';
 
 @pragma("vm:entry-point")
@@ -581,8 +587,18 @@ class LocalNotificationsService {
   static Future<void> notificationTapBackground(
     NotificationResponse notificationResponse,
   ) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    DartPluginRegistrant.ensureInitialized();
+
     if (notificationResponse.input != null) {
       try {
+        debugPrint('Notification response: ${notificationResponse.payload}');
+        if (kDebugMode) {
+          await dotenv.load(fileName: "assets/.env.dev");
+        } else {
+          await dotenv.load(fileName: "assets/.env.prod");
+        }
+
         await initializeTranslations();
         final message = chatMessageFromJson(notificationResponse.payload!);
         final backgroundService = FlutterBackgroundService();
@@ -590,21 +606,38 @@ class LocalNotificationsService {
 
         final uuid = Uuid();
 
-        await _chatMessageRepository.createOrUpdate(
-          ChatMessageCompanion(
-            id: Value(uuid.v4()),
-            conversation: Value(message.conversation),
-            content: Value(notificationResponse.input.toString()),
-            type: Value(message.type),
-            creator: Value(message.creator),
-            date: Value(DateTime.now()),
-            status: Value(ChatMessageStatus.sent),
-            pending: Value(true),
-          ),
-        );
+        final String id = uuid.v4();
+
+        final storage = FlutterSecureStorage();
+
+        final userId = await storage.read(key: "userId");
+
+        debugPrint('User ID: $userId');
+
+        debugPrint('Background running: $isRunning');
 
         if (!isRunning) {
-          await backgroundService.startService();
+          await _chatMessageRepository.createOrUpdate(
+            ChatMessageCompanion(
+              id: Value(id),
+              creator: Value(userId!),
+              conversation: Value(message.conversation),
+              content: Value(notificationResponse.input.toString()),
+              type: Value(message.type),
+              date: Value(DateTime.now()),
+              status: Value(ChatMessageStatus.sent),
+              pending: Value(true),
+            ),
+          );
+          Timer(Duration(milliseconds: 100), startBackgroundService);
+        } else {
+          final newMessage = CreateMessage(
+            id: id,
+            conversation: message.conversation,
+            content: notificationResponse.input.toString(),
+            type: message.type,
+          );
+          backgroundService.invoke('new_message', newMessage.toJson());
         }
       } catch (e) {
         debugPrint("Error in notificationTapBackground: $e");

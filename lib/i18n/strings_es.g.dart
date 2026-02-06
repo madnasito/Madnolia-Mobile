@@ -60,6 +60,7 @@ class TranslationsEs with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsAlertEs ALERT = _TranslationsAlertEs._(_root);
 	@override late final _TranslationsErrorsEs ERRORS = _TranslationsErrorsEs._(_root);
 	@override late final _TranslationsShareEs SHARE = _TranslationsShareEs._(_root);
+	@override late final _TranslationsUpdateEs UPDATE = _TranslationsUpdateEs._(_root);
 }
 
 // Path: PRESENTATION
@@ -88,6 +89,7 @@ class _TranslationsHeaderEs implements TranslationsHeaderEn {
 	@override String get REGISTER => 'Registrarse';
 	@override String get LOGIN => 'Ingresar';
 	@override String get PROFILE => 'Perfil';
+	@override String get SETTINGS => 'Settings';
 	@override String get LOGOUT => 'Salir';
 }
 
@@ -371,9 +373,12 @@ class _TranslationsReportsEs implements TranslationsReportsEn {
 	@override String get REPORT_USER => 'Reportar este usuario';
 	@override String get REPORT_TO => 'Reportar a';
 	@override String get SELECT_TYPE => 'Selecciona el tipo';
+	@override String get APP_BUG => 'Bug de la aplicación';
+	@override String get OTHER => 'Otro';
 	@override String get SPAM => 'Spam';
 	@override String get CHILD_ABUSE => 'Abuso de menores';
 	@override String get SUBMIT => 'Subir reporte';
+	@override String get FEEDBACK => 'Enviar reporte';
 }
 
 // Path: UTILS
@@ -424,6 +429,7 @@ class _TranslationsErrorsEs implements TranslationsErrorsEn {
 	@override late final _TranslationsErrorsServerEs SERVER = _TranslationsErrorsServerEs._(_root);
 	@override late final _TranslationsErrorsNetworkEs NETWORK = _TranslationsErrorsNetworkEs._(_root);
 	@override late final _TranslationsErrorsLocalEs LOCAL = _TranslationsErrorsLocalEs._(_root);
+	@override late final _TranslationsErrorsUiEs UI = _TranslationsErrorsUiEs._(_root);
 }
 
 // Path: SHARE
@@ -436,6 +442,18 @@ class _TranslationsShareEs implements TranslationsShareEn {
 	@override String get TITLE => '⚡️ ¡Comparte esta partida!';
 	@override String SUBJECT({required Object name}) => '🎮 Juguemos ${name}';
 	@override String TEXT({required Object gameName, required Object match}) => '🎮 Juguemos ${gameName} \n⚡️ Unete aqui: ${match}';
+}
+
+// Path: UPDATE
+class _TranslationsUpdateEs implements TranslationsUpdateEn {
+	_TranslationsUpdateEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get TITLE => '¡NUEVA VERSIÓN!';
+	@override String MESSAGE({required Object version}) => 'Actualiza madnolia a la versión ${version} para seguir jugando.';
+	@override String get BUTTON => 'ACTUALIZAR AHORA';
 }
 
 // Path: REGISTER.VALIDATIONS
@@ -736,6 +754,17 @@ class _TranslationsErrorsLocalEs implements TranslationsErrorsLocalEn {
 	@override String get LOADING_USER => 'Error cargando usuario';
 }
 
+// Path: ERRORS.UI
+class _TranslationsErrorsUiEs implements TranslationsErrorsUiEn {
+	_TranslationsErrorsUiEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get MAIN => 'Algo salió mal al renderizar la UI. Por favor, recarga la app.';
+	@override String get TECHNICAL_DETAILS => 'Detalles técnicos';
+}
+
 // Path: PROFILE.USER_PAGE.INVITATIONS
 class _TranslationsProfileUserPageInvitationsEs implements TranslationsProfileUserPageInvitationsEn {
 	_TranslationsProfileUserPageInvitationsEs._(this._root);
@@ -783,6 +812,7 @@ extension on TranslationsEs {
 			'HEADER.REGISTER' => 'Registrarse',
 			'HEADER.LOGIN' => 'Ingresar',
 			'HEADER.PROFILE' => 'Perfil',
+			'HEADER.SETTINGS' => 'Settings',
 			'HEADER.LOGOUT' => 'Salir',
 			'HOME.MATCH' => 'Partida creada',
 			'HOME.MATCHES' => 'Partidas creadas',
@@ -1023,9 +1053,12 @@ extension on TranslationsEs {
 			'REPORTS.REPORT_USER' => 'Reportar este usuario',
 			'REPORTS.REPORT_TO' => 'Reportar a',
 			'REPORTS.SELECT_TYPE' => 'Selecciona el tipo',
+			'REPORTS.APP_BUG' => 'Bug de la aplicación',
+			'REPORTS.OTHER' => 'Otro',
 			'REPORTS.SPAM' => 'Spam',
 			'REPORTS.CHILD_ABUSE' => 'Abuso de menores',
 			'REPORTS.SUBMIT' => 'Subir reporte',
+			'REPORTS.FEEDBACK' => 'Enviar reporte',
 			'UTILS.SHOW_MORE' => 'Mostrar más',
 			'UTILS.SHOW_LESS' => 'Mostrar menos',
 			'UTILS.DETAILS' => 'Detalles',
@@ -1066,9 +1099,14 @@ extension on TranslationsEs {
 			'ERRORS.NETWORK.VERIFY_CONNECTION' => 'Verifica tu conexión',
 			'ERRORS.LOCAL.LOADING_USERS' => 'Error cargando usuarios',
 			'ERRORS.LOCAL.LOADING_USER' => 'Error cargando usuario',
+			'ERRORS.UI.MAIN' => 'Algo salió mal al renderizar la UI. Por favor, recarga la app.',
+			'ERRORS.UI.TECHNICAL_DETAILS' => 'Detalles técnicos',
 			'SHARE.TITLE' => '⚡️ ¡Comparte esta partida!',
 			'SHARE.SUBJECT' => ({required Object name}) => '🎮 Juguemos ${name}',
 			'SHARE.TEXT' => ({required Object gameName, required Object match}) => '🎮 Juguemos ${gameName} \n⚡️ Unete aqui: ${match}',
+			'UPDATE.TITLE' => '¡NUEVA VERSIÓN!',
+			'UPDATE.MESSAGE' => ({required Object version}) => 'Actualiza madnolia a la versión ${version} para seguir jugando.',
+			'UPDATE.BUTTON' => 'ACTUALIZAR AHORA',
 			_ => null,
 		};
 	}

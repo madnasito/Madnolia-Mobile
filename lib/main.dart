@@ -13,6 +13,7 @@ import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/cubits/cubits.dart';
 import 'package:flutter/material.dart';
 import 'package:madnolia/routes/routes.dart';
+import 'package:madnolia/widgets/views/error_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:ui';
@@ -24,12 +25,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'i18n/strings.g.dart'; // Importa las traducciones generadas
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
+
+  // Custom Error Widget for rendering errors
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return ErrorView(errorDetails: details);
+  };
 
   // 1. INICIALIZAR slang PRIMERO
   LocaleSettings.useDeviceLocale(); // Esto debe ir antes de cualquier widget
@@ -40,6 +48,15 @@ void main() async {
       : await dotenv.load(fileName: "assets/.env.prod");
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
   serviceLocatorInit();
   cubitServiceLocatorInit();
@@ -166,9 +183,17 @@ class MyApp extends StatelessWidget {
           title: 'madnolia',
           routerConfig: router,
           builder: (context, child) {
-            return ColoredBox(
-              color: const Color.fromARGB(255, 10, 0, 25),
-              child: child!,
+            return UpgradeAlert(
+              navigatorKey: router.routerDelegate.navigatorKey,
+              // Upgrader handles store updates (binary change),
+              // while Shorebird handles OTA patches (code-push) silently.
+              upgrader: Upgrader(
+                durationUntilAlertAgain: const Duration(days: 1),
+              ),
+              child: ColoredBox(
+                color: const Color.fromARGB(255, 10, 0, 25),
+                child: child!,
+              ),
             );
           },
         ),

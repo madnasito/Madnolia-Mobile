@@ -12,7 +12,8 @@
     "PROFILE": "Profile",
     "LOGOUT": "Logout",
     "INVITATIONS": "Invitations",
-    "JOINED_MATCHES": "Joined"
+    "JOINED_MATCHES": "Joined",
+    "SETTINGS": "Settings"
   },
 
   "HOME":{
@@ -324,9 +325,12 @@
     "REPORT_USER": "Report this user",
     "REPORT_TO": "Report to",
     "SELECT_TYPE": "Select report type",
+    "APP_BUG": "App bug",
+    "OTHER": "Other",
     "SPAM": "Spam",
     "CHILD_ABUSE": "Child abuse",
-    "SUBMIT": "Submit report"
+    "SUBMIT": "Submit report",
+    "FEEDBACK": "Send feedback"
   },
   "UTILS":{
       "SHOW_MORE": "Show more",
@@ -378,12 +382,21 @@
     "LOCAL": {
       "LOADING_USERS": "Error loading users",
       "LOADING_USER": "Error loading user"
+    },
+    "UI": {
+      "MAIN": "Something went wrong while rendering the UI. Please try reloading the app.",
+      "TECHNICAL_DETAILS": "Technical details"
     }
   },
   "SHARE": {
     "TITLE": "⚡️ Share this match!",
     "SUBJECT": "🎮 Let's play $name",
     "TEXT": "🎮 Let's play $gameName \n⚡️ Join now here: $match"
+  },
+  "UPDATE": {
+    "TITLE": "NEW VERSION!",
+    "MESSAGE": "Update madnolia to version $version to keep playing.",
+    "BUTTON": "UPDATE NOW"
   }
 }
 

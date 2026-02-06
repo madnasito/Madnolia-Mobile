@@ -22,7 +22,9 @@ class UserPlatformsPage extends StatelessWidget {
     final userBloc = context.read<UserBloc>();
     final platformsGamesBloc = context.watch<PlatformGamesBloc>();
 
-    final platforms = userBloc.state.platforms;
+    List<int> platforms = [];
+
+    platforms.addAll(userBloc.state.platforms);
 
     ToastContext().init(context);
 

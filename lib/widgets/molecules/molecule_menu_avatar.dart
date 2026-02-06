@@ -26,7 +26,7 @@ class MoleculeMenuAvatar extends StatelessWidget {
             if (scaffoldState != null && scaffoldState.isDrawerOpen) {
               scaffoldState.closeDrawer();
             }
-            GoRouter.of(context).pushReplacement("/me/edit");
+            GoRouter.of(context).pushReplacement("/settings/edit-profile");
           },
           child: CircleAvatar(
             backgroundImage: CachedNetworkImageProvider(userBloc.state.image),
@@ -41,7 +41,9 @@ class MoleculeMenuAvatar extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: () => GoRouter.of(context).pushReplacement("/me/edit"),
+              onTap: () => GoRouter.of(
+                context,
+              ).pushReplacement("/settings/edit-profile"),
               child: Text(
                 userBloc.state.name,
                 style: const TextStyle(
