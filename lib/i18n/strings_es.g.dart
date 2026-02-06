@@ -60,6 +60,7 @@ class TranslationsEs with BaseTranslations<AppLocale, Translations> implements T
 	@override late final _TranslationsAlertEs ALERT = _TranslationsAlertEs._(_root);
 	@override late final _TranslationsErrorsEs ERRORS = _TranslationsErrorsEs._(_root);
 	@override late final _TranslationsShareEs SHARE = _TranslationsShareEs._(_root);
+	@override late final _TranslationsUpdateEs UPDATE = _TranslationsUpdateEs._(_root);
 }
 
 // Path: PRESENTATION
@@ -441,6 +442,18 @@ class _TranslationsShareEs implements TranslationsShareEn {
 	@override String get TITLE => '⚡️ ¡Comparte esta partida!';
 	@override String SUBJECT({required Object name}) => '🎮 Juguemos ${name}';
 	@override String TEXT({required Object gameName, required Object match}) => '🎮 Juguemos ${gameName} \n⚡️ Unete aqui: ${match}';
+}
+
+// Path: UPDATE
+class _TranslationsUpdateEs implements TranslationsUpdateEn {
+	_TranslationsUpdateEs._(this._root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get TITLE => '¡NUEVA VERSIÓN!';
+	@override String MESSAGE({required Object version}) => 'Actualiza madnolia a la versión ${version} para seguir jugando.';
+	@override String get BUTTON => 'ACTUALIZAR AHORA';
 }
 
 // Path: REGISTER.VALIDATIONS
@@ -1091,6 +1104,9 @@ extension on TranslationsEs {
 			'SHARE.TITLE' => '⚡️ ¡Comparte esta partida!',
 			'SHARE.SUBJECT' => ({required Object name}) => '🎮 Juguemos ${name}',
 			'SHARE.TEXT' => ({required Object gameName, required Object match}) => '🎮 Juguemos ${gameName} \n⚡️ Unete aqui: ${match}',
+			'UPDATE.TITLE' => '¡NUEVA VERSIÓN!',
+			'UPDATE.MESSAGE' => ({required Object version}) => 'Actualiza madnolia a la versión ${version} para seguir jugando.',
+			'UPDATE.BUTTON' => 'ACTUALIZAR AHORA',
 			_ => null,
 		};
 	}

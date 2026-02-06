@@ -392,6 +392,11 @@
     "TITLE": "⚡️ Share this match!",
     "SUBJECT": "🎮 Let's play $name",
     "TEXT": "🎮 Let's play $gameName \n⚡️ Join now here: $match"
+  },
+  "UPDATE": {
+    "TITLE": "NEW VERSION!",
+    "MESSAGE": "Update madnolia to version $version to keep playing.",
+    "BUTTON": "UPDATE NOW"
   }
 }
 

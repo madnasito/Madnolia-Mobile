@@ -63,6 +63,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsAlertEn ALERT = TranslationsAlertEn._(_root);
 	late final TranslationsErrorsEn ERRORS = TranslationsErrorsEn._(_root);
 	late final TranslationsShareEn SHARE = TranslationsShareEn._(_root);
+	late final TranslationsUpdateEn UPDATE = TranslationsUpdateEn._(_root);
 }
 
 // Path: PRESENTATION
@@ -763,6 +764,24 @@ class TranslationsShareEn {
 
 	/// en: '🎮 Let's play $gameName ⚡️ Join now here: $match'
 	String TEXT({required Object gameName, required Object match}) => '🎮 Let\'s play ${gameName} \n⚡️ Join now here: ${match}';
+}
+
+// Path: UPDATE
+class TranslationsUpdateEn {
+	TranslationsUpdateEn._(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'NEW VERSION!'
+	String get TITLE => 'NEW VERSION!';
+
+	/// en: 'Update madnolia to version $version to keep playing.'
+	String MESSAGE({required Object version}) => 'Update madnolia to version ${version} to keep playing.';
+
+	/// en: 'UPDATE NOW'
+	String get BUTTON => 'UPDATE NOW';
 }
 
 // Path: REGISTER.VALIDATIONS
@@ -1708,6 +1727,9 @@ extension on Translations {
 			'SHARE.TITLE' => '⚡️ Share this match!',
 			'SHARE.SUBJECT' => ({required Object name}) => '🎮 Let\'s play ${name}',
 			'SHARE.TEXT' => ({required Object gameName, required Object match}) => '🎮 Let\'s play ${gameName} \n⚡️ Join now here: ${match}',
+			'UPDATE.TITLE' => 'NEW VERSION!',
+			'UPDATE.MESSAGE' => ({required Object version}) => 'Update madnolia to version ${version} to keep playing.',
+			'UPDATE.BUTTON' => 'UPDATE NOW',
 			_ => null,
 		};
 	}

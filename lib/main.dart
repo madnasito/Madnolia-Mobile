@@ -26,6 +26,7 @@ import 'firebase_options.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'i18n/strings.g.dart'; // Importa las traducciones generadas
 
@@ -182,9 +183,17 @@ class MyApp extends StatelessWidget {
           title: 'madnolia',
           routerConfig: router,
           builder: (context, child) {
-            return ColoredBox(
-              color: const Color.fromARGB(255, 10, 0, 25),
-              child: child!,
+            return UpgradeAlert(
+              navigatorKey: router.routerDelegate.navigatorKey,
+              // Upgrader handles store updates (binary change),
+              // while Shorebird handles OTA patches (code-push) silently.
+              upgrader: Upgrader(
+                durationUntilAlertAgain: const Duration(days: 1),
+              ),
+              child: ColoredBox(
+                color: const Color.fromARGB(255, 10, 0, 25),
+                child: child!,
+              ),
             );
           },
         ),
