@@ -20,16 +20,17 @@ import 'package:madnolia/pages/notifications/notifications_page.dart';
 import 'package:madnolia/pages/platforms/platform_games_page.dart';
 import 'package:madnolia/pages/platforms/platforms_page.dart';
 import 'package:madnolia/pages/search/search_page.dart';
-import 'package:madnolia/pages/user/edit_user_page.dart';
-import 'package:madnolia/pages/user/user_page.dart';
-import 'package:madnolia/pages/user/user_platforms.dart';
-import 'package:madnolia/pages/user/user_profile_page.dart';
+import 'package:madnolia/pages/settings/edit_user_page.dart';
+import 'package:madnolia/pages/settings/settings_page.dart';
+import 'package:madnolia/pages/settings/user_platforms.dart';
+import 'package:madnolia/pages/settings/user_profile_page.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/scaffolds/unloged_scaffold.dart';
 
 import '../pages/chat/page_user_friendships.dart';
 import '../pages/home/home_user_page.dart';
+import '../pages/settings/page_reports.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -168,14 +169,14 @@ final GoRouter router = GoRouter(
               UserProfilePage(id: state.pathParameters['id'].toString()),
         ),
         GoRoute(
-          name: "me",
-          path: '/me',
+          name: "settings",
+          path: '/settings',
           builder: (BuildContext context, GoRouterState state) =>
-              const UserPage(),
+              const SettingsPage(),
           routes: [
             GoRoute(
-              name: "edit-user",
-              path: 'edit',
+              name: "edit-profile",
+              path: 'edit-profile',
               builder: (BuildContext context, GoRouterState state) =>
                   const UserEditPage(),
             ),
@@ -183,6 +184,11 @@ final GoRouter router = GoRouter(
               path: "platforms",
               name: "user-platforms",
               builder: (context, state) => const UserPlatformsPage(),
+            ),
+            GoRoute(
+              path: "reports",
+              name: "reports",
+              builder: (context, state) => const PageReports(),
             ),
           ],
         ),

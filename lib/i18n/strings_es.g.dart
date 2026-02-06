@@ -88,6 +88,7 @@ class _TranslationsHeaderEs implements TranslationsHeaderEn {
 	@override String get REGISTER => 'Registrarse';
 	@override String get LOGIN => 'Ingresar';
 	@override String get PROFILE => 'Perfil';
+	@override String get SETTINGS => 'Settings';
 	@override String get LOGOUT => 'Salir';
 }
 
@@ -371,9 +372,12 @@ class _TranslationsReportsEs implements TranslationsReportsEn {
 	@override String get REPORT_USER => 'Reportar este usuario';
 	@override String get REPORT_TO => 'Reportar a';
 	@override String get SELECT_TYPE => 'Selecciona el tipo';
+	@override String get APP_BUG => 'Bug de la aplicación';
+	@override String get OTHER => 'Otro';
 	@override String get SPAM => 'Spam';
 	@override String get CHILD_ABUSE => 'Abuso de menores';
 	@override String get SUBMIT => 'Subir reporte';
+	@override String get FEEDBACK => 'Enviar reporte';
 }
 
 // Path: UTILS
@@ -795,6 +799,7 @@ extension on TranslationsEs {
 			'HEADER.REGISTER' => 'Registrarse',
 			'HEADER.LOGIN' => 'Ingresar',
 			'HEADER.PROFILE' => 'Perfil',
+			'HEADER.SETTINGS' => 'Settings',
 			'HEADER.LOGOUT' => 'Salir',
 			'HOME.MATCH' => 'Partida creada',
 			'HOME.MATCHES' => 'Partidas creadas',
@@ -1035,9 +1040,12 @@ extension on TranslationsEs {
 			'REPORTS.REPORT_USER' => 'Reportar este usuario',
 			'REPORTS.REPORT_TO' => 'Reportar a',
 			'REPORTS.SELECT_TYPE' => 'Selecciona el tipo',
+			'REPORTS.APP_BUG' => 'Bug de la aplicación',
+			'REPORTS.OTHER' => 'Otro',
 			'REPORTS.SPAM' => 'Spam',
 			'REPORTS.CHILD_ABUSE' => 'Abuso de menores',
 			'REPORTS.SUBMIT' => 'Subir reporte',
+			'REPORTS.FEEDBACK' => 'Enviar reporte',
 			'UTILS.SHOW_MORE' => 'Mostrar más',
 			'UTILS.SHOW_LESS' => 'Mostrar menos',
 			'UTILS.DETAILS' => 'Detalles',

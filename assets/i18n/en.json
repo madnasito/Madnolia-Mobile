@@ -12,7 +12,8 @@
     "PROFILE": "Profile",
     "LOGOUT": "Logout",
     "INVITATIONS": "Invitations",
-    "JOINED_MATCHES": "Joined"
+    "JOINED_MATCHES": "Joined",
+    "SETTINGS": "Settings"
   },
 
   "HOME":{
@@ -324,9 +325,12 @@
     "REPORT_USER": "Report this user",
     "REPORT_TO": "Report to",
     "SELECT_TYPE": "Select report type",
+    "APP_BUG": "App bug",
+    "OTHER": "Other",
     "SPAM": "Spam",
     "CHILD_ABUSE": "Child abuse",
-    "SUBMIT": "Submit report"
+    "SUBMIT": "Submit report",
+    "FEEDBACK": "Send feedback"
   },
   "UTILS":{
       "SHOW_MORE": "Show more",

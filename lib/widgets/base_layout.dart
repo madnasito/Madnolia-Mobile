@@ -78,7 +78,9 @@ class BaseLayout extends StatelessWidget {
         child: Stack(
           children: [
             GestureDetector(
-              onTap: () => GoRouter.of(context).pushReplacement("/me/edit"),
+              onTap: () => GoRouter.of(
+                context,
+              ).pushReplacement("/settings/edit-profile"),
               child: Wrap(
                 spacing: 10,
                 crossAxisAlignment: WrapCrossAlignment.center,

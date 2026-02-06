@@ -12,6 +12,7 @@
       "REGISTER": "Registrarse",
       "LOGIN": "Ingresar",
       "PROFILE": "Perfil",
+      "SETTINGS": "Settings",
       "LOGOUT": "Salir"
     },    
     "HOME":{
@@ -320,9 +321,12 @@
         "REPORT_USER": "Reportar este usuario",
         "REPORT_TO": "Reportar a",
         "SELECT_TYPE": "Selecciona el tipo",
+        "APP_BUG": "Bug de la aplicación",
+        "OTHER": "Otro",
         "SPAM": "Spam",
         "CHILD_ABUSE": "Abuso de menores",
-        "SUBMIT": "Subir reporte"
+        "SUBMIT": "Subir reporte",
+        "FEEDBACK": "Enviar reporte"
     },
     "UTILS":{
       "SHOW_MORE": "Mostrar más",

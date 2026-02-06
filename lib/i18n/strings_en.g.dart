@@ -114,6 +114,9 @@ class TranslationsHeaderEn {
 
 	/// en: 'Joined'
 	String get JOINED_MATCHES => 'Joined';
+
+	/// en: 'Settings'
+	String get SETTINGS => 'Settings';
 }
 
 // Path: HOME
@@ -634,6 +637,12 @@ class TranslationsReportsEn {
 	/// en: 'Select report type'
 	String get SELECT_TYPE => 'Select report type';
 
+	/// en: 'App bug'
+	String get APP_BUG => 'App bug';
+
+	/// en: 'Other'
+	String get OTHER => 'Other';
+
 	/// en: 'Spam'
 	String get SPAM => 'Spam';
 
@@ -642,6 +651,9 @@ class TranslationsReportsEn {
 
 	/// en: 'Submit report'
 	String get SUBMIT => 'Submit report';
+
+	/// en: 'Send feedback'
+	String get FEEDBACK => 'Send feedback';
 }
 
 // Path: UTILS
@@ -1405,6 +1417,7 @@ extension on Translations {
 			'HEADER.LOGOUT' => 'Logout',
 			'HEADER.INVITATIONS' => 'Invitations',
 			'HEADER.JOINED_MATCHES' => 'Joined',
+			'HEADER.SETTINGS' => 'Settings',
 			'HOME.MATCH' => 'Created match',
 			'HOME.MATCHES' => 'Created matches',
 			'HOME.CREATE' => 'Create one here',
@@ -1644,9 +1657,12 @@ extension on Translations {
 			'REPORTS.REPORT_USER' => 'Report this user',
 			'REPORTS.REPORT_TO' => 'Report to',
 			'REPORTS.SELECT_TYPE' => 'Select report type',
+			'REPORTS.APP_BUG' => 'App bug',
+			'REPORTS.OTHER' => 'Other',
 			'REPORTS.SPAM' => 'Spam',
 			'REPORTS.CHILD_ABUSE' => 'Child abuse',
 			'REPORTS.SUBMIT' => 'Submit report',
+			'REPORTS.FEEDBACK' => 'Send feedback',
 			'UTILS.SHOW_MORE' => 'Show more',
 			'UTILS.SHOW_LESS' => 'Show less',
 			'UTILS.DETAILS' => 'Details',

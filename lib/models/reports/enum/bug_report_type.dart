@@ -1,0 +1,1 @@
+enum BugReportType { appBug, other }
