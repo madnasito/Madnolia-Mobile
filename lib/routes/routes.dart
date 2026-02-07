@@ -27,6 +27,7 @@ import 'package:madnolia/pages/settings/user_profile_page.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/widgets/scaffolds/custom_scaffold.dart';
 import 'package:madnolia/widgets/scaffolds/unloged_scaffold.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../pages/chat/page_user_friendships.dart';
 import '../pages/home/home_user_page.dart';
@@ -34,12 +35,15 @@ import '../pages/settings/page_reports.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+final talker = Talker();
+
 /// The route configuration.
 final GoRouter router = GoRouter(
   navigatorKey: navigatorKey,
   initialLocation: "/",
+  observers: [TalkerRouteObserver(talker)],
   redirect: (context, state) async {
-    debugPrint("Redirecting to ${state.matchedLocation}");
+    talker.info("Redirecting to ${state.matchedLocation}");
     final token = await getToken();
     final bool isLoggedIn = token != null;
 

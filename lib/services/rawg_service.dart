@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 import '../models/tiny_rawg_game_model.dart';
 import '../utils/images_util.dart' show resizeRawgImage;
@@ -11,8 +12,16 @@ import '../utils/images_util.dart' show resizeRawgImage;
 class RawgService {
   static const String urlBase = "https://api.rawg.io/api";
   static final String apiKey = dotenv.get("RAWG_API_KEY");
-  
-  final _dio = Dio();
+
+  final Dio _dio = Dio()
+    ..interceptors.add(
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printErrorData: true,
+          printErrorMessage: true,
+        ),
+      ),
+    );
 
   // Future searchGame({required String game, required String platform}) async {
   //   try {
@@ -56,16 +65,22 @@ class RawgService {
   //   }
   // }
 
-  Future <List<TinyRawgGame>> searchGames({required String game, required String platform}) async {
+  Future<List<TinyRawgGame>> searchGames({
+    required String game,
+    required String platform,
+  }) async {
     try {
       final url = "$urlBase/games";
 
-      Response response = await _dio.get(url, queryParameters: {
-        "key": apiKey,
-        "search": game,
-        "platforms": platform,
-        "page_size": "6"
-      });
+      Response response = await _dio.get(
+        url,
+        queryParameters: {
+          "key": apiKey,
+          "search": game,
+          "platforms": platform,
+          "page_size": "6",
+        },
+      );
 
       final Map<String, dynamic> responseData = response.data;
 
@@ -82,7 +97,7 @@ class RawgService {
           }
         }
       }
-      
+
       return games;
     } catch (e) {
       debugPrint('Error in RawgService.searchGame: $e');
@@ -94,12 +109,14 @@ class RawgService {
     try {
       Uri url = Uri.parse("$urlBase/games");
 
-      url = url.replace(queryParameters: {
-        "key": apiKey,
-        "platforms": id,
-        "page_size": "6",
-        "tags": "online"
-      });
+      url = url.replace(
+        queryParameters: {
+          "key": apiKey,
+          "platforms": id,
+          "page_size": "6",
+          "tags": "online",
+        },
+      );
 
       final resp = await http.get(url);
 

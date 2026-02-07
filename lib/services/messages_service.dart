@@ -1,35 +1,41 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'
+    show FlutterSecureStorage;
 import 'package:madnolia/models/chat/chat_message_model.dart';
 
 import 'package:dio/dio.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 import '../models/chat/user_chat_model.dart';
-class MessagesService {
 
+class MessagesService {
   final _storage = const FlutterSecureStorage();
 
-  final _dio = Dio();
+  final Dio _dio = Dio()
+    ..interceptors.add(
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printErrorData: true,
+          printErrorMessage: true,
+        ),
+      ),
+    );
 
   final String baseUrl = dotenv.get("API_URL");
 
-  Future<List<ChatMessage>> syncFromDate({required DateTime date }) async {
+  Future<List<ChatMessage>> syncFromDate({required DateTime date}) async {
     try {
-
       final String url = "$baseUrl/messages/sync-from";
-      final Map<String, String> queryParams = {
-        'date': date.toIso8601String(),
-      };
+      final Map<String, String> queryParams = {'date': date.toIso8601String()};
 
       final String? token = await _storage.read(key: "token");
 
       final resp = await _dio.get(
         url,
         queryParameters: queryParams,
-        options: Options(headers: {"Authorization": "Bearer $token"})
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
-
 
       return (resp.data as List).map((e) => ChatMessage.fromJson(e)).toList();
     } catch (e) {
@@ -39,36 +45,35 @@ class MessagesService {
   }
 
   Future<List<ChatMessage>> getMatchMessages(String id, String? cursor) async {
-  try {
-    final Map<String, String> queryParams = {
-      'match': id,
-    };
-    if (cursor != null) {
-      queryParams['cursor'] = cursor;
+    try {
+      final Map<String, String> queryParams = {'match': id};
+      if (cursor != null) {
+        queryParams['cursor'] = cursor;
+      }
+
+      final String? token = await _storage.read(key: "token");
+      final url = "$baseUrl/messages/match";
+      final resp = await _dio.get(
+        url,
+        queryParameters: queryParams,
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
+
+      return (resp.data as List).map((e) => ChatMessage.fromJson(e)).toList();
+    } catch (e) {
+      rethrow;
     }
-    
-    final String? token = await _storage.read(key: "token");
-    final url = "$baseUrl/messages/match";
-    final resp = await _dio.get(
-      url,
-      queryParameters: queryParams,
-      options: Options(headers: {"Authorization": "Bearer $token"})
-    );
-
-    return (resp.data as List).map((e) => ChatMessage.fromJson(e)).toList();
-  } catch (e) {
-    rethrow;
   }
-}
 
-  Future<List<ChatMessage>> getUserChatMessages(String userId, String? cursor) async {
+  Future<List<ChatMessage>> getUserChatMessages(
+    String userId,
+    String? cursor,
+  ) async {
     try {
       final url = "$baseUrl/messages/chat";
       final String? token = await _storage.read(key: "token");
 
-      final Map<String, String> queryParams = {
-        'conversation': userId,
-      };
+      final Map<String, String> queryParams = {'conversation': userId};
       if (cursor != null) {
         queryParams['cursor'] = cursor;
       }
@@ -76,8 +81,7 @@ class MessagesService {
       final resp = await _dio.post(
         url,
         data: queryParams,
-        options: Options(headers: {"Authorization": "Bearer $token"}
-        )
+        options: Options(headers: {"Authorization": "Bearer $token"}),
       );
 
       return (resp.data as List).map((e) => ChatMessage.fromJson(e)).toList();
@@ -91,11 +95,9 @@ class MessagesService {
       final url = "$baseUrl/messages/users";
       final String? token = await _storage.read(key: "token");
       final resp = await _dio.get(
-        url, 
+        url,
         options: Options(headers: {"Authorization": "Bearer $token"}),
-        queryParameters: {
-          'skip': skip
-        }
+        queryParameters: {'skip': skip},
       );
 
       // Explicit type casting solution
@@ -108,6 +110,4 @@ class MessagesService {
       throw ArgumentError(e.toString()); // Better to convert error to string
     }
   }
-
-  
 }

@@ -1,15 +1,23 @@
 import 'package:dio/dio.dart' show Dio, Options;
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:flutter_dotenv/flutter_dotenv.dart' show dotenv;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'
+    show FlutterSecureStorage;
 import 'package:madnolia/models/notification/notification_model.dart';
-
+import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 class NotificationsService {
-  
   final _storage = const FlutterSecureStorage();
   final String baseUrl = dotenv.get("API_URL");
-  final dio = Dio();
+  final Dio dio = Dio()
+    ..interceptors.add(
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printErrorData: true,
+          printErrorMessage: true,
+        ),
+      ),
+    );
 
   Future<List<NotificationModel>> getUserNotifications({String? cursor}) async {
     try {
@@ -18,12 +26,12 @@ class NotificationsService {
       final response = await dio.get(
         "$baseUrl/notifications",
         options: Options(headers: {"Authorization": "Bearer $token"}),
-        queryParameters: cursor != null ? {'from': cursor} : null
+        queryParameters: cursor != null ? {'from': cursor} : null,
       );
 
-      List<NotificationModel> notifications = List<Map<String, dynamic>>.from(response.data)
-      .map((e) => NotificationModel.fromJson(e))
-      .toList();
+      List<NotificationModel> notifications = List<Map<String, dynamic>>.from(
+        response.data,
+      ).map((e) => NotificationModel.fromJson(e)).toList();
 
       return notifications;
     } catch (e) {
@@ -37,7 +45,10 @@ class NotificationsService {
 
       final String? token = await _storage.read(key: "token");
 
-      final resp = await Dio().get(url, options: Options(headers: {"Authorization": "Bearer $token"}));
+      final resp = await Dio().get(
+        url,
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
 
       return int.parse(resp.data);
     } catch (e) {
@@ -55,10 +66,12 @@ class NotificationsService {
       final resp = await Dio().delete(
         url,
         options: Options(headers: {"Authorization": "Bearer $token"}),
-        queryParameters: {'id': id}
+        queryParameters: {'id': id},
       );
 
-      final NotificationModel notificationDeleted = NotificationModel.fromJson(resp.data);
+      final NotificationModel notificationDeleted = NotificationModel.fromJson(
+        resp.data,
+      );
 
       return notificationDeleted;
     } catch (e) {

@@ -7,11 +7,20 @@ import 'package:madnolia/models/reports/reports_model.dart';
 import 'package:madnolia/models/reports/response/bug_report_response.dart';
 import 'package:madnolia/models/reports/response/user_report_response.dart';
 import 'package:madnolia/models/reports/upload-report.model.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 class ReportsService {
   final _storage = const FlutterSecureStorage();
   final String baseUrl = dotenv.get("API_URL");
-  final dio = Dio();
+  final Dio dio = Dio()
+    ..interceptors.add(
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printErrorData: true,
+          printErrorMessage: true,
+        ),
+      ),
+    );
 
   Future<Report> createReport(UploadReportBody body) async {
     try {

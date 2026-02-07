@@ -24,13 +24,15 @@ import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../firebase_options.dart';
 
 import '../models/invitation_model.dart' show Invitation;
 
+final talker = Talker();
 @pragma('vm:entry-point')
 Future<void> onStart(ServiceInstance service) async {
-  debugPrint('Background service starting...');
+  talker.info('Background service starting...');
 
   // Load environment variables FIRST before Firebase initialization
   try {
@@ -38,7 +40,7 @@ Future<void> onStart(ServiceInstance service) async {
         ? await dotenv.load(fileName: "assets/.env.dev")
         : await dotenv.load(fileName: "assets/.env.prod");
   } catch (e) {
-    debugPrint('Error loading dotenv in background service: $e');
+    talker.error('Error loading dotenv in background service: $e');
   }
 
   final chatMessageRepository = RepositoryManager().chatMessage;
@@ -52,7 +54,7 @@ Future<void> onStart(ServiceInstance service) async {
     );
     await FirebaseMessagingService.initialize();
   } catch (e) {
-    debugPrint('Firebase already initialized or error: $e');
+    talker.handle('Firebase already initialized or error: $e');
   }
 
   // Crear el canal de notificaciones INMEDIATAMENTE
@@ -76,19 +78,19 @@ Future<void> onStart(ServiceInstance service) async {
         >()
         ?.createNotificationChannel(channel);
 
-    debugPrint('Notification channel created successfully in service');
+    talker.info('Notification channel created successfully in service');
   } catch (e) {
-    debugPrint('Error creating notification channel: $e');
+    talker.error('Error creating notification channel: $e');
   }
 
   try {
     const storage = FlutterSecureStorage();
     final token = await storage.read(key: "token");
-    debugPrint('Background service: token present: ${token != null}');
+    talker.debug('Background service: token present: ${token != null}');
 
     // dotenv is already loaded at the beginning of the function
     final String socketsUrl = dotenv.get("SOCKETS_URL");
-    debugPrint('Background service: socketsUrl: $socketsUrl');
+    talker.info('Background service: socketsUrl: $socketsUrl');
 
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
@@ -98,30 +100,30 @@ Future<void> onStart(ServiceInstance service) async {
     // For apple platforms, ensure the APNS token is available before making any FCM plugin API calls
     final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    debugPrint('Background service: FCM Token: $fcmToken');
-    debugPrint('Background service: APNS Token: $apnsToken');
+    talker.debug('Background service: FCM Token: $fcmToken');
+    talker.debug('Background service: APNS Token: $apnsToken');
     if (apnsToken != null) {
       // APNS token is available, make FCM plugin API requests...
     }
 
     FirebaseMessaging.instance.onTokenRefresh
         .listen((fcmToken) {
-          debugPrint('New FCM token: $fcmToken');
+          talker.debug('New FCM token: $fcmToken');
 
           // Note: This callback is fired at each app startup and whenever a new
           // token is generated.
         })
         .onError((err) {
-          debugPrint('Error getting FCM token: $err');
+          talker.error('Error getting FCM token: $err');
           // Error getting token.
         });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('Received a message while in the foreground!');
-      debugPrint('Message data: ${message.data}');
+      talker.debug('Received a message while in the foreground!');
+      talker.debug('Message data: ${message.data}');
 
       if (message.notification != null) {
-        debugPrint(
+        talker.debug(
           'Message also contained a notification: ${message.notification}',
         );
       }
@@ -137,24 +139,24 @@ Future<void> onStart(ServiceInstance service) async {
           .build(),
     );
 
-    debugPrint('Background service: socket initialization completed');
+    talker.debug('Background service: socket initialization completed');
 
     String currentRoom = "";
     String username = "";
     String? userId = await storage.read(key: "userId");
-    debugPrint('Background service: userId present: ${userId != null}');
+    talker.debug('Background service: userId present: ${userId != null}');
     final Set<String> inFlightMessages = {};
 
     service.invoke("service_started");
     socket.onConnect((_) async {
-      debugPrint(
+      talker.debug(
         'Background service: socket connected. Socket ID: ${socket.id}',
       );
 
       service.invoke("connected_socket");
 
       if (await storage.containsKey(key: 'lastSyncDate')) {
-        debugPrint('Background service: starting syncing');
+        talker.debug('Background service: starting syncing');
         final String? dateString = await storage.read(key: 'lastSyncDate');
         if (dateString != '' && dateString != null) {
           final date = DateTime.parse(dateString);
@@ -162,20 +164,20 @@ Future<void> onStart(ServiceInstance service) async {
         }
       }
 
-      debugPrint('Background service: checking for pending messages...');
+      talker.debug('Background service: checking for pending messages...');
       final sentMessages = await chatMessageRepository.getAllSentMessages();
-      debugPrint(
+      talker.debug(
         'Background service: found ${sentMessages.length} pending messages',
       );
       for (var message in sentMessages) {
         if (inFlightMessages.contains(message.id)) {
-          debugPrint(
+          talker.debug(
             'Background service: message ${message.id} already in flight, skipping',
           );
           continue;
         }
 
-        debugPrint(
+        talker.debug(
           'Background service: emitting pending message: ${message.id}',
         );
         inFlightMessages.add(message.id);
@@ -191,7 +193,7 @@ Future<void> onStart(ServiceInstance service) async {
           'message',
           newMessage.toJson(),
           ack: (data) {
-            debugPrint(
+            talker.debug(
               'Background service: ack received for message: ${message.id}',
             );
             inFlightMessages.remove(message.id);
@@ -223,9 +225,9 @@ Future<void> onStart(ServiceInstance service) async {
 
     socket.on("message", (payload) async {
       try {
-        debugPrint("MESSAGE!!!");
-        debugPrint(username);
-        debugPrint(currentRoom);
+        talker.debug("MESSAGE!!!");
+        talker.debug(username);
+        talker.debug(currentRoom);
         service.invoke("message", payload);
 
         ChatMessage message = ChatMessage.fromJson(payload);
@@ -234,7 +236,7 @@ Future<void> onStart(ServiceInstance service) async {
           message.toCompanion(),
         );
 
-        debugPrint('message saved: $messageDbSaved');
+        talker.debug('message saved: $messageDbSaved');
 
         if (message.creator == userId) {
           return LocalNotificationsService.deleteRoomMessages(
@@ -257,7 +259,7 @@ Future<void> onStart(ServiceInstance service) async {
           }
         }
       } catch (e) {
-        debugPrint(e.toString());
+        talker.handle(e);
       }
     });
 
@@ -267,7 +269,7 @@ Future<void> onStart(ServiceInstance service) async {
         payload['message']['id'],
         DateTime.parse(payload['message']['date']),
       );
-      debugPrint('Message sended saved $messageDb');
+      talker.debug('Message sended saved $messageDb');
     });
 
     socket.on("message_recipient_update", (payload) async {
@@ -275,7 +277,7 @@ Future<void> onStart(ServiceInstance service) async {
         final data = UpdateRecipientModel.fromJson(payload);
         await chatMessageRepository.updateMessageStatus(data.id, data.status);
       } catch (e) {
-        debugPrint(e.toString());
+        talker.handle(e);
         rethrow;
       }
     });
@@ -287,20 +289,20 @@ Future<void> onStart(ServiceInstance service) async {
 
         LocalNotificationsService.displayInvitation(invitation);
       } catch (e) {
-        debugPrint(e.toString());
+        talker.handle(e);
       }
     });
 
     socket.on("match_ready", (data) async {
-      debugPrint("NOW ON BACKGROUND");
-      debugPrint(data.toString());
+      talker.debug("NOW ON BACKGROUND");
+      talker.debug(data.toString());
 
       try {
         final MatchReady payload = MatchReady.fromJson(data);
 
         LocalNotificationsService.displayMatchReady(payload);
       } catch (e) {
-        debugPrint(e.toString());
+        talker.handle(e);
       }
       // Send match ready event to UI (if app is in foreground)
       // if (window.isActive) {
@@ -340,9 +342,9 @@ Future<void> onStart(ServiceInstance service) async {
         if (userId == connectionRequest.sender) return;
         final int deletedNotification = await notificationsRepository
             .deleteRequestNotification(senderId: connectionRequest.sender);
-        debugPrint('Deleted request notification: $deletedNotification');
+        talker.debug('Deleted request notification: $deletedNotification');
       } catch (e) {
-        debugPrint(e.toString());
+        talker.handle(e);
       }
     });
     socket.on("removed_partner", (data) => service.invoke("removed_partner"));
@@ -352,9 +354,9 @@ Future<void> onStart(ServiceInstance service) async {
         if (userId == connectionRequest.sender) return;
         final int deletedNotification = await notificationsRepository
             .deleteRequestNotification(senderId: connectionRequest.sender);
-        debugPrint('Deleted request notification: $deletedNotification');
+        talker.debug('Deleted request notification: $deletedNotification');
       } catch (e) {
-        debugPrint(e.toString());
+        talker.handle(e);
       }
     });
     socket.on(
@@ -366,7 +368,7 @@ Future<void> onStart(ServiceInstance service) async {
       try {
         await notificationsRepository.deleteNotification(id: data);
       } catch (e) {
-        debugPrint(e.toString());
+        talker.handle(e);
       }
     });
 
@@ -382,7 +384,7 @@ Future<void> onStart(ServiceInstance service) async {
         final notificationCompanion = notification.toCompanion();
         await notificationsRepository.insertNotification(notificationCompanion);
       } catch (e) {
-        debugPrint('Error handling standard notification: $e');
+        talker.handle(e);
       }
     });
     socket.onDisconnect((_) {
@@ -394,8 +396,8 @@ Future<void> onStart(ServiceInstance service) async {
     });
 
     service.on("update_socket").listen((event) {
-      debugPrint("Update socket");
-      debugPrint(event.toString());
+      talker.debug("Update socket");
+      talker.debug(event.toString());
     });
 
     service.on("update_username").listen((onData) {
@@ -419,30 +421,30 @@ Future<void> onStart(ServiceInstance service) async {
         );
 
     service.on("stop").listen((event) {
-      socket.disconnect(); // Disconnect when the service stops
+      socket.disconnect();
       service.stopSelf();
-      debugPrint("background process is now stopped");
+      talker.debug("background process is now stopped");
     });
 
     service.on("init_chat").listen((onData) {
       socket.emit("init_chat", {onData?["room"]});
       currentRoom = onData?["room"];
-      debugPrint("INIT CHAT: ${onData?["room"]}");
+      talker.debug("INIT CHAT: ${onData?["room"]}");
       LocalNotificationsService.deleteRoomMessages(onData?["room"]);
     });
 
     service.on("join_room").listen((onData) {
       currentRoom = onData?["room"];
-      debugPrint("INIT CHAT: ${onData?["room"]}");
+      talker.debug("INIT CHAT: ${onData?["room"]}");
       LocalNotificationsService.deleteRoomMessages(onData?["room"]);
     });
 
     service.on("new_message").listen((onData) async {
       try {
-        debugPrint("Background service: new_message event received");
-        debugPrint(onData.toString());
+        talker.debug("Background service: new_message event received");
+        talker.debug(onData.toString());
         final message = CreateMessage.fromJson(onData!);
-        debugPrint('Background service: using userId: ${userId!}');
+        talker.debug('Background service: using userId: ${userId!}');
         final result = await chatMessageRepository.createOrUpdate(
           ChatMessageCompanion(
             id: Value(message.id),
@@ -456,31 +458,31 @@ Future<void> onStart(ServiceInstance service) async {
           ),
         );
 
-        debugPrint(
+        talker.debug(
           'Background service: local message saved: ${result.toString()}',
         );
 
         if (inFlightMessages.contains(message.id)) {
-          debugPrint(
+          talker.debug(
             'Background service: message ${message.id} already in flight, skipping emission',
           );
           return;
         }
         inFlightMessages.add(message.id);
 
-        debugPrint('Background service: emitting message ${message.id}');
+        talker.debug('Background service: emitting message ${message.id}');
         socket.emitWithAck(
           "message",
           onData,
           ack: (data) {
-            debugPrint(
+            talker.debug(
               'Background service: ack received for message ${message.id}',
             );
             inFlightMessages.remove(message.id);
           },
         );
       } catch (e) {
-        debugPrint("Background service: error in new_message listener: $e");
+        talker.handle(e);
         rethrow;
       }
     });
@@ -495,7 +497,7 @@ Future<void> onStart(ServiceInstance service) async {
     });
 
     service.on("leave_room").listen((onData) {
-      debugPrint("LEAVE ROOM");
+      talker.debug("LEAVE ROOM");
       currentRoom = "";
     });
 
@@ -565,13 +567,13 @@ Future<void> onStart(ServiceInstance service) async {
           'delete_notification',
           id,
           ack: (value) async {
-            debugPrint('Deleted notification socket, $id');
-            debugPrint(value.toString());
+            talker.info('Deleted notification socket, $id');
+            talker.info(value.toString());
             await notificationsRepository.deleteNotification(id: id);
           },
         );
       } catch (e) {
-        debugPrint(e.toString());
+        talker.error(e.toString());
       }
     });
 
@@ -600,7 +602,7 @@ Future<void> onStart(ServiceInstance service) async {
         .on('cancel_connection')
         .listen((onData) => socket.emit('cancel_connection', onData?['user']));
   } catch (e) {
-    debugPrint('Error initializing background service: $e');
+    talker.handle(e);
     // El servicio ya está en foreground, por lo que continuará funcionando
     // aunque haya errores en la inicialización
   }
@@ -616,22 +618,22 @@ void startBackgroundService() {
         .then((isRunning) {
           if (!isRunning) {
             service.startService();
-            debugPrint('Background service started successfully');
+            talker.debug('Background service started successfully');
           } else {
-            debugPrint('Background service already running');
+            talker.debug('Background service already running');
           }
         })
         .catchError((e) {
-          debugPrint('Failed to check/start background service: $e');
+          talker.handle(e);
           // Fallback: try to start anyway
           try {
             service.startService();
           } catch (startError) {
-            debugPrint('Final fallback failed: $startError');
+            talker.handle(startError);
           }
         });
   } catch (e) {
-    debugPrint('Error in startBackgroundService: $e');
+    talker.handle(e);
   }
 }
 

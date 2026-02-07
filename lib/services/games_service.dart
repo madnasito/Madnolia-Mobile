@@ -8,12 +8,21 @@ import 'package:madnolia/models/game/game_model.dart';
 import 'package:madnolia/models/game/minimal_game_model.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/services/rawg_service.dart';
+import 'package:talker_dio_logger/talker_dio_logger.dart';
 
 import '../models/tiny_rawg_game_model.dart';
 
 class GamesService {
   final _storage = const FlutterSecureStorage();
-  final _dio = Dio();
+  final Dio _dio = Dio()
+    ..interceptors.add(
+      TalkerDioLogger(
+        settings: const TalkerDioLoggerSettings(
+          printErrorData: true,
+          printErrorMessage: true,
+        ),
+      ),
+    );
 
   final String apiUrl = dotenv.get("API_URL");
   Future<Game> getGameInfoBySlug(String gameSlug) async {
@@ -21,7 +30,10 @@ class GamesService {
       final url = "$apiUrl/games/$gameSlug";
 
       final token = await _storage.read(key: "token");
-      final response = await _dio.get(url, options: Options(headers: {"Authorization": "Bearer $token"}));
+      final response = await _dio.get(
+        url,
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
 
       debugPrint("Getting game info");
       final game = Game.fromJson(response.data);
@@ -37,7 +49,10 @@ class GamesService {
       final url = "$apiUrl/games/id/$id";
 
       final token = await _storage.read(key: "token");
-      final response = await _dio.get(url, options: Options(headers: {"Authorization": "Bearer $token"}));
+      final response = await _dio.get(
+        url,
+        options: Options(headers: {"Authorization": "Bearer $token"}),
+      );
 
       debugPrint("Getting game info");
       final game = Game.fromJson(response.data);
@@ -50,8 +65,7 @@ class GamesService {
 
   Future getPlatformGameMatches(int platformId, int gameId) async {
     try {
-      final url = Uri.parse(
-          "$apiUrl/matches_of_game/$platformId/$gameId");
+      final url = Uri.parse("$apiUrl/matches_of_game/$platformId/$gameId");
 
       final resp = await http.get(url);
 
@@ -65,10 +79,11 @@ class GamesService {
     try {
       final url = "$apiUrl/games/get-by-ids";
 
-
       final response = await _dio.post(url, data: {"ids": gamesIds});
 
-      final List<Game> games = (response.data as List).map((e) => Game.fromJson(e)).toList();
+      final List<Game> games = (response.data as List)
+          .map((e) => Game.fromJson(e))
+          .toList();
 
       return games;
     } catch (e) {
@@ -76,8 +91,10 @@ class GamesService {
     }
   }
 
-  static Future<List<TinyRawgGame>> searchGames({required String title, required String platform}) async {
-
+  static Future<List<TinyRawgGame>> searchGames({
+    required String title,
+    required String platform,
+  }) async {
     try {
       return RawgService().searchGames(game: title, platform: platform);
     } catch (e) {
