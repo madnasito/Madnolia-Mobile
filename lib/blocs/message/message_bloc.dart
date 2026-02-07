@@ -22,17 +22,18 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
-
   final _chatMessageRepository = RepositoryManager().chatMessage;
   final _conversationRepository = RepositoryManager().conversation;
 
   MessageBloc() : super(MessageInitial()) {
     on<MessageFetched>(
-      _onFetchRoomMessages, transformer: throttleDroppable(throttleDuration));
+      _onFetchRoomMessages,
+      transformer: throttleDroppable(throttleDuration),
+    );
 
     // on<GroupMessageFetched>(
     //   _onFetchGroupMessages, transformer: throttleDroppable(throttleDuration));
-    
+
     // on<AddIndividualMessage>(_addIndividualMessage);
     // on<AddRoomMessage>(_addRoomMessage);
 
@@ -43,83 +44,96 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     on<RestoreState>(_restoreState);
   }
 
-
   Future<void> _watchRoomMessages(
     WatchRoomMessages event,
-    Emitter<MessageState> emit) async {
-
-      try {
-        debugPrint('Watch room bloc');
-        await emit.forEach(
-          _chatMessageRepository.watchMessagesInRoom(
-            conversationId: event.roomId),
-            onData: (messages) => state.copyWith(roomMessages: messages),
-            onError: (error, stackTrace) {
-              debugPrint(error.toString());
-              debugPrint(stackTrace.toString());
-              return state.copyWith(status: BlocStatus.failure);
-            }
-          );
-      } catch (e) {
-        debugPrint(e.toString());
-        rethrow;
-      }
+    Emitter<MessageState> emit,
+  ) async {
+    try {
+      debugPrint('Watch room bloc');
+      final limit = event.limit ?? state.limit;
+      await emit.forEach(
+        _chatMessageRepository.watchMessagesInRoom(
+          conversationId: event.roomId,
+          limit: limit,
+        ),
+        onData: (messages) =>
+            state.copyWith(roomMessages: messages, limit: limit),
+        onError: (error, stackTrace) {
+          debugPrint(error.toString());
+          debugPrint(stackTrace.toString());
+          return state.copyWith(status: BlocStatus.failure);
+        },
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+      rethrow;
+    }
   }
 
   Future<void> _onFetchRoomMessages(
     MessageFetched event,
-    Emitter<MessageState> emit) async {
-      debugPrint('Fetching room messages...');
-      debugPrint('Has reached max: ${state.hasReachedMax}');
-      if (state.hasReachedMax) return;
+    Emitter<MessageState> emit,
+  ) async {
+    debugPrint('Fetching room messages...');
+    debugPrint('Has reached max: ${state.hasReachedMax}');
+    if (state.hasReachedMax) return;
 
-      try {
+    try {
+      String? cursor;
 
-        String? cursor;
-
-        if(state.roomMessages.isNotEmpty){
-          cursor = state.roomMessages.last.chatMessage.id;
-        }
-
-        final List<ChatMessageData> messages = await _chatMessageRepository.getMessagesInRoom(
-          conversationId: event.roomId,
-          type: event.type,
-          cursorId: cursor
-        );
-
-        final conversation = await _conversationRepository.get(event.roomId);
-        final bool conversationHasReachedEnd = conversation?.hasReachedEnd ?? false;
-
-        if(messages.isEmpty && conversationHasReachedEnd){
-          return emit(state.copyWith(hasReachedMax: true, status: BlocStatus.success));
-        }
-
-        emit(
-          state.copyWith(
-            status: BlocStatus.success,
-            hasReachedMax: messages.isEmpty && conversationHasReachedEnd, // Update hasReachedMax here
-          )
-        );
-
-      } catch (e) {
-        emit(state.copyWith(status: BlocStatus.failure));
+      if (state.roomMessages.isNotEmpty) {
+        cursor = state.roomMessages.last.chatMessage.id;
       }
-    }
 
-  void _restoreState(RestoreState event, Emitter<MessageState> emit){
-    emit(
-      state.copyWith(
-      status: BlocStatus.initial,
-      unreadUserChats: 0,
-      roomMessages: [],
-      hasReachedMax: false
-    ));
+      final List<ChatMessageData> messages = await _chatMessageRepository
+          .getMessagesInRoom(
+            conversationId: event.roomId,
+            type: event.type,
+            cursorId: cursor,
+          );
+
+      final conversation = await _conversationRepository.get(event.roomId);
+      final bool conversationHasReachedEnd =
+          conversation?.hasReachedEnd ?? false;
+
+      if (messages.isEmpty && conversationHasReachedEnd) {
+        return emit(
+          state.copyWith(hasReachedMax: true, status: BlocStatus.success),
+        );
+      }
+
+      if (messages.isNotEmpty) {
+        add(WatchRoomMessages(roomId: event.roomId, limit: state.limit + 50));
+      }
+
+      emit(
+        state.copyWith(
+          status: BlocStatus.success,
+          hasReachedMax:
+              messages.isEmpty &&
+              conversationHasReachedEnd, // Update hasReachedMax here
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(status: BlocStatus.failure));
+    }
   }
 
-  void _updateUnreadUserChatsCount(UpdateUnreadUserChatCount event, Emitter<MessageState> emit) =>
-  emit(
-    state.copyWith(
-      unreadUserChats: state.unreadUserChats + event.value
-    )
+  void _restoreState(RestoreState event, Emitter<MessageState> emit) {
+    emit(
+      state.copyWith(
+        status: BlocStatus.initial,
+        unreadUserChats: 0,
+        roomMessages: [],
+        hasReachedMax: false,
+      ),
+    );
+  }
+
+  void _updateUnreadUserChatsCount(
+    UpdateUnreadUserChatCount event,
+    Emitter<MessageState> emit,
+  ) => emit(
+    state.copyWith(unreadUserChats: state.unreadUserChats + event.value),
   );
 }

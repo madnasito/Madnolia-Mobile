@@ -10,20 +10,21 @@ sealed class MessageEvent extends Equatable {
 final class UserMessageFetched extends MessageEvent {
   final UserMessagesBody messagesBody;
 
-  const UserMessageFetched({ required this.messagesBody});
+  const UserMessageFetched({required this.messagesBody});
 }
 
 final class MessageFetched extends MessageEvent {
   final String roomId;
   final ChatMessageType type;
 
-  const MessageFetched({ required this.roomId, required this.type });
+  const MessageFetched({required this.roomId, required this.type});
 }
 
 final class WatchRoomMessages extends MessageEvent {
   final String roomId;
+  final int? limit;
 
-  const WatchRoomMessages({ required this.roomId });
+  const WatchRoomMessages({required this.roomId, this.limit});
 }
 
 final class RestoreState extends MessageEvent {}
@@ -31,17 +32,17 @@ final class RestoreState extends MessageEvent {}
 final class AddIndividualMessage extends MessageEvent {
   final ChatMessageData message;
 
-  const AddIndividualMessage({ required this.message});
+  const AddIndividualMessage({required this.message});
 }
 
 final class AddRoomMessage extends MessageEvent {
   final ChatMessageData message;
-  const AddRoomMessage({ required this.message });
+  const AddRoomMessage({required this.message});
 }
 
 final class AddUser extends MessageEvent {
   final String userId;
-  const AddUser( { required this.userId });
+  const AddUser({required this.userId});
 }
 
 final class UpdateUnreadUserChatCount extends MessageEvent {

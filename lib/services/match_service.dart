@@ -26,6 +26,9 @@ class MatchService {
         settings: const TalkerDioLoggerSettings(
           printErrorData: true,
           printErrorMessage: true,
+          printResponseData: false,
+          printResponseMessage: false,
+          printRequestData: false,
         ),
       ),
     );

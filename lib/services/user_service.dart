@@ -23,6 +23,9 @@ class UserService {
         settings: const TalkerDioLoggerSettings(
           printErrorData: true,
           printErrorMessage: true,
+          printResponseData: false,
+          printResponseMessage: false,
+          printRequestData: false,
         ),
       ),
     );
@@ -247,7 +250,6 @@ class UserService {
 
       return response.data;
     } catch (e) {
-      debugPrint(e.toString());
       rethrow;
     }
   }
@@ -263,7 +265,6 @@ class UserService {
 
       return User.fromJson(response.data);
     } catch (e) {
-      debugPrint(e.toString());
       rethrow;
     }
   }

@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter/widgets.dart' show debugPrint;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/database/conversations/conversation_state_repository.dart';
 import 'package:madnolia/database/database.dart';
@@ -10,15 +9,17 @@ import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_with_user.dart';
 import 'package:madnolia/models/chat/user_chat.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../models/chat/chat_message_model.dart';
 import '../../services/messages_service.dart';
 
 class ChatMessageRepository {
   final AppDatabase database;
-  late final ConversationRepository _conversationRepository;
 
   final _messagesService = MessagesService();
+  final talker = Talker();
+  late final ConversationRepository _conversationRepository;
   late final UserRepository _userRepository;
   late final FriendshipRepository _friendshipRepository;
 
@@ -37,7 +38,7 @@ class ChatMessageRepository {
           .into(database.chatMessage)
           .insertOnConflictUpdate(message);
     } catch (e) {
-      debugPrint('Error in create or update message: $e');
+      talker.handle(e);
       rethrow;
     }
   }
@@ -61,7 +62,7 @@ class ChatMessageRepository {
         const TableUpdate('chat_message', kind: UpdateKind.insert),
       });
     } catch (e) {
-      debugPrint('Error in create or update multiple messages: $e');
+      talker.handle(e);
       rethrow;
     }
   }
@@ -84,7 +85,7 @@ class ChatMessageRepository {
 
       return messages;
     } catch (e) {
-      debugPrint('Error getting sent messages:');
+      talker.handle(e);
       rethrow;
     }
   }
@@ -97,7 +98,7 @@ class ChatMessageRepository {
       )..where((tbl) => tbl.id.equals(newId))).getSingleOrNull();
 
       if (existing != null) {
-        debugPrint(
+        talker.debug(
           'Message with server ID $newId already exists, deleting temporary $oldId',
         );
         return await (database.delete(
@@ -116,7 +117,7 @@ class ChatMessageRepository {
         ),
       );
     } catch (e) {
-      debugPrint('Error in messageSended: $e');
+      talker.handle(e);
       rethrow;
     }
   }
@@ -130,7 +131,7 @@ class ChatMessageRepository {
             ..where((tbl) => tbl.id.equals(messageId)))
           .write(ChatMessageCompanion(status: Value(status)));
     } catch (e) {
-      debugPrint('Error in updateMessageStatus: $e');
+      talker.handle(e);
       rethrow;
     }
   }
@@ -146,7 +147,7 @@ class ChatMessageRepository {
         ),
       );
     } catch (e) {
-      debugPrint('Error in updateMessage: $e');
+      talker.handle(e);
       rethrow;
     }
   }
@@ -175,28 +176,28 @@ class ChatMessageRepository {
     String? cursorId,
   }) async {
     try {
-      debugPrint('Getting messages in room');
-      debugPrint('Messages type: $type');
-      debugPrint('Cursor: $cursorId');
+      talker.debug('Getting messages in room');
+      talker.debug('Messages type: $type');
+      talker.debug('Cursor: $cursorId');
 
       final query = database.select(database.chatMessage)
         ..where((tbl) => tbl.conversation.equals(conversationId));
 
       if (cursorId != null) {
-        debugPrint('Searching for cursor message with id: $cursorId');
+        talker.debug('Searching for cursor message with id: $cursorId');
         final cursorMessage = await (database.select(
           database.chatMessage,
         )..where((tbl) => tbl.id.equals(cursorId))).getSingleOrNull();
         if (cursorMessage != null) {
-          debugPrint(
+          talker.debug(
             'Cursor message found: ${cursorMessage.id} with date ${cursorMessage.date}',
           );
           query.where(
             (tbl) => tbl.date.isSmallerThan(Variable(cursorMessage.date)),
           );
-          debugPrint('Query: messages BEFORE ${cursorMessage.date}');
+          talker.debug('Query: messages BEFORE ${cursorMessage.date}');
         } else {
-          debugPrint(
+          talker.debug(
             'Cursor message with id $cursorId not found in local database',
           );
         }
@@ -211,7 +212,7 @@ class ChatMessageRepository {
                 ..limit(50))
               .get();
 
-      debugPrint('Messages length: ${messages.length}');
+      talker.debug('Messages length: ${messages.length}');
 
       if (messages.length < 50) {
         final conversationExists = await _conversationRepository.get(
@@ -309,7 +310,7 @@ class ChatMessageRepository {
         await FlutterSecureStorage().write(key: 'lastSyncDate', value: '');
       }
     } catch (e) {
-      debugPrint('Error in sync: $e');
+      talker.handle(e);
       rethrow;
     }
   }
@@ -373,14 +374,14 @@ class ChatMessageRepository {
 
       return userChats;
     } catch (e) {
-      debugPrint(e.toString());
-
+      talker.handle(e);
       rethrow;
     }
   }
 
   Stream<List<ChatMessageWithUser>> watchMessagesInRoom({
     required String conversationId,
+    int? limit,
   }) async* {
     try {
       final query = database.select(database.chatMessage).join([
@@ -395,6 +396,10 @@ class ChatMessageRepository {
         OrderingTerm.desc(database.chatMessage.id),
       ]);
 
+      if (limit != null) {
+        query.limit(limit);
+      }
+
       yield* query.watch().map((rows) {
         return rows.map((row) {
           return ChatMessageWithUser(
@@ -404,7 +409,7 @@ class ChatMessageRepository {
         }).toList();
       });
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
       rethrow;
     }
   }
@@ -468,16 +473,14 @@ class ChatMessageRepository {
               ),
             );
           } catch (e) {
-            debugPrint(
-              'watchUserChats: error procesando ${lastMessage.conversation}: $e',
-            );
+            talker.handle(e);
           }
         }
 
         return userChats;
       });
     } catch (e) {
-      debugPrint('Error in watchUserChats: $e');
+      talker.handle(e);
       rethrow;
     }
   }
