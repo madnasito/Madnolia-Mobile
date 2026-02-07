@@ -298,6 +298,8 @@ class _TranslationsChatEs implements TranslationsChatEn {
 	@override String SAY_HI_TO({required Object name}) => 'Di hola a ${name}';
 	@override String get SAY_HI => 'Saluda';
 	@override late final _TranslationsChatErrorsEs ERRORS = _TranslationsChatErrorsEs._(_root);
+	@override String get TODAY => 'Hoy';
+	@override String get YESTERDAY => 'Ayer';
 }
 
 // Path: GAME
@@ -1001,6 +1003,8 @@ extension on TranslationsEs {
 			'CHAT.ERRORS.NO_DATA' => 'Sin datos de amistad',
 			'CHAT.ERRORS.LOADING_USER' => 'Error cargando usuario',
 			'CHAT.ERRORS.NO_USER_DATA' => 'Sin datos del usuario',
+			'CHAT.TODAY' => 'Hoy',
+			'CHAT.YESTERDAY' => 'Ayer',
 			'GAME.GAME' => 'Juego',
 			'GAME.MATCH' => 'Partida',
 			'GAME.DATE' => 'Fecha',

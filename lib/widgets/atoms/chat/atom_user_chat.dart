@@ -1,7 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart' show CachedNetworkImageProvider;
+import 'package:cached_network_image/cached_network_image.dart'
+    show CachedNetworkImageProvider;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/models/chat/user_chat.dart';
 import 'package:madnolia/models/chat_user_model.dart';
@@ -15,7 +17,9 @@ class AtomUserChat extends StatelessWidget {
     String notMe = userChat.user.id; // Store notMe after fetching friendship
     final user = userChat.user;
     final isNotMyMessage = userChat.message.creator == notMe;
-    final isUnreadStatus = userChat.message.status == ChatMessageStatus.sent || userChat.message.status == ChatMessageStatus.delivered;
+    final isUnreadStatus =
+        userChat.message.status == ChatMessageStatus.sent ||
+        userChat.message.status == ChatMessageStatus.delivered;
     final hasUnread = isNotMyMessage && isUnreadStatus;
 
     // --- Redesigned Decorations for a more subtle, futuristic look ---
@@ -24,10 +28,13 @@ class AtomUserChat extends StatelessWidget {
     final unreadBoxDecoration = BoxDecoration(
       color: Colors.black.withValues(alpha: 0.4),
       borderRadius: BorderRadius.circular(15),
-      border: Border.all(color: const Color(0xFF00FFFF).withValues(alpha: 0.3), width: 1),
+      border: Border.all(
+        color: const Color(0xFF00FFFF).withValues(alpha: 0.3),
+        width: 1,
+      ),
       boxShadow: [
         BoxShadow(
-          color: const Color(0xFF00FFFF).withValues(alpha:  0.15),
+          color: const Color(0xFF00FFFF).withValues(alpha: 0.15),
           blurRadius: 8,
           spreadRadius: -2,
         ),
@@ -42,29 +49,35 @@ class AtomUserChat extends StatelessWidget {
     final readBoxDecoration = BoxDecoration(
       color: Colors.black.withValues(alpha: 0.3),
       borderRadius: BorderRadius.circular(15),
-      border: Border.all(color: Colors.grey[800]!.withValues(alpha: 0.5), width: 1),
+      border: Border.all(
+        color: Colors.grey[800]!.withValues(alpha: 0.5),
+        width: 1,
+      ),
     );
 
     // Subtle glow for the avatar
     final unreadAvatarDecoration = BoxDecoration(
       shape: BoxShape.circle,
-      border: Border.all(color: const Color(0xFF00FFFF).withValues(alpha: 0.5), width: 1),
+      border: Border.all(
+        color: const Color(0xFF00FFFF).withValues(alpha: 0.5),
+        width: 1,
+      ),
       boxShadow: [
         BoxShadow(
-          color: const Color(0xFF00FFFF).withValues(alpha:  0.2),
+          color: const Color(0xFF00FFFF).withValues(alpha: 0.2),
           blurRadius: 4,
-        )
-      ]
+        ),
+      ],
     );
 
     final readAvatarDecoration = BoxDecoration(
       shape: BoxShape.circle,
       border: Border.all(color: Colors.grey[800]!, width: 1),
     );
-    
+
     return GestureDetector(
       onTap: () => context.pushNamed(
-        "user-chat", 
+        "user-chat",
         extra: ChatUser(
           id: user.id,
           name: user.name,
@@ -79,7 +92,9 @@ class AtomUserChat extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              decoration: hasUnread ? unreadAvatarDecoration : readAvatarDecoration,
+              decoration: hasUnread
+                  ? unreadAvatarDecoration
+                  : readAvatarDecoration,
               child: CircleAvatar(
                 radius: 22,
                 backgroundImage: CachedNetworkImageProvider(user.thumb),
@@ -103,7 +118,9 @@ class AtomUserChat extends StatelessWidget {
                             color: const Color(0xFF00FFFF),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF00FFFF).withValues(alpha: 0.6),
+                                color: const Color(
+                                  0xFF00FFFF,
+                                ).withValues(alpha: 0.6),
                                 blurRadius: 4,
                               ),
                             ],
@@ -116,13 +133,17 @@ class AtomUserChat extends StatelessWidget {
                           color: Colors.white,
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
-                          shadows: hasUnread ? [
-                            Shadow(
-                              blurRadius: 5.0,
-                              color: const Color(0xFF00FFFF).withValues(alpha: 0.5),
-                              offset: const Offset(0, 0),
-                            ),
-                          ] : null,
+                          shadows: hasUnread
+                              ? [
+                                  Shadow(
+                                    blurRadius: 5.0,
+                                    color: const Color(
+                                      0xFF00FFFF,
+                                    ).withValues(alpha: 0.5),
+                                    offset: const Offset(0, 0),
+                                  ),
+                                ]
+                              : null,
                         ),
                       ),
                     ],
@@ -137,7 +158,9 @@ class AtomUserChat extends StatelessWidget {
                       style: TextStyle(
                         color: hasUnread ? Colors.white : Colors.grey[400],
                         fontSize: 14,
-                        fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: hasUnread
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
                     ),
                   ),
@@ -145,17 +168,13 @@ class AtomUserChat extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            _BuildTimestampAndStatus(
-              chat: userChat,
-              notMyId: notMe,
-            ),
+            _BuildTimestampAndStatus(chat: userChat, notMyId: notMe),
           ],
         ),
       ),
     );
   }
 }
-
 
 class _BuildTimestampAndStatus extends StatelessWidget {
   final UserChat chat;
@@ -170,13 +189,22 @@ class _BuildTimestampAndStatus extends StatelessWidget {
     // --- Date Formatting ---
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final messageDate = DateTime(message.date.year, message.date.month, message.date.day);
-    
+    final messageDate = DateTime(
+      message.date.year,
+      message.date.month,
+      message.date.day,
+    );
+
     String formattedDate;
     if (messageDate == today) {
-      formattedDate = DateFormat.jm().format(message.date); // HH:mm
+      formattedDate = DateFormat.jm(
+        LocaleSettings.currentLocale.languageCode,
+      ).format(message.date); // HH:mm
     } else {
-      formattedDate = DateFormat('dd/MM').format(message.date); // dd/MM
+      formattedDate = DateFormat(
+        'dd/MM',
+        LocaleSettings.currentLocale.languageCode,
+      ).format(message.date); // dd/MM
     }
 
     // --- Status Icon ---
@@ -201,7 +229,9 @@ class _BuildTimestampAndStatus extends StatelessWidget {
       }
       statusWidget = Icon(statusIcon, size: 16, color: statusColor);
     } else {
-      statusWidget = const SizedBox(height: 16); // Reserve space but show nothing
+      statusWidget = const SizedBox(
+        height: 16,
+      ); // Reserve space but show nothing
     }
 
     return Column(
@@ -210,10 +240,7 @@ class _BuildTimestampAndStatus extends StatelessWidget {
       children: [
         Text(
           formattedDate,
-          style: TextStyle(
-            color: Colors.grey[400],
-            fontSize: 12,
-          ),
+          style: TextStyle(color: Colors.grey[400], fontSize: 12),
         ),
         const SizedBox(height: 5),
         statusWidget,

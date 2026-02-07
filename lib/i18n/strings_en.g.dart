@@ -509,6 +509,12 @@ class TranslationsChatEn {
 	String get SAY_HI => 'Say hi';
 
 	late final TranslationsChatErrorsEn ERRORS = TranslationsChatErrorsEn._(_root);
+
+	/// en: 'Today'
+	String get TODAY => 'Today';
+
+	/// en: 'Yesterday'
+	String get YESTERDAY => 'Yesterday';
 }
 
 // Path: GAME
@@ -1624,6 +1630,8 @@ extension on Translations {
 			'CHAT.ERRORS.NO_DATA' => 'No friendship data',
 			'CHAT.ERRORS.LOADING_USER' => 'Error loading user',
 			'CHAT.ERRORS.NO_USER_DATA' => 'No user data',
+			'CHAT.TODAY' => 'Today',
+			'CHAT.YESTERDAY' => 'Yesterday',
 			'GAME.GAME' => 'Game',
 			'GAME.MATCH' => 'Match',
 			'GAME.DATE' => 'Date',

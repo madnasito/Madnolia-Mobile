@@ -13,19 +13,26 @@ class GameCard extends StatelessWidget {
   final String name;
   final String? background;
   final Widget bottom;
-  const GameCard({super.key,required this.name,  required this.background, required this.bottom});
+  const GameCard({
+    super.key,
+    required this.name,
+    required this.background,
+    required this.bottom,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Colors.black45, borderRadius: BorderRadius.circular(10)),
+        color: Colors.black45,
+        borderRadius: BorderRadius.circular(10),
+      ),
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.only(bottom: 10, top: 2),
       child: Column(
         children: [
-          AtomGameImage(name: name, background: background,),
-          bottom
+          AtomGameImage(name: name, background: background),
+          bottom,
         ],
       ),
     );
@@ -64,6 +71,7 @@ class MatchCard extends StatelessWidget {
         return const Color(0xFFFFFFFF); // Blanco neón por defecto
     }
   }
+
   @override
   Widget build(BuildContext context) {
     // Define un color y un texto basado en el estado del match
@@ -125,68 +133,67 @@ class MatchCard extends StatelessWidget {
       ),
     );
     return Container(
-  decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(10),
-    boxShadow: [
-      BoxShadow(
-        color: Colors.black45,
-        blurRadius: 5,
-        offset: const Offset(0, 3), // Sombra hacia abajo
-      ),
-    ],
-  ),
-  margin: const EdgeInsets.only(bottom: 10),
-  padding: const EdgeInsets.all(10),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      AtomGameImage(name: data.game.name, background: data.game.background, child: platformIcon),
-      const SizedBox(height: 10),
-      Text(
-        data.match.title,
-        style: const TextStyle(
-          color: Colors.cyanAccent,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 4),
-      Text(
-        DateFormat('EEEE, d MMMM yyyy - hh:mm a').format(
-          data.match.date,
-        ),
-        style: const TextStyle(
-          color: Colors.white70,
-          fontSize: 14,
-        ),
-      ),
-      const SizedBox(height: 12),
-      Container(
-        padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
-        decoration: BoxDecoration(
-          color: statusColor,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black45,
-              blurRadius: 5,
-              offset: Offset(0, 3), // Sombra hacia abajo
-            ),
-          ],
-        ),
-        child: Text(
-          statusText,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black45,
+            blurRadius: 5,
+            offset: const Offset(0, 3), // Sombra hacia abajo
           ),
-        ),
+        ],
       ),
-    ],
-  ),
-);
-
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AtomGameImage(
+            name: data.game.name,
+            background: data.game.background,
+            child: platformIcon,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            data.match.title,
+            style: const TextStyle(
+              color: Colors.cyanAccent,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            DateFormat(
+              'EEEE, d MMMM yyyy - hh:mm a',
+              LocaleSettings.currentLocale.languageCode,
+            ).format(data.match.date),
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
+            decoration: BoxDecoration(
+              color: statusColor,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black45,
+                  blurRadius: 5,
+                  offset: Offset(0, 3), // Sombra hacia abajo
+                ),
+              ],
+            ),
+            child: Text(
+              statusText,
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
-
-

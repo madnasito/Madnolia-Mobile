@@ -250,7 +250,9 @@
       "NO_DATA": "No friendship data",
       "LOADING_USER":"Error loading user",
       "NO_USER_DATA": "No user data"
-    }
+    },
+    "TODAY": "Today",
+    "YESTERDAY": "Yesterday"
   },
   "GAME":{
       "GAME": "Game",

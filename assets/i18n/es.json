@@ -246,7 +246,9 @@
       "NO_DATA": "Sin datos de amistad",
       "LOADING_USER": "Error cargando usuario",
       "NO_USER_DATA": "Sin datos del usuario"
-    }
+    },
+    "TODAY": "Hoy",
+    "YESTERDAY": "Ayer"
   },
   "GAME": {
     "GAME": "Juego",

@@ -29,9 +29,12 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:upgrader/upgrader.dart';
 
 import 'i18n/strings.g.dart'; // Importa las traducciones generadas
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  initializeDateFormatting('es', null);
+  initializeDateFormatting('en', null);
   DartPluginRegistrant.ensureInitialized();
 
   // Custom Error Widget for rendering errors
