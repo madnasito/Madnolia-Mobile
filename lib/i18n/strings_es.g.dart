@@ -89,7 +89,7 @@ class _TranslationsHeaderEs implements TranslationsHeaderEn {
 	@override String get REGISTER => 'Registrarse';
 	@override String get LOGIN => 'Ingresar';
 	@override String get PROFILE => 'Perfil';
-	@override String get SETTINGS => 'Settings';
+	@override String get SETTINGS => 'Ajustes';
 	@override String get LOGOUT => 'Salir';
 }
 
@@ -814,7 +814,7 @@ extension on TranslationsEs {
 			'HEADER.REGISTER' => 'Registrarse',
 			'HEADER.LOGIN' => 'Ingresar',
 			'HEADER.PROFILE' => 'Perfil',
-			'HEADER.SETTINGS' => 'Settings',
+			'HEADER.SETTINGS' => 'Ajustes',
 			'HEADER.LOGOUT' => 'Salir',
 			'HOME.MATCH' => 'Partida creada',
 			'HOME.MATCHES' => 'Partidas creadas',
