@@ -77,10 +77,15 @@ class AtomInvitationNotification extends StatelessWidget {
           title: RichText(
             text: TextSpan(
               text: t.NOTIFICATIONS.INVITATION_TO_MATCH,
+              style: const TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
               children: [
                 TextSpan(
                   text: data.notification.title,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -88,6 +93,7 @@ class AtomInvitationNotification extends StatelessWidget {
           subtitle: Text(
             "@${data.user?.username}",
             style: TextStyle(
+              fontSize: 13,
               color: Colors.greenAccent,
               overflow: TextOverflow.ellipsis, // Handle long text
             ),

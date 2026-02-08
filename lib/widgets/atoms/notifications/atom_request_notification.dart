@@ -39,10 +39,12 @@ class AtomRequestNotification extends StatelessWidget {
         ),
         title: Text(
           t.NOTIFICATIONS.CONNECTION_REQUEST(name: data.notification.title),
+          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         subtitle: Text(
           "@${data.user?.username}",
           style: TextStyle(
+            fontSize: 13,
             color: Colors.greenAccent, // Lighter grey for subtitle
             overflow: TextOverflow.ellipsis, // Handle long text
           ),
