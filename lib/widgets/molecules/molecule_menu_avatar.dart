@@ -15,7 +15,6 @@ class MoleculeMenuAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userBloc = context.watch<UserBloc>();
-    final userAvailability = userBloc.state.availability;
     final backgroundService = FlutterBackgroundService();
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,7 +59,7 @@ class MoleculeMenuAvatar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 DropdownButton<UserAvailability>(
-                  value: userAvailability,
+                  value: userBloc.state.availability,
                   dropdownColor: Colors.black87,
                   borderRadius: BorderRadius.circular(15.0),
                   items: UserAvailability.values.map((
