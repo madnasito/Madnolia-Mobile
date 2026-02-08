@@ -18,31 +18,37 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
-
   final _notificationsRepository = RepositoryManager().notification;
 
   NotificationsBloc() : super(const NotificationsState()) {
-    on<LoadNotifications>( _loadNotifications, transformer: throttleDroppable(throttleDuration));
+    on<LoadNotifications>(
+      _loadNotifications,
+      transformer: throttleDroppable(throttleDuration),
+    );
     on<RestoreNotificationsState>(_restore);
     on<WatchNotifications>(_watchNotifications);
   }
 
   void _restore(
     RestoreNotificationsState event,
-    Emitter<NotificationsState> emit
-  ){
+    Emitter<NotificationsState> emit,
+  ) {
     emit(
       state.copyWith(
         data: [],
         hasReachedMax: false,
-        status: BlocStatus.initial
-      )
+        status: BlocStatus.initial,
+      ),
     );
   }
 
-  Future<void> _loadNotifications(LoadNotifications event, Emitter<NotificationsState> emit) async {
-
-    debugPrint('hasReachedMax: ${state.hasReachedMax}, reload: ${event.reload}');
+  Future<void> _loadNotifications(
+    LoadNotifications event,
+    Emitter<NotificationsState> emit,
+  ) async {
+    debugPrint(
+      'hasReachedMax: ${state.hasReachedMax}, reload: ${event.reload}',
+    );
 
     if (state.hasReachedMax && !event.reload) return;
 
@@ -51,26 +57,29 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       emit(const NotificationsState());
     }
 
-
     try {
-      final cursorId = event.reload ? null : state.data.lastOrNull?.notification.id;
+      final cursorId = event.reload
+          ? null
+          : state.data.lastOrNull?.notification.id;
 
       bool reload = event.reload || state.status == BlocStatus.initial;
 
-      debugPrint('Loading notifications with cursorId: $cursorId, reload: $reload');
-
-      final newNotifications = await _notificationsRepository.getUserNotifications(
-        reload: reload,
-        cursorId: cursorId,
+      debugPrint(
+        'Loading notifications with cursorId: $cursorId, reload: $reload',
       );
+
+      final newNotifications = await _notificationsRepository
+          .getUserNotifications(reload: reload, cursorId: cursorId);
 
       final hasReachedMax = newNotifications.length < 20;
 
       emit(
         state.copyWith(
           status: BlocStatus.success,
-          // Append new notifications to the existing list.
-          data: event.reload ? newNotifications : (List.of(state.data)..addAll(newNotifications)),
+          // Replace on reload or initial load, append otherwise
+          data: reload
+              ? newNotifications
+              : (List.of(state.data)..addAll(newNotifications)),
           hasReachedMax: hasReachedMax,
         ),
       );
@@ -90,10 +99,11 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       await emit.forEach<List<NotificationDetails>>(
         _notificationsRepository.watchAllNotifications(),
         onData: (notifications) {
+          final status = (state.status == BlocStatus.initial)
+              ? BlocStatus.success
+              : state.status;
 
-          return state.copyWith(
-            data: notifications,
-          );
+          return state.copyWith(status: status, data: notifications);
         },
         onError: (error, stackTrace) {
           debugPrint('Stream error: $error');
