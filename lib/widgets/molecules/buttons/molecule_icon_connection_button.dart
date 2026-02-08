@@ -61,6 +61,30 @@ class _MoleculeConnectionIconButtonState
           if (mounted) setState(() {});
         }
       });
+
+      _backgroundService.on('reject_connection').listen((payload) {
+        debugPrint('Request rejected: $payload');
+
+        final requestData = ConnectionRequest.fromJson(payload!);
+
+        if (requestData.receiver == widget.userData.id ||
+            requestData.sender == widget.userData.id) {
+          widget.userData.connection = ConnectionStatus.none;
+          if (mounted) setState(() {});
+        }
+      });
+
+      _backgroundService.on('connection_rejected').listen((payload) {
+        debugPrint('Request rejected: $payload');
+
+        final requestData = ConnectionRequest.fromJson(payload!);
+
+        if (requestData.receiver == widget.userData.id ||
+            requestData.sender == widget.userData.id) {
+          widget.userData.connection = ConnectionStatus.none;
+          if (mounted) setState(() {});
+        }
+      });
     } catch (e) {
       debugPrint('Error setting up connection listeners: $e');
     }

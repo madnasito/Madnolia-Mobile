@@ -366,6 +366,7 @@ Future<void> onStart(ServiceInstance service) async {
     socket.on("removed_partner", (data) => service.invoke("removed_partner"));
     socket.on("connection_rejected", (data) async {
       try {
+        service.invoke("connection_rejected", data);
         final connectionRequest = ConnectionRequest.fromJson(data);
         if (userId == connectionRequest.sender) return;
         final int deletedNotification = await notificationsRepository
@@ -379,6 +380,11 @@ Future<void> onStart(ServiceInstance service) async {
       "canceled_connection",
       (data) => service.invoke("canceled_connection", data),
     );
+
+    socket.on('reject_connection', (data) {
+      talker.info(data.toString());
+      service.invoke('reject_connection', data);
+    });
 
     socket.on('notification_deleted', (data) async {
       try {
