@@ -40,7 +40,7 @@ class OrganismDrawer extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(left: 25, top: 15),
-                  child: MoleculeMenuAvatar(userBloc: userBloc),
+                  child: MoleculeMenuAvatar(),
                 ),
                 Column(
                   mainAxisSize: MainAxisSize.max,

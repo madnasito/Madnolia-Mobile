@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/utils/get_availability_data.dart';
@@ -9,11 +10,11 @@ import 'package:madnolia/enums/user-availability.enum.dart';
 import '../../utils/get_slang_translations.dart';
 
 class MoleculeMenuAvatar extends StatelessWidget {
-  final UserBloc userBloc;
-  const MoleculeMenuAvatar({super.key, required this.userBloc});
+  const MoleculeMenuAvatar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final userBloc = context.watch<UserBloc>();
     final userAvailability = userBloc.state.availability;
     final backgroundService = FlutterBackgroundService();
     return Row(
