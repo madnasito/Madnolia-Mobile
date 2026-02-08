@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/services/user_service.dart';
 import 'package:madnolia/widgets/organism/organism_users_list.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../models/user/simple_user_model.dart';
 import '../../widgets/atoms/input/atom_search_input.dart';
@@ -17,6 +18,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   late int counter;
   late final TextEditingController searchController;
+  final talker = Talker();
 
   @override
   void initState() {
@@ -33,7 +35,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _onSearchChanged(String value) {
-    debugPrint(searchController.text);
+    talker.debug(searchController.text);
     counter++;
     Timer(const Duration(seconds: 1), () {
       counter--;
@@ -89,11 +91,11 @@ class _SearchPageState extends State<SearchPage> {
   Future<List<SimpleUser>> _searchUsers(String query) async {
     try {
       final resp = await UserService().searchUser(query);
-      debugPrint('Search response: $resp');
+      talker.debug('Search response: $resp');
       if (resp is Map) return [];
       return (resp as List).map((e) => SimpleUser.fromJson(e)).toList();
     } catch (e) {
-      debugPrint('Search error: $e');
+      talker.handle(e);
       return [];
     }
   }

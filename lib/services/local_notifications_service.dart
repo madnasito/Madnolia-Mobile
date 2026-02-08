@@ -25,9 +25,11 @@ import 'package:madnolia/routes/routes.dart';
 import 'package:madnolia/services/sockets_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/utils/platforms.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/chat/chat_message_model.dart';
+import '../models/friendship/connection_request.dart';
 
 @pragma("vm:entry-point")
 class LocalNotificationsService {
@@ -35,6 +37,7 @@ class LocalNotificationsService {
   static final _chatMessageRepository = RepositoryManager().chatMessage;
   static final _matchRepository = RepositoryManager().match;
   static final _gamesRepository = RepositoryManager().games;
+  static final talker = Talker();
   // Instance of Flutternotification plugin
   @pragma("vm:entry-point")
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
@@ -351,6 +354,53 @@ class LocalNotificationsService {
     }
   }
 
+  @pragma("vm:entry-point")
+  static Future<void> requestConnection(
+    ConnectionRequest connectionRequest,
+  ) async {
+    // To display the notification in device
+
+    try {
+      LocaleSettings.useDeviceLocale();
+      await initializeTranslations();
+      final userDb = await _userRepository.getUserById(
+        connectionRequest.sender,
+      );
+
+      final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+      final image = await getRoundedImageBytes(
+        CachedNetworkImageProvider(userDb.thumb),
+      );
+
+      final detailsInfo = NotificationDetails(
+        android: AndroidNotificationDetails(
+          "main_channel",
+          "Main Channel",
+          groupKey: "connection_requests",
+          playSound: true,
+          icon: '@drawable/ic_notifications',
+          subText: t.NOTIFICATIONS.CONNECTION_REQUEST_TITLE,
+          largeIcon: ByteArrayAndroidBitmap(image),
+          priority: Priority.high,
+          importance: Importance.high,
+        ),
+      );
+      NotificationDetails notificationDetails = detailsInfo;
+      await _notificationsPlugin.show(
+        id,
+        t.NOTIFICATIONS.CONNECTION_REQUEST_TITLE,
+        t.NOTIFICATIONS.CONNECTION_REQUEST(name: userDb.name),
+        notificationDetails,
+        payload: json.encode(connectionRequest.toJson()),
+      );
+    } catch (e) {
+      talker.error(e);
+      talker.handle(e);
+      rethrow;
+    }
+  }
+
   static Future<NotificationDetails> invitationWithImage({
     required UserData userDb,
     required Invitation invitation,
@@ -446,7 +496,7 @@ class LocalNotificationsService {
     NotificationResponse details,
   ) async {
     if (details.payload == null || details.payload!.isEmpty) {
-      debugPrint("Notification payload is empty.");
+      talker.info("Notification payload is empty.");
       return;
     }
 
@@ -458,7 +508,15 @@ class LocalNotificationsService {
       router.push("/match/${matchDb.id}");
       return;
     } catch (e) {
-      debugPrint("Not MatchData payload: $e");
+      talker.debug("Not MatchData payload: $e");
+    }
+
+    try {
+      ConnectionRequest.fromJson(json.decode(details.payload!));
+      router.pushNamed("notifications");
+      return;
+    } catch (e) {
+      talker.debug("Not ConnectionRequest payload: $e");
     }
 
     try {
@@ -488,7 +546,8 @@ class LocalNotificationsService {
           router.push("/match/${message.conversation}");
       }
     } catch (e) {
-      debugPrint("Not ChatMessage payload: $e");
+      talker.handle(e);
+      rethrow;
     }
   }
 

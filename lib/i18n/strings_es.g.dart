@@ -328,7 +328,8 @@ class _TranslationsNotificationsEs implements TranslationsNotificationsEn {
 	@override String get ERROR_LOADING => 'Error cargando notificaciones';
 	@override String get MATCH_INVITATION => 'Invitacion a partida';
 	@override String get INVITED_TO => 'Fuiste invitado a:';
-	@override String CONNECTION_REQUEST({required Object name}) => '${name} quiere conectar contigo';
+	@override String get CONNECTION_REQUEST_TITLE => '¡Nuevo Aliado!';
+	@override String CONNECTION_REQUEST({required Object name}) => '¡${name} quiere sumarse a tu equipo!';
 	@override String get ACCEPT_REQUEST_TITLE => '¿Aceptar solicitud?';
 	@override String get INVITATION_TO_MATCH => 'Tienes una invitacion para: ';
 	@override String get MATCH_READY => 'Partida lista';
@@ -1015,7 +1016,8 @@ extension on TranslationsEs {
 			'NOTIFICATIONS.ERROR_LOADING' => 'Error cargando notificaciones',
 			'NOTIFICATIONS.MATCH_INVITATION' => 'Invitacion a partida',
 			'NOTIFICATIONS.INVITED_TO' => 'Fuiste invitado a:',
-			'NOTIFICATIONS.CONNECTION_REQUEST' => ({required Object name}) => '${name} quiere conectar contigo',
+			'NOTIFICATIONS.CONNECTION_REQUEST_TITLE' => '¡Nuevo Aliado!',
+			'NOTIFICATIONS.CONNECTION_REQUEST' => ({required Object name}) => '¡${name} quiere sumarse a tu equipo!',
 			'NOTIFICATIONS.ACCEPT_REQUEST_TITLE' => '¿Aceptar solicitud?',
 			'NOTIFICATIONS.INVITATION_TO_MATCH' => 'Tienes una invitacion para: ',
 			'NOTIFICATIONS.MATCH_READY' => 'Partida lista',

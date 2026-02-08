@@ -564,8 +564,11 @@ class TranslationsNotificationsEn {
 	/// en: 'You are invited to'
 	String get INVITED_TO => 'You are invited to';
 
-	/// en: '$name wants connect with you'
-	String CONNECTION_REQUEST({required Object name}) => '${name} wants connect with you';
+	/// en: 'New Ally!'
+	String get CONNECTION_REQUEST_TITLE => 'New Ally!';
+
+	/// en: '$name wants to join your team!'
+	String CONNECTION_REQUEST({required Object name}) => '${name} wants to join your team!';
 
 	/// en: 'Accept request?'
 	String get ACCEPT_REQUEST_TITLE => 'Accept request?';
@@ -1642,7 +1645,8 @@ extension on Translations {
 			'NOTIFICATIONS.ERROR_LOADING' => 'Error loading notifications',
 			'NOTIFICATIONS.MATCH_INVITATION' => 'Match Invitation',
 			'NOTIFICATIONS.INVITED_TO' => 'You are invited to',
-			'NOTIFICATIONS.CONNECTION_REQUEST' => ({required Object name}) => '${name} wants connect with you',
+			'NOTIFICATIONS.CONNECTION_REQUEST_TITLE' => 'New Ally!',
+			'NOTIFICATIONS.CONNECTION_REQUEST' => ({required Object name}) => '${name} wants to join your team!',
 			'NOTIFICATIONS.ACCEPT_REQUEST_TITLE' => 'Accept request?',
 			'NOTIFICATIONS.INVITATION_TO_MATCH' => 'You have a new invitation to:',
 			'NOTIFICATIONS.MATCH_READY' => 'Match ready',

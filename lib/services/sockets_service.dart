@@ -331,10 +331,18 @@ Future<void> onStart(ServiceInstance service) async {
     );
 
     // Events for handle user connections
-    socket.on(
-      "new_request_connection",
-      (data) => service.invoke("new_request_connection", data),
-    );
+    socket.on("new_request_connection", (data) {
+      service.invoke("new_request_connection", data);
+      try {
+        final connectionRequest = ConnectionRequest.fromJson(data);
+        if (userId == connectionRequest.sender) return;
+        talker.info(connectionRequest.toJson());
+        LocalNotificationsService.requestConnection(connectionRequest);
+      } catch (e) {
+        talker.error(e);
+        talker.handle(e);
+      }
+    });
     socket.on("connection_accepted", (data) async {
       try {
         service.invoke("connection_accepted", data);

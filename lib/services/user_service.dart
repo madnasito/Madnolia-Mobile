@@ -97,7 +97,9 @@ class UserService {
 
   Future resetNotifications() => userGetRequest("user/reset-notifications");
 
-  Future searchUser(String user) =>
+  Future searchUser(String user) => userGetRequest("user/search/$user");
+
+  Future searchUserToInvite(String user) =>
       userGetRequest("user/search-to-invite/$user");
 
   Future<Map> addUserPartner({required String partner}) =>

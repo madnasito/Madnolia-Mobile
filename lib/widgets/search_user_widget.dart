@@ -51,34 +51,28 @@ class _SeatchUserState extends State<SeatchUser> {
         SimpleCustomInput(
           iconData: CupertinoIcons.person_2,
           controller: controller,
-          placeholder:
-              t.CREATE_MATCH.SEARCH_USER,
+          placeholder: t.CREATE_MATCH.SEARCH_USER,
           onChanged: (value) async {
             counter++;
-            Timer(
-              const Duration(seconds: 1),
-              () {
-                counter--;
-                setState(() {});
-              },
-            );
+            Timer(const Duration(seconds: 1), () {
+              counter--;
+              setState(() {});
+            });
           },
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         (counter == 0 && controller.text.isNotEmpty)
             ? FutureBuilder(
                 future: _seatchUser(controller.text),
-                builder:
-                    (BuildContext context, AsyncSnapshot snapshot) {
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     final resp = snapshot.data;
 
                     if (resp!.isEmpty) return Container();
 
-                    final users =
-                        resp.map((e) => ChatUser.fromJson(e)).toList();
+                    final users = resp
+                        .map((e) => ChatUser.fromJson(e))
+                        .toList();
                     return Column(
                       children: [
                         const Text(
@@ -101,8 +95,12 @@ class _SeatchUserState extends State<SeatchUser> {
                                   setState(() {
                                     controller.text = "";
 
-                                    var foundedUser = matchUsersCubit.state.users.where(
-                                        (user) => user.id == users[index].id);
+                                    var foundedUser = matchUsersCubit
+                                        .state
+                                        .users
+                                        .where(
+                                          (user) => user.id == users[index].id,
+                                        );
 
                                     if (foundedUser.isEmpty) {
                                       matchUsersCubit.addUser(users[index]);
@@ -114,8 +112,12 @@ class _SeatchUserState extends State<SeatchUser> {
                                   spacing: 10,
                                   crossAxisAlignment: WrapCrossAlignment.center,
                                   children: [
-                                    CachedNetworkImage(imageUrl: users[index].thumb, width: 50, height: 50),
-                                    Text(users[index].username)
+                                    CachedNetworkImage(
+                                      imageUrl: users[index].thumb,
+                                      width: 50,
+                                      height: 50,
+                                    ),
+                                    Text(users[index].username),
                                   ],
                                 ),
                               );
@@ -130,8 +132,8 @@ class _SeatchUserState extends State<SeatchUser> {
                 },
               )
             : Visibility(
-              visible: matchUsersCubit.state.users.isNotEmpty,
-              child: Column(
+                visible: matchUsersCubit.state.users.isNotEmpty,
+                child: Column(
                   children: [
                     const Text(
                       "Inviteds:\n",
@@ -160,18 +162,21 @@ class _SeatchUserState extends State<SeatchUser> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(60),
-                                      border:
-                                          Border.all(color: Colors.greenAccent)),
+                                    borderRadius: BorderRadius.circular(60),
+                                    border: Border.all(
+                                      color: Colors.greenAccent,
+                                    ),
+                                  ),
                                   child: CircleAvatar(
                                     backgroundImage: NetworkImage(
-                                        matchUsersCubit.state.users[index].thumb,
-                                        scale: 0.1),
+                                      matchUsersCubit.state.users[index].thumb,
+                                      scale: 0.1,
+                                    ),
                                     minRadius: 25,
                                     maxRadius: 35,
                                   ),
                                 ),
-                                Text(matchUsersCubit.state.users[index].name)
+                                Text(matchUsersCubit.state.users[index].name),
                               ],
                             ),
                           );
@@ -180,12 +185,12 @@ class _SeatchUserState extends State<SeatchUser> {
                     ),
                   ],
                 ),
-            ),
+              ),
       ],
     );
   }
 
   Future _seatchUser(String user) {
-    return UserService().searchUser(user);
+    return UserService().searchUserToInvite(user);
   }
 }

@@ -2,7 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart' show FlutterSecureStorage;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart'
+    show FlutterSecureStorage;
 import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
@@ -10,81 +11,101 @@ import 'package:madnolia/models/chat/chat_message_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import '../firebase_options.dart';
+import '../models/friendship/connection_request.dart';
 
-/// Define un manejador de nivel superior para mensajes en background
+final talker = Talker();
+
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  (kDebugMode) ? await dotenv.load(fileName: "assets/.env.dev") : await dotenv.load(fileName: "assets/.env.prod") ;
-  // Si necesitas usar Firebase en el background handler, debes inicializarlo
+  (kDebugMode)
+      ? await dotenv.load(fileName: "assets/.env.dev")
+      : await dotenv.load(fileName: "assets/.env.prod");
   try {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform);
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
   } catch (e) {
     if (e.toString().contains('duplicate-app')) {
-      debugPrint('Firebase already initialized in background handler');
+      talker.warning('Firebase already initialized in background handler');
     } else {
+      talker.handle(e);
       rethrow;
     }
   }
-  
-  debugPrint("Handling a background message: ${message.messageId}");
-  debugPrint("Message data: ${message.data}");
-  
-  // Si el mensaje contiene datos, puedes procesarlos aquí
+
+  talker.debug("Handling a background message: ${message.messageId}");
+  talker.debug("Message data: ${message.data}");
+
   if (message.data.isNotEmpty) {
-    debugPrint("Message data: ${message.data}");
+    talker.debug("Message data: ${message.data}");
   }
 
-  debugPrint("Message notification: ${message.notification}");
-  
-  // Si el mensaje contiene notificación, crear una notificación local
+  talker.debug("Message notification: ${message.notification}");
+
   if (message.data.isNotEmpty) {
     await _showNotification(message);
   }
 }
 
-/// Mostrar notificación local para mensajes recibidos en background
 Future<void> _showNotification(RemoteMessage message) async {
-
-  try {  
-    debugPrint(message.data.toString());
-    debugPrint(message.data['type']);
+  try {
+    final storage = FlutterSecureStorage();
+    String? userId = await storage.read(key: 'userId');
+    talker.debug(message.data.toString());
+    talker.debug(message.data['type']);
     switch (message.data['type']) {
       case 'chat_message':
-        final ChatMessage chatMessage = chatMessageFromJson(message.data['data']);
-        debugPrint(chatMessage.id);
+        final ChatMessage chatMessage = chatMessageFromJson(
+          message.data['data'],
+        );
+        talker.debug(chatMessage.id);
 
         const storage = FlutterSecureStorage();
 
         String? userId = await storage.read(key: 'userId');
-        
-        if ((chatMessage.type == ChatMessageType.match || chatMessage.type == ChatMessageType.group) && 
+
+        if ((chatMessage.type == ChatMessageType.match ||
+                chatMessage.type == ChatMessageType.group) &&
             chatMessage.creator != userId) {
           String? username = await storage.read(key: 'username');
-          
+
           if (username == null) return;
-          
+
           // Regular expression to get the mention as a full word
-          final mentionRegex = RegExp(r'(^|\s)@' + RegExp.escape(username) + r'(\s|$)');
-          
+          final mentionRegex = RegExp(
+            r'(^|\s)@' + RegExp.escape(username) + r'(\s|$)',
+          );
+
           if (!mentionRegex.hasMatch(chatMessage.content)) return;
         }
         await LocalNotificationsService.displayRoomMessage(chatMessage);
         break;
       case 'match_ready':
         final MatchReady payload = matchReadyFromJson(message.data['data']);
-        await RepositoryManager().match.updateMatchStatus(payload.match, MatchStatus.running);
+        await RepositoryManager().match.updateMatchStatus(
+          payload.match,
+          MatchStatus.running,
+        );
         await LocalNotificationsService.displayMatchReady(payload);
         break;
       case 'invitation':
         final Invitation invitation = invitationFromJson(message.data['data']);
         await LocalNotificationsService.displayInvitation(invitation);
+        break;
+      case 'new_request_connection':
+        final ConnectionRequest connectionRequest = connectionRequestFromJson(
+          message.data['data'],
+        );
+        if (userId == connectionRequest.sender) return;
+        await LocalNotificationsService.requestConnection(connectionRequest);
+        break;
       default:
-        debugPrint('Unknow type');
+        talker.warning('Unknow type');
     }
   } catch (e) {
-    debugPrint(e.toString());
+    talker.handle(e);
   }
 }
 
@@ -93,8 +114,8 @@ class FirebaseMessagingService {
     // Configurar el manejador de mensajes en background
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      debugPrint('This come from the listen');
-      debugPrint('Message data: $message');
+      talker.debug('This come from the listen');
+      talker.debug('Message data: $message');
 
       // if (message.data.isNotEmpty) {
       //   await _showNotification(message);
@@ -102,25 +123,26 @@ class FirebaseMessagingService {
     });
 
     // Solicitar permisos (especialmente importante para iOS)
-    NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    NotificationSettings settings = await FirebaseMessaging.instance
+        .requestPermission(
+          alert: true,
+          announcement: false,
+          badge: true,
+          carPlay: false,
+          criticalAlert: false,
+          provisional: false,
+          sound: true,
+        );
 
-    debugPrint('User granted permission: ${settings.authorizationStatus}');
+    talker.debug('User granted permission: ${settings.authorizationStatus}');
 
     // Obtener el token de FCM
     String? token = await FirebaseMessaging.instance.getToken();
-    debugPrint('FCM Token: $token');
+    talker.debug('FCM Token: $token');
 
     // Escuchar cambios en el token
     FirebaseMessaging.instance.onTokenRefresh.listen((fcmToken) {
-      debugPrint('FCM Token refreshed: $fcmToken');
+      talker.debug('FCM Token refreshed: $fcmToken');
     });
 
     // Manejar mensajes cuando la app está en foreground
@@ -139,25 +161,26 @@ class FirebaseMessagingService {
 
     // Manejar cuando el usuario toca una notificación que abrió la app
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('A new onMessageOpenedApp event was published!');
-      debugPrint('Message data: ${message.data}');
-      
+      talker.debug('A new onMessageOpenedApp event was published!');
+      talker.debug('Message data: ${message.data}');
+
       // Navegar a una pantalla específica basada en los datos del mensaje
       _handleMessageOpenedApp(message);
     });
 
     // Verificar si la app se abrió desde una notificación
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage();
     if (initialMessage != null) {
-      debugPrint('App opened from terminated state by notification');
+      talker.debug('App opened from terminated state by notification');
       _handleMessageOpenedApp(initialMessage);
     }
   }
 
   static void _handleMessageOpenedApp(RemoteMessage message) {
     // Aquí puedes manejar la navegación basada en los datos del mensaje
-    debugPrint('Handling message opened app: ${message.data}');
-    
+    talker.debug('Handling message opened app: ${message.data}');
+
     // Ejemplo: navegar a una pantalla específica
     // if (message.data['type'] == 'chat') {
     //   navigatorKey.currentState?.pushNamed('/chat/${message.data['chatId']}');
@@ -170,11 +193,11 @@ class FirebaseMessagingService {
 
   static void subscribeToTopic(String topic) {
     FirebaseMessaging.instance.subscribeToTopic(topic);
-    debugPrint('Subscribed to topic: $topic');
+    talker.log('Subscribed to topic: $topic');
   }
 
   static void unsubscribeFromTopic(String topic) {
     FirebaseMessaging.instance.unsubscribeFromTopic(topic);
-    debugPrint('Unsubscribed from topic: $topic');
+    talker.log('Unsubscribed from topic: $topic');
   }
 }
