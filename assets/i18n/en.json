@@ -269,6 +269,8 @@
       "INVITED_TO": "You are invited to",
       "CONNECTION_REQUEST_TITLE": "New Ally!",
       "CONNECTION_REQUEST": "$name wants to join your team!",
+      "CONNECTION_ACCEPTED_TITLE": "Alliance Formed!",
+      "CONNECTION_ACCEPTED": "$name has joined your team! You can now play together.",
       "ACCEPT_REQUEST_TITLE": "Accept request?",
       "INVITATION_TO_MATCH": "You have a new invitation to:",
       "MATCH_READY": "Match ready",

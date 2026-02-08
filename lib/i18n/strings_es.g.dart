@@ -330,6 +330,8 @@ class _TranslationsNotificationsEs implements TranslationsNotificationsEn {
 	@override String get INVITED_TO => 'Fuiste invitado a:';
 	@override String get CONNECTION_REQUEST_TITLE => '¡Nuevo Aliado!';
 	@override String CONNECTION_REQUEST({required Object name}) => '¡${name} quiere sumarse a tu equipo!';
+	@override String get CONNECTION_ACCEPTED_TITLE => '¡Alianza Formada!';
+	@override String CONNECTION_ACCEPTED({required Object name}) => '¡${name} se ha unido a tu equipo! Ya pueden jugar juntos.';
 	@override String get ACCEPT_REQUEST_TITLE => '¿Aceptar solicitud?';
 	@override String get INVITATION_TO_MATCH => 'Tienes una invitacion para: ';
 	@override String get MATCH_READY => 'Partida lista';
@@ -1018,6 +1020,8 @@ extension on TranslationsEs {
 			'NOTIFICATIONS.INVITED_TO' => 'Fuiste invitado a:',
 			'NOTIFICATIONS.CONNECTION_REQUEST_TITLE' => '¡Nuevo Aliado!',
 			'NOTIFICATIONS.CONNECTION_REQUEST' => ({required Object name}) => '¡${name} quiere sumarse a tu equipo!',
+			'NOTIFICATIONS.CONNECTION_ACCEPTED_TITLE' => '¡Alianza Formada!',
+			'NOTIFICATIONS.CONNECTION_ACCEPTED' => ({required Object name}) => '¡${name} se ha unido a tu equipo! Ya pueden jugar juntos.',
 			'NOTIFICATIONS.ACCEPT_REQUEST_TITLE' => '¿Aceptar solicitud?',
 			'NOTIFICATIONS.INVITATION_TO_MATCH' => 'Tienes una invitacion para: ',
 			'NOTIFICATIONS.MATCH_READY' => 'Partida lista',

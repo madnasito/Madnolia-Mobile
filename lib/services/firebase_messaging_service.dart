@@ -8,6 +8,7 @@ import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
+import 'package:madnolia/models/connection/accepted_connection_model.dart';
 import 'package:madnolia/models/invitation_model.dart';
 import 'package:madnolia/models/match/match_ready_model.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
@@ -100,6 +101,12 @@ Future<void> _showNotification(RemoteMessage message) async {
         );
         if (userId == connectionRequest.sender) return;
         await LocalNotificationsService.requestConnection(connectionRequest);
+        break;
+      case 'request_accepted':
+        final AcceptedConnection acceptedConnection =
+            acceptedConnectionFromJson(message.data['data']);
+        if (userId == acceptedConnection.request.receiver) return;
+        await LocalNotificationsService.requestAccepted(acceptedConnection);
         break;
       default:
         talker.warning('Unknow type');

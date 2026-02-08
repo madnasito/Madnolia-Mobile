@@ -29,6 +29,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/chat/chat_message_model.dart';
+import '../models/connection/accepted_connection_model.dart';
 import '../models/friendship/connection_request.dart';
 
 @pragma("vm:entry-point")
@@ -401,6 +402,40 @@ class LocalNotificationsService {
     }
   }
 
+  static Future<NotificationDetails> requestAccepted(
+    AcceptedConnection acceptedConnection,
+  ) async {
+    final userDb = await _userRepository.getUserById(
+      acceptedConnection.request.receiver,
+    );
+
+    final image = await getRoundedImageBytes(
+      CachedNetworkImageProvider(userDb.thumb),
+    );
+    final detailsInfo = NotificationDetails(
+      android: AndroidNotificationDetails(
+        "main_channel",
+        "Main Channel",
+        groupKey: "connection_requests",
+        playSound: true,
+        icon: '@drawable/ic_notifications',
+        subText: t.NOTIFICATIONS.CONNECTION_ACCEPTED_TITLE,
+        largeIcon: ByteArrayAndroidBitmap(image),
+        priority: Priority.high,
+        importance: Importance.high,
+      ),
+    );
+    NotificationDetails notificationDetails = detailsInfo;
+    await _notificationsPlugin.show(
+      DateTime.now().millisecondsSinceEpoch ~/ 1000,
+      t.NOTIFICATIONS.CONNECTION_ACCEPTED_TITLE,
+      t.NOTIFICATIONS.CONNECTION_ACCEPTED(name: userDb.name),
+      notificationDetails,
+      payload: acceptedConnectionToJson(acceptedConnection),
+    );
+    return notificationDetails;
+  }
+
   static Future<NotificationDetails> invitationWithImage({
     required UserData userDb,
     required Invitation invitation,
@@ -517,6 +552,27 @@ class LocalNotificationsService {
       return;
     } catch (e) {
       talker.debug("Not ConnectionRequest payload: $e");
+    }
+
+    try {
+      AcceptedConnection acceptedConnection = acceptedConnectionFromJson(
+        details.payload!,
+      );
+      UserData userDb = await _userRepository.getUserById(
+        acceptedConnection.request.receiver,
+      );
+
+      final ChatUser chatUser = ChatUser(
+        id: userDb.id,
+        name: userDb.name,
+        thumb: userDb.thumb,
+        username: userDb.username,
+      );
+
+      router.pushNamed("user-chat", extra: chatUser);
+      return;
+    } catch (e) {
+      talker.debug("Not AcceptedConnection payload: $e");
     }
 
     try {

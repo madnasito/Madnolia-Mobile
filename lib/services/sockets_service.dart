@@ -27,6 +27,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import '../firebase_options.dart';
 
+import '../models/connection/accepted_connection_model.dart';
 import '../models/invitation_model.dart' show Invitation;
 
 final talker = Talker();
@@ -343,13 +344,20 @@ Future<void> onStart(ServiceInstance service) async {
         talker.handle(e);
       }
     });
-    socket.on("connection_accepted", (data) async {
+    socket.on("request_accepted", (data) async {
       try {
-        service.invoke("connection_accepted", data);
-        final connectionRequest = ConnectionRequest.fromJson(data);
-        if (userId == connectionRequest.sender) return;
+        service.invoke("request_accepted", data);
+        talker.info(data.toString());
+        final acceptedConnection = AcceptedConnection.fromJson(data);
+        if (userId == acceptedConnection.request.sender) {
+          LocalNotificationsService.requestAccepted(acceptedConnection);
+          return;
+        }
+
         final int deletedNotification = await notificationsRepository
-            .deleteRequestNotification(senderId: connectionRequest.sender);
+            .deleteRequestNotification(
+              senderId: acceptedConnection.request.sender,
+            );
         talker.debug('Deleted request notification: $deletedNotification');
       } catch (e) {
         talker.handle(e);

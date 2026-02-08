@@ -265,6 +265,8 @@
     "INVITED_TO": "Fuiste invitado a:",
     "CONNECTION_REQUEST_TITLE": "¡Nuevo Aliado!",
     "CONNECTION_REQUEST": "¡$name quiere sumarse a tu equipo!",
+    "CONNECTION_ACCEPTED_TITLE": "¡Alianza Formada!",
+    "CONNECTION_ACCEPTED": "¡$name se ha unido a tu equipo! Ya pueden jugar juntos.",
     "ACCEPT_REQUEST_TITLE": "¿Aceptar solicitud?",
     "INVITATION_TO_MATCH": "Tienes una invitacion para: ",
     "MATCH_READY": "Partida lista",

@@ -570,6 +570,12 @@ class TranslationsNotificationsEn {
 	/// en: '$name wants to join your team!'
 	String CONNECTION_REQUEST({required Object name}) => '${name} wants to join your team!';
 
+	/// en: 'Alliance Formed!'
+	String get CONNECTION_ACCEPTED_TITLE => 'Alliance Formed!';
+
+	/// en: '$name has joined your team! You can now play together.'
+	String CONNECTION_ACCEPTED({required Object name}) => '${name} has joined your team! You can now play together.';
+
 	/// en: 'Accept request?'
 	String get ACCEPT_REQUEST_TITLE => 'Accept request?';
 
@@ -1647,6 +1653,8 @@ extension on Translations {
 			'NOTIFICATIONS.INVITED_TO' => 'You are invited to',
 			'NOTIFICATIONS.CONNECTION_REQUEST_TITLE' => 'New Ally!',
 			'NOTIFICATIONS.CONNECTION_REQUEST' => ({required Object name}) => '${name} wants to join your team!',
+			'NOTIFICATIONS.CONNECTION_ACCEPTED_TITLE' => 'Alliance Formed!',
+			'NOTIFICATIONS.CONNECTION_ACCEPTED' => ({required Object name}) => '${name} has joined your team! You can now play together.',
 			'NOTIFICATIONS.ACCEPT_REQUEST_TITLE' => 'Accept request?',
 			'NOTIFICATIONS.INVITATION_TO_MATCH' => 'You have a new invitation to:',
 			'NOTIFICATIONS.MATCH_READY' => 'Match ready',
