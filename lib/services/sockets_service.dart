@@ -615,8 +615,8 @@ Future<void> onStart(ServiceInstance service) async {
         .on('request_connection')
         .listen((onData) => socket.emit('request_connection', onData?['user']));
     service
-        .on('accept_connection')
-        .listen((onData) => socket.emit('accept_connection', onData?['user']));
+        .on('request_accepted')
+        .listen((onData) => socket.emit('request_accepted', onData?['user']));
     service
         .on('reject_connection')
         .listen((onData) => socket.emit('reject_connection', onData?['user']));
