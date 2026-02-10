@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/enums/connection-status.enum.dart';
 import 'package:madnolia/models/chat_user_model.dart';
+import 'package:madnolia/models/connection/accepted_connection_model.dart';
 import 'package:madnolia/models/friendship/connection_request.dart';
 import 'package:madnolia/models/user/simple_user_model.dart';
+import 'package:madnolia/routes/routes.dart';
 import '../../atoms/buttons/atom_buttons.dart';
 
 class MoleculeConnectionIconButton extends StatefulWidget {
@@ -39,14 +41,19 @@ class _MoleculeConnectionIconButtonState
       });
 
       _backgroundService.on('request_accepted').listen((payload) {
-        debugPrint('Request accepted: $payload');
+        try {
+          debugPrint('Request accepted: $payload');
 
-        final requestData = ConnectionRequest.fromJson(payload!);
+          final requestData = AcceptedConnection.fromJson(payload!);
 
-        if (requestData.receiver == widget.userData.id ||
-            requestData.sender == widget.userData.id) {
-          widget.userData.connection = ConnectionStatus.partner;
-          if (mounted) setState(() {});
+          if (requestData.request.receiver == widget.userData.id ||
+              requestData.request.sender == widget.userData.id) {
+            widget.userData.connection = ConnectionStatus.partner;
+            if (mounted) setState(() {});
+          }
+        } catch (e) {
+          talker.error('error here 2 $e');
+          talker.handle(e);
         }
       });
 

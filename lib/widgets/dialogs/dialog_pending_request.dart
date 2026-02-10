@@ -49,7 +49,7 @@ class DialogPendingRequest extends StatelessWidget {
         TextButton(
           onPressed: () {
             final backgroundService = FlutterBackgroundService();
-            backgroundService.invoke('request_accepted', {'user': userData.id});
+            backgroundService.invoke('accept_request', {'user': userData.id});
             Navigator.pop(context, 'OK');
           },
           child: Text(t.CONNECTIONS.REQUESTS.ACCEPT),

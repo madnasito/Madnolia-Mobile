@@ -114,7 +114,7 @@ class AtomRequestNotification extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     final backgroundService = FlutterBackgroundService();
-                    backgroundService.invoke('request_accepted', {
+                    backgroundService.invoke('accept_request', {
                       'user': data.user?.id,
                     });
                     Navigator.pop(context, 'OK');

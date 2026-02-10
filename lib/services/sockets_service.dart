@@ -360,6 +360,7 @@ Future<void> onStart(ServiceInstance service) async {
             );
         talker.debug('Deleted request notification: $deletedNotification');
       } catch (e) {
+        talker.error('error here 1 $e');
         talker.handle(e);
       }
     });
@@ -615,8 +616,8 @@ Future<void> onStart(ServiceInstance service) async {
         .on('request_connection')
         .listen((onData) => socket.emit('request_connection', onData?['user']));
     service
-        .on('request_accepted')
-        .listen((onData) => socket.emit('request_accepted', onData?['user']));
+        .on('accept_request')
+        .listen((onData) => socket.emit('accept_request', onData?['user']));
     service
         .on('reject_connection')
         .listen((onData) => socket.emit('reject_connection', onData?['user']));
