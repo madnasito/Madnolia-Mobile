@@ -36,21 +36,6 @@ class BaseLayout extends StatelessWidget {
     final userBloc = context.read<UserBloc>();
     final messageBloc = context.read<MessageBloc>();
 
-    final backgroundService = FlutterBackgroundService();
-
-    backgroundService.on("new_request_connection").listen((onData) {
-      if (onData?['user'] == userBloc.state.id) {
-        userBloc.add(AddNotifications(value: userBloc.state.notifications + 1));
-      }
-    });
-    backgroundService
-        .on("invitation")
-        .listen(
-          (onData) => userBloc.add(
-            AddNotifications(value: userBloc.state.notifications + 1),
-          ),
-        );
-
     Widget body = child;
 
     // Wrap with SafeArea if needed
@@ -124,35 +109,35 @@ class BaseLayout extends StatelessWidget {
                   title: t.MATCHES.TITLE,
                   route: "/matches",
                 ),
-                _MenuButton(
-                  icon: userBloc.state.notifications == 0
-                      ? Icon(
-                          Icons.notifications_none_rounded,
-                          size: 40,
-                          color: Colors.white,
-                        )
-                      : Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Icon(
-                              Icons.notifications_active_rounded,
-                              size: 40,
-                              color: Colors.pink,
-                            ),
-                            Text(
-                              userBloc.state.notifications > 9
-                                  ? '9+'
-                                  : userBloc.state.notifications.toString(),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                  title: t.HEADER.NOTIFICATIONS,
-                  route: "/notifications",
-                ),
+                // _MenuButton(
+                //   icon: userBloc.state.notifications == 0
+                //       ? Icon(
+                //           Icons.notifications_none_rounded,
+                //           size: 40,
+                //           color: Colors.white,
+                //         )
+                //       : Stack(
+                //           alignment: Alignment.center,
+                //           children: [
+                //             Icon(
+                //               Icons.notifications_active_rounded,
+                //               size: 40,
+                //               color: Colors.pink,
+                //             ),
+                //             Text(
+                //               userBloc.state.notifications > 9
+                //                   ? '9+'
+                //                   : userBloc.state.notifications.toString(),
+                //               style: TextStyle(
+                //                 color: Colors.white,
+                //                 fontSize: 14,
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //   title: t.HEADER.NOTIFICATIONS,
+                //   route: "/notifications",
+                // ),
                 _MenuButton(
                   icon: messageBloc.state.unreadUserChats == 0
                       ? Icon(

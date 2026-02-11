@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,45 +22,13 @@ class CustomScaffold extends StatefulWidget {
 }
 
 class _CustomScaffoldState extends State<CustomScaffold> {
-  StreamSubscription? _newRequestSubscription;
-  StreamSubscription? _invitationSubscription;
-
   @override
   void initState() {
     super.initState();
-    _setupBackgroundListeners();
-  }
-
-  void _setupBackgroundListeners() {
-    final backgroundService = FlutterBackgroundService();
-
-    _newRequestSubscription = backgroundService
-        .on("new_request_connection")
-        .listen((onData) {
-          if (mounted) {
-            final userBloc = context.read<UserBloc>();
-            if (onData?['user'] == userBloc.state.id) {
-              userBloc.add(
-                AddNotifications(value: userBloc.state.notifications + 1),
-              );
-            }
-          }
-        });
-
-    _invitationSubscription = backgroundService.on("invitation").listen((
-      onData,
-    ) {
-      if (mounted) {
-        final userBloc = context.read<UserBloc>();
-        userBloc.add(AddNotifications(value: userBloc.state.notifications + 1));
-      }
-    });
   }
 
   @override
   void dispose() {
-    _newRequestSubscription?.cancel();
-    _invitationSubscription?.cancel();
     super.dispose();
   }
 

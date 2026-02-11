@@ -5,7 +5,6 @@ import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
 import 'package:madnolia/enums/bloc_status.enum.dart';
 
-import '../../blocs/user/user_bloc.dart';
 import '../../enums/notification_type.enum.dart';
 import '../atoms/notifications/atom_invitation_notification.dart';
 import '../atoms/notifications/atom_request_notification.dart';
@@ -75,9 +74,6 @@ class _NotificationsLoaderState extends State<NotificationsLoader> {
   @override
   Widget build(BuildContext context) {
     final backgroundService = FlutterBackgroundService();
-
-    final userBloc = context.watch<UserBloc>();
-    userBloc.add(RestoreNotifications());
 
     return ListView.builder(
       shrinkWrap: true,

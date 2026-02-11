@@ -1,6 +1,7 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:dio/dio.dart';
 import 'package:go_router/go_router.dart';
+import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
@@ -132,15 +133,17 @@ class _HomeUserPageState extends State<HomeUserPage> {
 
       final userBloc = context.read<UserBloc>();
       final messageBloc = context.read<MessageBloc>();
+      final chatsBloc = context.read<ChatsBloc>(); // Added ChatsBloc
       final platformsGamesBloc = context.read<PlatformGamesBloc>();
       final notificationsBloc = context.read<NotificationsBloc>();
 
       final User user = await UserService().getUserInfo();
 
-      // Start watching unread notifications from database
-      userBloc.add(WatchUnreadNotifications());
-
       userBloc.add(UpdateData(user: user));
+
+      // Start watchers for real-time updates in drawer
+      notificationsBloc.add(WatchNotifications());
+      chatsBloc.add(WatchUserChats());
 
       // Load notifications from backend only if not already loaded
       if (notificationsBloc.state.status == BlocStatus.initial) {

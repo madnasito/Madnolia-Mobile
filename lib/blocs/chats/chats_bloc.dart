@@ -41,7 +41,13 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       debugPrint('Watch user chats bloc');
       await emit.forEach(
         _chatMessageRepository.watchUserChats(),
-        onData: (chats) => state.copyWith(usersChats: chats),
+        onData: (chats) {
+          final unreadCount = chats.fold<int>(
+            0,
+            (previousValue, chat) => previousValue + chat.unreadCount,
+          );
+          return state.copyWith(usersChats: chats, unreadCount: unreadCount);
+        },
         onError: (error, stackTrace) {
           debugPrint(error.toString());
           debugPrint(stackTrace.toString());
@@ -78,6 +84,10 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         state.copyWith(
           status: BlocStatus.success,
           // usersChats: [...state.usersChats, ...chats]
+          unreadCount: chats.fold<int>(
+            0,
+            (previousValue, chat) => previousValue + chat.unreadCount,
+          ),
         ),
       );
     } catch (e) {

@@ -3,8 +3,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
+import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
-import 'package:madnolia/blocs/blocs.dart';
 
 import '../../../routes/routes.dart' show router;
 import '../../../utils/logout.dart';
@@ -17,8 +18,8 @@ class OrganismDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userBloc = context.read<UserBloc>();
-    final messageBloc = context.read<MessageBloc>();
+    final chatsBloc = context.watch<ChatsBloc>();
+    final notificationsBloc = context.watch<NotificationsBloc>();
     return Drawer(
       surfaceTintColor: Colors.pink,
       backgroundColor: Colors.transparent, // Cambia a transparente
@@ -66,7 +67,7 @@ class OrganismDrawer extends StatelessWidget {
                       route: "/matches",
                     ),
                     AtomMenuButton(
-                      icon: userBloc.state.notifications == 0
+                      icon: notificationsBloc.state.unreadCount == 0
                           ? Icon(
                               Icons.notifications_none_rounded,
                               size: 40,
@@ -81,9 +82,10 @@ class OrganismDrawer extends StatelessWidget {
                                   color: Colors.pink,
                                 ),
                                 Text(
-                                  userBloc.state.notifications > 9
+                                  notificationsBloc.state.unreadCount > 9
                                       ? '9+'
-                                      : userBloc.state.notifications.toString(),
+                                      : notificationsBloc.state.unreadCount
+                                            .toString(),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 14,
@@ -95,7 +97,7 @@ class OrganismDrawer extends StatelessWidget {
                       route: "/notifications",
                     ),
                     AtomMenuButton(
-                      icon: messageBloc.state.unreadUserChats == 0
+                      icon: chatsBloc.state.unreadCount == 0
                           ? Icon(
                               Icons.chat_bubble_outline_rounded,
                               size: 40,
@@ -112,9 +114,9 @@ class OrganismDrawer extends StatelessWidget {
                                 Positioned(
                                   bottom: 12,
                                   child: Text(
-                                    messageBloc.state.unreadUserChats > 9
+                                    chatsBloc.state.unreadCount > 9
                                         ? '9+'
-                                        : messageBloc.state.unreadUserChats
+                                        : chatsBloc.state.unreadCount
                                               .toString(),
                                     style: TextStyle(
                                       color: Colors.white,

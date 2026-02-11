@@ -52,11 +52,6 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
     if (state.hasReachedMax && !event.reload) return;
 
-    // On pull-to-refresh, reset the state completely.
-    if (event.reload) {
-      emit(const NotificationsState());
-    }
-
     try {
       final cursorId = event.reload
           ? null
@@ -73,6 +68,12 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
       final hasReachedMax = newNotifications.length < 20;
 
+      final unreadCount = reload
+          ? newNotifications.where((e) => !e.notification.read).length
+          : (List.of(state.data)..addAll(newNotifications))
+                .where((e) => !e.notification.read)
+                .length;
+
       emit(
         state.copyWith(
           status: BlocStatus.success,
@@ -81,6 +82,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
               ? newNotifications
               : (List.of(state.data)..addAll(newNotifications)),
           hasReachedMax: hasReachedMax,
+          unreadCount: unreadCount,
         ),
       );
     } catch (e) {
@@ -103,7 +105,15 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
               ? BlocStatus.success
               : state.status;
 
-          return state.copyWith(status: status, data: notifications);
+          final unreadCount = notifications
+              .where((e) => !e.notification.read)
+              .length;
+
+          return state.copyWith(
+            status: status,
+            data: notifications,
+            unreadCount: unreadCount,
+          );
         },
         onError: (error, stackTrace) {
           debugPrint('Stream error: $error');

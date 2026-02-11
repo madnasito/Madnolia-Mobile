@@ -33,12 +33,3 @@ class UpdateAvailability extends UserEvent {
   final UserAvailability availability;
   const UpdateAvailability({required this.availability});
 }
-
-class AddNotifications extends UserEvent {
-  final int value;
-  const AddNotifications({required this.value});
-}
-
-class RestoreNotifications extends UserEvent {}
-
-class WatchUnreadNotifications extends UserEvent {}
