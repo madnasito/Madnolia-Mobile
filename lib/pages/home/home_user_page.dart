@@ -3,11 +3,12 @@ import 'package:dio/dio.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/blocs.dart';
+import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
+import 'package:madnolia/enums/bloc_status.enum.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
 import 'package:madnolia/services/messages_service.dart';
-import 'package:madnolia/services/notifications_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/models/user/user_model.dart';
@@ -132,12 +133,20 @@ class _HomeUserPageState extends State<HomeUserPage> {
       final userBloc = context.read<UserBloc>();
       final messageBloc = context.read<MessageBloc>();
       final platformsGamesBloc = context.read<PlatformGamesBloc>();
+      final notificationsBloc = context.read<NotificationsBloc>();
 
       final User user = await UserService().getUserInfo();
-      final int unreadNotificationsCount = await NotificationsService()
-          .getNotificationsCount();
-      userBloc.add(AddNotifications(value: unreadNotificationsCount));
+
+      // Start watching unread notifications from database
+      userBloc.add(WatchUnreadNotifications());
+
       userBloc.add(UpdateData(user: user));
+
+      // Load notifications from backend only if not already loaded
+      if (notificationsBloc.state.status == BlocStatus.initial) {
+        notificationsBloc.add(LoadNotifications(reload: true));
+      }
+
       if (platformsGamesBloc.state.platformGames.isEmpty) {
         platformsGamesBloc.add(LoadPlatforms(platforms: user.platforms));
       }

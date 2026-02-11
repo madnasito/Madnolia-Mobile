@@ -89,6 +89,9 @@ class OrganismLoginForm extends StatelessWidget {
                         } else {
                           if (context.mounted) {
                             context.read<UserBloc>().add(GetInfo());
+                            context.read<UserBloc>().add(
+                              WatchUnreadNotifications(),
+                            );
                             context.go("/");
                           }
                         }

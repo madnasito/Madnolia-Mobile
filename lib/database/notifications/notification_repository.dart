@@ -7,10 +7,10 @@ import '../../enums/notification_type.enum.dart';
 import '../../models/notification/notification_details.dart';
 import '../../services/notifications_service.dart';
 import '../users/user_repository.dart';
-class NotificationRepository {
 
+class NotificationRepository {
   final AppDatabase database;
-  
+
   final NotificationsService _notificationsService = NotificationsService();
   late final UserRepository _userRepository;
 
@@ -20,43 +20,58 @@ class NotificationRepository {
 
   Future<int> insertNotification(NotificationCompanion notification) async {
     try {
-      if(notification.sender.value != null) {
+      if (notification.sender.value != null) {
         await _userRepository.getUserById(notification.sender.value!);
       }
-      return await database.into(database.notification).insertOnConflictUpdate(notification);
+      return await database
+          .into(database.notification)
+          .insertOnConflictUpdate(notification);
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
     }
   }
 
-  Future<List<NotificationDetails>> getUserNotifications({String? cursorId, bool? reload}) async {
+  Future<List<NotificationDetails>> getUserNotifications({
+    String? cursorId,
+    bool? reload,
+  }) async {
     try {
-      if(reload == true) await updateData(cursorId);
+      if (reload == true) await updateData(cursorId);
 
       final query = database.select(database.notification).join([
-        leftOuterJoin(database.user, database.user.id.equalsExp(database.notification.sender)),
+        leftOuterJoin(
+          database.user,
+          database.user.id.equalsExp(database.notification.sender),
+        ),
       ]);
 
       if (cursorId != null) {
-        final cursorNotification = await (database.select(database.notification)
-          ..where((t) => t.id.equals(cursorId)))
-        .getSingleOrNull();
+        final cursorNotification = await (database.select(
+          database.notification,
+        )..where((t) => t.id.equals(cursorId))).getSingleOrNull();
 
         if (cursorNotification != null) {
           final cursorDate = cursorNotification.date;
           query.where(
             database.notification.date.isSmallerThanValue(cursorDate) |
-            (database.notification.date.equals(cursorDate) & database.notification.id.isSmallerThanValue(cursorId))
+                (database.notification.date.equals(cursorDate) &
+                    database.notification.id.isSmallerThanValue(cursorId)),
           );
         }
       }
 
       query
         ..orderBy([
-            OrderingTerm(expression: database.notification.date, mode: OrderingMode.desc),
-            OrderingTerm(expression: database.notification.id, mode: OrderingMode.desc)
-          ])
+          OrderingTerm(
+            expression: database.notification.date,
+            mode: OrderingMode.desc,
+          ),
+          OrderingTerm(
+            expression: database.notification.id,
+            mode: OrderingMode.desc,
+          ),
+        ])
         ..limit(20);
 
       final results = await query.get();
@@ -86,24 +101,31 @@ class NotificationRepository {
 
   Future<void> updateData(String? cursorId) async {
     try {
-      List<NotificationModel> apiNotifications = await _notificationsService.getUserNotifications(cursor: cursorId);
+      List<NotificationModel> apiNotifications = await _notificationsService
+          .getUserNotifications(cursor: cursorId);
 
-      List<NotificationCompanion> notificationsCompanion = apiNotifications.map((n) => n.toCompanion()).toList();
+      List<NotificationCompanion> notificationsCompanion = apiNotifications
+          .map((n) => n.toCompanion())
+          .toList();
 
       return await insertOrUpdateMany(notificationsCompanion);
-
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
     }
   }
 
-  Future<void> insertOrUpdateMany(List <NotificationCompanion> notifications) async {
+  Future<void> insertOrUpdateMany(
+    List<NotificationCompanion> notifications,
+  ) async {
     try {
+      final notificationsWithSenders = notifications
+          .where((n) => n.sender.value != null)
+          .toList();
 
-      final notificationsWithSenders = notifications.where((n) => n.sender.value != null).toList();
-
-      List<String> senders = notificationsWithSenders.map((n) => n.sender.value!).toList();
+      List<String> senders = notificationsWithSenders
+          .map((n) => n.sender.value!)
+          .toList();
 
       // Verifyng all senders
       await _userRepository.getUsersByIds(senders);
@@ -115,31 +137,31 @@ class NotificationRepository {
       rethrow;
     }
   }
-  
-  Future<int> deleteNotification({required String id }) async {
+
+  Future<int> deleteNotification({required String id}) async {
     try {
       return (database.delete(
-        database.notification
-      )..where((t) => t.id.equals(id)))
-      .go();
+        database.notification,
+      )..where((t) => t.id.equals(id))).go();
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
     }
   }
 
-  Future<int> deleteRequestNotification({required String senderId }) async {
+  Future<int> deleteRequestNotification({required String senderId}) async {
     try {
-      return (database.delete(
-        database.notification
-      )..where((t) => t.sender.equals(senderId) & t.type.equals(NotificationType.request.index)))
-      .go();
+      return (database.delete(database.notification)..where(
+            (t) =>
+                t.sender.equals(senderId) &
+                t.type.equals(NotificationType.request.index),
+          ))
+          .go();
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
     }
   }
-
 
   Future<int> deleteNotifications() async {
     try {
@@ -152,8 +174,15 @@ class NotificationRepository {
 
   Future<int> deleteOldInvitationNotifications() async {
     try {
-      final eightMonthsAgo = DateTime.now().subtract(const Duration(days: 8 * 30)); // Approximate 8 months
-      return (database.delete(database.notification)..where((t) => t.type.equals(NotificationType.matchInvitation.index) & t.date.isSmallerThanValue(eightMonthsAgo))).go();
+      final eightMonthsAgo = DateTime.now().subtract(
+        const Duration(days: 8 * 30),
+      ); // Approximate 8 months
+      return (database.delete(database.notification)..where(
+            (t) =>
+                t.type.equals(NotificationType.matchInvitation.index) &
+                t.date.isSmallerThanValue(eightMonthsAgo),
+          ))
+          .go();
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
@@ -162,27 +191,40 @@ class NotificationRepository {
 
   Future<int> deleteOldNotifications() async {
     try {
-      final eightMonthsAgo = DateTime.now().subtract(const Duration(days: 8 * 30)); // Approximate 8 months
-      return (database.delete(database.notification)..where((t) => t.date.isSmallerThanValue(eightMonthsAgo))).go();
+      final eightMonthsAgo = DateTime.now().subtract(
+        const Duration(days: 8 * 30),
+      ); // Approximate 8 months
+      return (database.delete(
+        database.notification,
+      )..where((t) => t.date.isSmallerThanValue(eightMonthsAgo))).go();
     } catch (e) {
       debugPrint(e.toString());
       rethrow;
     }
   }
+
   Stream<List<NotificationDetails>> watchAllNotifications() {
     try {
       debugPrint('Starting to watch notifications from database');
-      
+
       // Build joined query first, then apply ordering via cascade
       final query = database.select(database.notification).join([
-        leftOuterJoin(database.user, database.user.id.equalsExp(database.notification.sender)),
+        leftOuterJoin(
+          database.user,
+          database.user.id.equalsExp(database.notification.sender),
+        ),
       ]);
 
-      query
-        .orderBy([
-            OrderingTerm(expression: database.notification.date, mode: OrderingMode.desc),
-            OrderingTerm(expression: database.notification.id, mode: OrderingMode.desc)
-          ]);
+      query.orderBy([
+        OrderingTerm(
+          expression: database.notification.date,
+          mode: OrderingMode.desc,
+        ),
+        OrderingTerm(
+          expression: database.notification.id,
+          mode: OrderingMode.desc,
+        ),
+      ]);
 
       return query.watch().map((rows) {
         final notifications = rows.map((row) {
@@ -191,12 +233,32 @@ class NotificationRepository {
             user: row.readTableOrNull(database.user),
           );
         }).toList();
-        
-        debugPrint('Database stream emitted ${notifications.length} notifications');
+
+        debugPrint(
+          'Database stream emitted ${notifications.length} notifications',
+        );
         return notifications;
       });
     } catch (e) {
       debugPrint('Error in watchAllNotifications: $e');
+      rethrow;
+    }
+  }
+
+  Stream<int> watchUnreadNotificationsCount() {
+    try {
+      debugPrint('Starting to watch unread notifications count');
+
+      final query = database.select(database.notification)
+        ..where((t) => t.read.equals(false));
+
+      return query.watch().map((notifications) {
+        final count = notifications.length;
+        debugPrint('Unread notifications count: $count');
+        return count;
+      });
+    } catch (e) {
+      debugPrint('Error in watchUnreadNotificationsCount: $e');
       rethrow;
     }
   }

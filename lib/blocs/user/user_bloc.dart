@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:madnolia/database/repository_manager.dart';
 import 'package:madnolia/enums/bloc_status.enum.dart';
 import 'package:madnolia/enums/user-availability.enum.dart';
 import 'package:madnolia/models/user/user_model.dart';
@@ -11,6 +14,8 @@ part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final _userService = UserService();
+  final _notificationRepository = RepositoryManager().notification;
+  StreamSubscription<int>? _unreadNotificationsSubscription;
 
   UserBloc() : super(const UserState()) {
     on<GetInfo>(_loadInfo);
@@ -28,6 +33,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<AddNotifications>(_updateNotifications);
 
     on<RestoreNotifications>(_restoreNotifications);
+
+    on<WatchUnreadNotifications>(_watchUnreadNotifications);
+  }
+
+  @override
+  Future<void> close() {
+    _unreadNotificationsSubscription?.cancel();
+    return super.close();
   }
 
   Future<void> _loadInfo(GetInfo event, Emitter<UserState> emit) async {
@@ -110,5 +123,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     Emitter<UserState> emit,
   ) {
     emit(state.copyWith(notifications: 0));
+  }
+
+  Future<void> _watchUnreadNotifications(
+    WatchUnreadNotifications event,
+    Emitter<UserState> emit,
+  ) async {
+    await _unreadNotificationsSubscription?.cancel();
+
+    _unreadNotificationsSubscription = _notificationRepository
+        .watchUnreadNotificationsCount()
+        .listen((count) {
+          add(AddNotifications(value: count));
+        });
   }
 }

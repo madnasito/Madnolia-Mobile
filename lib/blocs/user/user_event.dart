@@ -40,3 +40,5 @@ class AddNotifications extends UserEvent {
 }
 
 class RestoreNotifications extends UserEvent {}
+
+class WatchUnreadNotifications extends UserEvent {}

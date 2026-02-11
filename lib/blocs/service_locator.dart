@@ -1,4 +1,3 @@
-
 import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
 import 'package:madnolia/blocs/friendships/friendships_bloc.dart';
@@ -11,7 +10,6 @@ import 'package:madnolia/blocs/matches/matches_bloc.dart';
 GetIt getIt = GetIt.instance;
 
 Future<void> serviceLocatorInit() async {
-
   getIt.registerLazySingleton(() => UserBloc());
   getIt.registerLazySingleton(() => GameDataBloc());
   getIt.registerLazySingleton(() => MessageBloc());
@@ -22,4 +20,3 @@ Future<void> serviceLocatorInit() async {
   getIt.registerLazySingleton(() => PlatformGameMatchesBloc());
   getIt.registerLazySingleton(() => FriendshipsBloc());
 }
-

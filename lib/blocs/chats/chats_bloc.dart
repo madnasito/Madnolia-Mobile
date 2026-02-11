@@ -20,19 +20,23 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
 }
 
 class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
-
-  final ChatMessageRepository _chatMessageRepository = RepositoryManager().chatMessage;
+  final ChatMessageRepository _chatMessageRepository =
+      RepositoryManager().chatMessage;
 
   ChatsBloc() : super(ChatsInitial()) {
-
-    on<UserChatsFetched>(_onFetchUserChats, transformer: throttleDroppable(chatsThrottleDuration));
+    on<UserChatsFetched>(
+      _onFetchUserChats,
+      transformer: throttleDroppable(chatsThrottleDuration),
+    );
     on<WatchUserChats>(_watchUserChats);
     on<RestoreUserChats>(_restoreState);
     // on<UpdateRecipientStatus>(_updateListStatus);
-    
   }
 
-  Future<void> _watchUserChats (WatchUserChats event, Emitter<ChatsState> emit) async {
+  Future<void> _watchUserChats(
+    WatchUserChats event,
+    Emitter<ChatsState> emit,
+  ) async {
     try {
       debugPrint('Watch user chats bloc');
       await emit.forEach(
@@ -42,7 +46,7 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
           debugPrint(error.toString());
           debugPrint(stackTrace.toString());
           return state.copyWith(status: BlocStatus.failure);
-        }
+        },
       );
     } catch (e) {
       debugPrint(e.toString());
@@ -50,25 +54,31 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
     }
   }
 
-  Future _onFetchUserChats(UserChatsFetched event, Emitter<ChatsState> emit) async {
-    if(state.hasReachedMax) return;
+  Future _onFetchUserChats(
+    UserChatsFetched event,
+    Emitter<ChatsState> emit,
+  ) async {
+    if (state.hasReachedMax) return;
 
     try {
       final int skip = state.usersChats.length;
 
       final isReload = state.status == BlocStatus.initial || event.reload;
 
-      final chats = await _chatMessageRepository.getUsersChats(skip: skip, reload: isReload );
+      final chats = await _chatMessageRepository.getUsersChats(
+        skip: skip,
+        reload: isReload,
+      );
 
-      if(chats.length < 30){
+      if (chats.length < 30) {
         emit(state.copyWith(hasReachedMax: true));
       }
-      
+
       emit(
         state.copyWith(
           status: BlocStatus.success,
           // usersChats: [...state.usersChats, ...chats]
-        )
+        ),
       );
     } catch (e) {
       emit(state.copyWith(status: BlocStatus.failure));
@@ -80,8 +90,8 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       state.copyWith(
         status: BlocStatus.initial,
         hasReachedMax: false,
-        usersChats: []
-      )
+        usersChats: [],
+      ),
     );
   }
 }

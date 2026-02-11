@@ -38,7 +38,7 @@ class NotificationsService {
 
       return notifications;
     } catch (e) {
-      throw Exception(e);
+      rethrow;
     }
   }
 
