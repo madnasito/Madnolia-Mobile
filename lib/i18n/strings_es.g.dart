@@ -384,6 +384,7 @@ class _TranslationsReportsEs implements TranslationsReportsEn {
 	@override String get CHILD_ABUSE => 'Abuso de menores';
 	@override String get SUBMIT => 'Subir reporte';
 	@override String get FEEDBACK => 'Enviar reporte';
+	@override String get ERROR => 'Error al crear reporte';
 }
 
 // Path: UTILS
@@ -1069,6 +1070,7 @@ extension on TranslationsEs {
 			'REPORTS.CHILD_ABUSE' => 'Abuso de menores',
 			'REPORTS.SUBMIT' => 'Subir reporte',
 			'REPORTS.FEEDBACK' => 'Enviar reporte',
+			'REPORTS.ERROR' => 'Error al crear reporte',
 			'UTILS.SHOW_MORE' => 'Mostrar más',
 			'UTILS.SHOW_LESS' => 'Mostrar menos',
 			'UTILS.DETAILS' => 'Detalles',

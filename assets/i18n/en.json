@@ -335,7 +335,8 @@
     "SPAM": "Spam",
     "CHILD_ABUSE": "Child abuse",
     "SUBMIT": "Submit report",
-    "FEEDBACK": "Send feedback"
+    "FEEDBACK": "Send feedback",
+    "ERROR": "Error creating report"
   },
   "UTILS":{
       "SHOW_MORE": "Show more",

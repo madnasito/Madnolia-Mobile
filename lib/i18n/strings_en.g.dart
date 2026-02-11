@@ -670,6 +670,9 @@ class TranslationsReportsEn {
 
 	/// en: 'Send feedback'
 	String get FEEDBACK => 'Send feedback';
+
+	/// en: 'Error creating report'
+	String get ERROR => 'Error creating report';
 }
 
 // Path: UTILS
@@ -1702,6 +1705,7 @@ extension on Translations {
 			'REPORTS.CHILD_ABUSE' => 'Child abuse',
 			'REPORTS.SUBMIT' => 'Submit report',
 			'REPORTS.FEEDBACK' => 'Send feedback',
+			'REPORTS.ERROR' => 'Error creating report',
 			'UTILS.SHOW_MORE' => 'Show more',
 			'UTILS.SHOW_LESS' => 'Show less',
 			'UTILS.DETAILS' => 'Details',

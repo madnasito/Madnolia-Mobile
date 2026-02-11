@@ -6,6 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:madnolia/services/reports_service.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:toast/toast.dart';
 
 import '../../../i18n/strings.g.dart';
@@ -14,6 +15,7 @@ import '../../../models/reports/enum/bug_report_type.dart';
 import '../../molecules/buttons/molecule_form_button.dart';
 import '../../molecules/form/molecule_dropdown_form_field.dart';
 import '../../molecules/form/molecule_text_form_field.dart';
+import 'package:toastification/toastification.dart';
 
 class OrganismCreateReportForm extends StatefulWidget {
   const OrganismCreateReportForm({super.key});
@@ -26,6 +28,7 @@ class OrganismCreateReportForm extends StatefulWidget {
 class _OrganismCreateReportFormState extends State<OrganismCreateReportForm> {
   final _formKey = GlobalKey<FormBuilderState>();
   final _reportsService = ReportsService();
+  final talker = Talker();
   XFile? _imageFile;
   bool _isSubmitting = false;
 
@@ -43,10 +46,10 @@ class _OrganismCreateReportFormState extends State<OrganismCreateReportForm> {
   Future<void> _submitReport() async {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       if (_imageFile == null) {
-        Toast.show(
-          t.FORM.VALIDATIONS.REQUIRED_FIELD,
-          duration: Toast.lengthLong,
-          gravity: Toast.bottom,
+        toastification.show(
+          context: context,
+          title: Text(t.FORM.VALIDATIONS.REQUIRED_FIELD),
+          type: ToastificationType.error,
         );
         return;
       }
@@ -69,19 +72,20 @@ class _OrganismCreateReportFormState extends State<OrganismCreateReportForm> {
         await _reportsService.createBugReport(dto);
 
         if (mounted) {
-          Toast.show(
-            t.REPORTS.CREATED,
-            duration: Toast.lengthLong,
-            gravity: Toast.bottom,
+          toastification.show(
+            context: context,
+            title: Text(t.REPORTS.CREATED),
+            type: ToastificationType.success,
           );
           Navigator.of(context).pop();
         }
       } catch (e) {
+        talker.handle(e);
         if (mounted) {
-          Toast.show(
-            t.CREATE_MATCH.ERROR,
-            duration: Toast.lengthLong,
-            gravity: Toast.bottom,
+          toastification.show(
+            context: context,
+            title: Text(t.REPORTS.ERROR),
+            type: ToastificationType.error,
           );
         }
       } finally {

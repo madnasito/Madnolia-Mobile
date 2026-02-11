@@ -331,7 +331,8 @@
     "SPAM": "Spam",
     "CHILD_ABUSE": "Abuso de menores",
     "SUBMIT": "Subir reporte",
-    "FEEDBACK": "Enviar reporte"
+    "FEEDBACK": "Enviar reporte",
+    "ERROR": "Error al crear reporte"
   },
   "UTILS": {
     "SHOW_MORE": "Mostrar más",

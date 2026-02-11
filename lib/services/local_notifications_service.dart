@@ -248,7 +248,7 @@ class LocalNotificationsService {
                 ),
               ],
             ),
-            AndroidNotificationAction(message.id, t.FORM.INPUT.MARK_AS_READ),
+            // AndroidNotificationAction(message.id, t.FORM.INPUT.MARK_AS_READ),
           ],
           styleInformation: MessagingStyleInformation(
             me,
