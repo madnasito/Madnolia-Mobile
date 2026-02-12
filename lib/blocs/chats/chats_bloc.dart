@@ -42,10 +42,13 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
       await emit.forEach(
         _chatMessageRepository.watchUserChats(),
         onData: (chats) {
-          final unreadCount = chats.fold<int>(
-            0,
-            (previousValue, chat) => previousValue + chat.unreadCount,
-          );
+          final unreadCount = chats.fold<int>(0, (previousValue, chat) {
+            final isNotMyMessage = chat.message.creator == chat.user.id;
+            final isUnread =
+                chat.message.status == ChatMessageStatus.sent ||
+                chat.message.status == ChatMessageStatus.delivered;
+            return previousValue + (isNotMyMessage && isUnread ? 1 : 0);
+          });
           return state.copyWith(usersChats: chats, unreadCount: unreadCount);
         },
         onError: (error, stackTrace) {
@@ -84,10 +87,13 @@ class ChatsBloc extends Bloc<ChatsEvent, ChatsState> {
         state.copyWith(
           status: BlocStatus.success,
           // usersChats: [...state.usersChats, ...chats]
-          unreadCount: chats.fold<int>(
-            0,
-            (previousValue, chat) => previousValue + chat.unreadCount,
-          ),
+          unreadCount: chats.fold<int>(0, (previousValue, chat) {
+            final isNotMyMessage = chat.message.creator == chat.user.id;
+            final isUnread =
+                chat.message.status == ChatMessageStatus.sent ||
+                chat.message.status == ChatMessageStatus.delivered;
+            return previousValue + (isNotMyMessage && isUnread ? 1 : 0);
+          }),
         ),
       );
     } catch (e) {
