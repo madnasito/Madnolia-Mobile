@@ -112,7 +112,7 @@ class ChatMessageRepository {
         ChatMessageCompanion(
           id: Value(newId),
           date: Value(date),
-          status: Value(ChatMessageStatus.delivered),
+          status: Value(ChatMessageStatus.sent),
           pending: Value(false),
         ),
       );
