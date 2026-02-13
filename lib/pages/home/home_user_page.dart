@@ -7,9 +7,7 @@ import 'package:madnolia/blocs/blocs.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/enums/bloc_status.enum.dart';
-import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/services/local_notifications_service.dart';
-import 'package:madnolia/services/messages_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/models/user/user_model.dart';
@@ -132,7 +130,6 @@ class _HomeUserPageState extends State<HomeUserPage> {
       if (!context.mounted) return null;
 
       final userBloc = context.read<UserBloc>();
-      final messageBloc = context.read<MessageBloc>();
       final chatsBloc = context.read<ChatsBloc>(); // Added ChatsBloc
       final platformsGamesBloc = context.read<PlatformGamesBloc>();
       final notificationsBloc = context.read<NotificationsBloc>();
@@ -145,23 +142,17 @@ class _HomeUserPageState extends State<HomeUserPage> {
       notificationsBloc.add(WatchNotifications());
       chatsBloc.add(WatchUserChats());
 
-      // Load notifications from backend only if not already loaded
+      // Load notifications/chats from backend only if not already loaded
       if (notificationsBloc.state.status == BlocStatus.initial) {
         notificationsBloc.add(LoadNotifications(reload: true));
       }
 
-      if (platformsGamesBloc.state.platformGames.isEmpty) {
-        platformsGamesBloc.add(LoadPlatforms(platforms: user.platforms));
+      if (chatsBloc.state.status == BlocStatus.initial) {
+        chatsBloc.add(UserChatsFetched(reload: true));
       }
 
-      if (messageBloc.state.unreadUserChats == 0) {
-        final chats = await MessagesService().getUsersChats(0);
-        for (var chat in chats) {
-          if (chat.message.creator != userBloc.state.id &&
-              chat.message.status == ChatMessageStatus.sent) {
-            messageBloc.add(UpdateUnreadUserChatCount(value: 1));
-          }
-        }
+      if (platformsGamesBloc.state.platformGames.isEmpty) {
+        platformsGamesBloc.add(LoadPlatforms(platforms: user.platforms));
       }
 
       return user;
