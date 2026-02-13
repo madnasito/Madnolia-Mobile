@@ -1,5 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
@@ -18,6 +19,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
   late NotificationsBloc notificationsBloc;
   late final _scrollController = ScrollController();
 
+  final backgroundService = FlutterBackgroundService();
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +28,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     notificationsBloc.add(LoadNotifications());
     notificationsBloc.add(WatchNotifications());
     _scrollController.addListener(_onScroll);
+    backgroundService.invoke('read_all_notifications');
   }
 
   @override

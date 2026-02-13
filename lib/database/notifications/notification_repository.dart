@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/models/notification/notification_model.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 import '../../enums/notification_type.enum.dart';
 import '../../models/notification/notification_details.dart';
@@ -12,6 +12,7 @@ class NotificationRepository {
   final AppDatabase database;
 
   final NotificationsService _notificationsService = NotificationsService();
+  final talker = Talker();
   late final UserRepository _userRepository;
 
   NotificationRepository(this.database) {
@@ -27,7 +28,30 @@ class NotificationRepository {
           .into(database.notification)
           .insertOnConflictUpdate(notification);
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
+      rethrow;
+    }
+  }
+
+  Future<int> readAllNotifications() async {
+    try {
+      return (database.update(database.notification)
+            ..where((t) => t.read.equals(false)))
+          .write(NotificationCompanion(read: const Value(true)));
+    } catch (e) {
+      talker.handle(e);
+      rethrow;
+    }
+  }
+
+  Future<int> unreadNotificationsCount() async {
+    try {
+      return (database.select(database.notification)
+            ..where((t) => t.read.equals(false)))
+          .get()
+          .then((notifications) => notifications.length);
+    } catch (e) {
+      talker.handle(e);
       rethrow;
     }
   }
@@ -94,7 +118,7 @@ class NotificationRepository {
         );
       }).toList();
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
       rethrow;
     }
   }
@@ -110,7 +134,7 @@ class NotificationRepository {
 
       return await insertOrUpdateMany(notificationsCompanion);
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
       rethrow;
     }
   }
@@ -133,7 +157,7 @@ class NotificationRepository {
         batch.insertAllOnConflictUpdate(database.notification, notifications);
       });
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
       rethrow;
     }
   }
@@ -144,7 +168,7 @@ class NotificationRepository {
         database.notification,
       )..where((t) => t.id.equals(id))).go();
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
       rethrow;
     }
   }
@@ -158,7 +182,7 @@ class NotificationRepository {
           ))
           .go();
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
       rethrow;
     }
   }
@@ -167,7 +191,7 @@ class NotificationRepository {
     try {
       return (database.delete(database.notification)).go();
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
       rethrow;
     }
   }
@@ -184,7 +208,7 @@ class NotificationRepository {
           ))
           .go();
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
       rethrow;
     }
   }
@@ -198,14 +222,14 @@ class NotificationRepository {
         database.notification,
       )..where((t) => t.date.isSmallerThanValue(eightMonthsAgo))).go();
     } catch (e) {
-      debugPrint(e.toString());
+      talker.handle(e);
       rethrow;
     }
   }
 
   Stream<List<NotificationDetails>> watchAllNotifications() {
     try {
-      debugPrint('Starting to watch notifications from database');
+      talker.log('Starting to watch notifications from database');
 
       // Build joined query first, then apply ordering via cascade
       final query = database.select(database.notification).join([
@@ -234,31 +258,31 @@ class NotificationRepository {
           );
         }).toList();
 
-        debugPrint(
+        talker.log(
           'Database stream emitted ${notifications.length} notifications',
         );
         return notifications;
       });
     } catch (e) {
-      debugPrint('Error in watchAllNotifications: $e');
+      talker.handle(e);
       rethrow;
     }
   }
 
   Stream<int> watchUnreadNotificationsCount() {
     try {
-      debugPrint('Starting to watch unread notifications count');
+      talker.log('Starting to watch unread notifications count');
 
       final query = database.select(database.notification)
         ..where((t) => t.read.equals(false));
 
       return query.watch().map((notifications) {
         final count = notifications.length;
-        debugPrint('Unread notifications count: $count');
+        talker.log('Unread notifications count: $count');
         return count;
       });
     } catch (e) {
-      debugPrint('Error in watchUnreadNotificationsCount: $e');
+      talker.handle(e);
       rethrow;
     }
   }

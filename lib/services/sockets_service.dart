@@ -387,6 +387,14 @@ Future<void> onStart(ServiceInstance service) async {
       service.invoke('reject_connection', data);
     });
 
+    // Events to handle notifications
+    socket.on('notifications_read', (data) async {
+      try {
+        await notificationsRepository.readAllNotifications();
+      } catch (e) {
+        talker.handle(e);
+      }
+    });
     socket.on('notification_deleted', (data) async {
       try {
         await notificationsRepository.deleteNotification(id: data);
@@ -410,6 +418,15 @@ Future<void> onStart(ServiceInstance service) async {
         talker.handle(e);
       }
     });
+
+    socket.on('notification_read', (data) async {
+      try {
+        await notificationsRepository.readAllNotifications();
+      } catch (e) {
+        talker.handle(e);
+      }
+    });
+
     socket.onDisconnect((_) {
       service.invoke("disconnected_socket");
       storage.write(
@@ -582,6 +599,7 @@ Future<void> onStart(ServiceInstance service) async {
         .on("room_ice_candidate")
         .listen((onData) => socket.emit("room_ice_candidate", onData));
 
+    // Notifications events
     service.on("delete_notification").listen((onData) {
       try {
         final String id = onData?['id'];
@@ -599,17 +617,23 @@ Future<void> onStart(ServiceInstance service) async {
         talker.error(e.toString());
       }
     });
-
     service
         .on("delete_chat_notifications")
         .listen(
           (onData) =>
               LocalNotificationsService.deleteRoomMessages(onData?["room"]),
         );
-
     service
         .on("delete_all_notifications")
         .listen((onData) => LocalNotificationsService.deleteAllNotifications());
+    service.on('read_all_notifications').listen((onData) async {
+      try {
+        final count = await notificationsRepository.unreadNotificationsCount();
+        if (count > 0) socket.emit('read_all_notifications');
+      } catch (e) {
+        talker.error(e.toString());
+      }
+    });
 
     // Events for handle connections
     service
