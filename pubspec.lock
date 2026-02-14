@@ -365,10 +365,10 @@ packages:
     dependency: "direct main"
     description:
       name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
+      sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.7"
+    version: "2.0.8"
   expandable_text:
     dependency: "direct main"
     description:
@@ -1421,6 +1421,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  shorebird_code_push:
+    dependency: "direct main"
+    description:
+      name: shorebird_code_push
+      sha256: "77511427c51906dd39d3bb1e6b0a8c49777975f9b0a5d073e35c9087a8a36bb6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.6"
   sky_engine:
     dependency: transitive
     description: flutter
