@@ -8,7 +8,8 @@ import 'package:madnolia/database/database.dart';
 import 'package:madnolia/services/match_service.dart';
 import 'package:madnolia/utils/images_util.dart';
 import 'package:madnolia/widgets/alert_widget.dart';
-import 'package:toast/toast.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../blocs/matches/matches_bloc.dart';
 import '../../../blocs/platform_games/platform_games_bloc.dart';
@@ -16,16 +17,21 @@ import '../../../blocs/platform_games/platform_games_bloc.dart';
 class MoleculeButtonCancellMatch extends StatelessWidget {
   final MatchData match;
   final GameData game;
-  const MoleculeButtonCancellMatch({super.key, required this.match, required this.game});
+  const MoleculeButtonCancellMatch({
+    super.key,
+    required this.match,
+    required this.game,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final talker = Talker();
     final matchesBloc = context.watch<MatchesBloc>();
     return IconButton(
-      onPressed: () { 
+      onPressed: () {
         showDialog(
-          context: context, 
-          builder: (BuildContext context) { 
+          context: context,
+          builder: (BuildContext context) {
             final platformsGamesBloc = context.watch<PlatformGamesBloc>();
             return AlertDialog(
               backgroundColor: Colors.black26,
@@ -33,52 +39,66 @@ class MoleculeButtonCancellMatch extends StatelessWidget {
               contentPadding: EdgeInsets.only(bottom: 10, top: 20),
               actionsPadding: const EdgeInsets.all(0),
               titleTextStyle: const TextStyle(fontSize: 20),
-              icon: game.background != null ? CircleAvatar(
-                radius: 50,
-                backgroundImage: CachedNetworkImageProvider(resizeRawgImage(game.background!)) 
-              ) : null,
-              title: Text(t.MATCH.CANCELL_MATCH_QUESTION, textAlign: TextAlign.center),
+              icon: game.background != null
+                  ? CircleAvatar(
+                      radius: 50,
+                      backgroundImage: CachedNetworkImageProvider(
+                        resizeRawgImage(game.background!),
+                      ),
+                    )
+                  : null,
+              title: Text(
+                t.MATCH.CANCELL_MATCH_QUESTION,
+                textAlign: TextAlign.center,
+              ),
               actions: [
                 TextButton(
                   onPressed: () async {
-                    Navigator.of(context).pop();                    
-                  }, 
-                  child: Text(t.UTILS.NO)
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(t.UTILS.NO),
                 ),
                 TextButton(
                   onPressed: () async {
                     try {
                       await MatchService().cancellMatch(match.id);
                       platformsGamesBloc.add(RestorePlatformsGamesState());
-                      matchesBloc.add(UpdateMatchStatus(matchId: match.id, status: MatchStatus.cancelled));
-                      if(!context.mounted) return;
-                      Toast.show(t.MATCH.MATCH_CANCELLED,
-                        gravity: 100,
-                        border: Border.all(color: Colors.blueAccent),
-                        textStyle: const TextStyle(fontSize: 18),
-                        duration: 3
+                      matchesBloc.add(
+                        UpdateMatchStatus(
+                          matchId: match.id,
+                          status: MatchStatus.cancelled,
+                        ),
                       );
+                      if (!context.mounted) return;
+                      toastification.show(
+                        context: context,
+                        title: Text(t.MATCH.MATCH_CANCELLED),
+                        type: ToastificationType.success,
+                        style: ToastificationStyle.flat,
+                        autoCloseDuration: const Duration(seconds: 3),
+                      );
+                      Navigator.of(context).pop();
                       GoRouter.of(context).pushReplacement('/matches');
-                      ToastContext().init(context);
                     } catch (e) {
-                      debugPrint(e.toString());
-                      if(e is Map) showErrorServerAlert(context, e);
+                      talker.handle(e);
+                      Navigator.of(context).pop();
+                      if (e is Map) showErrorServerAlert(context, e);
                     }
-                  }, 
-                  child: Text(t.UTILS.YES)
+                  },
+                  child: Text(t.UTILS.YES),
                 ),
               ],
             );
-          }
+          },
         );
-       },
+      },
       icon: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 5,
         children: [
           Icon(Icons.cancel, color: Colors.red),
-          Text(t.MATCH.CANCEL_MATCH)
+          Text(t.MATCH.CANCEL_MATCH),
         ],
       ),
     );
