@@ -4,30 +4,35 @@ import 'package:madnolia/widgets/molecules/chat_message_molecule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class GroupChatMessageOrganism extends StatefulWidget {
   final ChatMessageData messageData;
   final UserData user;
-  final bool mainMessage;
+  final bool isFirst;
+  final bool isLast;
 
-  const GroupChatMessageOrganism(
-      {super.key,
-      required this.messageData,
-      required this.user,
-      required this.mainMessage});
+  const GroupChatMessageOrganism({
+    super.key,
+    required this.messageData,
+    required this.user,
+    required this.isFirst,
+    required this.isLast,
+  });
 
   @override
-  State<GroupChatMessageOrganism> createState() => _GroupChatMessageOrganismState();
+  State<GroupChatMessageOrganism> createState() =>
+      _GroupChatMessageOrganismState();
 }
 
-class _GroupChatMessageOrganismState extends State<GroupChatMessageOrganism> with SingleTickerProviderStateMixin {
+class _GroupChatMessageOrganismState extends State<GroupChatMessageOrganism>
+    with SingleTickerProviderStateMixin {
   late AnimationController animationController;
 
   @override
   void initState() {
     animationController = AnimationController(
-                vsync: this, duration: const Duration(milliseconds: 300))
-              ..forward();
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    )..forward();
     super.initState();
   }
 
@@ -39,21 +44,30 @@ class _GroupChatMessageOrganismState extends State<GroupChatMessageOrganism> wit
 
   @override
   Widget build(BuildContext context) {
-    final userState = context.read<UserBloc>().state; 
+    final userState = context.read<UserBloc>().state;
     return FadeTransition(
-            opacity: animationController,
-            child: SizeTransition(
-              sizeFactor: CurvedAnimation(
-                  parent: animationController, curve: Curves.easeInOut),
-              child: Container(
-                child: widget.user.id == userState.id
-                    ? MyGroupMessageMolecule(user: widget.user, messageData: widget.messageData, mainMessage: widget.mainMessage)
-                    : NotMyGroupMessageMolecule(user: widget.user, messageData: widget.messageData, mainMessage: widget.mainMessage),
-              ),
-            ),
-          );
-        }
-      }
-  
-  
-
+      opacity: animationController,
+      child: SizeTransition(
+        sizeFactor: CurvedAnimation(
+          parent: animationController,
+          curve: Curves.easeInOut,
+        ),
+        child: Container(
+          child: widget.user.id == userState.id
+              ? MyGroupMessageMolecule(
+                  user: widget.user,
+                  messageData: widget.messageData,
+                  isFirst: widget.isFirst,
+                  isLast: widget.isLast,
+                )
+              : NotMyGroupMessageMolecule(
+                  user: widget.user,
+                  messageData: widget.messageData,
+                  isFirst: widget.isFirst,
+                  isLast: widget.isLast,
+                ),
+        ),
+      ),
+    );
+  }
+}

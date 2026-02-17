@@ -9,10 +9,13 @@ import '../icons/message_status_icon.dart';
 
 class AtomMyIndividualMessage extends StatelessWidget {
   final ChatMessageData message;
-  final bool mainMessage;
+  final bool isLast;
 
-  const AtomMyIndividualMessage(
-      {super.key, required this.message, required this.mainMessage});
+  const AtomMyIndividualMessage({
+    super.key,
+    required this.message,
+    required this.isLast,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class AtomMyIndividualMessage extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: Container(
         constraints: BoxConstraints(maxWidth: maxWidth),
-        margin: EdgeInsets.only(bottom: mainMessage ? 10 : 2, right: 10),
+        margin: EdgeInsets.only(bottom: isLast ? 10 : 2, right: 10),
         decoration: BoxDecoration(
           color: Colors.transparent,
           border: Border.all(
@@ -33,7 +36,7 @@ class AtomMyIndividualMessage extends StatelessWidget {
             topLeft: const Radius.circular(15),
             topRight: const Radius.circular(15),
             bottomLeft: const Radius.circular(15),
-            bottomRight: Radius.circular(mainMessage ? 0 : 15),
+            bottomRight: Radius.circular(isLast ? 0 : 15),
           ),
         ),
         padding: const EdgeInsets.all(10),
@@ -68,10 +71,9 @@ class AtomMyIndividualMessage extends StatelessWidget {
               children: [
                 Text(
                   DateFormat.Hm().format(message.date),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: Colors.white.withValues(alpha: 0.6)),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.6),
+                  ),
                 ),
                 const SizedBox(width: 4),
                 AtomMessageStatusIcon(

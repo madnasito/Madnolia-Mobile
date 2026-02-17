@@ -12,10 +12,13 @@ import '../../../models/chat/update_recipient_model.dart';
 
 class AtomNotMyIndividualMessage extends StatefulWidget {
   final ChatMessageData message;
-  final bool mainMessage;
+  final bool isLast;
 
-  const AtomNotMyIndividualMessage(
-      {super.key, required this.message, required this.mainMessage});
+  const AtomNotMyIndividualMessage({
+    super.key,
+    required this.message,
+    required this.isLast,
+  });
 
   @override
   State<AtomNotMyIndividualMessage> createState() =>
@@ -43,18 +46,19 @@ class _AtomNotMyIndividualMessageState
             widget.message.status == ChatMessageStatus.sent) {
           debugPrint('${widget.message.content}: ${widget.message.status}');
           backgroundService.invoke(
-              'update_recipient_status',
-              UpdateRecipientModel(
-                      id: widget.message.id, status: ChatMessageStatus.read)
-                  .toJson());
+            'update_recipient_status',
+            UpdateRecipientModel(
+              id: widget.message.id,
+              status: ChatMessageStatus.read,
+            ).toJson(),
+          );
         }
       },
       child: Align(
         alignment: Alignment.centerLeft,
         child: Container(
           constraints: BoxConstraints(maxWidth: maxWidth),
-          margin:
-              EdgeInsets.only(bottom: widget.mainMessage ? 10 : 2, left: 10),
+          margin: EdgeInsets.only(bottom: widget.isLast ? 10 : 2, left: 10),
           decoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(
@@ -64,7 +68,7 @@ class _AtomNotMyIndividualMessageState
             borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(15),
               topRight: const Radius.circular(15),
-              bottomLeft: Radius.circular(widget.mainMessage ? 0 : 15),
+              bottomLeft: Radius.circular(widget.isLast ? 0 : 15),
               bottomRight: const Radius.circular(15),
             ),
           ),
@@ -98,10 +102,9 @@ class _AtomNotMyIndividualMessageState
               ),
               Text(
                 DateFormat.Hm().format(widget.message.date),
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(color: Colors.white.withValues(alpha: 0.6)),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.white.withValues(alpha: 0.6),
+                ),
               ),
             ],
           ),

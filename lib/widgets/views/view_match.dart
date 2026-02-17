@@ -281,7 +281,12 @@ class BuildMessageList extends StatelessWidget {
         itemBuilder: (context, index) {
           final message = state.roomMessages[index];
 
-          final isMainMessage =
+          final isFirst =
+              index == state.roomMessages.length - 1 ||
+              state.roomMessages[index].chatMessage.creator !=
+                  state.roomMessages[index + 1].chatMessage.creator;
+
+          final isLast =
               index == 0 ||
               state.roomMessages[index].chatMessage.creator !=
                   state.roomMessages[index - 1].chatMessage.creator;
@@ -301,7 +306,8 @@ class BuildMessageList extends StatelessWidget {
           final messageWidget = GroupChatMessageOrganism(
             messageData: state.roomMessages[index].chatMessage,
             user: message.user,
-            mainMessage: isMainMessage,
+            isFirst: isFirst,
+            isLast: isLast,
           );
 
           if (showDateHeader) {

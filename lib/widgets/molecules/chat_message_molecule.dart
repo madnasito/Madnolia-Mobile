@@ -11,12 +11,14 @@ import 'package:url_launcher/url_launcher.dart' show launchUrl;
 class MyGroupMessageMolecule extends StatelessWidget {
   final UserData user;
   final ChatMessageData messageData;
-  final bool mainMessage;
+  final bool isFirst;
+  final bool isLast;
 
   const MyGroupMessageMolecule({
     super.key,
     required this.messageData,
-    required this.mainMessage,
+    required this.isFirst,
+    required this.isLast,
     required this.user,
   });
 
@@ -30,7 +32,7 @@ class MyGroupMessageMolecule extends StatelessWidget {
       children: [
         Container(
           constraints: BoxConstraints(maxWidth: maxWidth),
-          margin: EdgeInsets.only(bottom: mainMessage ? 10 : 2, right: 10),
+          margin: EdgeInsets.only(bottom: isLast ? 10 : 2, right: 10),
           decoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(
@@ -41,7 +43,7 @@ class MyGroupMessageMolecule extends StatelessWidget {
               topLeft: Radius.circular(15),
               topRight: Radius.circular(15),
               bottomLeft: Radius.circular(15),
-              bottomRight: Radius.circular(mainMessage ? 0 : 15),
+              bottomRight: Radius.circular(isLast ? 0 : 15),
             ),
           ),
           padding: const EdgeInsets.all(10),
@@ -94,9 +96,9 @@ class MyGroupMessageMolecule extends StatelessWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(bottom: mainMessage ? 10 : 2, left: 2),
+          margin: EdgeInsets.only(bottom: isLast ? 10 : 2, left: 2),
           child: CircleAvatar(
-            backgroundImage: mainMessage
+            backgroundImage: isLast
                 ? CachedNetworkImageProvider(user.thumb)
                 : null,
             backgroundColor: Colors.transparent,
@@ -110,13 +112,15 @@ class MyGroupMessageMolecule extends StatelessWidget {
 class NotMyGroupMessageMolecule extends StatelessWidget {
   final UserData? user;
   final ChatMessageData messageData;
-  final bool mainMessage;
+  final bool isFirst;
+  final bool isLast;
 
   const NotMyGroupMessageMolecule({
     super.key,
     this.user,
     required this.messageData,
-    required this.mainMessage,
+    required this.isFirst,
+    required this.isLast,
   });
 
   @override
@@ -128,13 +132,9 @@ class NotMyGroupMessageMolecule extends StatelessWidget {
       children: [
         GestureDetector(
           child: Container(
-            margin: EdgeInsets.only(
-              left: 2,
-              right: 4,
-              bottom: mainMessage ? 10 : 2,
-            ),
+            margin: EdgeInsets.only(left: 2, right: 4, bottom: isLast ? 10 : 2),
             child: CircleAvatar(
-              backgroundImage: mainMessage
+              backgroundImage: isLast
                   ? CachedNetworkImageProvider(user!.thumb)
                   : null,
               backgroundColor: Colors.transparent,
@@ -143,7 +143,7 @@ class NotMyGroupMessageMolecule extends StatelessWidget {
         ),
         Container(
           constraints: BoxConstraints(maxWidth: maxWidth),
-          margin: EdgeInsets.only(bottom: mainMessage ? 10 : 2, left: 10),
+          margin: EdgeInsets.only(bottom: isLast ? 10 : 2, left: 10),
           decoration: BoxDecoration(
             color: Colors.transparent,
             border: Border.all(
@@ -153,7 +153,7 @@ class NotMyGroupMessageMolecule extends StatelessWidget {
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(15),
               topRight: Radius.circular(15),
-              bottomLeft: Radius.circular(mainMessage ? 0 : 15),
+              bottomLeft: Radius.circular(isLast ? 0 : 15),
               bottomRight: Radius.circular(15),
             ),
           ),
@@ -162,7 +162,7 @@ class NotMyGroupMessageMolecule extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (mainMessage && user != null)
+              if (isFirst && user != null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 4.0),
                   child: Text(
