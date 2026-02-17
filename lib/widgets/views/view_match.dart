@@ -304,6 +304,9 @@ class BuildMessageList extends StatelessWidget {
           }
 
           final messageWidget = GroupChatMessageOrganism(
+            key: ValueKey(
+              '${message.chatMessage.creator}_${message.chatMessage.date.millisecondsSinceEpoch}',
+            ),
             messageData: state.roomMessages[index].chatMessage,
             user: message.user,
             isFirst: isFirst,

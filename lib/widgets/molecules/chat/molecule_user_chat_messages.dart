@@ -47,8 +47,17 @@ class MoleculeUserChatMessagesList extends StatelessWidget {
           }
 
           final messageWidget = currentMessage.creator == myUserId
-              ? AtomMyIndividualMessage(message: currentMessage, isLast: isLast)
+              ? AtomMyIndividualMessage(
+                  key: ValueKey(
+                    '${currentMessage.creator}_${currentMessage.date.millisecondsSinceEpoch}',
+                  ),
+                  message: currentMessage,
+                  isLast: isLast,
+                )
               : AtomNotMyIndividualMessage(
+                  key: ValueKey(
+                    '${currentMessage.creator}_${currentMessage.date.millisecondsSinceEpoch}',
+                  ),
                   message: currentMessage,
                   isLast: isLast,
                 );

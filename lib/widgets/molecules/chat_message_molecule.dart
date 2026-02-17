@@ -5,7 +5,6 @@ import 'package:madnolia/i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/widgets/atoms/icons/message_status_icon.dart';
-// import 'package:madnolia/utils/user_db_util.dart';
 import 'package:url_launcher/url_launcher.dart' show launchUrl;
 
 class MyGroupMessageMolecule extends StatelessWidget {
@@ -40,9 +39,9 @@ class MyGroupMessageMolecule extends StatelessWidget {
               color: Colors.blue.withValues(alpha: 0.5),
             ),
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
-              bottomLeft: Radius.circular(15),
+              topLeft: const Radius.circular(15),
+              topRight: const Radius.circular(15),
+              bottomLeft: const Radius.circular(15),
               bottomRight: Radius.circular(isLast ? 0 : 15),
             ),
           ),
@@ -62,7 +61,7 @@ class MyGroupMessageMolecule extends StatelessWidget {
                     animation: true,
                     collapseOnTextTap: true,
                     expandOnTextTap: true,
-                    mentionStyle: TextStyle(color: Colors.greenAccent),
+                    mentionStyle: const TextStyle(color: Colors.greenAccent),
                     onMentionTap: (value) => debugPrint('Mention $value'),
                     onUrlTap: (value) async {
                       final Uri url = Uri.parse(value);
@@ -151,10 +150,10 @@ class NotMyGroupMessageMolecule extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.2),
             ),
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
+              topLeft: const Radius.circular(15),
+              topRight: const Radius.circular(15),
               bottomLeft: Radius.circular(isLast ? 0 : 15),
-              bottomRight: Radius.circular(15),
+              bottomRight: const Radius.circular(15),
             ),
           ),
           padding: const EdgeInsets.all(10),
@@ -188,7 +187,9 @@ class NotMyGroupMessageMolecule extends StatelessWidget {
                         animation: true,
                         collapseOnTextTap: true,
                         expandOnTextTap: true,
-                        mentionStyle: TextStyle(color: Colors.greenAccent),
+                        mentionStyle: const TextStyle(
+                          color: Colors.greenAccent,
+                        ),
                         onMentionTap: (value) => debugPrint('Mention $value'),
                         onUrlTap: (value) async {
                           final Uri url = Uri.parse(value);
