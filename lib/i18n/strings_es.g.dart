@@ -193,7 +193,8 @@ class _TranslationsCreateMatchEs implements TranslationsCreateMatchEn {
 	@override String get SEARCHING => 'Buscando';
 	@override String get SEARCH_USER => 'Invitar compañeros a tu partida (opcional)';
 	@override String get MATCH_NAME => 'Nombre de la partida (opcional)';
-	@override String get INVITEDS => 'Invitados';
+	@override String get INVITEDS => 'Invitados:';
+	@override String get RESULTS => 'Resultados:';
 	@override String get DATE => 'Fecha';
 	@override String get TIME => 'Hora';
 	@override String get CLOCK_MESSAGE => 'Presiona el reloj';
@@ -935,7 +936,8 @@ extension on TranslationsEs {
 			'CREATE_MATCH.SEARCHING' => 'Buscando',
 			'CREATE_MATCH.SEARCH_USER' => 'Invitar compañeros a tu partida (opcional)',
 			'CREATE_MATCH.MATCH_NAME' => 'Nombre de la partida (opcional)',
-			'CREATE_MATCH.INVITEDS' => 'Invitados',
+			'CREATE_MATCH.INVITEDS' => 'Invitados:',
+			'CREATE_MATCH.RESULTS' => 'Resultados:',
 			'CREATE_MATCH.DATE' => 'Fecha',
 			'CREATE_MATCH.TIME' => 'Hora',
 			'CREATE_MATCH.CLOCK_MESSAGE' => 'Presiona el reloj',

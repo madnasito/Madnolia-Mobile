@@ -12,14 +12,14 @@ import 'package:madnolia/i18n/strings.g.dart';
 
 import 'custom_input_widget.dart';
 
-class SeatchUser extends StatefulWidget {
-  const SeatchUser({super.key});
+class SearchUser extends StatefulWidget {
+  const SearchUser({super.key});
 
   @override
-  State<SeatchUser> createState() => _SeatchUserState();
+  State<SearchUser> createState() => _SearchUserState();
 }
 
-class _SeatchUserState extends State<SeatchUser> {
+class _SearchUserState extends State<SearchUser> {
   late int counter;
   late TextEditingController controller;
   @override
@@ -75,10 +75,10 @@ class _SeatchUserState extends State<SeatchUser> {
                         .toList();
                     return Column(
                       children: [
-                        const Text(
-                          "Results: \n",
+                        Text(
+                          "${t.CREATE_MATCH.RESULTS} \n",
                           textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 20),
+                          style: const TextStyle(fontSize: 20),
                         ),
                         Container(
                           color: Colors.black45,
@@ -135,10 +135,10 @@ class _SeatchUserState extends State<SeatchUser> {
                 visible: matchUsersCubit.state.users.isNotEmpty,
                 child: Column(
                   children: [
-                    const Text(
-                      "Inviteds:\n",
+                    Text(
+                      "${t.CREATE_MATCH.INVITEDS}\n",
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
                     Container(
                       color: Colors.black38,

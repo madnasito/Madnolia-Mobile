@@ -309,8 +309,11 @@ class TranslationsCreateMatchEn {
 	/// en: 'Match name (optional)'
 	String get MATCH_NAME => 'Match name (optional)';
 
-	/// en: 'Inviteds'
-	String get INVITEDS => 'Inviteds';
+	/// en: 'Invited:'
+	String get INVITEDS => 'Invited:';
+
+	/// en: 'Results:'
+	String get RESULTS => 'Results:';
 
 	/// en: 'Date'
 	String get DATE => 'Date';
@@ -1570,7 +1573,8 @@ extension on Translations {
 			'CREATE_MATCH.SEARCHING' => 'Searching',
 			'CREATE_MATCH.SEARCH_USER' => 'Invite partners to your match (optional)',
 			'CREATE_MATCH.MATCH_NAME' => 'Match name (optional)',
-			'CREATE_MATCH.INVITEDS' => 'Inviteds',
+			'CREATE_MATCH.INVITEDS' => 'Invited:',
+			'CREATE_MATCH.RESULTS' => 'Results:',
 			'CREATE_MATCH.DATE' => 'Date',
 			'CREATE_MATCH.TIME' => 'Time',
 			'CREATE_MATCH.CLOCK_MESSAGE' => 'Press the clock',
