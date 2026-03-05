@@ -94,6 +94,7 @@ dependencies:
   firebase_analytics: ^12.1.1
   talker_flutter: ^5.1.13
   talker_dio_logger: ^5.1.13
+  drift_db_viewer: ^2.1.0
 
 dev_dependencies:
   flutter_test:

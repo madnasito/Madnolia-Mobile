@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart' show CupertinoIcons;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
@@ -138,6 +139,17 @@ class OrganismDrawer extends StatelessWidget {
                       title: t.HEADER.SETTINGS,
                       route: "/settings",
                     ),
+                    kDebugMode
+                        ? AtomMenuButton(
+                            icon: Icon(
+                              Icons.developer_mode_rounded,
+                              size: 40,
+                              color: Colors.white,
+                            ),
+                            title: "Dev",
+                            route: "/dev",
+                          )
+                        : SizedBox.shrink(),
                   ],
                 ),
                 Container(
