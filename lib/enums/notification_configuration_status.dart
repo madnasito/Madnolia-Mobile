@@ -1,3 +1,1 @@
-enum NotificationConfigurationStatus {
-  mute
-}
+enum NotificationConfigurationStatus { enabled, mute, mentions }
