@@ -1,5 +1,5 @@
 enum NotificationEvents {
-  standardNotification('notification:standard_notification'),
+  standartNotification('notification:standart_notification'),
   notificationDeleted('notification:deleted'),
   delete('notification:delete'),
   deleteChatNotifications('notification:delete_chat_notifications'),

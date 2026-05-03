@@ -421,7 +421,7 @@ Future<void> onStart(ServiceInstance service) async {
           await matchRepository.updateMatchStatus(data, MatchStatus.cancelled),
     );
 
-    socket.on(NotificationEvents.standardNotification.event, (data) async {
+    socket.on(NotificationEvents.standartNotification.event, (data) async {
       try {
         final notification = NotificationModel.fromJson(data);
         final notificationCompanion = notification.toCompanion();
