@@ -45,7 +45,7 @@ class PlatformGamesBloc extends Bloc<PlatformGamesEvent, PlatformGamesState> {
           PlatformGamesModel(
             platform: platform.platform,
             games: platform.games,
-            page: 0,
+            page: 1,
             status: PlatformGamesStatus.success,
             hasReachedMax: platform.games.length < 5 ? true : false,
           ),
