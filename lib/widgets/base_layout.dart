@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:madnolia/enums/events/notification-events.enum.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/chats/chats_bloc.dart';
@@ -196,7 +197,9 @@ class BaseLayout extends StatelessWidget {
                   matchesBloc.add(RestoreMatchesState());
                   chatsBloc.add(RestoreUserChats());
                   final backgroundService = FlutterBackgroundService();
-                  backgroundService.invoke("delete_all_notifications");
+                  backgroundService.invoke(
+                    NotificationEvents.deleteAllNotifications.event,
+                  );
                   stopBackgroundService();
                   const storage = FlutterSecureStorage();
                   await storage.delete(key: "token");

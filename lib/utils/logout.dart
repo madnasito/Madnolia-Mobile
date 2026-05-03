@@ -10,6 +10,7 @@ import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
 import 'package:madnolia/cubits/match_users/match_users_cubit.dart';
 import 'package:madnolia/database/repository_manager.dart';
+import 'package:madnolia/enums/events/sockets_events.dart';
 import 'package:madnolia/services/sockets_service.dart';
 
 import '../blocs/friendships/friendships_bloc.dart';
@@ -25,8 +26,8 @@ Future<void> logoutApp(BuildContext context) async {
   final notificationsBloc = context.read<NotificationsBloc>();
   final friendshipsBloc = context.read<FriendshipsBloc>();
   final matchUsersCubit = context.read<MatchUsersCubit>();
-  backgroundService.invoke('logout');
-  backgroundService.invoke("delete_all_notifications");
+  backgroundService.invoke(UserEvents.logout.event);
+  backgroundService.invoke(NotificationEvents.deleteAllNotifications.event);
   userBloc.add(UserLogOut());
   messageBloc.add(RestoreState());
   matchesBloc.add(RestoreMatchesState());

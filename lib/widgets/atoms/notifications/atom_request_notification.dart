@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart'
     show FlutterBackgroundService;
+import 'package:madnolia/enums/events/user-events.enum.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import '../../../models/notification/notification_details.dart';
 
@@ -101,9 +102,10 @@ class AtomRequestNotification extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     final backgroundService = FlutterBackgroundService();
-                    backgroundService.invoke('reject_connection', {
-                      'user': data.user?.id,
-                    });
+                    backgroundService.invoke(
+                      UserEvents.rejectConnection.event,
+                      {'user': data.user?.id},
+                    );
                     Navigator.pop(context, 'Cancel');
                   },
                   child: Text(
@@ -114,7 +116,7 @@ class AtomRequestNotification extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     final backgroundService = FlutterBackgroundService();
-                    backgroundService.invoke('accept_request', {
+                    backgroundService.invoke(UserEvents.acceptRequest.event, {
                       'user': data.user?.id,
                     });
                     Navigator.pop(context, 'OK');

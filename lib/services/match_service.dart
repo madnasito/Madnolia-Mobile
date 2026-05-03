@@ -235,7 +235,7 @@ class MatchService {
   Future<List<PlatformGame>> getGamesMatchesByPlatform({
     required int platformId,
     required int page,
-    int limit = 5,
+    int limit = 9,
   }) async {
     final token = await _storage.read(key: "token");
     final baseUrl = dotenv.get("API_URL");

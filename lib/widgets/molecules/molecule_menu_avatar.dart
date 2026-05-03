@@ -4,6 +4,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
+import 'package:madnolia/enums/events/user-events.enum.dart';
 import 'package:madnolia/utils/get_availability_data.dart';
 import 'package:madnolia/enums/user-availability.enum.dart';
 
@@ -106,9 +107,10 @@ class MoleculeMenuAvatar extends StatelessWidget {
                   },
                   onChanged: (value) {
                     if (value == null) return;
-                    backgroundService.invoke('update_availability', {
-                      'availability': value.index,
-                    });
+                    backgroundService.invoke(
+                      UserEvents.updateAvailability.event,
+                      {'availability': value.index},
+                    );
                     userBloc.add(UpdateAvailability(availability: value));
                   },
                   isDense: true,

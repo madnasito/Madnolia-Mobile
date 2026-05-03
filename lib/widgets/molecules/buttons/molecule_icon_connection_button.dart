@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/enums/connection-status.enum.dart';
+import 'package:madnolia/enums/events/user-events.enum.dart';
 import 'package:madnolia/models/chat_user_model.dart';
 import 'package:madnolia/models/connection/accepted_connection_model.dart';
 import 'package:madnolia/models/friendship/connection_request.dart';
@@ -26,7 +27,9 @@ class _MoleculeConnectionIconButtonState
     _backgroundService = FlutterBackgroundService();
 
     try {
-      _backgroundService.on('new_request_connection').listen((payload) {
+      _backgroundService.on(UserEvents.newRequestConnection.event).listen((
+        payload,
+      ) {
         debugPrint('new request: $payload');
 
         final requestData = ConnectionRequest.fromJson(payload!);
@@ -40,7 +43,7 @@ class _MoleculeConnectionIconButtonState
         }
       });
 
-      _backgroundService.on('request_accepted').listen((payload) {
+      _backgroundService.on(UserEvents.requestAccepted.event).listen((payload) {
         try {
           debugPrint('Request accepted: $payload');
 
@@ -69,7 +72,9 @@ class _MoleculeConnectionIconButtonState
         }
       });
 
-      _backgroundService.on('reject_connection').listen((payload) {
+      _backgroundService.on(UserEvents.rejectConnection.event).listen((
+        payload,
+      ) {
         debugPrint('Request rejected: $payload');
 
         final requestData = ConnectionRequest.fromJson(payload!);
@@ -81,7 +86,9 @@ class _MoleculeConnectionIconButtonState
         }
       });
 
-      _backgroundService.on('connection_rejected').listen((payload) {
+      _backgroundService.on(UserEvents.connectionRejected.event).listen((
+        payload,
+      ) {
         debugPrint('Request rejected: $payload');
 
         final requestData = ConnectionRequest.fromJson(payload!);

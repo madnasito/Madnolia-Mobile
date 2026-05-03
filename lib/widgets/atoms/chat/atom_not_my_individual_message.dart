@@ -1,6 +1,7 @@
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:madnolia/enums/events/sockets_events.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:intl/intl.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
@@ -32,7 +33,7 @@ class AtomNotMyIndividualMessage extends StatelessWidget {
             message.status == ChatMessageStatus.sent) {
           debugPrint('${message.content}: ${message.status}');
           backgroundService.invoke(
-            'update_recipient_status',
+            ChatMessageEvents.updateRecipientStatus.event,
             UpdateRecipientModel(
               id: message.id,
               status: ChatMessageStatus.read,
