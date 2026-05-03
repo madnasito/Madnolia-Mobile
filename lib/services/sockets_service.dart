@@ -15,6 +15,7 @@ import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
+import 'package:madnolia/models/chat/chat_sended_message.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat/update_recipient_model.dart';
 import 'package:madnolia/models/friendship/connection_request.dart';
@@ -192,7 +193,7 @@ Future<void> onStart(ServiceInstance service) async {
         );
 
         socket.emitWithAck(
-          'message',
+          ChatMessageEvents.message.event,
           newMessage.toJson(),
           ack: (data) {
             talker.debug(
@@ -268,12 +269,17 @@ Future<void> onStart(ServiceInstance service) async {
     });
 
     socket.on(ChatMessageEvents.sendedMessage.event, (payload) async {
-      final messageDb = await chatMessageRepository.messageSended(
-        payload['uid'],
-        payload['message']['id'],
-        DateTime.parse(payload['message']['date']),
-      );
-      talker.debug('Message sended saved $messageDb');
+      try {
+        final chagMessageSended = ChatMessageSendedI.fromJson(payload);
+        final messageDb = await chatMessageRepository.messageSended(
+          chagMessageSended.uid,
+          chagMessageSended.message.id,
+          chagMessageSended.message.date,
+        );
+        talker.debug('Message sended saved $messageDb');
+      } catch (e, stackTrace) {
+        talker.handle(e, stackTrace);
+      }
     });
 
     socket.on(ChatMessageEvents.messageRecipientUpdate.event, (payload) async {
