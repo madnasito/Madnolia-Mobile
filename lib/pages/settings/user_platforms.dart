@@ -78,13 +78,13 @@ class UserPlatformsPage extends StatelessWidget {
                                   final User user = User.fromJson(resp);
                                   debugPrint(user.platforms.toString());
                                   userBloc.add(UpdateData(user: user));
-                                  // platformsGamesBloc.add(
-                                  //   LoadPlatforms(
-                                  //     platforms: userBloc.state.platforms,
-                                  //   ),
-                                  // );
                                   platformsGamesBloc.add(
                                     RestorePlatformsGamesState(),
+                                  );
+                                  platformsGamesBloc.add(
+                                    LoadPlatforms(
+                                      platforms: userBloc.state.platforms,
+                                    ),
                                   );
                                   Toast.show(
                                     t.PROFILE.PLATFORMS_PAGE.SUCCESS,

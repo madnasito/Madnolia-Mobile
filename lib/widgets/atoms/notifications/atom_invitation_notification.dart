@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:madnolia/enums/events/notification-events.enum.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,7 +24,7 @@ class AtomInvitationNotification extends StatelessWidget {
       key: UniqueKey(),
       confirmDismiss: (direction) async {
         try {
-          backgroundService.invoke('delete_notification', {
+          backgroundService.invoke(NotificationEvents.delete.event, {
             'id': data.notification.id,
           });
           return true;

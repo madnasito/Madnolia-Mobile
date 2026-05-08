@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:madnolia/enums/events/sockets_events.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
@@ -14,6 +15,7 @@ import 'package:madnolia/enums/chat_message_status.enum.dart';
 import 'package:madnolia/enums/match-status.enum.dart';
 import 'package:madnolia/enums/chat_message_type.enum.dart';
 import 'package:madnolia/models/chat/chat_message_model.dart';
+import 'package:madnolia/models/chat/chat_sended_message.dart';
 import 'package:madnolia/models/chat/create_message_model.dart';
 import 'package:madnolia/models/chat/update_recipient_model.dart';
 import 'package:madnolia/models/friendship/connection_request.dart';
@@ -191,7 +193,7 @@ Future<void> onStart(ServiceInstance service) async {
         );
 
         socket.emitWithAck(
-          'message',
+          ChatMessageEvents.message.event,
           newMessage.toJson(),
           ack: (data) {
             talker.debug(
@@ -204,27 +206,29 @@ Future<void> onStart(ServiceInstance service) async {
     });
 
     socket.on(
-      'update_availability',
+      UserEvents.updateAvailability.event,
+      (payload) => service.invoke(UserEvents.updateAvailability.event, {
+        'availability': payload,
+      }),
+    );
+
+    // socket.on(
+    //   "added_to_match",
+    //   (payload) => service.invoke("added_to_match", {"resp": payload}),
+    // );
+
+    // socket.on(
+    //   "left_match",
+    //   (payload) => service.invoke("left_match", {"resp": payload}),
+    // );
+
+    socket.on(
+      MatchEvents.playerLeftMatch.event,
       (payload) =>
-          service.invoke('update_availability', {'availability': payload}),
+          service.invoke(MatchEvents.playerLeftMatch.event, {"resp": payload}),
     );
 
-    socket.on(
-      "added_to_match",
-      (payload) => service.invoke("added_to_match", {"resp": payload}),
-    );
-
-    socket.on(
-      "left_match",
-      (payload) => service.invoke("left_match", {"resp": payload}),
-    );
-
-    socket.on(
-      "player_left_match",
-      (payload) => service.invoke("player_left_match", {"resp": payload}),
-    );
-
-    socket.on("message", (payload) async {
+    socket.on(ChatMessageEvents.message.event, (payload) async {
       try {
         talker.debug("MESSAGE!!!");
         talker.debug(username);
@@ -264,16 +268,21 @@ Future<void> onStart(ServiceInstance service) async {
       }
     });
 
-    socket.on('sended_message', (payload) async {
-      final messageDb = await chatMessageRepository.messageSended(
-        payload['uid'],
-        payload['message']['id'],
-        DateTime.parse(payload['message']['date']),
-      );
-      talker.debug('Message sended saved $messageDb');
+    socket.on(ChatMessageEvents.sendedMessage.event, (payload) async {
+      try {
+        final chagMessageSended = ChatMessageSendedI.fromJson(payload);
+        final messageDb = await chatMessageRepository.messageSended(
+          chagMessageSended.uid,
+          chagMessageSended.message.id,
+          chagMessageSended.message.date,
+        );
+        talker.debug('Message sended saved $messageDb');
+      } catch (e, stackTrace) {
+        talker.handle(e, stackTrace);
+      }
     });
 
-    socket.on("message_recipient_update", (payload) async {
+    socket.on(ChatMessageEvents.messageRecipientUpdate.event, (payload) async {
       try {
         final data = UpdateRecipientModel.fromJson(payload);
         await chatMessageRepository.updateMessageStatus(data.id, data.status);
@@ -283,9 +292,9 @@ Future<void> onStart(ServiceInstance service) async {
       }
     });
 
-    socket.on("invitation", (data) async {
+    socket.on(MatchEvents.invitation.event, (data) async {
       try {
-        service.invoke("invitation", data);
+        service.invoke(MatchEvents.invitation.event, data);
         Invitation invitation = Invitation.fromJson(data);
 
         LocalNotificationsService.displayInvitation(invitation);
@@ -294,7 +303,7 @@ Future<void> onStart(ServiceInstance service) async {
       }
     });
 
-    socket.on("match_ready", (data) async {
+    socket.on(MatchEvents.matchReady.event, (data) async {
       talker.debug("NOW ON BACKGROUND");
       talker.debug(data.toString());
 
@@ -332,8 +341,8 @@ Future<void> onStart(ServiceInstance service) async {
     );
 
     // Events for handle user connections
-    socket.on("new_request_connection", (data) {
-      service.invoke("new_request_connection", data);
+    socket.on(UserEvents.newRequestConnection.event, (data) {
+      service.invoke(UserEvents.newRequestConnection.event, data);
       try {
         final connectionRequest = ConnectionRequest.fromJson(data);
         if (userId == connectionRequest.sender) return;
@@ -344,9 +353,9 @@ Future<void> onStart(ServiceInstance service) async {
         talker.handle(e);
       }
     });
-    socket.on("request_accepted", (data) async {
+    socket.on(UserEvents.requestAccepted.event, (data) async {
       try {
-        service.invoke("request_accepted", data);
+        service.invoke(UserEvents.requestAccepted.event, data);
         talker.info(data.toString());
         final acceptedConnection = AcceptedConnection.fromJson(data);
         if (userId == acceptedConnection.request.sender) {
@@ -364,10 +373,13 @@ Future<void> onStart(ServiceInstance service) async {
         talker.handle(e);
       }
     });
-    socket.on("removed_partner", (data) => service.invoke("removed_partner"));
-    socket.on("connection_rejected", (data) async {
+    socket.on(
+      UserEvents.removedPartner.event,
+      (data) => service.invoke(UserEvents.removedPartner.event),
+    );
+    socket.on(UserEvents.connectionRejected.event, (data) async {
       try {
-        service.invoke("connection_rejected", data);
+        service.invoke(UserEvents.connectionRejected.event, data);
         final connectionRequest = ConnectionRequest.fromJson(data);
         if (userId == connectionRequest.sender) return;
         final int deletedNotification = await notificationsRepository
@@ -378,24 +390,24 @@ Future<void> onStart(ServiceInstance service) async {
       }
     });
     socket.on(
-      "canceled_connection",
-      (data) => service.invoke("canceled_connection", data),
+      UserEvents.connectionCanceled.event,
+      (data) => service.invoke(UserEvents.connectionCanceled.event, data),
     );
 
-    socket.on('reject_connection', (data) {
+    socket.on(UserEvents.connectionRejected.event, (data) {
       talker.info(data.toString());
-      service.invoke('reject_connection', data);
+      service.invoke(UserEvents.connectionRejected.event, data);
     });
 
     // Events to handle notifications
-    socket.on('notifications_read', (data) async {
+    socket.on(UserEvents.readNotification.event, (data) async {
       try {
         await notificationsRepository.readAllNotifications();
       } catch (e) {
         talker.handle(e);
       }
     });
-    socket.on('notification_deleted', (data) async {
+    socket.on(NotificationEvents.notificationDeleted.event, (data) async {
       try {
         await notificationsRepository.deleteNotification(id: data);
       } catch (e) {
@@ -404,12 +416,12 @@ Future<void> onStart(ServiceInstance service) async {
     });
 
     socket.on(
-      'match_cancelled',
+      MatchEvents.cancelled.event,
       (data) async =>
           await matchRepository.updateMatchStatus(data, MatchStatus.cancelled),
     );
 
-    socket.on('standard_notification', (data) async {
+    socket.on(NotificationEvents.standartNotification.event, (data) async {
       try {
         final notification = NotificationModel.fromJson(data);
         final notificationCompanion = notification.toCompanion();
@@ -419,7 +431,7 @@ Future<void> onStart(ServiceInstance service) async {
       }
     });
 
-    socket.on('notification_read', (data) async {
+    socket.on(UserEvents.readNotification.event, (data) async {
       try {
         await notificationsRepository.readAllNotifications();
       } catch (e) {
@@ -435,23 +447,17 @@ Future<void> onStart(ServiceInstance service) async {
       );
     });
 
-    service.on("update_socket").listen((event) {
-      talker.debug("Update socket");
-      talker.debug(event.toString());
-    });
-
-    service.on("update_username").listen((onData) {
+    service.on(UserEvents.updateUserName.event).listen((onData) {
       username = onData?["username"];
       storage.write(key: 'username', value: username);
     });
 
     service
-        .on('match_created')
-        .listen((onData) => socket.emit('match_created', onData?['id']));
-
-    service
-        .on('join_to_match')
-        .listen((onData) => socket.emit('join_to_match', onData?['match']));
+        .on(MatchEvents.joinToMatch.event)
+        .listen(
+          (onData) =>
+              socket.emit(MatchEvents.joinToMatch.event, onData?['match']),
+        );
 
     service
         .on('is_socket_connected')
@@ -466,20 +472,20 @@ Future<void> onStart(ServiceInstance service) async {
       talker.debug("background process is now stopped");
     });
 
-    service.on("init_chat").listen((onData) {
-      socket.emit("init_chat", {onData?["room"]});
+    service.on(ChatMessageEvents.initChat.event).listen((onData) {
+      socket.emit(ChatMessageEvents.initChat.event, {onData?["room"]});
       currentRoom = onData?["room"];
       talker.debug("INIT CHAT: ${onData?["room"]}");
       LocalNotificationsService.deleteRoomMessages(onData?["room"]);
     });
 
-    service.on("join_room").listen((onData) {
+    service.on(ChatMessageEvents.joinRoom.event).listen((onData) {
       currentRoom = onData?["room"];
       talker.debug("INIT CHAT: ${onData?["room"]}");
       LocalNotificationsService.deleteRoomMessages(onData?["room"]);
     });
 
-    service.on("new_message").listen((onData) async {
+    service.on(ChatMessageEvents.newMessage.event).listen((onData) async {
       try {
         talker.debug("Background service: new_message event received");
         talker.debug(onData.toString());
@@ -512,7 +518,7 @@ Future<void> onStart(ServiceInstance service) async {
 
         talker.debug('Background service: emitting message ${message.id}');
         socket.emitWithAck(
-          "message",
+          ChatMessageEvents.message.event,
           onData,
           ack: (data) {
             talker.debug(
@@ -528,30 +534,39 @@ Future<void> onStart(ServiceInstance service) async {
     });
 
     service
-        .on("update_recipient_status")
-        .listen((onData) => socket.emit("update_recipient_status", onData));
+        .on(ChatMessageEvents.updateRecipientStatus.event)
+        .listen(
+          (onData) => socket.emit(
+            ChatMessageEvents.updateRecipientStatus.event,
+            onData,
+          ),
+        );
 
-    service.on("disconnect_chat").listen((onData) {
-      socket.emit("disconnect_chat");
+    service.on(ChatMessageEvents.disconnectChat.event).listen((onData) {
+      socket.emit(ChatMessageEvents.disconnectChat.event);
       currentRoom = "";
     });
 
-    service.on("leave_room").listen((onData) {
+    service.on(ChatMessageEvents.leaveRoom.event).listen((onData) {
       talker.debug("LEAVE ROOM");
       currentRoom = "";
     });
 
     service
-        .on('update_availability')
+        .on(UserEvents.updateAvailability.event)
         .listen(
-          (onData) =>
-              socket.emit('update_availability', onData?['availability']),
+          (onData) => socket.emit(
+            UserEvents.updateAvailability.event,
+            onData?['availability'],
+          ),
         );
 
-    service.on("logout").listen((onData) => socket.emit("logout"));
+    service
+        .on(UserEvents.logout.event)
+        .listen((onData) => socket.emit(UserEvents.logout.event));
 
     service
-        .on("new_player_to_match")
+        .on(MatchEvents.newPlayerToMatch.event)
         .listen(
           (onData) async => await matchRepository.joinUser(
             onData?['match'],
@@ -560,12 +575,18 @@ Future<void> onStart(ServiceInstance service) async {
         );
 
     service
-        .on("join_to_match")
-        .listen((onData) => socket.emit("join_to_match", onData?["match"]));
+        .on(MatchEvents.joinToMatch.event)
+        .listen(
+          (onData) =>
+              socket.emit(MatchEvents.joinToMatch.event, onData?["match"]),
+        );
 
     service
-        .on("leave_match")
-        .listen((onData) => socket.emit("leave_match", onData?["match"]));
+        .on(MatchEvents.leaveMatch.event)
+        .listen(
+          (onData) =>
+              socket.emit(MatchEvents.leaveMatch.event, onData?["match"]),
+        );
 
     service
         .on("make_call")
@@ -600,12 +621,12 @@ Future<void> onStart(ServiceInstance service) async {
         .listen((onData) => socket.emit("room_ice_candidate", onData));
 
     // Notifications events
-    service.on("delete_notification").listen((onData) {
+    service.on(NotificationEvents.delete.event).listen((onData) {
       try {
         final String id = onData?['id'];
 
         socket.emitWithAck(
-          'delete_notification',
+          NotificationEvents.delete.event,
           id,
           ack: (value) async {
             talker.info('Deleted notification socket, $id');
@@ -618,18 +639,18 @@ Future<void> onStart(ServiceInstance service) async {
       }
     });
     service
-        .on("delete_chat_notifications")
+        .on(NotificationEvents.deleteChatNotifications.event)
         .listen(
           (onData) =>
               LocalNotificationsService.deleteRoomMessages(onData?["room"]),
         );
     service
-        .on("delete_all_notifications")
+        .on(NotificationEvents.deleteAllNotifications.event)
         .listen((onData) => LocalNotificationsService.deleteAllNotifications());
-    service.on('read_all_notifications').listen((onData) async {
+    service.on(UserEvents.readAllNotifications.event).listen((onData) async {
       try {
         final count = await notificationsRepository.unreadNotificationsCount();
-        if (count > 0) socket.emit('read_all_notifications');
+        if (count > 0) socket.emit(UserEvents.readAllNotifications.event);
       } catch (e) {
         talker.error(e.toString());
       }
@@ -637,17 +658,29 @@ Future<void> onStart(ServiceInstance service) async {
 
     // Events for handle connections
     service
-        .on('request_connection')
-        .listen((onData) => socket.emit('request_connection', onData?['user']));
+        .on(UserEvents.requestConnection.event)
+        .listen(
+          (onData) =>
+              socket.emit(UserEvents.requestConnection.event, onData?['user']),
+        );
     service
-        .on('accept_request')
-        .listen((onData) => socket.emit('accept_request', onData?['user']));
+        .on(UserEvents.acceptRequest.event)
+        .listen(
+          (onData) =>
+              socket.emit(UserEvents.acceptRequest.event, onData?['user']),
+        );
     service
-        .on('reject_connection')
-        .listen((onData) => socket.emit('reject_connection', onData?['user']));
+        .on(UserEvents.rejectConnection.event)
+        .listen(
+          (onData) =>
+              socket.emit(UserEvents.rejectConnection.event, onData?['user']),
+        );
     service
-        .on('cancel_connection')
-        .listen((onData) => socket.emit('cancel_connection', onData?['user']));
+        .on(UserEvents.cancelConnection.event)
+        .listen(
+          (onData) =>
+              socket.emit(UserEvents.cancelConnection.event, onData?['user']),
+        );
   } catch (e) {
     talker.handle(e);
     // El servicio ya está en foreground, por lo que continuará funcionando

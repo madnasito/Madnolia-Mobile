@@ -8,7 +8,9 @@ import 'package:madnolia/blocs/notifications/notifications_bloc.dart';
 import 'package:madnolia/blocs/platform_games/platform_games_bloc.dart';
 import 'package:madnolia/blocs/matches/matches_bloc.dart';
 import 'package:madnolia/blocs/user/user_bloc.dart';
+import 'package:madnolia/cubits/match_users/match_users_cubit.dart';
 import 'package:madnolia/database/repository_manager.dart';
+import 'package:madnolia/enums/events/sockets_events.dart';
 import 'package:madnolia/services/sockets_service.dart';
 
 import '../blocs/friendships/friendships_bloc.dart';
@@ -23,8 +25,9 @@ Future<void> logoutApp(BuildContext context) async {
   final platformGamesBloc = context.read<PlatformGamesBloc>();
   final notificationsBloc = context.read<NotificationsBloc>();
   final friendshipsBloc = context.read<FriendshipsBloc>();
-  backgroundService.invoke('logout');
-  backgroundService.invoke("delete_all_notifications");
+  final matchUsersCubit = context.read<MatchUsersCubit>();
+  backgroundService.invoke(UserEvents.logout.event);
+  backgroundService.invoke(NotificationEvents.deleteAllNotifications.event);
   userBloc.add(UserLogOut());
   messageBloc.add(RestoreState());
   matchesBloc.add(RestoreMatchesState());
@@ -32,6 +35,7 @@ Future<void> logoutApp(BuildContext context) async {
   platformGamesBloc.add(RestorePlatformsGamesState());
   notificationsBloc.add(RestoreNotificationsState());
   friendshipsBloc.add(RestoreFriendshipsState());
+  matchUsersCubit.restore();
   await RepositoryManager().games.deleteAllGames();
   await RepositoryManager().user.deleteUsers();
   await RepositoryManager().match.deleteMatches();

@@ -6,6 +6,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/services/user_service.dart';
 
+import '../../enums/events/user-events.enum.dart';
+
 part 'user_event.dart';
 part 'user_state.dart';
 
@@ -31,7 +33,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
     final service = FlutterBackgroundService();
 
-    service.invoke("update_username", {"username": userApiData.username});
+    service.invoke(UserEvents.updateUserName.event, {
+      "username": userApiData.username,
+    });
 
     final User user = userApiData;
     emit(

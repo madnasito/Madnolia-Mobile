@@ -12,6 +12,7 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:madnolia/enums/chat_message_status.enum.dart';
+import 'package:madnolia/enums/events/chat-message-events.enum.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/database/repository_manager.dart';
@@ -752,7 +753,10 @@ class LocalNotificationsService {
             content: notificationResponse.input.toString(),
             type: message.type,
           );
-          backgroundService.invoke('new_message', newMessage.toJson());
+          backgroundService.invoke(
+            ChatMessageEvents.newMessage.event,
+            newMessage.toJson(),
+          );
         }
       } catch (e) {
         debugPrint("Error in notificationTapBackground: $e");

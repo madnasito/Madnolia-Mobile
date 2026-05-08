@@ -28,16 +28,11 @@ class MoleculeUserChatMessagesList extends StatelessWidget {
       itemBuilder: (context, index) {
         if (index < state.roomMessages.length) {
           final currentMessage = state.roomMessages[index].chatMessage;
-          bool mainMessage = false;
 
-          if (index == 0) {
-            mainMessage = true;
-          } else {
-            final previousMessage = state.roomMessages[index - 1].chatMessage;
-            if (previousMessage.creator != currentMessage.creator) {
-              mainMessage = true;
-            }
-          }
+          final isLast =
+              index == 0 ||
+              state.roomMessages[index].chatMessage.creator !=
+                  state.roomMessages[index - 1].chatMessage.creator;
 
           bool showDateHeader = false;
           if (index == state.roomMessages.length - 1) {
@@ -53,12 +48,18 @@ class MoleculeUserChatMessagesList extends StatelessWidget {
 
           final messageWidget = currentMessage.creator == myUserId
               ? AtomMyIndividualMessage(
+                  key: ValueKey(
+                    '${currentMessage.creator}_${currentMessage.date.millisecondsSinceEpoch}',
+                  ),
                   message: currentMessage,
-                  mainMessage: mainMessage,
+                  isLast: isLast,
                 )
               : AtomNotMyIndividualMessage(
+                  key: ValueKey(
+                    '${currentMessage.creator}_${currentMessage.date.millisecondsSinceEpoch}',
+                  ),
                   message: currentMessage,
-                  mainMessage: mainMessage,
+                  isLast: isLast,
                 );
 
           if (showDateHeader) {

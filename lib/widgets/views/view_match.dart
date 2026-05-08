@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:madnolia/database/database.dart';
 import 'package:madnolia/enums/bloc_status.enum.dart' show BlocStatus;
+import 'package:madnolia/enums/events/sockets_events.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:madnolia/i18n/strings.g.dart';
@@ -51,17 +52,19 @@ class _ViewMatchState extends State<ViewMatch> {
 
     // Guarda las suscripciones para poder cancelarlas después
 
-    _addedToMatchSubscription = backgroundService.on("added_to_match").listen((
-      data,
-    ) {
-      if (!mounted) return;
-      if (data?["resp"] == true) {
-        isInMatch = true;
-        if (mounted) setState(() {});
-      }
-    });
+    // _addedToMatchSubscription = backgroundService.on("added_to_match").listen((
+    //   data,
+    // ) {
+    //   if (!mounted) return;
+    //   if (data?["resp"] == true) {
+    //     isInMatch = true;
+    //     if (mounted) setState(() {});
+    //   }
+    // });
 
-    backgroundService.invoke("init_chat", {"room": _match.id});
+    backgroundService.invoke(ChatMessageEvents.initChat.event, {
+      "room": _match.id,
+    });
 
     _socketDisconnectedSubscription = backgroundService
         .on("disconnected_socket")
@@ -85,9 +88,8 @@ class _ViewMatchState extends State<ViewMatch> {
     _socketDisconnectedSubscription?.cancel();
     _socketConnectedSubscription?.cancel();
 
-    backgroundService.invoke("disconnect_chat");
-    backgroundService.invoke("leave_room");
-    // backgroundService.invoke("new_player_to_match");
+    backgroundService.invoke(ChatMessageEvents.disconnectChat.event);
+    backgroundService.invoke(ChatMessageEvents.leaveRoom.event);
     userBloc.add(UpdateChatRoom(chatRoom: ''));
     super.dispose();
   }
@@ -281,7 +283,12 @@ class BuildMessageList extends StatelessWidget {
         itemBuilder: (context, index) {
           final message = state.roomMessages[index];
 
-          final isMainMessage =
+          final isFirst =
+              index == state.roomMessages.length - 1 ||
+              state.roomMessages[index].chatMessage.creator !=
+                  state.roomMessages[index + 1].chatMessage.creator;
+
+          final isLast =
               index == 0 ||
               state.roomMessages[index].chatMessage.creator !=
                   state.roomMessages[index - 1].chatMessage.creator;
@@ -299,9 +306,13 @@ class BuildMessageList extends StatelessWidget {
           }
 
           final messageWidget = GroupChatMessageOrganism(
+            key: ValueKey(
+              '${message.chatMessage.creator}_${message.chatMessage.date.millisecondsSinceEpoch}',
+            ),
             messageData: state.roomMessages[index].chatMessage,
             user: message.user,
-            mainMessage: isMainMessage,
+            isFirst: isFirst,
+            isLast: isLast,
           );
 
           if (showDateHeader) {

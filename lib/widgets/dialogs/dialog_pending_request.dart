@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart'
     show FlutterBackgroundService;
+import 'package:madnolia/enums/events/user-events.enum.dart';
 import 'package:madnolia/i18n/strings.g.dart';
 import 'package:madnolia/models/user/simple_user_model.dart';
 
@@ -39,7 +40,7 @@ class DialogPendingRequest extends StatelessWidget {
         TextButton(
           onPressed: () {
             final backgroundService = FlutterBackgroundService();
-            backgroundService.invoke('reject_connection', {
+            backgroundService.invoke(UserEvents.rejectConnection.event, {
               'user': userData.id,
             });
             Navigator.pop(context, 'Reject');

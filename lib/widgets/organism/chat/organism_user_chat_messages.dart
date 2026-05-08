@@ -11,6 +11,8 @@ import 'package:madnolia/enums/bloc_status.enum.dart' show BlocStatus;
 import 'package:madnolia/widgets/molecules/chat/molecule_user_chat_messages.dart'
     show MoleculeUserChatMessagesList;
 
+import '../../../enums/events/chat-message-events.enum.dart';
+
 class OrganismUserChatMessages extends StatefulWidget {
   final String id;
   final String user;
@@ -40,7 +42,9 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
     userBloc = context.read<UserBloc>();
     _scrollController.addListener(_onScroll);
 
-    _backgroundService.invoke("join_room", {"room": widget.id});
+    _backgroundService.invoke(ChatMessageEvents.joinRoom.event, {
+      "room": widget.id,
+    });
 
     _messageSubscription = _backgroundService.on("message").listen((onData) {
       if (onData != null) {
@@ -102,7 +106,7 @@ class _OrganismUserChatMessagesState extends State<OrganismUserChatMessages> {
 
   @override
   void dispose() {
-    _backgroundService.invoke("leave_room");
+    _backgroundService.invoke(ChatMessageEvents.leaveRoom.event);
     _scrollController
       ..removeListener(_onScroll)
       ..dispose();

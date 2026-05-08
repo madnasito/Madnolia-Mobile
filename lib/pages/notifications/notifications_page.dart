@@ -8,6 +8,8 @@ import 'package:madnolia/style/text_style.dart';
 import 'package:madnolia/widgets/atoms/text_atoms/center_title_atom.dart';
 import 'package:madnolia/widgets/organism/organism_notifications.dart';
 
+import '../../enums/events/user-events.enum.dart';
+
 class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
 
@@ -28,7 +30,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     notificationsBloc.add(LoadNotifications());
     notificationsBloc.add(WatchNotifications());
     _scrollController.addListener(_onScroll);
-    backgroundService.invoke('read_all_notifications');
+    backgroundService.invoke(UserEvents.readAllNotifications.event);
   }
 
   @override

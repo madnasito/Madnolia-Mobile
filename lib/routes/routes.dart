@@ -4,6 +4,7 @@ import 'package:madnolia/pages/auth/recover_password_page.dart';
 import 'package:madnolia/pages/auth/recover_password_token_page.dart';
 import 'package:madnolia/pages/chat/user_chat_page.dart';
 import 'package:madnolia/pages/chat/chats_page.dart';
+import 'package:madnolia/pages/debug/page_database.dart';
 import 'package:madnolia/pages/game/game_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -245,6 +246,16 @@ final GoRouter router = GoRouter(
           path: "/search-game",
           name: "search game",
           builder: (context, state) => const SearchGamePage(),
+        ),
+        GoRoute(
+          path: "/dev",
+          builder: (context, state) => const PageDatabase(),
+          // routes: [
+          //   GoRoute(
+          //     path: "database",
+          //     builder: (context, state) => const PageDatabase(),
+          //   ),
+          // ],
         ),
       ],
     ),

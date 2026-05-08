@@ -16,23 +16,25 @@ EventTransformer<E> throttleDroppable<E>(Duration duration) {
   };
 }
 
-
 class PlatformGamesBloc extends Bloc<PlatformGamesEvent, PlatformGamesState> {
   PlatformGamesBloc() : super(PlatformGamesInitial()) {
-
     on<LoadPlatforms>(_loadPlatforms);
 
-    on<PlatformGamesFetched>(_onFetchPlatformGames, transformer: throttleDroppable(throttleDuration));
+    on<PlatformGamesFetched>(
+      _onFetchPlatformGames,
+      transformer: throttleDroppable(throttleDuration),
+    );
 
     on<RestorePlatformsGamesState>(_restoreState);
-    
+
     on<FetchAllPlatforms>(_fetchAll);
   }
 
-  Future<void> _loadPlatforms(LoadPlatforms event, Emitter<PlatformGamesState> emit) async {
-
+  Future<void> _loadPlatforms(
+    LoadPlatforms event,
+    Emitter<PlatformGamesState> emit,
+  ) async {
     try {
-      
       List<PlatformGamesModel> newUserPlatforms = [];
 
       final response = await MatchService().getPlatformsWithGameMatches();
@@ -43,10 +45,11 @@ class PlatformGamesBloc extends Bloc<PlatformGamesEvent, PlatformGamesState> {
           PlatformGamesModel(
             platform: platform.platform,
             games: platform.games,
-            page: 0,
+            page: 1,
             status: PlatformGamesStatus.success,
-            hasReachedMax: platform.games.length < 5 ? true: false)
-          );
+            hasReachedMax: platform.games.length < 5 ? true : false,
+          ),
+        );
       }
 
       emit(state.copyWith(platformGames: newUserPlatforms));
@@ -63,58 +66,78 @@ class PlatformGamesBloc extends Bloc<PlatformGamesEvent, PlatformGamesState> {
     }
   }
 
-  Future _onFetchPlatformGames(PlatformGamesFetched event, Emitter<PlatformGamesState> emit) async {
-
+  Future _onFetchPlatformGames(
+    PlatformGamesFetched event,
+    Emitter<PlatformGamesState> emit,
+  ) async {
     List<PlatformGamesModel> platformsGames = state.platformGames;
-    PlatformGamesModel? platformState = state.platformGames.firstWhere((e) => e.platform == event.platformId);
+    PlatformGamesModel? platformState = state.platformGames.firstWhere(
+      (e) => e.platform == event.platformId,
+    );
 
-    if(platformState.hasReachedMax) return;
+    if (platformState.hasReachedMax) return;
 
     try {
       debugPrint('Request to get games');
-      final games = await MatchService().getGamesMatchesByPlatform(platformId: platformState.platform, page: platformState.page);
+      final games = await MatchService().getGamesMatchesByPlatform(
+        platformId: platformState.platform,
+        page: platformState.page,
+      );
 
-      if(games.isEmpty){
+      if (games.isEmpty) {
         platformState.hasReachedMax = true;
         platformState.status = PlatformGamesStatus.success;
-        final index = platformsGames.indexWhere((e) => e.platform == event.platformId);
+        final index = platformsGames.indexWhere(
+          (e) => e.platform == event.platformId,
+        );
         platformsGames[index] = platformState;
 
-        return emit(state.copyWith(
-          platformGames: platformsGames,
-          lastUpdate: DateTime.now().millisecondsSinceEpoch,
-        ));
+        return emit(
+          state.copyWith(
+            platformGames: platformsGames,
+            lastUpdate: DateTime.now().millisecondsSinceEpoch,
+          ),
+        );
       }
 
-      if(games.length < 5) platformState.hasReachedMax = true;
+      if (games.length < 9) platformState.hasReachedMax = true;
 
       platformState.games.addAll(games);
       platformState.page++;
       platformState.status = PlatformGamesStatus.success;
 
-      final index = platformsGames.indexWhere((e) => e.platform == event.platformId);
+      final index = platformsGames.indexWhere(
+        (e) => e.platform == event.platformId,
+      );
       platformsGames[index] = platformState;
 
-      emit(state.copyWith(
-        platformGames: platformsGames,
-        lastUpdate: DateTime.now().millisecondsSinceEpoch
-      ));
-
+      emit(
+        state.copyWith(
+          platformGames: platformsGames,
+          lastUpdate: DateTime.now().millisecondsSinceEpoch,
+        ),
+      );
     } catch (e) {
       platformState.status = PlatformGamesStatus.failure;
-      final index = platformsGames.indexWhere((e) => e.platform == event.platformId);
+      final index = platformsGames.indexWhere(
+        (e) => e.platform == event.platformId,
+      );
       platformState.status = PlatformGamesStatus.failure;
       platformsGames[index] = platformState;
 
-      emit(state.copyWith(
-        platformGames: platformsGames,
-        lastUpdate: DateTime.now().millisecondsSinceEpoch
-      ));
+      emit(
+        state.copyWith(
+          platformGames: platformsGames,
+          lastUpdate: DateTime.now().millisecondsSinceEpoch,
+        ),
+      );
     }
-
   }
 
-  void _restoreState(RestorePlatformsGamesState event, Emitter<PlatformGamesState> emit){
+  void _restoreState(
+    RestorePlatformsGamesState event,
+    Emitter<PlatformGamesState> emit,
+  ) {
     emit(state.copyWith(platformGames: [], lastUpdate: 0));
   }
 }
